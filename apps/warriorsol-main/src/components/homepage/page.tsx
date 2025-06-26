@@ -4,6 +4,11 @@ import Footer from "../shared/footer";
 import Hero from "./Hero";
 import RebellionSection from "./RebellionSection";
 import ChooseYourArmor from "./ChooseYourArmor";
+import WhyIWearMine from "./WhyIWearMine";
+import PurchasePower from "./PurchasePower";
+import CircleThatNeverCloses from "./CircleThatNeverCloses";
+import GiveMeaning from "./GiveMeaning";
+import RebellionNewsletter from "./RebellionNewsletter";
 
 const HomePage = () => {
   return (
@@ -12,10 +17,14 @@ const HomePage = () => {
       <Hero />
       <RebellionSection />
       <ChooseYourArmor />
+      <WhyIWearMine />
+      <PurchasePower />
+      <CircleThatNeverCloses />
+      <GiveMeaning />
+      <RebellionNewsletter />
       <Footer />
     </div>
   );
 };
 
 export default HomePage;
-   

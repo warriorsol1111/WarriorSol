@@ -41,7 +41,7 @@ export default function HomePage({
   const [notifyLoading, setNotifyLoading] = useState(false);
   const [email, setEmail] = useState("");
   useEffect(() => {
-    if (products && countofMails) {
+    if (products) {
       setLoading(false);
     }
   }, []);

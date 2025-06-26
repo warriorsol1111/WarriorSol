@@ -1,10 +1,10 @@
-import React from 'react';
-import Image from 'next/image';
-import rebellionImage from '@/assets/rebellion-image.png'; // update the path if needed
+import React from "react";
+import Image from "next/image";
+import rebellionImage from "@/assets/rebellion-image.png"; // update the path if needed
 
 const RebellionSection: React.FC = () => {
   return (
-    <section className="relative w-full h-[596px] text-[#1F1F1F]">
+    <section className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[596px] text-[#1F1F1F]">
       {/* Background Image */}
       <Image
         src={rebellionImage}
@@ -19,16 +19,16 @@ const RebellionSection: React.FC = () => {
         className="absolute inset-0 z-10"
         style={{
           background:
-            'linear-gradient(180deg, rgba(31, 31, 31, 0) 0%, rgba(31, 31, 31, 0.6) 100%)',
+            "linear-gradient(180deg, rgba(31, 31, 31, 0) 0%, rgba(31, 31, 31, 0.6) 100%)",
         }}
       />
 
       {/* Top White Block with Text and Circle */}
-      <div className="absolute top-0 left-0 right-0 bg-white px-16 py-12 z-20 flex justify-between items-start">
+      <div className="absolute top-0 left-0 right-0 bg-white px-4 sm:px-8 md:px-12 lg:px-16 py-6 sm:py-8 md:py-10 lg:py-12 z-20">
         {/* Left-aligned Text */}
-        <h2 className="text-[62px] leading-[62px] font-['Cormorant_SC'] font-normal text-left capitalize max-w-[900px]">
-          Not Just Apparel.<br />
-          A Rebellion Wrapped In Thread.
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[62px] leading-tight lg:leading-[62px] font-['Cormorant_SC'] font-normal text-left capitalize max-w-full lg:max-w-[900px]">
+          Not Just Apparel.
+          <br className="hidden sm:block" />A Rebellion Wrapped In Thread.
         </h2>
       </div>
     </section>
