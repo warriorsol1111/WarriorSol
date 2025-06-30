@@ -8,6 +8,7 @@ import ProductGrid from "./productGrid";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
 import Filter, { FilterState, initialFilterState } from "./filters";
 import { BsFilterLeft } from "react-icons/bs";
+import { Button } from "../ui/button";
 
 const socialLinks = [
   {
@@ -187,13 +188,15 @@ const Products = () => {
           </h1>
 
           {/* Filter button - hidden on mobile, shown as small button on tablet+ */}
-          <button
+          <Button
             onClick={() => setIsFilterOpen(true)}
+            variant="link"
+            size="default"
             className="hidden md:flex items-center gap-2 border border-gray-300 py-2 px-4 text-sm hover:bg-gray-50 transition-colors rounded"
           >
             <BsFilterLeft size={16} />
             <span>Sort & Filter</span>
-          </button>
+          </Button>
         </div>
 
         <p className="text-base md:text-lg lg:text-xl font-light font-inter text-gray-600 mb-6">
@@ -202,13 +205,14 @@ const Products = () => {
         </p>
 
         {/* Mobile filter button - full width */}
-        <button
+        <Button
+          variant="link"
           onClick={() => setIsFilterOpen(true)}
           className="md:hidden w-full border border-gray-300 py-3 px-4 flex items-center justify-between text-base hover:bg-gray-50 transition mb-6"
         >
           <span>Sort & Filter</span>
           <BsFilterLeft size={20} />
-        </button>
+        </Button>
 
         <Filter
           isOpen={isFilterOpen}

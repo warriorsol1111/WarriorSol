@@ -10,6 +10,7 @@ import {
   DrawerTitle,
   DrawerClose,
 } from "../ui/drawer";
+import { Button } from "../ui/button";
 
 export interface FilterState {
   sortBy: string;
@@ -90,7 +91,9 @@ export const Filter: React.FC<FilterProps> = ({
             <h3 className="font-medium mb-3">Sort By</h3>
             <div className="flex flex-wrap gap-2">
               {sortOptions.map((option) => (
-                <button
+                <Button
+                  size="lg"
+                  variant="link"
                   key={option}
                   onClick={() => toggleFilter("sortBy", option)}
                   className={`px-4 py-2 rounded-full border ${
@@ -100,7 +103,7 @@ export const Filter: React.FC<FilterProps> = ({
                   }`}
                 >
                   {option}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -109,7 +112,9 @@ export const Filter: React.FC<FilterProps> = ({
             <h3 className="font-medium mb-3">Product Type</h3>
             <div className="flex flex-wrap gap-2">
               {productTypes.map((type) => (
-                <button
+                <Button
+                  size="lg"
+                  variant="link"
                   key={type}
                   onClick={() => toggleFilter("productType", type)}
                   className={`px-4 py-2 rounded-full border ${
@@ -119,7 +124,7 @@ export const Filter: React.FC<FilterProps> = ({
                   }`}
                 >
                   {type}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -128,14 +133,16 @@ export const Filter: React.FC<FilterProps> = ({
             <h3 className="font-medium mb-3">Color</h3>
             <div className="flex gap-2">
               {colors.map((color) => (
-                <button
+                <Button
+                  size="lg"
+                  variant="link"
                   key={color}
                   onClick={() => toggleFilter("color", color)}
-                  className={`w-8 h-8 rounded-full border ${
+                  className={`w-12 h-12 rounded-full border ${
                     filters.color.includes(color) ? "ring-2 ring-black" : ""
                   }`}
                   style={{ backgroundColor: color }}
-                />
+                ></Button>
               ))}
             </div>
           </div>
@@ -144,7 +151,9 @@ export const Filter: React.FC<FilterProps> = ({
             <h3 className="font-medium mb-3">Size</h3>
             <div className="flex flex-wrap gap-2">
               {sizes.map((size) => (
-                <button
+                <Button
+                  size="lg"
+                  variant="link"
                   key={size}
                   onClick={() => toggleFilter("size", size)}
                   className={`px-4 py-2 rounded-full border ${
@@ -154,7 +163,7 @@ export const Filter: React.FC<FilterProps> = ({
                   }`}
                 >
                   {size}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -163,7 +172,9 @@ export const Filter: React.FC<FilterProps> = ({
             <h3 className="font-medium mb-3">Gender</h3>
             <div className="flex gap-2">
               {genders.map((gender) => (
-                <button
+                <Button
+                  size="lg"
+                  variant="link"
                   key={gender}
                   onClick={() => toggleFilter("gender", gender)}
                   className={`px-4 py-2 rounded-full border ${
@@ -173,7 +184,7 @@ export const Filter: React.FC<FilterProps> = ({
                   }`}
                 >
                   {gender}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -182,7 +193,9 @@ export const Filter: React.FC<FilterProps> = ({
             <h3 className="font-medium mb-3">Warrior Corner</h3>
             <div className="flex gap-2">
               {collections.map((collection) => (
-                <button
+                <Button
+                  size="lg"
+                  variant="link"
                   key={collection}
                   onClick={() => toggleFilter("collection", collection)}
                   className={`px-4 py-2 rounded-full border ${
@@ -192,7 +205,7 @@ export const Filter: React.FC<FilterProps> = ({
                   }`}
                 >
                   {collection}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -200,18 +213,22 @@ export const Filter: React.FC<FilterProps> = ({
 
         <DrawerFooter className="border-t border-gray-200">
           <div className="flex gap-4">
-            <button
+            <Button
+              size="lg"
               onClick={handleClearFilters}
+              variant="link"
               className="flex-1 py-3 px-4 border rounded-lg hover:bg-gray-50"
             >
               Clear Filter
-            </button>
-            <button
+            </Button>
+            <Button
+              size="lg"
               onClick={onApplyFilters}
+              variant="link"
               className="flex-1 py-3 px-4 bg-[#E97451] text-white rounded-lg hover:bg-[#E97451]/90"
             >
               Apply Filters
-            </button>
+            </Button>
           </div>
         </DrawerFooter>
       </DrawerContent>

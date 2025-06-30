@@ -4,6 +4,7 @@ import Image, { StaticImageData } from "next/image";
 import productImage from "@/assets/product-image.png"; // your static image
 import { AiOutlineHeart, AiOutlineShoppingCart } from "react-icons/ai";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 interface Product {
   id: number;
@@ -80,12 +81,14 @@ const ChooseYourArmor: React.FC = () => {
             Journey.
           </p>
         </div>
-        <button
+        <Button
+          variant="outline"
+          size="lg"
           onClick={() => router.push("/products")}
           className="w-full sm:w-auto border border-black px-4 sm:px-5 py-2.5 sm:py-3 text-base sm:text-lg lg:text-[20px] font-['Inter'] capitalize flex items-center justify-center sm:justify-start gap-2 hover:bg-black hover:text-white transition"
         >
-          See All Products ↗
-        </button>
+          See All Products
+        </Button>
       </div>
 
       {/* Product Grid */}
@@ -135,12 +138,20 @@ const ChooseYourArmor: React.FC = () => {
 
       {/* Pagination */}
       <div className="flex justify-center items-center gap-3 sm:gap-4 mt-8 sm:mt-12">
-        <button className="w-8 h-8 sm:w-10 sm:h-10 border border-[#ccc] text-base sm:text-lg">
+        <Button
+          variant="outline"
+          size="lg"
+          className="w-8 h-8 sm:w-10 sm:h-10 border border-[#ccc] text-base sm:text-lg"
+        >
           &lt;
-        </button>
-        <button className="w-8 h-8 sm:w-10 sm:h-10 border border-[#ccc] text-base sm:text-lg">
+        </Button>
+        <Button
+          variant="outline"
+          size="lg"
+          className="w-8 h-8 sm:w-10 sm:h-10 border border-[#ccc] text-base sm:text-lg"
+        >
           &gt;
-        </button>
+        </Button>
       </div>
     </section>
   );

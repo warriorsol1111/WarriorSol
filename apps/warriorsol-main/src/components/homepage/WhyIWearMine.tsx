@@ -4,7 +4,7 @@ import Image from "next/image";
 import sunsetImage from "@/assets/sunset.png";
 import userImage from "@/assets/user.svg";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-
+import { Button } from "../ui/button";
 interface Story {
   id: number;
   quote: string;
@@ -49,9 +49,13 @@ const WhyIWearMine: React.FC = () => {
               Real Stories From Real Warriors In Our Community
             </p>
           </div>
-          <button className="border border-black px-4 sm:px-5 py-2 sm:py-3 text-[16px] sm:text-[18px] lg:text-[20px] font-['Inter'] capitalize flex items-center gap-2 hover:bg-black hover:text-white transition">
+          <Button
+            variant="outline"
+            size="lg"
+            className="border border-black px-4 sm:px-5 py-2 sm:py-3 text-[16px] sm:text-[18px] lg:text-[20px] font-['Inter'] capitalize flex items-center gap-2 hover:bg-black hover:text-white transition"
+          >
             Read All Stories ↗
-          </button>
+          </Button>
         </div>
       </section>
 
@@ -114,18 +118,20 @@ const WhyIWearMine: React.FC = () => {
 
             {/* Navigation Buttons */}
             <div className="flex gap-2">
-              <button
+              <Button
+                size="lg"
                 onClick={prevStory}
                 className="w-8 h-8 sm:w-10 sm:h-10 border border-white/30 flex items-center justify-center hover:bg-white hover:text-black transition"
               >
                 <FaAngleLeft />
-              </button>
-              <button
+              </Button>
+              <Button
+                size="lg"
                 onClick={nextStory}
                 className="w-8 h-8 sm:w-10 sm:h-10 border border-white/30 flex items-center justify-center hover:bg-white hover:text-black transition"
               >
                 <FaAngleRight />
-              </button>
+              </Button>
             </div>
           </div>
         </div>

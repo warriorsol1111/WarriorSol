@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { Heart } from "lucide-react";
 import { MdOutlineShoppingBag } from "react-icons/md";
+import { Button } from "../ui/button";
 
 type Product = {
   id: string;
@@ -40,7 +41,8 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
               />
               {/* Overlay with icons */}
               <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex flex-row gap-2 sm:gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <button
+                <Button
+                  variant="link"
                   className="p-1.5 sm:p-2 bg-white/90 backdrop-blur-sm cursor-pointer hover:bg-white transition-colors shadow-md rounded-full"
                   onClick={(e) => {
                     e.preventDefault();
@@ -48,8 +50,9 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
                   }}
                 >
                   <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="link"
                   className="p-1.5 sm:p-2 bg-white/90 backdrop-blur-sm cursor-pointer hover:bg-white transition-colors shadow-md rounded-full"
                   onClick={(e) => {
                     e.preventDefault();
@@ -57,7 +60,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
                   }}
                 >
                   <MdOutlineShoppingBag className="h-4 w-4 sm:h-5 sm:w-5" />
-                </button>
+                </Button>
               </div>
             </div>
             <div className="p-3 sm:p-4">

@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "../ui/button";
 
 const GiveMeaning = () => {
   const steps = [
@@ -61,9 +62,13 @@ const GiveMeaning = () => {
       </div>
 
       <div className="text-center mt-8 md:mt-12">
-        <button className='border border-black px-6 sm:px-8 py-2.5 sm:py-3 text-[16px] sm:text-[18px] md:text-[20px] font-["Inter"] capitalize hover:bg-black hover:text-white transition'>
+        <Button
+          variant="outline"
+          size="lg"
+          className="border border-black px-6 sm:px-8 py-2 h-14 sm:py-3 text-[16px] sm:text-[18px] md:text-[20px] font-['Inter'] capitalize hover:bg-black hover:text-white transition"
+        >
           Get A Gift ↗
-        </button>
+        </Button>
       </div>
     </section>
   );

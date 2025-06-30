@@ -4,6 +4,7 @@ import FamilyPhoto2 from "@/assets/image 2.png";
 import FamilyPhoto3 from "@/assets/image 3.png";
 import FamilyPhoto4 from "@/assets/image 4.png";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
 const CircleThatNeverCloses = () => {
   return (
@@ -18,9 +19,13 @@ const CircleThatNeverCloses = () => {
             Stories With Pride
           </p>
         </div>
-        <button className="border border-black px-4 sm:px-5 py-2 sm:py-3 text-[16px] sm:text-[18px] lg:text-[20px] font-['Inter'] capitalize flex items-center gap-2 hover:bg-black hover:text-white transition whitespace-nowrap">
+        <Button
+          variant="outline"
+          size="lg"
+          className="border border-black px-4 sm:px-5 py-2 h-14 sm:py-3 text-[16px] sm:text-[18px] lg:text-[20px] font-['Inter'] capitalize flex items-center gap-2 hover:bg-black hover:text-white transition whitespace-nowrap"
+        >
           Join The Movement ↗
-        </button>
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">

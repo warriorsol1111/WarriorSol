@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import newsLetterImage from "@/assets/newsletter.png";
+import { Button } from "../ui/button";
 const RebellionNewsletter = () => {
   const [email, setEmail] = useState("");
 
@@ -61,12 +62,13 @@ const RebellionNewsletter = () => {
                 placeholder="Your Email"
                 className='w-full bg-[rgba(255,255,255,0.1)] border-none px-4 py-3 font-["Inter"] placeholder:text-white/50 focus:outline-none'
               />
-              <button
+              <Button
                 type="submit"
+                size="lg"
                 className='sm:absolute sm:right-0 sm:top-0 h-full bg-[#EE9254] text-white px-8 font-["Inter"] hover:bg-[#d89b89] transition'
               >
                 Subscribe
-              </button>
+              </Button>
             </div>
           </form>
         </div>

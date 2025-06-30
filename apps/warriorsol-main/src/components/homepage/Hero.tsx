@@ -3,6 +3,7 @@ import React from "react";
 import Image from "next/image";
 import heroImage from "@/assets/image.png";
 import { useRouter } from "next/navigation";
+import { Button } from "../ui/button";
 
 const Hero: React.FC = () => {
   const router = useRouter();
@@ -48,13 +49,14 @@ const Hero: React.FC = () => {
             never stopped standing by their side.
           </p>
 
-          <button
+          <Button
             onClick={() => router.push("/products")}
+            size="lg"
             className="mt-6 flex items-center gap-2 px-5 py-[12px] border border-white text-white text-[18px] md:text-[20px] font-['Inter'] capitalize hover:bg-white hover:text-black transition w-full md:w-auto justify-center md:justify-start"
           >
             Shop the story
             <span className="ml-1">↗</span>
-          </button>
+          </Button>
         </div>
       </div>
     </section>

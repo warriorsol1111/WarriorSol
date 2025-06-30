@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Logo from "../../assets/logo.svg";
 import { MdOutlineShoppingBag } from "react-icons/md";
+import { Button } from "../ui/button";
 
 export default function Navbar() {
   return (
@@ -48,18 +49,18 @@ export default function Navbar() {
 
         {/* Right Icons */}
         <div className="flex items-center space-x-4">
-          <button className="hover:text-gray-600">
+          <Button variant="link">
             <Search className="h-5 w-5" />
-          </button>
-          <button className="hover:text-gray-600">
+          </Button>
+          <Button variant="link">
             <User className="h-5 w-5" />
-          </button>
-          <button className="hover:text-gray-600 relative">
+          </Button>
+          <Button variant="link" className="relative">
             <MdOutlineShoppingBag className="h-5 w-5" />
-            <span className="absolute -top-2 -right-2 bg-[#e88a49] text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+            <span className="absolute -top-1 -right-1 bg-[#e88a49] text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
               0
             </span>
-          </button>
+          </Button>
         </div>
       </div>
     </header>

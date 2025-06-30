@@ -8,6 +8,7 @@ import {
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatPrice } from "@/lib/utils";
+import { Button } from "../ui/button";
 
 interface ProductVariant {
   id: string;
@@ -273,7 +274,9 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 </label>
                 <div className="flex flex-wrap gap-5">
                   {colors.map((color) => (
-                    <button
+                    <Button
+                      variant="link"
+                      size="lg"
                       key={color}
                       onClick={() => setSelectedColor(color)}
                       className={`px-4 py-2 text-lg rounded-md border cursor-pointer transition-all duration-200 shadow-sm ${
@@ -283,7 +286,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                       }`}
                     >
                       {color}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>
@@ -303,7 +306,9 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                   </label>
                   <div className="flex flex-wrap gap-5">
                     {sizes.map((size) => (
-                      <button
+                      <Button
+                        variant="link"
+                        size="lg"
                         key={size}
                         onClick={() => setSelectedSize(size)}
                         className={`px-4 py-2 text-lg rounded-md border cursor-pointer transition-all duration-200 shadow-sm ${
@@ -313,7 +318,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                         }`}
                       >
                         {size}
-                      </button>
+                      </Button>
                     ))}
                   </div>
                 </div>
@@ -322,27 +327,33 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             {/* Quantity */}
             <div className="flex items-center gap-4">
               <div className="flex items-center border border-gray-200 rounded w-full justify-between">
-                <button
+                <Button
+                  variant="link"
+                  size="lg"
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   className="p-2 text-gray-600 hover:text-gray-900"
                 >
                   <AiOutlineMinus size={16} />
-                </button>
+                </Button>
                 <span className="w-12 text-center text-sm font-medium">
                   {quantity.toString().padStart(2, "0")}
                 </span>
-                <button
+                <Button
+                  variant="link"
+                  size="lg"
                   onClick={() => setQuantity(quantity + 1)}
                   className="p-2 text-gray-600 hover:text-gray-900"
                 >
                   <AiOutlinePlus size={16} />
-                </button>
+                </Button>
               </div>
             </div>
 
             {/* Action Buttons */}
             <div className="grid grid-cols-1 gap-3">
-              <button
+              <Button
+                variant="link"
+                size="lg"
                 className="flex items-center w-full cursor-pointer justify-center gap-2 py-3 px-6 bg-[#EE9254] text-white rounded-lg text-base font-medium hover:bg-orange-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={!selectedVariant?.availableForSale || isLoading}
                 onClick={handleBuyProduct}
@@ -353,7 +364,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                   : selectedVariant?.availableForSale
                     ? "Buy Product"
                     : "Out of Stock"}
-              </button>
+              </Button>
             </div>
           </div>
         </div>
