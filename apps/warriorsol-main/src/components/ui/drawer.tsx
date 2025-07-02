@@ -50,7 +50,7 @@ const drawerContentVariants = cva(
   {
     variants: {
       direction: {
-        right: "ml-24 right-0 rounded-l-[10px] inset-y-0",
+        right: "ml-24 right-0 rounded-l-[10px] inset-y-0 w-[95%] max-w-[600px]",
         top: "mb-24 top-0 rounded-b-[10px] inset-x-0",
         bottom: "mt-24 rounded-t-[10px] bottom-0 inset-x-0",
         left: "mr-24 left-0 rounded-r-[10px] inset-y-0",
