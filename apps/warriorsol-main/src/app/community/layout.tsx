@@ -10,7 +10,7 @@ const CommunityLayout: React.FC<CommunityLayoutProps> = ({ children }) => {
     return (
         <div className="community-layout">
             <Navbar />
-            <main>{children}</main>
+            {children}
             <footer />
         </div>
     );
