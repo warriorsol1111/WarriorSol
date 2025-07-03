@@ -30,7 +30,7 @@ export default function Navbar() {
 
         {/* Centered Navigation */}
         <nav className="absolute hidden md:flex left-1/2 transform -translate-x-1/2 space-x-6 text-sm text-center text-black font-light">
-          <Link href="/" className="hover:underline">
+          <Link href="/home" className="hover:underline">
             Home
           </Link>
           <Link href="/products" className="hover:underline">
