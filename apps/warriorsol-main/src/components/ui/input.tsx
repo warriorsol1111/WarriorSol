@@ -19,7 +19,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           type={type}
           data-slot="input"
           className={cn(
-            "file:text-foreground placeholder:text-muted-foreground",
+            "file:text-foreground placeholder:text-muted-foreground font-[Inter]",
             "flex h-12 w-full rounded-md border bg-white px-4 py-2 text-base shadow-sm transition-all duration-200",
             "border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-300",
             "selection:bg-blue-500 selection:text-white",

@@ -1,14 +1,13 @@
 "use client";
 import React, { useState, useMemo, useEffect } from "react";
-import {
-  AiOutlineMinus,
-  AiOutlinePlus,
-  AiOutlineShoppingCart,
-} from "react-icons/ai";
+import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatPrice } from "@/lib/utils";
 import { Button } from "../ui/button";
+import { useCartStore } from "@/store/cart-store";
+import { FaRegHeart } from "react-icons/fa6";
+import { BsCart2 } from "react-icons/bs";
 
 interface ProductVariant {
   id: string;
@@ -49,6 +48,7 @@ interface ProductDetailsProps {
 
 export default function ProductDetails({ product }: ProductDetailsProps) {
   // Get unique colors and sizes from variants
+  const { addItem, openCart } = useCartStore();
   const { colors, sizes } = useMemo(() => {
     const colorSet = new Set<string>();
     const sizeSet = new Set<string>();
@@ -117,7 +117,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     );
   }, [selectedColor, product.variants]);
 
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   // Find the selected variant based on color and size
   const selectedVariant = useMemo(() => {
     const isHatProduct = product.variants.every((variant) => {
@@ -170,35 +170,35 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
       })
     : null;
 
-  const handleBuyProduct = async () => {
-    if (!selectedVariant) return;
+  // const handleBuyProduct = async () => {
+  //   if (!selectedVariant) return;
 
-    setIsLoading(true);
-    try {
-      const response = await fetch("/api/shopify/createCheckout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          variantId: selectedVariant.id,
-          quantity: quantity,
-        }),
-      });
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await fetch("/api/shopify/createCheckout", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         variantId: selectedVariant.id,
+  //         quantity: quantity,
+  //       }),
+  //     });
 
-      if (!response.ok) {
-        throw new Error("Failed to create checkout");
-      }
+  //     if (!response.ok) {
+  //       throw new Error("Failed to create checkout");
+  //     }
 
-      const data = await response.json();
-      window.location.href = data.checkoutUrl;
-    } catch (error) {
-      console.error("Error creating checkout:", error);
-      alert("Failed to create checkout. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //     const data = await response.json();
+  //     window.location.href = data.checkoutUrl;
+  //   } catch (error) {
+  //     console.error("Error creating checkout:", error);
+  //     alert("Failed to create checkout. Please try again.");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-white">
@@ -350,20 +350,34 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             </div>
 
             {/* Action Buttons */}
-            <div className="grid grid-cols-1 gap-3">
+            <div className="grid grid-cols-2 gap-4">
               <Button
                 variant="link"
                 size="lg"
-                className="flex items-center w-full cursor-pointer justify-center gap-2 py-3 px-6 bg-[#EE9254] text-white rounded-lg text-base font-medium hover:bg-orange-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={!selectedVariant?.availableForSale || isLoading}
-                onClick={handleBuyProduct}
+                className="flex items-center justify-center gap-2 text-gray-800 border-1 border-black hover:text-black"
               >
-                <AiOutlineShoppingCart size={20} />
-                {isLoading
-                  ? "Creating Checkout..."
-                  : selectedVariant?.availableForSale
-                    ? "Buy Product"
-                    : "Out of Stock"}
+                <FaRegHeart size={20} />
+                Add To Wishlist
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                disabled={!selectedVariant?.availableForSale}
+                onClick={() => {
+                  addItem({
+                    id: selectedVariant.id,
+                    name: product.title,
+                    price: parseFloat(selectedVariant.price.amount),
+                    color: selectedColor || "Default",
+                    size: selectedSize || "One Size",
+                    image: selectedVariant.image?.url || product.image,
+                  });
+                  openCart();
+                }}
+                className="flex items-center justify-center gap-2 bg-[#EE9254] text-white hover:bg-orange-500 transition-colors"
+              >
+                <BsCart2 size={20} />
+                Add to Cart
               </Button>
             </div>
           </div>

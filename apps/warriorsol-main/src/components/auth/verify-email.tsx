@@ -7,21 +7,61 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import SignupImage from "@/assets/auth/signup.svg";
 import Logo from "@/assets/auth/logo.svg";
+import { toast } from "react-hot-toast";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function VerifyEmailPage() {
   const [verificationCode, setVerificationCode] = useState("");
-
+  const router = useRouter();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setVerificationCode(e.target.value);
   };
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Verifying email with code:", verificationCode);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/verify-email`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, verificationCode }),
+      }
+    );
+    const data = await response.json();
+    if (data.status === "success") {
+      toast.success("Email verified successfully");
+      router.push("/login");
+    } else {
+      toast.error("Invalid verification code");
+    }
   };
 
-  const handleResendCode = () => {
-    console.log("Resending verification code");
+  const handleResendCode = async () => {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/resend-otp`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          type: "email",
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.status === "success") {
+      toast.success("Verification code resent successfully");
+    } else {
+      toast.error("Failed to resend verification code");
+    }
   };
 
   return (

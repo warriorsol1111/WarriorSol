@@ -10,10 +10,15 @@ import { FcGoogle } from "react-icons/fc";
 import { useState } from "react";
 import LoginImage from "@/assets/auth/login.svg";
 import Logo from "@/assets/auth/logo.svg";
+import { signIn } from "next-auth/react";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+
 export default function LoginPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -22,9 +27,36 @@ export default function LoginPage() {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Logging in with", formData);
+    const { email, password } = formData;
+
+    const response = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    if (response?.error) {
+      if (response.error.includes("User is not verified")) {
+        toast.error("User not verified");
+        router.push(`/verify-email?email=${email}`);
+      } else if (response.error.includes("Invalid credentials")) {
+        toast.error("Invalid credentials");
+      } else if (
+        response.error.includes("linked to a Google account") ||
+        response.error.includes("sign in with Google")
+      ) {
+        toast.error(
+          "This account is linked to Google. Please sign in with Google."
+        );
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    } else {
+      toast.success("Login successful");
+      router.push("/home");
+    }
   };
 
   return (
@@ -80,9 +112,7 @@ export default function LoginPage() {
               </Button>
             </div>
             <div className="text-right text-base md:text-lg text-[#1F1F1F99] font-light mt-2">
-              <a href="/forgot-password" className="hover:underline">
-                Forgot Password?
-              </a>
+              <Link href="/forgot-password">Forgot Password?</Link>
             </div>
           </div>
 
@@ -95,6 +125,7 @@ export default function LoginPage() {
               variant="ghost"
               size="icon"
               className="w-12 h-12 md:w-14 md:h-14"
+              onClick={() => signIn("google")}
             >
               <FcGoogle className="text-3xl md:text-4xl !w-1/2 !h-1/2" />
             </Button>

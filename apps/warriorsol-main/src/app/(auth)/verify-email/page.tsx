@@ -1,4 +1,5 @@
 import VerifyEmail from "@/components/auth/verify-email";
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Warrior Sol - Verify Email",

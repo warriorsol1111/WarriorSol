@@ -10,7 +10,8 @@ import { FcGoogle } from "react-icons/fc";
 import { useState } from "react";
 import SignupImage from "@/assets/auth/signup.svg";
 import Logo from "@/assets/auth/logo.svg";
-
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 export default function SignupPage() {
   const [formData, setFormData] = useState({
     name: "",
@@ -20,7 +21,7 @@ export default function SignupPage() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+  const router = useRouter();
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -33,9 +34,30 @@ export default function SignupPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Logging in with", formData);
+    const body = {
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+    };
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/register`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      }
+    );
+    const data = await response.json();
+    if (data.status === "success") {
+      toast.success(
+        "Signup successful! Please check your email to verify your account."
+      );
+      router.push("/verify-email?email=" + formData.email);
+    }
   };
 
   return (

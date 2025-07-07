@@ -6,8 +6,25 @@ import Image from "next/image";
 import Logo from "../../assets/logo.svg";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import { Button } from "../ui/button";
+import { useCartStore } from "@/store/cart-store";
+import { useSession, signOut } from "next-auth/react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 
 export default function Navbar() {
+  const itemCount = useCartStore((state) => state.itemCount);
+  const toggleCart = useCartStore((state) => state.toggleCart);
+  const { data: session } = useSession();
+  const userName =
+    session?.user?.firstName || session?.user?.lastName
+      ? `${session?.user?.firstName ?? ""} ${session?.user?.lastName ?? ""}`.trim()
+      : "Guest";
   return (
     <header className="">
       <div className="bg-[#e88a49] text-white text-xs sm:text-sm text-center py-2 px-4">
@@ -52,14 +69,42 @@ export default function Navbar() {
           <Button variant="link">
             <Search className="h-5 w-5" />
           </Button>
-          <Button variant="link">
-            <User className="h-5 w-5" />
-          </Button>
-          <Button variant="link" className="relative">
+
+          {/* User Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="link">
+                <User className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-48">
+              <DropdownMenuLabel className="text-lg text-gray-500">
+                Signed in as
+              </DropdownMenuLabel>
+              <DropdownMenuLabel className="font-medium text-lg truncate">
+                {userName}
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild className="cursor-pointer">
+                <Link href="/account">Account</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => signOut()}
+                className="cursor-pointer"
+              >
+                Log out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Cart Icon */}
+          <Button variant="link" className="relative" onClick={toggleCart}>
             <MdOutlineShoppingBag className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 bg-[#e88a49] text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-              0
-            </span>
+            {itemCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-[#e88a49] text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                {itemCount}
+              </span>
+            )}
           </Button>
         </div>
       </div>

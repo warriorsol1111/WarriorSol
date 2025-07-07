@@ -11,8 +11,8 @@ import ForgotPasswordImage3 from "@/assets/auth/forgotPassword3.svg";
 import ForgotPasswordImage4 from "@/assets/auth/forgotPassword4.svg";
 import Logo from "@/assets/auth/logo.svg";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { toast } from "react-hot-toast";
 
-// Temporarily using login image for all steps until new images are added
 import LoginImage from "@/assets/auth/login.svg";
 
 type ForgotPasswordStep = "email" | "verify" | "newPassword" | "success";
@@ -33,18 +33,22 @@ export default function ForgotPasswordPage() {
   const toggleConfirmPasswordVisibility = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
+  const isValidPassword = (password: string) => {
+    const passwordRegex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?-]).{8,}$/;
+    return passwordRegex.test(password);
+  };
 
   const getBackgroundImage = () => {
-    // TODO: Replace LoginImage with the corresponding step image once available
     switch (step) {
       case "email":
-        return ForgotPasswordImage1; // Replace with ForgotPasswordEmailImage
+        return ForgotPasswordImage1;
       case "verify":
-        return ForgotPasswordImage2; // Replace with ForgotPasswordVerifyImage
+        return ForgotPasswordImage2;
       case "newPassword":
-        return ForgotPasswordImage3; // Replace with ForgotPasswordNewImage
+        return ForgotPasswordImage3;
       case "success":
-        return ForgotPasswordImage4; // Replace with ForgotPasswordSuccessImage
+        return ForgotPasswordImage4;
       default:
         return LoginImage;
     }
@@ -54,28 +58,106 @@ export default function ForgotPasswordPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     switch (step) {
       case "email":
-        // Handle email submission and send verification code
-        console.log("Sending verification code to", formData.email);
-        setStep("verify");
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/forgot-password`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email: formData.email }),
+          }
+        );
+        const data = await response.json();
+        if (data.status === "success") {
+          toast.success("Verification code sent successfully");
+          setStep("verify");
+        } else {
+          if (
+            data.message &&
+            data.message.includes(
+              "This email is linked to a Google account. Please sign in with Google."
+            )
+          ) {
+            toast.error(
+              "This email is linked to a Google account. Please sign in with Google."
+            );
+          } else {
+            toast.error("Failed to send verification code");
+          }
+        }
         break;
       case "verify":
-        // Handle verification code validation
-        console.log("Verifying code", formData.verificationCode);
-        setStep("newPassword");
+        const verifyResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/verify-email`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: formData.email,
+              verificationCode: formData.verificationCode,
+              type: "forget_password",
+            }),
+          }
+        );
+        const verifyData = await verifyResponse.json();
+        if (verifyData.status === "success") {
+          toast.success("Verification code verified successfully");
+          setStep("newPassword");
+        } else {
+          toast.error("Failed to verify verification code");
+        }
         break;
       case "newPassword":
-        // Handle password update
+        if (!isValidPassword(formData.newPassword)) {
+          toast.error(
+            "Password must be at least 8 characters and include a letter, number, and special character"
+          );
+          return;
+        }
+
         if (formData.newPassword === formData.confirmPassword) {
-          console.log("Updating password");
-          setStep("success");
+          const updateResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/reset-password`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: formData.email,
+                newPassword: formData.newPassword,
+              }),
+            }
+          );
+          const updateData = await updateResponse.json();
+          if (updateData.status === "success") {
+            if (
+              updateData.message ===
+              "New password cannot be the same as your current password"
+            ) {
+              toast.error(
+                "New password cannot be the same as your current password"
+              );
+            } else {
+              toast.success("Password updated successfully");
+              setStep("success");
+            }
+          } else {
+            toast.error("Failed to update password");
+          }
         } else {
+          toast.error("Passwords don't match");
           console.error("Passwords don't match");
         }
         break;
+
       default:
         break;
     }
@@ -173,6 +255,7 @@ export default function ForgotPasswordPage() {
                 <Button
                   variant="ghost"
                   size="icon"
+                  type="button"
                   onClick={togglePasswordVisibility}
                   className="absolute right-3 top-1/2 cursor-pointer -translate-y-1/2 text-gray-500 hover:text-gray-700"
                 >
@@ -199,6 +282,7 @@ export default function ForgotPasswordPage() {
                 <Button
                   variant="ghost"
                   size="icon"
+                  type="button"
                   onClick={toggleConfirmPasswordVisibility}
                   className="absolute right-3 top-1/2 cursor-pointer -translate-y-1/2 text-gray-500 hover:text-gray-700"
                 >
