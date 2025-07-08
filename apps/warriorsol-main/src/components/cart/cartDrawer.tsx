@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { X, Plus, Minus, Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useCartStore } from "@/store/cart-store";
@@ -20,7 +20,7 @@ export default function CartDrawer() {
   const router = useRouter();
   const { items, isOpen, subtotal, closeCart, updateQuantity, removeItem } =
     useCartStore();
-
+  const [loading, setLoading] = useState(false);
   if (!isOpen) return null;
 
   return (
@@ -99,7 +99,7 @@ export default function CartDrawer() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => removeItem(item.id)}
+                          onClick={() => item.lineId && removeItem(item.lineId)}
                           className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -113,12 +113,14 @@ export default function CartDrawer() {
                             variant="outline"
                             size="sm"
                             onClick={() =>
-                              updateQuantity(item.id, item.quantity - 1)
+                              item.lineId &&
+                              updateQuantity(item.lineId, item.quantity - 1)
                             }
                             className="h-8 w-8 p-0 border-gray-300"
                           >
                             <Minus className="h-3 w-3" />
                           </Button>
+
                           <span className="text-sm font-medium min-w-[2rem] text-center">
                             {item.quantity}
                           </span>
@@ -126,7 +128,8 @@ export default function CartDrawer() {
                             variant="outline"
                             size="sm"
                             onClick={() =>
-                              updateQuantity(item.id, item.quantity + 1)
+                              item.lineId &&
+                              updateQuantity(item.lineId, item.quantity + 1)
                             }
                             className="h-8 w-8 p-0 border-gray-300"
                           >
@@ -160,13 +163,26 @@ export default function CartDrawer() {
               {/* Action Buttons */}
               <div className="grid grid-cols-2 gap-3">
                 <Button
-                  onClick={() => {
-                    // Handle checkout logic here
-                    console.log("Proceeding to checkout...");
+                  onClick={async () => {
+                    setLoading(true);
+                    try {
+                      const res = await fetch("/api/shopify/getCheckout");
+                      const data = await res.json();
+                      if (res.ok && data.checkoutUrl) {
+                        window.location.href = data.checkoutUrl;
+                      } else {
+                        alert(data.error || "Failed to get checkout URL");
+                      }
+                    } catch {
+                      alert("Failed to get checkout URL");
+                    } finally {
+                      setLoading(false);
+                    }
                   }}
                   className="w-full py-3 text-sm font-medium bg-[#EE9254] hover:bg-[#EE9254] text-white"
+                  disabled={loading}
                 >
-                  Checkout
+                  {loading ? "Redirecting..." : "Checkout"}
                 </Button>
                 <Button
                   onClick={() => {

@@ -122,6 +122,7 @@ export default function LoginPage() {
 
           <div className="flex gap-8 md:gap-24 justify-center">
             <Button
+              type="button"
               variant="ghost"
               size="icon"
               className="w-12 h-12 md:w-14 md:h-14"

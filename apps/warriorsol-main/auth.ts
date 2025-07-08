@@ -98,10 +98,10 @@ const authConfig: AuthOptions = {
   ],
 
   callbacks: {
-    async signIn({ user, account }) {
+    signIn: async ({ user, account }) => {
       if (account?.provider === "google") {
         try {
-          await fetch(
+          const res = await fetch(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google-sync`,
             {
               method: "POST",
@@ -109,26 +109,41 @@ const authConfig: AuthOptions = {
               body: JSON.stringify({
                 email: user.email,
                 name: user.name,
-                provider: "google",
               }),
             }
           );
+
+          const data = await res.json();
+
+          if (!res.ok || !data.data?.token) {
+            console.error("❌ Google sync failed:", data.message);
+            return false;
+          }
+
+          //  Inject the custom token directly into the account object
+          account.access_token = data.data.token;
+
+          // You may still attach to user for logging or fallback
+          user.id = data.data.id;
+          user.name = data.data.name;
+          user.token = data.data.token;
         } catch (err) {
           console.error("❌ Failed to sync Google user to backend:", err);
-          return false; // Block login if sync fails
+          return false;
         }
       }
 
       return true;
     },
-
-    async jwt({ token, user, account, trigger, session }) {
+    jwt: async ({ token, user, account }) => {
       if (user && account) {
         if (account.provider === "google") {
           token.id = user.id;
           token.email = user.email!;
           token.firstName = user.name?.split(" ")[0] || "";
           token.lastName = user.name?.split(" ").slice(1).join(" ") || "";
+
+          // ✅ Use the backend token injected into account
           token.accessToken = account.access_token!;
         } else {
           token.id = (user as User).id;
@@ -137,13 +152,6 @@ const authConfig: AuthOptions = {
           token.lastName = (user as User).lastName;
           token.accessToken = (user as User).token;
         }
-      }
-
-      if (trigger === "update" && session) {
-        const s = session as unknown as import("next-auth").Session["user"];
-        if (s.firstName !== undefined) token.firstName = s.firstName;
-        if (s.lastName !== undefined) token.lastName = s.lastName;
-        if (s.email !== undefined) token.email = s.email;
       }
 
       return token;

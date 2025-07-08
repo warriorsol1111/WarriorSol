@@ -56,18 +56,35 @@ export async function PATCH(request: NextRequest) {
 
     const data = await fetchShopify(UPDATE_CART_MUTATION, variables);
 
-    if (data.cartLinesUpdate.userErrors.length > 0) {
+    // Check for null or user errors
+    const updateResponse = data?.cartLinesUpdate;
+
+    if (!updateResponse) {
       return NextResponse.json(
-        { error: data.cartLinesUpdate.userErrors[0].message },
+        {
+          error: "cartLinesUpdate returned null",
+          raw: data,
+        },
         { status: 400 }
       );
     }
 
-    return NextResponse.json({ cart: data.cartLinesUpdate.cart });
+    if (updateResponse.userErrors?.length) {
+      console.warn("Shopify userErrors:", updateResponse.userErrors);
+      return NextResponse.json(
+        {
+          error: "Shopify userErrors occurred",
+          userErrors: updateResponse.userErrors,
+        },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json({ cart: updateResponse.cart });
   } catch (error) {
     console.error("Error updating cart:", error);
     return NextResponse.json(
-      { error: "Failed to update cart" },
+      { error: "Failed to update cart", details: String(error) },
       { status: 500 }
     );
   }

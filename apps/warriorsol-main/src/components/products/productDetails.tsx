@@ -364,14 +364,17 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 size="lg"
                 disabled={!selectedVariant?.availableForSale}
                 onClick={() => {
-                  addItem({
-                    id: selectedVariant.id,
-                    name: product.title,
-                    price: parseFloat(selectedVariant.price.amount),
-                    color: selectedColor || "Default",
-                    size: selectedSize || "One Size",
-                    image: selectedVariant.image?.url || product.image,
-                  });
+                  addItem(
+                    {
+                      id: selectedVariant.id,
+                      name: product.title,
+                      price: parseFloat(selectedVariant.price.amount),
+                      color: selectedColor || "Default",
+                      size: selectedSize || "One Size",
+                      image: selectedVariant.image?.url || product.image,
+                    },
+                    quantity // pass quantity as the second argument
+                  );
                   openCart();
                 }}
                 className="flex items-center justify-center gap-2 bg-[#EE9254] text-white hover:bg-orange-500 transition-colors"

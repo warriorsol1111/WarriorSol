@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchShopify } from "../../../../lib/shopify";
 import { cookies } from "next/headers";
+import { getToken } from "next-auth/jwt";
 
 export async function POST(request: NextRequest) {
   try {
@@ -65,6 +66,23 @@ export async function POST(request: NextRequest) {
       maxAge: 60 * 60 * 24 * 30, // 30 days
       httpOnly: false,
     });
+    const token = await getToken({ req: request });
+
+    if (!token) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/cart`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token.accessToken}`,
+      },
+      body: JSON.stringify({ cartId: cart.id }),
+    });
+
+    if (!res.ok) {
+      console.error("Failed to save cart ID to backend");
+    }
 
     return NextResponse.json({ cart });
   } catch (error) {

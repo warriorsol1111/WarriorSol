@@ -1,13 +1,14 @@
 import { create } from "zustand";
 
 export interface CartItem {
-  id: string;
+  id: string; // variantId
   name: string;
   color: string;
   size: string;
   price: number;
   quantity: number;
   image: string;
+  lineId?: string; // Shopify line item ID
 }
 
 interface CartState {
@@ -15,10 +16,17 @@ interface CartState {
   isOpen: boolean;
   subtotal: number;
   itemCount: number;
-  addItem: (item: Omit<CartItem, "quantity">) => void;
-  removeItem: (id: string) => void;
-  updateQuantity: (id: string, quantity: number) => void;
-  clearCart: () => void;
+  checkoutUrl?: string;
+
+  hydrateCart: () => Promise<void>;
+  addItem: (
+    item: Omit<CartItem, "quantity" | "lineId">,
+    quantity: number
+  ) => Promise<void>;
+  removeItem: (lineId: string) => Promise<void>;
+  updateQuantity: (lineId: string, quantity: number) => Promise<void>;
+  clearCart: () => Promise<void>;
+
   toggleCart: () => void;
   openCart: () => void;
   closeCart: () => void;
@@ -29,58 +37,99 @@ export const useCartStore = create<CartState>((set, get) => ({
   isOpen: false,
   subtotal: 0,
   itemCount: 0,
+  checkoutUrl: undefined,
 
-  addItem: (item) => {
-    const { items } = get();
-    const existing = items.find(
-      (i) => i.id === item.id && i.color === item.color && i.size === item.size
-    );
+  hydrateCart: async () => {
+    try {
+      const res = await fetch("/api/shopify/getCart", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
 
-    let newItems;
-    if (existing) {
-      newItems = items.map((i) =>
-        i.id === existing.id &&
-        i.color === existing.color &&
-        i.size === existing.size
-          ? { ...i, quantity: i.quantity + 1 }
-          : i
+      const shopifyItems: CartItem[] = data.cart.items || [];
+      const subtotal = shopifyItems.reduce(
+        (acc, item) => acc + item.price * item.quantity,
+        0
       );
-    } else {
-      newItems = [...items, { ...item, quantity: 1 }];
+      const itemCount = shopifyItems.reduce(
+        (acc, item) => acc + item.quantity,
+        0
+      );
+      set({
+        items: shopifyItems,
+        subtotal,
+        itemCount,
+        checkoutUrl: data.cart.checkoutUrl,
+      });
+    } catch (err) {
+      console.error("Failed to hydrate cart", err);
     }
-
-    const subtotal = newItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
-    const itemCount = newItems.reduce((sum, i) => sum + i.quantity, 0);
-
-    set({ items: newItems, subtotal, itemCount });
   },
 
-  removeItem: (id) => {
-    const newItems = get().items.filter((i) => i.id !== id);
-    const subtotal = newItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
-    const itemCount = newItems.reduce((sum, i) => sum + i.quantity, 0);
-    set({ items: newItems, subtotal, itemCount });
-  },
+  addItem: async (item, quantity = 1) => {
+    try {
+      const res = await fetch("/api/shopify/addItemToCart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          merchandiseId: item.id,
+          quantity,
+        }),
+      });
 
-  updateQuantity: (id, quantity) => {
-    if (quantity <= 0) {
-      get().removeItem(id);
-      return;
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      await get().hydrateCart();
+    } catch (err) {
+      console.error("Add item failed", err);
     }
-
-    const newItems = get().items.map((i) =>
-      i.id === id ? { ...i, quantity } : i
-    );
-
-    const subtotal = newItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
-    const itemCount = newItems.reduce((sum, i) => sum + i.quantity, 0);
-
-    set({ items: newItems, subtotal, itemCount });
   },
 
-  clearCart: () => set({ items: [], subtotal: 0, itemCount: 0 }),
+  removeItem: async (lineId: string) => {
+    try {
+      const res = await fetch("/api/shopify/removeItemFromCart", {
+        method: "DELETE",
+        body: JSON.stringify({ lineId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      await get().hydrateCart();
+    } catch (err) {
+      console.error("Remove item failed", err);
+    }
+  },
 
-  toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
+  updateQuantity: async (lineId: string, quantity: number) => {
+    try {
+      const res = await fetch("/api/shopify/updateCart", {
+        method: "PATCH",
+        body: JSON.stringify({ lineId, quantity }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      await get().hydrateCart();
+    } catch (err) {
+      console.error("Update quantity failed", err);
+    }
+  },
+
+  clearCart: async () => {
+    try {
+      await fetch("/api/shopify/deleteCart", { method: "DELETE" });
+      await get().hydrateCart();
+    } catch (err) {
+      console.error("Clear cart failed", err);
+    }
+  },
+
+  toggleCart: () => set((s) => ({ isOpen: !s.isOpen })),
   openCart: () => set({ isOpen: true }),
   closeCart: () => set({ isOpen: false }),
 }));
