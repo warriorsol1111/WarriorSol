@@ -6,10 +6,13 @@ import { Input } from "@/components/ui/input";
 import ComingSoonGif from "@/assets/comingSoon.gif";
 import Link from "next/link";
 import Logo from "../../assets/logo.svg";
+import { toast } from "react-hot-toast";
+import { Loader2 } from "lucide-react";
 
 export default function ComingSoon() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const targetDate = new Date("2025-11-11T11:11:00").getTime();
+
   const [isPlaying, setIsPlaying] = useState(false);
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -17,8 +20,10 @@ export default function ComingSoon() {
     minutes: 0,
     seconds: 0,
   });
+
   const [email, setEmail] = useState("");
-  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [notifyLoading, setNotifyLoading] = useState(false);
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -59,15 +64,42 @@ export default function ComingSoon() {
       audioRef.current
         .play()
         .then(() => setIsPlaying(true))
-        .catch((error) => console.error("Error playing audio:", error));
+        .catch((error) => {
+          console.error("Error playing audio:", error);
+        });
+    }
+  };
+
+  const addEmailToWaitlist = async (email: string) => {
+    setNotifyLoading(true);
+    try {
+      const response = await fetch(`${BACKEND_URL}/launch-mails/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (data.message === "Email already exists") {
+        toast.error("Email already exists in the waitlist");
+      } else {
+        toast.success("Email added to waitlist");
+      }
+
+      setEmail("");
+    } catch (error) {
+      console.error("Error adding email to waitlist:", error);
+      toast.error("Failed to add email to waitlist");
+    } finally {
+      setNotifyLoading(false);
     }
   };
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
-      setIsSubscribed(true);
-      console.log("Subscribed email:", email);
+      addEmailToWaitlist(email);
     }
   };
 
@@ -101,7 +133,7 @@ export default function ComingSoon() {
       </header>
 
       <div className="min-h-screen flex flex-col relative overflow-hidden">
-        {/* Background */}
+        {/* Background Image */}
         <div className="absolute inset-0 w-full h-full">
           <Image
             src={ComingSoonGif}
@@ -115,7 +147,7 @@ export default function ComingSoon() {
 
         <div className="absolute inset-0 bg-black/50" />
 
-        {/* Audio Control */}
+        {/* Audio Toggle */}
         <Button
           variant="link"
           onClick={toggleAudio}
@@ -138,19 +170,19 @@ export default function ComingSoon() {
           src="https://res.cloudinary.com/dr5yanrd3/video/upload/v1751544573/Bon_Iver_-_Holocene_Lyrics_bp8n2s.mp3"
         />
 
-        {/* Page Content */}
-        <div className="relative z-10 flex flex-col flex-grow text-center">
-          <div className="mt-4 sm:mt-6 md:mt-10">
-            <h1 className="text-white text-xl sm:text-2xl md:text-3xl font-light mb-2 tracking-[0.15em] uppercase">
+        {/* Main Content */}
+        <div className="relative z-10 flex flex-col flex-grow text-center px-4 sm:px-6 lg:px-8">
+          <div className="mt-10 sm:mt-16 md:mt-20">
+            <h1 className="text-white text-lg sm:text-2xl md:text-4xl lg:text-5xl font-light mb-2 tracking-[0.15em] uppercase">
               Warrior Sol & The Warrior Sol Foundation...
             </h1>
-            <h2 className="text-white text-lg sm:text-xl md:text-2xl font-light mb-16 sm:mb-20 tracking-[0.15em] uppercase">
+            <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-4xl font-light mb-12 sm:mb-16 tracking-[0.15em] uppercase">
               Rising 11:11
             </h2>
           </div>
 
           <div className="mt-auto flex flex-col items-center">
-            <h3 className="text-white text-sm sm:text-base uppercase font-light tracking-[0.25em] mb-4">
+            <h3 className="text-white text-xs sm:text-sm md:text-base uppercase font-light tracking-[0.25em] mb-4">
               We&apos;re Launching Soon.
             </h3>
 
@@ -161,15 +193,17 @@ export default function ComingSoon() {
               {["days", "hours", "minutes", "seconds"].map((unit, i) => (
                 <React.Fragment key={unit}>
                   {i !== 0 && (
-                    <div className="text-white text-lg sm:text-xl">:</div>
+                    <div className="text-white text-lg sm:text-xl md:text-2xl">
+                      :
+                    </div>
                   )}
                   <div className="text-center">
-                    <div className="text-xl sm:text-2xl md:text-3xl text-white font-light">
+                    <div className="text-xl sm:text-2xl md:text-4xl text-white font-light">
                       {timeLeft[unit as keyof typeof timeLeft]
                         .toString()
                         .padStart(2, "0")}
                     </div>
-                    <div className="text-white text-[10px] sm:text-xs uppercase tracking-widest">
+                    <div className="text-white text-[10px] sm:text-xs md:text-sm lg:text-base uppercase tracking-widest">
                       {unit}
                     </div>
                   </div>
@@ -177,25 +211,28 @@ export default function ComingSoon() {
               ))}
             </div>
 
-            {/* Subscribe */}
+            {/* Email Subscribe */}
             <form
               onSubmit={handleSubscribe}
-              className="flex flex-col sm:flex-row gap-2 w-full max-w-xs sm:max-w-md mb-4"
+              className="flex flex-col sm:flex-row gap-2 w-full max-w-xs sm:max-w-md mb-12"
             >
               <Input
                 type="email"
                 placeholder="Your Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-transparent border-white/30 text-white placeholder-white/60 text-xs sm:text-sm"
+                className="bg-transparent border-white/30 text-white placeholder-white/60 text-xs sm:text-sm h-10 sm:h-12"
               />
               <Button
                 type="submit"
-                size="sm"
-                className="bg-orange-500 hover:bg-orange-600 text-white px-4 sm:px-6 py-2 tracking-wide uppercase text-xs sm:text-sm"
-                disabled={isSubscribed}
+                className="bg-orange-500 hover:bg-orange-600 h-10 sm:h-12 text-white px-4 sm:px-6 py-2 tracking-wide uppercase text-xs sm:text-sm flex items-center gap-2"
+                disabled={notifyLoading}
               >
-                {isSubscribed ? "Subscribed!" : "Subscribe"}
+                {notifyLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  "Notify Me"
+                )}
               </Button>
             </form>
           </div>

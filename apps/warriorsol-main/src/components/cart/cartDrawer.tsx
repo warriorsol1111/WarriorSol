@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, Plus, Minus, Trash2 } from "lucide-react";
+import { X, Plus, Minus, Trash2, Loader2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useCartStore } from "@/store/cart-store";
 import Image from "next/image";
@@ -15,12 +15,14 @@ import {
 } from "../ui/drawer";
 import { useRouter } from "next/navigation";
 import { MdOutlineShoppingBag } from "react-icons/md";
+import NProgress from "nprogress";
 
 export default function CartDrawer() {
   const router = useRouter();
   const { items, isOpen, subtotal, closeCart, updateQuantity, removeItem } =
     useCartStore();
   const [loading, setLoading] = useState(false);
+  const [cartLoading, setCartLoading] = useState(false);
   if (!isOpen) return null;
 
   return (
@@ -182,18 +184,32 @@ export default function CartDrawer() {
                   className="w-full py-3 text-sm font-medium bg-[#EE9254] hover:bg-[#EE9254] text-white"
                   disabled={loading}
                 >
-                  {loading ? "Redirecting..." : "Checkout"}
+                  {loading ? (
+                    <Loader2 className="inline-block mr-2 animate-spin w-6 h-6" />
+                  ) : (
+                    "Checkout"
+                  )}
                 </Button>
                 <Button
                   onClick={() => {
+                    setCartLoading(true);
+                    NProgress.start();
                     router.push("/cart");
+
                     closeCart();
+                    setCartLoading(false);
                   }}
                   variant="outline"
                   className="w-full py-3 text-sm font-medium border-gray-300 hover:bg-gray-50"
                 >
-                  <MdOutlineShoppingBag className="inline-block mr-2 w-6 h-6" />
-                  Goto Cart
+                  {cartLoading ? (
+                    <Loader2 className="inline-block mr-2 animate-spin w-6 h-6" />
+                  ) : (
+                    <>
+                      <MdOutlineShoppingBag className="inline-block mr-2 w-6 h-6" />
+                      View Cart
+                    </>
+                  )}
                 </Button>
               </div>
             </DrawerFooter>

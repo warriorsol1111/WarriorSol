@@ -4,7 +4,7 @@ import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatPrice } from "@/lib/utils";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { useCartStore } from "@/store/cart-store";
 import { FaRegHeart } from "react-icons/fa6";
 import { BsCart2 } from "react-icons/bs";

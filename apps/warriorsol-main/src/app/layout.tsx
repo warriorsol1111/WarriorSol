@@ -5,6 +5,7 @@ import { Cormorant_SC } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import SessionProviderWrapper from "@/components/shared/sessionProvider";
 import CartDrawer from "@/components/cart/cartDrawer";
+import NextTopLoader from "nextjs-toploader";
 
 const cormorantSC = Cormorant_SC({
   weight: ["400", "500", "600", "700"],
@@ -19,7 +20,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "WarriorSol Main",
-  description: "Warriorol Main",
+  description: "WarriorSol Main",
 };
 
 export default function RootLayout({
@@ -32,6 +33,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${cormorantSC.className} antialiased`}
       >
+        <NextTopLoader height={5} showSpinner={false} />
         <Toaster
           toastOptions={{
             className: "!font-bold",

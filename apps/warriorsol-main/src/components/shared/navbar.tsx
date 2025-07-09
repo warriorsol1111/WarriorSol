@@ -16,7 +16,12 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { useEffect } from "react";
 
 export default function Navbar() {
@@ -50,6 +55,7 @@ export default function Navbar() {
                 <MdMenu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
+            <SheetTitle></SheetTitle>
             <SheetContent
               side="left"
               className="p-4 pt-10 space-y-6 w-[250px] sm:w-64 bg-white text-black"
@@ -57,6 +63,7 @@ export default function Navbar() {
               <nav className="flex flex-col gap-4 font-medium">
                 <Link href="/home">Home</Link>
                 <Link href="/products">All Products</Link>
+                <Link href="/warrior-products">Warrior Products</Link>
                 <Link href="/community">Community</Link>
                 <Link href="/about">About</Link>
                 <Link href="/contacts">Contacts</Link>
@@ -87,6 +94,9 @@ export default function Navbar() {
           <Link href="/products" className="hover:underline">
             All Products
           </Link>
+          <Link href="/warrior-products" className="hover:underline">
+            Warrior Products
+          </Link>
           <Link href="/community" className="hover:underline">
             Community
           </Link>
@@ -99,7 +109,7 @@ export default function Navbar() {
         </nav>
 
         {/* Right: Search / User / Cart */}
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center sm:gap-4">
           <Button variant="link" className="p-1 sm:p-2">
             <Search className="h-5 w-5" />
           </Button>

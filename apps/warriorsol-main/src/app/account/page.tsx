@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/shared/navbar";
 import Footer from "@/components/shared/footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Wishlist from "@/components/account/wishlist";
 
 export default function AccountPage() {
   const { data: session } = useSession();
@@ -64,9 +65,15 @@ export default function AccountPage() {
 
         <Tabs defaultValue="personal" className="w-full">
           <TabsList className="flex space-x-4 mb-6">
-            <TabsTrigger value="personal">Personal Info</TabsTrigger>
-            <TabsTrigger value="wishlist">Wishlist</TabsTrigger>
-            <TabsTrigger value="orders">Orders</TabsTrigger>
+            <TabsTrigger className="cursor-pointer rounded-lg" value="personal">
+              Personal Info
+            </TabsTrigger>
+            <TabsTrigger className="cursor-pointer rounded-lg" value="wishlist">
+              Wishlist
+            </TabsTrigger>
+            <TabsTrigger className="cursor-pointer rounded-lg" value="orders">
+              Orders
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="personal">
@@ -128,9 +135,7 @@ export default function AccountPage() {
           </TabsContent>
 
           <TabsContent value="wishlist">
-            <div className="bg-white p-6 rounded-lg shadow">
-              <p className="text-gray-600">💡 Wishlist feature coming soon!</p>
-            </div>
+            <Wishlist />
           </TabsContent>
 
           <TabsContent value="orders">
