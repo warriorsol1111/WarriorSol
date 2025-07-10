@@ -19,6 +19,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { IoClose } from "react-icons/io5";
+import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
+import { Loader2 } from "lucide-react";
 
 interface StoryDrawerProps {
   isOpen: boolean;
@@ -36,17 +39,121 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
     story: "",
     image: null as File | null,
   });
+  const [isAnonymous, setIsAnonymous] = useState(false);
+  const [fileError, setFileError] = useState("");
+  const [errors, setErrors] = useState({
+    name: "",
+    role: "",
+    title: "",
+    story: "",
+    image: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const { data: session } = useSession();
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (
+        file.type === "image/svg+xml" ||
+        file.name.toLowerCase().endsWith(".svg")
+      ) {
+        setFileError("SVG files are not allowed ");
+        setFormData((prev) => ({ ...prev, image: null }));
+        toast.error("SVG files are not allowed ");
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        setFileError("File size must be under 5MB ");
+        setFormData((prev) => ({ ...prev, image: null }));
+        toast.error("File size must be under 5MB ");
+        return;
+      }
+      setFileError("");
+      setFormData((prev) => ({ ...prev, image: file }));
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement form submission logic
-    console.log("Form submitted:", formData);
-    onOpenChange(false);
-  };
+    const newErrors = { name: "", role: "", title: "", story: "", image: "" };
+    let hasError = false;
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFormData((prev) => ({ ...prev, image: e.target.files![0] }));
+    if (!isAnonymous && !formData.name.trim()) {
+      newErrors.name = "Name is required unless sharing as anonymous.";
+      hasError = true;
+    }
+    if (!formData.role) {
+      newErrors.role = "Role is required.";
+      hasError = true;
+    }
+    if (!formData.title.trim()) {
+      newErrors.title = "Title is required.";
+      hasError = true;
+    } else if (formData.title.length > 255) {
+      newErrors.title = "Title must be 255 characters or less.";
+      hasError = true;
+    }
+    if (!formData.story.trim()) {
+      newErrors.story = "Story is required.";
+      hasError = true;
+    }
+    if (!formData.image) {
+      newErrors.image = "Please upload an image or video.";
+      hasError = true;
+    }
+    if (fileError) {
+      newErrors.image = fileError;
+      hasError = true;
+    }
+    setErrors(newErrors);
+    if (hasError) return;
+
+    setIsLoading(true);
+    const form = new FormData();
+    if (formData.image) {
+      form.append("attachment", formData.image);
+    }
+    form.append("title", formData.title);
+    if (isAnonymous) form.append("userName", "Anonymous");
+    else form.append("userName", formData.name);
+    form.append("description", formData.story);
+    form.append("userType", formData.role);
+    form.append("isAnonymous", isAnonymous ? "True" : "False");
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user-stories`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${session?.user?.token}`,
+          },
+          body: form,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to submit story");
+      }
+
+      toast.success(
+        "Your story has been submitted and will be reviewed by our team before going live! "
+      );
+      setFormData({
+        name: "",
+        role: "",
+        title: "",
+        story: "",
+        image: null,
+      });
+      setIsAnonymous(false);
+      setErrors({ name: "", role: "", title: "", story: "", image: "" });
+      onOpenChange(false);
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong. Please try again ");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -55,7 +162,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
       <DrawerContent className="h-full p-2">
         <DrawerHeader className="border-b border-gray-200">
           <div className="flex justify-between items-center">
-            <DrawerTitle className="text-2xl font-light ">
+            <DrawerTitle className="text-2xl font-light">
               Share Your Story
             </DrawerTitle>
             <DrawerClose className="p-2">
@@ -63,79 +170,69 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
             </DrawerClose>
           </div>
         </DrawerHeader>
+
         <div className="p-6 overflow-y-auto flex-1">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <Label htmlFor="name">Your Name*</Label>
+              <Label htmlFor="name">Your Name{!isAnonymous && "*"}</Label>
               <Input
                 id="name"
-                required
+                required={!isAnonymous}
                 value={formData.name}
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, name: e.target.value }))
                 }
                 placeholder="Martin Mallet"
                 className="mt-2"
+                disabled={isAnonymous}
               />
+              {errors.name && (
+                <p className="text-xs text-red-500 mt-1">{errors.name}</p>
+              )}
             </div>
 
             <div>
               <Label htmlFor="role">You Are*</Label>
               <Select
                 value={formData.role}
-                onValueChange={(value) =>
-                  setFormData((prev) => ({ ...prev, role: value }))
-                }
+                onValueChange={(value) => {
+                  setFormData((prev) => ({ ...prev, role: value }));
+                  setErrors((prev) => ({ ...prev, role: "" }));
+                }}
                 required
               >
                 <SelectTrigger className="mt-2 w-full border border-gray-300 !h-12 cursor-pointer">
                   <SelectValue placeholder="Select your role" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem
-                    className="cursor-pointer hover:!bg-gray-200"
-                    value="warrior"
-                  >
-                    The Warrior
-                  </SelectItem>
-                  <SelectItem
-                    className="cursor-pointer hover:!bg-gray-200"
-                    value="spouse"
-                  >
-                    The Lock - Spouse/Partner
-                  </SelectItem>
-                  <SelectItem
-                    className="cursor-pointer hover:!bg-gray-200"
-                    value="bloodline"
-                  >
-                    The Bloodline - Son, Daughter or Sibling
-                  </SelectItem>
-                  <SelectItem
-                    className="cursor-pointer hover:!bg-gray-200"
-                    value="caregiver"
-                  >
-                    The Backbone - Caregiver
-                  </SelectItem>
-                  <SelectItem
-                    className="cursor-pointer hover:!bg-gray-200"
-                    value="guardian"
-                  >
-                    The Guardian
-                  </SelectItem>
-                  <SelectItem
-                    className="cursor-pointer hover:!bg-gray-200"
-                    value="griever"
-                  >
-                    The Galvanzied Heart - Griever
-                  </SelectItem>
-                  <SelectItem
-                    className="cursor-pointer hover:!bg-gray-200"
-                    value="supporter"
-                  >
-                    The Ally - Supporter
-                  </SelectItem>
+                  {[
+                    { value: "warrior", label: "The Warrior" },
+                    { value: "spouse", label: "The Lock - Spouse/Partner" },
+                    {
+                      value: "bloodline",
+                      label: "The Bloodline - Son, Daughter or Sibling",
+                    },
+                    { value: "caregiver", label: "The Backbone - Caregiver" },
+                    { value: "guardian", label: "The Guardian" },
+                    {
+                      value: "griever",
+                      label: "The Galvanzied Heart - Griever",
+                    },
+                    { value: "supporter", label: "The Ally - Supporter" },
+                  ].map(({ value, label }) => (
+                    <SelectItem
+                      key={value}
+                      className="cursor-pointer hover:!bg-gray-200"
+                      value={value}
+                    >
+                      {label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
+              {errors.role && (
+                <p className="text-xs text-red-500 mt-1">{errors.role}</p>
+              )}
             </div>
 
             <div>
@@ -148,12 +245,15 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                   setFormData((prev) => ({ ...prev, title: e.target.value }))
                 }
                 placeholder="This Hoodie Wrapped Me In Warmth When The World Felt Cold"
-                maxLength={50}
+                maxLength={255}
                 className="mt-2"
               />
               <span className="text-sm text-gray-500 float-right">
-                {formData.title.length}/50
+                {formData.title.length}/255
               </span>
+              {errors.title && (
+                <p className="text-xs text-red-500 mt-1">{errors.title}</p>
+              )}
             </div>
 
             <div>
@@ -172,6 +272,9 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
               <span className="text-sm text-gray-500 float-right">
                 {formData.story.length}/1800
               </span>
+              {errors.story && (
+                <p className="text-xs text-red-500 mt-1">{errors.story}</p>
+              )}
             </div>
 
             <div>
@@ -189,7 +292,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                         name="image"
                         type="file"
                         className="sr-only"
-                        accept="image/*,video/*"
+                        accept="image/png,image/jpeg,image/jpg,image/gif,video/mp4,video/*"
                         onChange={handleFileChange}
                         required
                       />
@@ -197,17 +300,48 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                     <p className="pl-1">or drag and drop</p>
                   </div>
                   <p className="text-xs leading-5 text-gray-600">
-                    PNG, JPG, GIF up to 10MB
+                    PNG, JPG, GIF, MP4 up to 5MB
                   </p>
+                  {fileError && (
+                    <p className="text-xs text-red-500 mt-2">{fileError}</p>
+                  )}
+                  {errors.image && (
+                    <p className="text-xs text-red-500 mt-1">{errors.image}</p>
+                  )}
+                  {formData.image && !fileError && (
+                    <p className="text-xs text-green-600 mt-2">
+                      {formData.image.name}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
 
+            <div className="flex items-center space-x-2">
+              <input
+                id="isAnonymous"
+                type="checkbox"
+                checked={isAnonymous}
+                onChange={(e) => setIsAnonymous(e.target.checked)}
+                className="h-4 w-4 border-gray-300 rounded"
+              />
+              <Label htmlFor="isAnonymous" className="cursor-pointer">
+                Share as Anonymous
+              </Label>
+            </div>
+
             <Button
               type="submit"
-              className="w-full bg-[#EE9254] hover:bg-[#EE9254]/90 text-white"
+              className="w-full bg-[#EE9254] hover:bg-[#EE9254]/90 text-white flex items-center justify-center"
+              disabled={isLoading}
             >
-              Share Story
+              {isLoading ? (
+                <span className="flex items-center justify-center">
+                  <Loader2 className="animate-spin mr-2" />
+                </span>
+              ) : (
+                "Share Story"
+              )}
             </Button>
           </form>
         </div>

@@ -1,50 +1,68 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import sunsetImage from "@/assets/sunset.png";
-import userImage from "@/assets/user.svg";
-import missionImage from "@/assets/mission.png";
 import { StoryCard } from "./storyCard";
 import { StoryDrawer } from "./storyDrawer";
 import { SocialLinks } from "../shared/socialLinks";
 import { MdArrowOutward } from "react-icons/md";
+import { useSession } from "next-auth/react";
 
-const stories = [
-  {
-    title:
-      "I wore this lid when I sat by her bed, every chemo session. I still wear it today — for her.",
-    author: {
-      name: "Marcus Chen",
-      role: "The Guardian - Husband",
-      avatar: userImage,
-    },
-    background: sunsetImage.src,
-    link: "/stories/marcus",
-  },
-  // ...more stories
-  {
-    title:
-      "I wore this lid when I sat by her bed, every chemo session. I still wear it today — for her.",
-    author: {
-      name: "Marcus Chen",
-      role: "The Guardian - Husband",
-      avatar: userImage,
-    },
-    background: missionImage.src,
-    link: "/stories/marcus",
-  },
-];
+interface Story {
+  id: string;
+  title: string;
+  description: string;
+  userName: string;
+  userType: string;
+  attachment?: string;
+}
 
-const Community = () => {
+const Community: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = useSession();
+  const [stories, setStories] = useState<Story[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (!session?.user?.token) return;
+
+    const fetchUserStories = async () => {
+      setLoading(true);
+      setError(false);
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/user-stories/approved`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session.user.token}`,
+            },
+          }
+        );
+        const data = await res.json();
+        if (data.status === "success") {
+          setStories(data.data);
+        } else {
+          setError(true);
+        }
+      } catch {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserStories();
+  }, [session]);
 
   return (
     <>
       <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
         <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6 mb-8 sm:mb-12">
           <div>
-            <h2 className="text-4xl sm:text-5xl lg:text-[62px] leading-tight lg:leading-[62px] font-['Cormorant_SC'] font-normal text-[#1F1F1F] capitalize">
-              Why I Wear Mine{" "}
+            <h2 className="text-4xl sm:text-5xl lg:text-[62px] leading-tight lg:leading-[62px] font-['Cormorant_SC'] text-[#1F1F1F] capitalize">
+              Why I Wear Mine
             </h2>
             <p className="text-base sm:text-lg lg:text-[20px] font-light font-['Inter'] text-[#1F1F1F]/70 capitalize mt-2 sm:mt-0">
               Real stories from real warriors in our community
@@ -54,18 +72,51 @@ const Community = () => {
             variant="outline"
             size="lg"
             onClick={() => setIsOpen(true)}
-            className="w-full sm:w-auto border border-black px-4 sm:px-5 py-2.5 sm:py-3 text-base sm:text-lg lg:text-[20px] font-['Inter'] capitalize flex items-center justify-center sm:justify-start gap-2 transition"
+            className="w-full sm:w-auto border border-black px-4 sm:px-5 py-2.5 sm:py-3 text-base sm:text-lg lg:text-[20px] font-['Inter'] capitalize flex items-center gap-2 transition"
           >
             Share Your Story <MdArrowOutward className="w-6 h-6" />
           </Button>
         </div>
-        <div className="grid grid-cols-1 gap-3">
-          {stories.map((story, index) => (
-            <StoryCard key={index} {...story} id={index.toString()} />
-          ))}
+
+        {/* Loader / Error / Fallback / Grid */}
+        <div className="min-h-[300px]">
+          {loading ? (
+            <div className="flex justify-center items-center py-20">
+              <span className="animate-spin h-10 w-10 border-4 border-[#EE9254] border-t-transparent rounded-full" />
+            </div>
+          ) : error ? (
+            <p className="text-center text-lg text-red-500">
+              Failed to load stories. Please try again later. 😢
+            </p>
+          ) : stories.length === 0 ? (
+            <div className="text-center text-gray-500 py-12">
+              <p className="text-xl font-medium">No stories found 💬</p>
+              <p className="text-sm mt-1">
+                Be the first to share your journey ✨
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-3">
+              {stories.map((story) => (
+                <StoryCard
+                  key={story.id}
+                  id={story.id}
+                  title={story.title}
+                  background={story.attachment || "/default-story-bg.jpg"}
+                  link={`/community/${story.id}`}
+                  author={{
+                    name: story.userName,
+                    role: story.userType,
+                  }}
+                />
+              ))}
+            </div>
+          )}
         </div>
+
         <StoryDrawer isOpen={isOpen} onOpenChange={setIsOpen} />
       </section>
+
       <SocialLinks />
     </>
   );

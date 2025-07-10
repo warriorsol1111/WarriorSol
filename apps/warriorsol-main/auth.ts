@@ -11,6 +11,7 @@ declare module "next-auth" {
     email: string;
     firstName: string;
     lastName: string;
+    role: string;
     token: string;
   }
   interface Session {
@@ -23,6 +24,7 @@ declare module "next-auth/jwt" {
     email: string;
     firstName: string;
     lastName: string;
+    role?: string;
     accessToken: string;
   }
 }
@@ -87,6 +89,7 @@ const authConfig: AuthOptions = {
             email: userData.email,
             firstName,
             lastName,
+            role: userData.role || "user",
             token: userData.token,
           };
         } catch (error) {
@@ -127,6 +130,7 @@ const authConfig: AuthOptions = {
           user.id = data.data.id;
           user.name = data.data.name;
           user.token = data.data.token;
+          user.role = data.data.role || "user";
         } catch (err) {
           console.error("❌ Failed to sync Google user to backend:", err);
           return false;
@@ -151,6 +155,7 @@ const authConfig: AuthOptions = {
           token.firstName = (user as User).firstName;
           token.lastName = (user as User).lastName;
           token.accessToken = (user as User).token;
+          token.role = (user as User).role || "user";
         }
       }
 
@@ -164,6 +169,7 @@ const authConfig: AuthOptions = {
         firstName: token.firstName as string,
         lastName: token.lastName as string,
         token: token.accessToken as string,
+        role: (token.role as string) || "user",
       };
       return session;
     },

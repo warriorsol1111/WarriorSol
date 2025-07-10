@@ -67,6 +67,9 @@ export default function Navbar() {
                 <Link href="/community">Community</Link>
                 <Link href="/about">About</Link>
                 <Link href="/contacts">Contacts</Link>
+                {session?.user?.role === "admin" && (
+                  <Link href="/admin-story-review">Review Stories </Link>
+                )}
               </nav>
             </SheetContent>
           </Sheet>
@@ -106,6 +109,11 @@ export default function Navbar() {
           <Link href="/contacts" className="hover:underline">
             Contacts
           </Link>
+          {session?.user?.role === "admin" && (
+            <Link href="/admin-story-review" className="hover:underline">
+              Review Stories
+            </Link>
+          )}
         </nav>
 
         {/* Right: Search / User / Cart */}
