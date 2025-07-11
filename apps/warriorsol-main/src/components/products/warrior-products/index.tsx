@@ -17,6 +17,7 @@ interface Product {
   price: string;
   imageUrl: string;
   handle: string;
+  availableForSale: boolean;
 }
 
 interface ShopifyProductEdge {
@@ -25,10 +26,12 @@ interface ShopifyProductEdge {
     title: string;
     productType: string;
     handle: string;
+    availableForSale: boolean;
     variants: {
       edges: Array<{
         node: {
           price: string;
+          availableForSale: boolean;
         };
       }>;
     };
@@ -58,11 +61,18 @@ const WarriorProducts = () => {
 
   const transformProducts = (data: ShopifyProductResponse): Product[] => {
     if (!data.products?.edges) return [];
+    console.log("Transforming products:", data.products.edges);
 
     return data.products.edges.map((edge: ShopifyProductEdge) => {
       const product = edge.node;
       const firstVariant = product.variants?.edges?.[0]?.node;
       const firstImage = product.images?.edges?.[0]?.node;
+
+      // Check if ANY variant is available for sale
+      const hasAvailableVariant =
+        product.variants?.edges?.some(
+          (variantEdge) => variantEdge.node.availableForSale
+        ) ?? false;
 
       return {
         id: product.id,
@@ -71,6 +81,7 @@ const WarriorProducts = () => {
         price: firstVariant?.price ? `$${firstVariant.price}` : "$0.00",
         imageUrl: firstImage?.originalSrc || "/placeholder-image.jpg",
         handle: product.handle,
+        availableForSale: hasAvailableVariant, // Now checks all variants
       };
     });
   };

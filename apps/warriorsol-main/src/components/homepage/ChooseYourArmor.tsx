@@ -260,12 +260,14 @@ const ChooseYourArmor: React.FC = () => {
           </div>
         ) : (
           products.map((product) => (
-            <Link
-              className="no-underline"
-              href={`/products/${product.handle}`}
+            <div
               key={product.id}
+              className="flex flex-col gap-3 group relative"
             >
-              <div key={product.id} className="flex flex-col gap-3 group">
+              <Link
+                className="no-underline block"
+                href={`/products/${product.handle}`}
+              >
                 {/* Image Card */}
                 <div className="relative w-full aspect-[3/4] sm:h-[400px] lg:h-[534px]">
                   <Image
@@ -274,59 +276,7 @@ const ChooseYourArmor: React.FC = () => {
                     fill
                     className="object-cover rounded-md"
                   />
-                  {/* Hover icons */}
-                  <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button
-                      variant="link"
-                      className="w-8 h-8 sm:w-10 sm:h-10 bg-white flex items-center justify-center text-lg sm:text-xl rounded-full shadow p-0"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleToggleWishlist(product);
-                      }}
-                      disabled={wishlistLoading === product.id}
-                    >
-                      {wishlistLoading === product.id ? (
-                        <Loader2 className="animate-spin h-5 w-5" />
-                      ) : wishlist[product.id] ? (
-                        <AiFillHeart className="text-red-500" />
-                      ) : (
-                        <AiOutlineHeart className="text-gray-500" />
-                      )}
-                    </Button>
-                    {!product.availableForSale ? (
-                      <div title="Out of stock">
-                        <Button
-                          variant="link"
-                          className="w-8 h-8 sm:w-10 sm:h-10 bg-white flex items-center justify-center text-lg sm:text-xl rounded-full shadow p-0"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleAddToCart(product);
-                          }}
-                          disabled
-                        >
-                          <AiOutlineShoppingCart />
-                        </Button>
-                      </div>
-                    ) : (
-                      <Button
-                        variant="link"
-                        className="w-8 h-8 sm:w-10 sm:h-10 bg-white flex items-center justify-center text-lg sm:text-xl rounded-full shadow p-0"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleAddToCart(product);
-                        }}
-                        disabled={cartLoading === product.id}
-                      >
-                        {cartLoading === product.id ? (
-                          <Loader2 className="animate-spin h-5 w-5" />
-                        ) : (
-                          <AiOutlineShoppingCart />
-                        )}
-                      </Button>
-                    )}
-                  </div>
                 </div>
-
                 {/* Details */}
                 <div className="flex justify-between px-1 sm:px-2">
                   <div>
@@ -343,8 +293,62 @@ const ChooseYourArmor: React.FC = () => {
                     </div>
                   </div>
                 </div>
+              </Link>
+              {/* Overlay with icons OUTSIDE the anchor */}
+              <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <Button
+                  variant="link"
+                  className="w-8 h-8 sm:w-10 sm:h-10 bg-white flex items-center justify-center text-lg sm:text-xl rounded-full shadow p-0"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleToggleWishlist(product);
+                  }}
+                  disabled={wishlistLoading === product.id}
+                >
+                  {wishlistLoading === product.id ? (
+                    <Loader2 className="animate-spin h-5 w-5" />
+                  ) : wishlist[product.id] ? (
+                    <AiFillHeart className="text-red-500" />
+                  ) : (
+                    <AiOutlineHeart className="text-gray-500" />
+                  )}
+                </Button>
+                {!product.availableForSale ? (
+                  <div title="Out of stock">
+                    <Button
+                      variant="link"
+                      className="w-8 h-8 sm:w-10 sm:h-10 bg-white flex items-center justify-center text-lg sm:text-xl rounded-full shadow p-0"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleAddToCart(product);
+                      }}
+                      disabled
+                    >
+                      <AiOutlineShoppingCart />
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    variant="link"
+                    className="w-8 h-8 sm:w-10 sm:h-10 bg-white flex items-center justify-center text-lg sm:text-xl rounded-full shadow p-0"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleAddToCart(product);
+                    }}
+                    disabled={cartLoading === product.id}
+                  >
+                    {cartLoading === product.id ? (
+                      <Loader2 className="animate-spin h-5 w-5" />
+                    ) : (
+                      <AiOutlineShoppingCart />
+                    )}
+                  </Button>
+                )}
               </div>
-            </Link>
+            </div>
           ))
         )}
       </div>
