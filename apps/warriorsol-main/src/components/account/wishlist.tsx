@@ -127,9 +127,11 @@ export default function Wishlist() {
   };
 
   return (
-    <div className="min-h-screen py-10 px-4 flex flex-col items-center">
-      <h1 className="text-3xl font-bold mb-2">Your Wishlist</h1>
-      <p className="text-gray-600 mb-6">
+    <div className="min-h-screen py-6 sm:py-10 px-2 sm:px-4 flex flex-col items-center">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-center">
+        Your Wishlist
+      </h1>
+      <p className="text-gray-600 mb-6 text-center">
         {count} item{count !== 1 && "s"} saved
       </p>
 
@@ -139,11 +141,14 @@ export default function Wishlist() {
         </div>
       ) : count === 0 ? (
         <>
-          <p className="text-gray-500 mb-8">
+          <p className="text-gray-500 mb-8 text-center">
             Your wishlist is currently empty.
           </p>
-          <Link href="/products">
-            <Button className="bg-[#EE9254] hover:bg-[#EE9254]">
+          <Link
+            href="/products"
+            className="w-full sm:w-auto flex justify-center"
+          >
+            <Button className="bg-[#EE9254] hover:bg-[#EE9254] w-full sm:w-auto">
               Browse Products
             </Button>
           </Link>
@@ -172,22 +177,22 @@ export default function Wishlist() {
               return (
                 <li
                   key={item.id}
-                  className="bg-white rounded-xl shadow p-6 flex flex-row items-center gap-6 w-full"
+                  className="bg-white rounded-xl shadow p-4 sm:p-6 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full"
                 >
                   {d.image && (
-                    <div className="flex-shrink-0">
+                    <div className="flex-shrink-0 w-full sm:w-auto flex justify-center">
                       <Image
                         src={d.image}
                         alt={d.title}
                         width={120}
                         height={120}
-                        className="rounded-lg w-[120px] h-[120px] object-cover border border-gray-200"
+                        className="rounded-lg w-[90px] h-[90px] sm:w-[120px] sm:h-[120px] object-cover border border-gray-200"
                       />
                     </div>
                   )}
                   <div className="flex-1 flex flex-col sm:flex-row sm:items-center gap-4 justify-between w-full">
-                    <div className="flex-1 min-w-0">
-                      <h2 className="font-bold text-xl text-gray-900 truncate">
+                    <div className="flex-1 min-w-0 text-center sm:text-left">
+                      <h2 className="font-bold text-lg sm:text-xl text-gray-900 truncate">
                         {d.productTitle}
                       </h2>
                       <p className="text-sm text-gray-600 mt-1">
@@ -196,17 +201,17 @@ export default function Wishlist() {
                           {d.title}
                         </span>
                       </p>
-                      <p className="text-gray-900 font-semibold text-lg mt-2">
+                      <p className="text-gray-900 font-semibold text-base sm:text-lg mt-2">
                         {d.price}
                       </p>
                       <p className="text-xs text-gray-500 mt-2">
                         Added on {new Date(item.createdAt).toLocaleDateString()}
                       </p>
                     </div>
-                    <div className="flex flex-col items-end gap-2 min-w-[140px]">
+                    <div className="flex flex-col items-end gap-2 min-w-0 sm:min-w-[140px] w-full sm:w-auto">
                       <Link
                         href={`/products/${d.productId}?variant=${item.variantId}`}
-                        className="text-lg text-white hover:underline bg-[#EE9254] px-4 py-2 border border-[EE9254] rounded-lg font-bold transition"
+                        className="text-lg text-white hover:underline bg-[#EE9254] px-4 py-2 border border-[#EE9254] rounded-lg font-bold transition w-full sm:w-auto text-center"
                       >
                         View Product
                       </Link>

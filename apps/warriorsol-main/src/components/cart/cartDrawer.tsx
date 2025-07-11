@@ -19,10 +19,17 @@ import NProgress from "nprogress";
 
 export default function CartDrawer() {
   const router = useRouter();
-  const { items, isOpen, subtotal, closeCart, updateQuantity, removeItem } =
-    useCartStore();
+  const {
+    items,
+    isOpen,
+    subtotal,
+    closeCart,
+    updateQuantity,
+    removeItem,
+    itemLoading,
+    cartLoading,
+  } = useCartStore();
   const [loading, setLoading] = useState(false);
-  const [cartLoading, setCartLoading] = useState(false);
   if (!isOpen) return null;
 
   return (
@@ -103,6 +110,10 @@ export default function CartDrawer() {
                           size="sm"
                           onClick={() => item.lineId && removeItem(item.lineId)}
                           className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50"
+                          disabled={
+                            cartLoading ||
+                            (!!item.lineId && itemLoading[item.lineId])
+                          }
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -119,6 +130,10 @@ export default function CartDrawer() {
                               updateQuantity(item.lineId, item.quantity - 1)
                             }
                             className="h-8 w-8 p-0 border-gray-300"
+                            disabled={
+                              cartLoading ||
+                              (!!item.lineId && itemLoading[item.lineId])
+                            }
                           >
                             <Minus className="h-3 w-3" />
                           </Button>
@@ -134,6 +149,10 @@ export default function CartDrawer() {
                               updateQuantity(item.lineId, item.quantity + 1)
                             }
                             className="h-8 w-8 p-0 border-gray-300"
+                            disabled={
+                              cartLoading ||
+                              (!!item.lineId && itemLoading[item.lineId])
+                            }
                           >
                             <Plus className="h-3 w-3" />
                           </Button>
@@ -192,24 +211,15 @@ export default function CartDrawer() {
                 </Button>
                 <Button
                   onClick={() => {
-                    setCartLoading(true);
                     NProgress.start();
                     router.push("/cart");
-
                     closeCart();
-                    setCartLoading(false);
                   }}
                   variant="outline"
                   className="w-full py-3 text-sm font-medium border-gray-300 hover:bg-gray-50"
                 >
-                  {cartLoading ? (
-                    <Loader2 className="inline-block mr-2 animate-spin w-6 h-6" />
-                  ) : (
-                    <>
-                      <MdOutlineShoppingBag className="inline-block mr-2 w-6 h-6" />
-                      View Cart
-                    </>
-                  )}
+                  <MdOutlineShoppingBag className="inline-block mr-2 w-6 h-6" />
+                  View Cart
                 </Button>
               </div>
             </DrawerFooter>

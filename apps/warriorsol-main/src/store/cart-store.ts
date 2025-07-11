@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import toast from "react-hot-toast";
 
 export interface CartItem {
   id: string; // variantId
@@ -17,6 +18,12 @@ interface CartState {
   subtotal: number;
   itemCount: number;
   checkoutUrl?: string;
+
+  // Per-item loading state
+  itemLoading: Record<string, boolean>;
+
+  // Global cart loading state
+  cartLoading: boolean;
 
   hydrateCart: () => Promise<void>;
   addItem: (
@@ -38,6 +45,8 @@ export const useCartStore = create<CartState>((set, get) => ({
   subtotal: 0,
   itemCount: 0,
   checkoutUrl: undefined,
+  itemLoading: {},
+  cartLoading: false,
 
   hydrateCart: async () => {
     try {
@@ -71,6 +80,8 @@ export const useCartStore = create<CartState>((set, get) => ({
   },
 
   addItem: async (item, quantity = 1) => {
+    set({ cartLoading: true });
+    toast.loading("Adding item to cart...");
     try {
       const res = await fetch("/api/shopify/addItemToCart", {
         method: "POST",
@@ -87,12 +98,19 @@ export const useCartStore = create<CartState>((set, get) => ({
       if (!res.ok) throw new Error(data.error);
 
       await get().hydrateCart();
+      toast.dismiss();
+      toast.success("Item added to cart!");
     } catch (err) {
       console.error("Add item failed", err);
+      toast.dismiss();
+      toast.error("Failed to add item to cart");
+    } finally {
+      set({ cartLoading: false });
     }
   },
 
   removeItem: async (lineId: string) => {
+    set((state) => ({ itemLoading: { ...state.itemLoading, [lineId]: true } }));
     try {
       const res = await fetch("/api/shopify/removeItemFromCart", {
         method: "DELETE",
@@ -103,10 +121,18 @@ export const useCartStore = create<CartState>((set, get) => ({
       await get().hydrateCart();
     } catch (err) {
       console.error("Remove item failed", err);
+    } finally {
+      set((state) => {
+        // Omit the property by destructuring, intentionally unused for property removal
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { [lineId]: _removed, ...rest } = state.itemLoading;
+        return { itemLoading: rest };
+      });
     }
   },
 
   updateQuantity: async (lineId: string, quantity: number) => {
+    set((state) => ({ itemLoading: { ...state.itemLoading, [lineId]: true } }));
     try {
       const res = await fetch("/api/shopify/updateCart", {
         method: "PATCH",
@@ -117,6 +143,12 @@ export const useCartStore = create<CartState>((set, get) => ({
       await get().hydrateCart();
     } catch (err) {
       console.error("Update quantity failed", err);
+    } finally {
+      set((state) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { [lineId]: _unused, ...rest } = state.itemLoading;
+        return { itemLoading: rest };
+      });
     }
   },
 

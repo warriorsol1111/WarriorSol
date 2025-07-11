@@ -46,6 +46,7 @@ const authConfig: AuthOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
+
     Credentials({
       credentials: {
         email: {},
@@ -119,26 +120,29 @@ const authConfig: AuthOptions = {
           const data = await res.json();
 
           if (!res.ok || !data.data?.token) {
-            console.error("❌ Google sync failed:", data.message);
-            return false;
+            // 👇 BLOCK and REDIRECT with error query param
+            throw new Error("GOOGLE_LOGIN_BLOCKED");
           }
 
-          //  Inject the custom token directly into the account object
+          // ✅ Inject token and user data
           account.access_token = data.data.token;
-
-          // You may still attach to user for logging or fallback
           user.id = data.data.id;
           user.name = data.data.name;
           user.token = data.data.token;
           user.role = data.data.role || "user";
-        } catch (err) {
-          console.error("❌ Failed to sync Google user to backend:", err);
-          return false;
+
+          return true;
+        } catch (err: unknown) {
+          const message = err instanceof Error ? err.message : String(err);
+          console.error("❌ Google sync failed:", message);
+          // 👇 Prevent login if sync fails
+          throw new Error("GOOGLE_LOGIN_BLOCKED");
         }
       }
 
       return true;
     },
+
     jwt: async ({ token, user, account }) => {
       if (user && account) {
         if (account.provider === "google") {
@@ -182,6 +186,7 @@ const authConfig: AuthOptions = {
 
   pages: {
     signIn: "/login",
+    error: "/login",
   },
 
   secret: process.env.NEXTAUTH_SECRET,

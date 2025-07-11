@@ -7,21 +7,41 @@ import { Button } from "@/components/ui/button";
 import { FaFacebook, FaApple, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
-import { useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import LoginImage from "@/assets/auth/login.svg";
 import Logo from "@/assets/auth/logo.svg";
 import { signIn } from "next-auth/react";
 import { toast } from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-export default function LoginPage() {
+function LoginPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error");
+
+  useEffect(() => {
+    if (error) {
+      // 🔥 Show the toast first
+      if (error === "GOOGLE_LOGIN_BLOCKED") {
+        toast.error(
+          "This email is registered with a password. Please use email/password to log in."
+        );
+      } else {
+        toast.error("Something went wrong.");
+      }
+
+      // 🧹 Clean up the URL (remove ?error=...)
+      const url = new URL(window.location.href);
+      url.searchParams.delete("error");
+      window.history.replaceState({}, "", url.toString());
+    }
+  }, [searchParams, error]);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -55,7 +75,7 @@ export default function LoginPage() {
       }
     } else {
       toast.success("Login successful");
-      router.push("/home");
+      router.replace("/home");
     }
   };
 
@@ -187,3 +207,13 @@ export default function LoginPage() {
     </div>
   );
 }
+
+function LoginPageWithSuspense() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginPage />
+    </Suspense>
+  );
+}
+
+export default LoginPageWithSuspense;

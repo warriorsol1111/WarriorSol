@@ -294,7 +294,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           {/* Product Details */}
           <div className="space-y-6 lg:space-y-8">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+            <div className="flex flex-col xl:flex-row sm:justify-between sm:items-start gap-4">
               <div>
                 <h1 className="text-3xl sm:text-4xl lg:text-[62px] font-normal text-black">
                   {product.title}
@@ -421,7 +421,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             </div>
 
             {/* Action Buttons */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Button
                 variant="link"
                 size="lg"

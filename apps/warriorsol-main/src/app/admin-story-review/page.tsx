@@ -91,11 +91,12 @@ const AdminStoriesPage: React.FC = () => {
       } else {
         toast.error(
           action === "approve"
-            ? `Failed to approve story: `
-            : `Failed to reject story:`
+            ? "Failed to approve story"
+            : "Failed to reject story"
         );
       }
     } catch {
+      toast.error("Action failed. Try again later.");
     } finally {
       setActionLoading(null);
     }
@@ -106,7 +107,7 @@ const AdminStoriesPage: React.FC = () => {
       <Navbar />
 
       <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
-        <h1 className="text-3xl font-bold mb-6 text-[#EE9254]">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-[#EE9254] text-center sm:text-left">
           Pending User Stories
         </h1>
 
@@ -120,8 +121,8 @@ const AdminStoriesPage: React.FC = () => {
           </p>
         ) : stories.length === 0 ? (
           <div className="text-center text-gray-500 py-12">
-            <p className="text-xl font-medium">
-              No stories available to review yet{" "}
+            <p className="text-xl sm:text-2xl md:text-3xl font-medium">
+              No stories available to review yet.
             </p>
           </div>
         ) : (
@@ -129,36 +130,39 @@ const AdminStoriesPage: React.FC = () => {
             {stories.map((story) => (
               <div
                 key={story.id}
-                className="border rounded-lg p-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between bg-white shadow"
+                className="border rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white shadow"
               >
-                <div className="flex-1">
-                  <h2 className="text-lg font-semibold mb-1">{story.title}</h2>
-                  <p className="text-sm text-gray-700 mb-2">
+                {/* Story Details */}
+                <div className="flex-1 w-full">
+                  <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold mb-1">
+                    {story.title}
+                  </h2>
+                  <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 mb-2">
                     {story.description}
                   </p>
 
-                  <div className="text-xs text-gray-500 mb-1">
+                  <div className="text-xs sm:text-sm md:text-base text-gray-500 mb-2 space-y-1 sm:space-y-0 sm:flex sm:items-center sm:gap-4">
                     <span>
                       User: {story.userName} ({story.userType})
                     </span>
-                    <span className="ml-2">
+                    <span>
                       Submitted: {new Date(story.createdAt).toLocaleString()}
                     </span>
                   </div>
 
                   {story.attachment && (
-                    <div className="mt-2">
+                    <div className="mt-3 max-w-full">
                       {story.attachment.match(/\.(mp4|webm)$/) ? (
                         <video
                           src={story.attachment}
                           controls
-                          className="max-w-xs max-h-40 rounded"
+                          className="w-full max-w-sm rounded"
                         />
                       ) : (
                         <Image
                           src={story.attachment}
                           alt="attachment"
-                          className="max-w-xs max-h-40 rounded object-cover"
+                          className="w-full max-w-sm h-auto object-cover rounded"
                           width={1000}
                           height={1000}
                         />
@@ -167,14 +171,17 @@ const AdminStoriesPage: React.FC = () => {
                   )}
                 </div>
 
-                <div className="flex flex-col gap-2 min-w-[120px]">
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:items-end w-full sm:w-auto gap-2">
                   <Button
-                    className="bg-[#EE9254] text-white hover:bg-[#d67e43]"
+                    className="bg-[#EE9254] text-white hover:bg-[#d67e43] w-full sm:w-auto text-base sm:text-lg md:text-xl"
                     disabled={actionLoading === story.id + "approve"}
                     onClick={() => handleAction(story.id, "approve")}
                   >
                     {actionLoading === story.id + "approve" ? (
-                      <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                      <>
+                        <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                      </>
                     ) : (
                       "Approve"
                     )}
@@ -182,11 +189,14 @@ const AdminStoriesPage: React.FC = () => {
 
                   <Button
                     variant="destructive"
+                    className="w-full sm:w-full text-base sm:text-lg md:text-xl"
                     disabled={actionLoading === story.id + "reject"}
                     onClick={() => handleAction(story.id, "reject")}
                   >
                     {actionLoading === story.id + "reject" ? (
-                      <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                      <>
+                        <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                      </>
                     ) : (
                       "Reject"
                     )}

@@ -36,7 +36,7 @@ export default function RootLayout({
         <NextTopLoader height={5} showSpinner={false} />
         <Toaster
           toastOptions={{
-            className: "!font-bold !font-[Inter]",
+            className: "!font-[Inter]",
           }}
         />
         <SessionProviderWrapper>{children}</SessionProviderWrapper>

@@ -105,14 +105,14 @@ const WhyIWearMine: React.FC = () => {
             <h2 className="text-[32px] sm:text-[42px] md:text-[52px] lg:text-[62px] leading-tight lg:leading-[62px] font-['Cormorant_SC'] font-normal text-[#1F1F1F] capitalize">
               WHY I WEAR MINE
             </h2>
-            <p className="text-[16px] sm:text-[18px] lg:text-[20px] font-light font-['Inter'] text-[#1F1F1F]/70 capitalize mt-2">
+            <p className="text-[16px] sm:text-[18px] lg:text-[20px] text-center md:text-start font-light font-['Inter'] text-[#1F1F1F]/70 capitalize mt-2">
               Real Stories From Real Warriors In Our Community
             </p>
           </div>
           <Button
             variant="outline"
             size="lg"
-            className="border border-black px-4 sm:px-5 py-2 sm:py-3 text-[16px] sm:text-[18px] lg:text-[20px] font-['Inter'] capitalize flex items-center gap-2 hover:bg-black hover:text-white transition"
+            className="w-full sm:w-auto border border-black px-4 sm:px-5 py-2.5 sm:py-3 text-base sm:text-lg lg:text-[20px] font-['Inter'] capitalize flex items-center justify-center sm:justify-start gap-2 hover:bg-black hover:text-white transition"
           >
             Read All Stories ↗
           </Button>

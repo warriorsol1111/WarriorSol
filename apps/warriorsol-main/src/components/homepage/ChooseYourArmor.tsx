@@ -1,82 +1,243 @@
 "use client";
-import React from "react";
-import Image, { StaticImageData } from "next/image";
-import productImage from "@/assets/product-image.png"; // your static image
-import { AiOutlineHeart, AiOutlineShoppingCart } from "react-icons/ai";
+import React, { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
+import {
+  AiFillHeart,
+  AiOutlineHeart,
+  AiOutlineShoppingCart,
+} from "react-icons/ai";
+import { useSession } from "next-auth/react";
+import toast from "react-hot-toast";
+import { useCartStore } from "@/store/cart-store";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
 interface Product {
-  id: number;
-  name: string;
-  subtitle: string;
-  image: string | StaticImageData;
-  price: number;
-  originalPrice?: number;
+  id: string;
+  title: string;
+  category: string;
+  price: string;
+  imageUrl: string;
+  handle: string;
+  availableForSale: boolean;
 }
 
-const products: Product[] = [
-  {
-    id: 1,
-    name: "Amethyst Blazer",
-    subtitle: "Lux Blazer",
-    image: productImage,
-    price: 79,
-    originalPrice: 129,
-  },
-  {
-    id: 2,
-    name: "McLaren Cap",
-    subtitle: "Lux Blazer",
-    image: productImage,
-    price: 79,
-    originalPrice: 129,
-  },
-  {
-    id: 3,
-    name: "Amethyst Blazer",
-    subtitle: "Lux Blazer",
-    image: productImage,
-    price: 79,
-    originalPrice: 129,
-  },
-  {
-    id: 4,
-    name: "Amethyst Blazer",
-    subtitle: "Lux Blazer",
-    image: productImage,
-    price: 79,
-    originalPrice: 129,
-  },
-  {
-    id: 5,
-    name: "Amethyst Blazer",
-    subtitle: "Lux Blazer",
-    image: productImage,
-    price: 79,
-    originalPrice: 129,
-  },
-  {
-    id: 6,
-    name: "Amethyst Blazer",
-    subtitle: "Lux Blazer",
-    image: productImage,
-    price: 79,
-    originalPrice: 129,
-  },
-];
+interface ShopifyProductEdge {
+  node: {
+    id: string;
+    title: string;
+    productType: string;
+    handle: string;
+    variants: {
+      edges: Array<{
+        node: {
+          price: string;
+          availableForSale: boolean;
+        };
+      }>;
+    };
+    images: {
+      edges: Array<{
+        node: {
+          originalSrc: string;
+        };
+      }>;
+    };
+  };
+}
+
+interface ShopifyProductResponse {
+  products: {
+    edges: ShopifyProductEdge[];
+  };
+}
 
 const ChooseYourArmor: React.FC = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [wishlistLoading, setWishlistLoading] = useState<string | null>(null);
+  const [cartLoading, setCartLoading] = useState<string | null>(null);
+  const [wishlist, setWishlist] = useState<{ [id: string]: boolean }>({});
   const router = useRouter();
+  const { data: session } = useSession();
+  const { addItem, openCart } = useCartStore();
+
+  const transformProducts = (data: ShopifyProductResponse): Product[] => {
+    if (!data.products?.edges) return [];
+
+    return data.products.edges.map((edge: ShopifyProductEdge) => {
+      const product = edge.node;
+      const firstVariant = product.variants?.edges?.[0]?.node;
+      const firstImage = product.images?.edges?.[0]?.node;
+
+      return {
+        id: product.id,
+        title: product.title,
+        category: product.productType || "General",
+        price: firstVariant?.price ? `$${firstVariant.price}` : "$0.00",
+        imageUrl: firstImage?.originalSrc || "/placeholder-image.jpg",
+        handle: product.handle,
+        availableForSale: firstVariant?.availableForSale ?? false,
+      };
+    });
+  };
+
+  const fetchProducts = useCallback(async () => {
+    const PUBLIC_URL = process.env.NEXT_PUBLIC_APP_URL;
+    setLoading(true);
+
+    try {
+      const endpoint = `${PUBLIC_URL}/api/shopify/getAllProducts`;
+      const response = await fetch(endpoint);
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch products: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const transformed = transformProducts(data);
+      setProducts(transformed.slice(0, 6)); // Limit to 6 items
+    } catch (err) {
+      console.error("Error fetching products:", err);
+      setProducts([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
+  // Helper to get first variantId for a product
+  const getFirstVariantId = async (id: string): Promise<string | null> => {
+    try {
+      const res = await fetch(
+        `/api/shopify/getProductById?id=${encodeURIComponent(id)}`
+      );
+      const data = await res.json();
+      const variantId =
+        data?.variants?.[0]?.id ||
+        data?.variant?.id ||
+        data?.variants?.edges?.[0]?.node?.id;
+      return variantId || null;
+    } catch {
+      return null;
+    }
+  };
+
+  // Check wishlist status for each product
+  useEffect(() => {
+    const checkAllWishlists = async () => {
+      if (!session) return;
+      const newWishlist: { [id: string]: boolean } = {};
+      for (const product of products) {
+        const variantId = await getFirstVariantId(product.id);
+        if (!variantId) continue;
+        try {
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/wishlist/check?variantId=${variantId}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                authorization: `Bearer ${session?.user.token}`,
+              },
+            }
+          );
+          const result = await res.json();
+          newWishlist[product.id] = !!result?.data?.isInWishlist;
+        } catch {
+          newWishlist[product.id] = false;
+        }
+      }
+      setWishlist(newWishlist);
+    };
+    if (products.length && session) checkAllWishlists();
+  }, [products, session]);
+
+  const handleToggleWishlist = async (product: Product) => {
+    setWishlistLoading(product.id);
+    const variantId = await getFirstVariantId(product.id);
+    if (!variantId) {
+      toast.error("Could not find product variant.");
+      setWishlistLoading(null);
+      return;
+    }
+    if (!session) {
+      toast.error("Please log in to use wishlist.");
+      setWishlistLoading(null);
+      return;
+    }
+    const isInWishlist = wishlist[product.id];
+    const method = isInWishlist ? "DELETE" : "POST";
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/wishlist`,
+        {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.user.token}`,
+          },
+          body: JSON.stringify({ variantId }),
+        }
+      );
+      const result = await res.json();
+      if (res.ok) {
+        toast.success(
+          isInWishlist ? "Item removed from Wishlist" : "Item Added to Wishlist"
+        );
+        setWishlist((prev) => ({ ...prev, [product.id]: !isInWishlist }));
+      } else {
+        toast.error(result?.message || "Something went wrong");
+      }
+    } catch {
+      toast.error("Failed to update wishlist. Please try again.");
+    } finally {
+      setWishlistLoading(null);
+    }
+  };
+
+  const handleAddToCart = async (product: Product) => {
+    setCartLoading(product.id);
+    const variantId = await getFirstVariantId(product.id);
+    if (!variantId) {
+      toast.error("Could not find product variant.");
+      setCartLoading(null);
+      return;
+    }
+    try {
+      await addItem(
+        {
+          id: variantId,
+          name: product.title,
+          price: parseFloat(product.price.replace("$", "")),
+          color: "Default",
+          size: "One Size",
+          image: product.imageUrl,
+        },
+        1
+      );
+      openCart();
+      toast.success("Added to cart!");
+    } catch {
+      toast.error("Failed to add item to cart. Please try again.");
+    } finally {
+      setCartLoading(null);
+    }
+  };
+
   return (
     <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
       {/* Heading */}
       <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6 mb-8 sm:mb-12">
         <div>
-          <h2 className="text-4xl sm:text-5xl lg:text-[62px] leading-tight lg:leading-[62px] font-['Cormorant_SC'] font-normal text-[#1F1F1F] capitalize">
+          <h2 className="text-4xl sm:text-5xl lg:text-[62px] text-center md:text-start leading-tight lg:leading-[62px] font-['Cormorant_SC'] font-normal text-[#1F1F1F] capitalize">
             Choose Your Armor
           </h2>
-          <p className="text-base sm:text-lg lg:text-[20px] font-light font-['Inter'] text-[#1F1F1F]/70 capitalize mt-2 sm:mt-0">
+          <p className="text-base sm:text-lg lg:text-[20px] font-light  text-center md:text-start font-['Inter'] text-[#1F1F1F]/70 capitalize mt-2 sm:mt-0">
             Every Collection Tells A Story. Find The One That Speaks To Your
             Journey.
           </p>
@@ -92,66 +253,100 @@ const ChooseYourArmor: React.FC = () => {
       </div>
 
       {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
-        {products.map((product) => (
-          <div key={product.id} className="flex flex-col gap-3">
-            {/* Image Card */}
-            <div className="relative w-full aspect-[3/4] sm:h-[400px] lg:h-[534px]">
-              <Image
-                src={product.image}
-                alt={product.name}
-                fill
-                className="object-cover"
-              />
-              <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-2 text-black">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white flex items-center justify-center text-lg sm:text-xl">
-                  <AiOutlineHeart />
-                </div>
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white flex items-center justify-center text-lg sm:text-xl">
-                  <AiOutlineShoppingCart />
-                </div>
-              </div>
-            </div>
-
-            {/* Details */}
-            <div className="flex justify-between px-1 sm:px-2">
-              <div>
-                <div className="text-sm sm:text-base lg:text-[16px] font-['Cormorant'] font-medium text-[#1F1F1F]">
-                  {product.name}
-                </div>
-                <div className="text-xs sm:text-[12.5px] text-[#1E1E1E99] font-light font-['Inter']">
-                  {product.subtitle}
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="text-sm sm:text-base lg:text-[14px] font-['Cormorant'] font-medium text-[#1F1F1F]">
-                  ${product.price.toFixed(2)}
-                </div>
-                <div className="text-[10px] sm:text-[11px] font-['Inter'] text-[#1E1E1E99] line-through">
-                  ${product.originalPrice?.toFixed(2)}
-                </div>
-              </div>
-            </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
+        {loading ? (
+          <div className="col-span-full flex justify-center">
+            <Loader2 className="animate-spin h-8 w-8 text-[#EE9254]" />
           </div>
-        ))}
-      </div>
+        ) : (
+          products.map((product) => (
+            <Link
+              className="no-underline"
+              href={`/products/${product.handle}`}
+              key={product.id}
+            >
+              <div key={product.id} className="flex flex-col gap-3 group">
+                {/* Image Card */}
+                <div className="relative w-full aspect-[3/4] sm:h-[400px] lg:h-[534px]">
+                  <Image
+                    src={product.imageUrl}
+                    alt={product.title}
+                    fill
+                    className="object-cover rounded-md"
+                  />
+                  {/* Hover icons */}
+                  <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button
+                      variant="link"
+                      className="w-8 h-8 sm:w-10 sm:h-10 bg-white flex items-center justify-center text-lg sm:text-xl rounded-full shadow p-0"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleToggleWishlist(product);
+                      }}
+                      disabled={wishlistLoading === product.id}
+                    >
+                      {wishlistLoading === product.id ? (
+                        <Loader2 className="animate-spin h-5 w-5" />
+                      ) : wishlist[product.id] ? (
+                        <AiFillHeart className="text-red-500" />
+                      ) : (
+                        <AiOutlineHeart className="text-gray-500" />
+                      )}
+                    </Button>
+                    {!product.availableForSale ? (
+                      <div title="Out of stock">
+                        <Button
+                          variant="link"
+                          className="w-8 h-8 sm:w-10 sm:h-10 bg-white flex items-center justify-center text-lg sm:text-xl rounded-full shadow p-0"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleAddToCart(product);
+                          }}
+                          disabled
+                        >
+                          <AiOutlineShoppingCart />
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button
+                        variant="link"
+                        className="w-8 h-8 sm:w-10 sm:h-10 bg-white flex items-center justify-center text-lg sm:text-xl rounded-full shadow p-0"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleAddToCart(product);
+                        }}
+                        disabled={cartLoading === product.id}
+                      >
+                        {cartLoading === product.id ? (
+                          <Loader2 className="animate-spin h-5 w-5" />
+                        ) : (
+                          <AiOutlineShoppingCart />
+                        )}
+                      </Button>
+                    )}
+                  </div>
+                </div>
 
-      {/* Pagination */}
-      <div className="flex justify-center items-center gap-3 sm:gap-4 mt-8 sm:mt-12">
-        <Button
-          variant="outline"
-          size="lg"
-          className="w-8 h-8 sm:w-10 sm:h-10 border border-[#ccc] text-base sm:text-lg"
-        >
-          &lt;
-        </Button>
-        <Button
-          variant="outline"
-          size="lg"
-          className="w-8 h-8 sm:w-10 sm:h-10 border border-[#ccc] text-base sm:text-lg"
-        >
-          &gt;
-        </Button>
+                {/* Details */}
+                <div className="flex justify-between px-1 sm:px-2">
+                  <div>
+                    <div className="text-sm sm:text-base lg:text-[16px] font-['Cormorant'] font-medium text-[#1F1F1F]">
+                      {product.title}
+                    </div>
+                    <div className="text-xs sm:text-[12.5px] text-[#1E1E1E99] font-light font-['Inter']">
+                      {product.category}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm sm:text-base lg:text-[14px] font-['Cormorant'] font-medium text-[#1F1F1F]">
+                      {product.price}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ))
+        )}
       </div>
     </section>
   );

@@ -160,7 +160,7 @@ const WarriorProducts = () => {
       <div className="px-4 sm:px-6 md:px-8 lg:px-10 pt-6 pb-4 relative">
         {/* Header with title and filter button */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
-          <h1 className="text-[32px] md:text-[48px] lg:text-[62px] font-normal">
+          <h1 className="text-[32px] md:text-[48px] text-center md:text-start lg:text-[62px] font-normal">
             View Our Warriors Collection
           </h1>
 

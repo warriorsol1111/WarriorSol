@@ -3,13 +3,64 @@ import React, { useState } from "react";
 import Image from "next/image";
 import newsLetterImage from "@/assets/newsletter.png";
 import { Button } from "../ui/button";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
+import { Loader2 } from "lucide-react";
 const RebellionNewsletter = () => {
   const [email, setEmail] = useState("");
+  const [count, setCount] = useState(0);
+  const [notifyLoading, setNotifyLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    const fetchCountofMails = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/newsletter-mails/count`
+        );
+        if (!response.ok) {
+          throw new Error(`Failed to fetch mail count: ${response.status}`);
+        }
+        const data = await response.json();
+        setCount(data.data || 0);
+      } catch (error) {
+        console.error("Error fetching mail count:", error);
+        setCount(0);
+      }
+    };
+    fetchCountofMails();
+  }, []);
+
+  const addEmailToNewsLetter = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: Implement newsletter subscription logic
-    console.log("Subscribe email:", email);
+    setNotifyLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/newsletter-mails/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
+      const data = await response.json();
+      if (data.message === "Email already exists") {
+        toast.error("Email already exists in the waitlist");
+        setEmail("");
+        setNotifyLoading(false);
+        return;
+      }
+      toast.success("Email added to waitlist");
+      setEmail("");
+      setNotifyLoading(false);
+      // Optionally refresh count
+      setCount((prev) => prev + 1);
+    } catch (error) {
+      console.error("Error adding email to waitlist:", error);
+      toast.error("Failed to add email to waitlist");
+      setNotifyLoading(false);
+    }
   };
 
   return (
@@ -51,24 +102,36 @@ const RebellionNewsletter = () => {
           </p>
 
           <form
-            onSubmit={handleSubmit}
+            onSubmit={addEmailToNewsLetter}
             className="w-full max-w-md px-4 md:px-0"
           >
-            <div className="relative flex flex-col sm:flex-row gap-2 sm:gap-0">
+            <div className="relative flex flex-col sm:flex-row gap-2 sm:gap-0 md:gap-x-4 lg:gap-x-6">
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your Email"
                 className='w-full bg-[rgba(255,255,255,0.1)] border-none px-4 py-3 font-["Inter"] placeholder:text-white/50 focus:outline-none'
+                required
+                disabled={notifyLoading}
               />
               <Button
                 type="submit"
                 size="lg"
-                className='sm:absolute sm:right-0 sm:top-0 h-full bg-[#EE9254] text-white px-8 font-["Inter"] hover:bg-[#d89b89] transition'
+                className='sm:absolute sm:right-0 sm:top-0 bg-[#EE9254] text-white px-8 font-["Inter"] hover:bg-[#d89b89] transition h-12'
+                disabled={notifyLoading}
               >
-                Subscribe
+                {notifyLoading ? (
+                  <Loader2 className="animate-spin h-5 w-5 text-white" />
+                ) : (
+                  "Subscribe"
+                )}
               </Button>
+            </div>
+            <div className="mt-4 text-sm text-white/80">
+              {count > 0
+                ? `${count} people have already joined our newsletter!`
+                : "Be the first to join our newsletter!"}
             </div>
           </form>
         </div>
