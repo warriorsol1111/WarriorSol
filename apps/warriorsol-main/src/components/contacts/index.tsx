@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Image from "next/image";
@@ -8,6 +8,9 @@ import FormImage from "@/assets/formImage.svg";
 import { useForm } from "react-hook-form";
 import { Label } from "@radix-ui/react-label";
 import { Textarea } from "../ui/textarea";
+import { useSession } from "next-auth/react";
+import toast from "react-hot-toast";
+import { Loader2 } from "lucide-react";
 
 type FormData = {
   fullName: string;
@@ -16,15 +19,52 @@ type FormData = {
 };
 
 const Contacts = () => {
+  const { data: session } = useSession();
+  const [loading, setLoading] = useState(false);
+  console.log("Session data:", session?.user.token);
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormData>();
 
-  const onSubmit = (data: FormData) => {
-    // TODO: Implement form submission logic
-    console.log("Form submitted:", data);
+  const onSubmit = async (data: FormData) => {
+    if (!session?.user?.email) {
+      return toast.error("You must be logged in to send a message.");
+    }
+
+    try {
+      setLoading(true);
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/contact/send-message`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${session.user.token}`,
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const result = await res.json();
+
+      if (!res.ok) throw new Error(result.message || "Failed to send message");
+
+      toast.success("Message sent successfully!");
+      reset();
+    } catch (err) {
+      console.error("Send message error:", err);
+      if (err instanceof Error) {
+        toast.error(err.message || "Something went wrong.");
+      } else {
+        toast.error("Something went wrong.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -39,7 +79,6 @@ const Contacts = () => {
       </p>
 
       <div className="mt-12 flex flex-col lg:flex-row items-stretch">
-        {/* Left image */}
         <div className="w-full lg:w-1/2">
           <Image
             src={FormImage}
@@ -48,11 +87,10 @@ const Contacts = () => {
           />
         </div>
 
-        {/* Right form */}
         <div className="w-full lg:w-1/2 bg-[#FFEBCC] rounded-lg p-6 sm:p-10">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="bg-white h-full  p-6 sm:p-8 rounded-md space-y-6 shadow-md"
+            className="bg-white h-full p-6 sm:p-8 rounded-md space-y-6 shadow-md"
           >
             <div>
               <Label className="block text-sm font-medium mb-1">
@@ -61,7 +99,7 @@ const Contacts = () => {
               <Input
                 {...register("fullName", { required: "Full name is required" })}
                 type="text"
-                placeholder="Daniyal Khan"
+                placeholder="Enter your full name"
                 className="w-full px-4 py-2 rounded-md border border-gray-300 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-300"
               />
               {errors.fullName && (
@@ -84,7 +122,7 @@ const Contacts = () => {
                   },
                 })}
                 type="email"
-                placeholder="Daniyal.Khan@Ccript.Com"
+                placeholder="Enter your email address"
                 className="w-full px-4 py-2 rounded-md border border-gray-300 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-300"
               />
               {errors.email && (
@@ -112,9 +150,13 @@ const Contacts = () => {
               type="submit"
               size="lg"
               variant="default"
+              disabled={loading}
               className="w-full py-3 rounded-md text-white bg-[#EE9254] hover:bg-[#e9823b] font-medium flex items-center justify-center gap-2"
             >
-              Send Message <span className="text-lg">➜</span>
+              {loading && (
+                <Loader2 className="animate-spin h-5 w-5 text-white" />
+              )}
+              <span className="text-lg">Send Message</span>
             </Button>
           </form>
         </div>

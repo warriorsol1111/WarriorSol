@@ -22,6 +22,7 @@ export default function AccountPage() {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  console.log("Data from session:", session);
 
   const handleVerifyPassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,80 +127,85 @@ export default function AccountPage() {
                 </p>
               </div>
 
-              <form
-                onSubmit={
-                  step === 1 ? handleVerifyPassword : handleChangePassword
-                }
-                className="space-y-5"
-              >
+              <div className="space-y-5">
                 <h2 className="text-xl font-semibold text-gray-800">
                   Change Password
                 </h2>
 
-                {step === 1 && (
-                  <div className="space-y-2">
-                    <Label htmlFor="oldPassword">Current Password</Label>
-                    <Input
-                      id="oldPassword"
-                      type="password"
-                      value={oldPassword}
-                      onChange={(e) => setOldPassword(e.target.value)}
-                      required
-                    />
+                {session?.user?.loginMethod === "google" ? (
+                  <div className="bg-orange-50 border border-orange-300 text-orange-950 p-4 rounded-md">
+                    You’re signed in with Google. Password changes aren’t
+                    available for accounts using Google login.
                   </div>
-                )}
+                ) : (
+                  <form
+                    onSubmit={
+                      step === 1 ? handleVerifyPassword : handleChangePassword
+                    }
+                    className="space-y-5"
+                  >
+                    {step === 1 && (
+                      <div className="space-y-2">
+                        <Label htmlFor="oldPassword">Current Password</Label>
+                        <Input
+                          id="oldPassword"
+                          type="password"
+                          value={oldPassword}
+                          onChange={(e) => setOldPassword(e.target.value)}
+                          required
+                        />
+                      </div>
+                    )}
 
-                {step === 2 && (
-                  <>
-                    <div className="space-y-2">
-                      <Label htmlFor="newPassword">New Password</Label>
-                      <Input
-                        id="newPassword"
-                        type="password"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="confirmPassword">
-                        Confirm New Password
-                      </Label>
-                      <Input
-                        id="confirmPassword"
-                        type="password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        required
-                      />
-                    </div>
-                  </>
-                )}
+                    {step === 2 && (
+                      <>
+                        <div className="space-y-2">
+                          <Label htmlFor="newPassword">New Password</Label>
+                          <Input
+                            id="newPassword"
+                            type="password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="confirmPassword">
+                            Confirm New Password
+                          </Label>
+                          <Input
+                            id="confirmPassword"
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
+                          />
+                        </div>
+                      </>
+                    )}
 
-                {message && (
-                  <div className="text-sm text-red-600 font-medium">
-                    {message}
-                  </div>
-                )}
+                    {message && (
+                      <div className="text-sm text-red-600 font-medium">
+                        {message}
+                      </div>
+                    )}
 
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full bg-[#EE9254] text-white hover:bg-[#e97e3a] transition"
-                >
-                  {loading ? (
-                    step === 1 ? (
-                      <Loader2 className="animate-spin h-5 w-5 mr-2" />
-                    ) : (
-                      <Loader2 className="animate-spin h-5 w-5 mr-2" />
-                    )
-                  ) : step === 1 ? (
-                    "Verify Current Password"
-                  ) : (
-                    "Change Password"
-                  )}
-                </Button>
-              </form>
+                    <Button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full bg-[#EE9254] text-white hover:bg-[#e97e3a] transition"
+                    >
+                      {loading ? (
+                        <Loader2 className="animate-spin h-5 w-5 mr-2" />
+                      ) : step === 1 ? (
+                        "Verify Current Password"
+                      ) : (
+                        "Change Password"
+                      )}
+                    </Button>
+                  </form>
+                )}
+              </div>
             </div>
           </TabsContent>
 

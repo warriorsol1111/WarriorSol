@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { FaFacebook, FaApple, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
 import { useEffect, useState, Suspense } from "react";
@@ -22,12 +22,12 @@ function LoginPage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
 
   useEffect(() => {
     if (error) {
-      // 🔥 Show the toast first
       if (error === "GOOGLE_LOGIN_BLOCKED") {
         toast.error(
           "This email is registered with a password. Please use email/password to log in."
@@ -36,7 +36,6 @@ function LoginPage() {
         toast.error("Something went wrong.");
       }
 
-      // 🧹 Clean up the URL (remove ?error=...)
       const url = new URL(window.location.href);
       url.searchParams.delete("error");
       window.history.replaceState({}, "", url.toString());
@@ -131,53 +130,42 @@ function LoginPage() {
                 )}
               </Button>
             </div>
-            <div className="text-right text-base md:text-lg text-[#1F1F1F99] font-light mt-2">
+            <div className="text-right text-sm md:text-base text-[#1F1F1F99] font-light mt-2">
               <Link href="/forgot-password">Forgot Password?</Link>
             </div>
           </div>
 
-          <div className="flex items-center gap-4 justify-center">
-            <span className="text-base md:text-lg">Or</span>
-          </div>
-
-          <div className="flex gap-8 md:gap-24 justify-center">
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="w-12 h-12 md:w-14 md:h-14"
-              onClick={() => signIn("google")}
-            >
-              <FcGoogle className="text-3xl md:text-4xl !w-1/2 !h-1/2" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="w-12 h-12 md:w-14 md:h-14"
-            >
-              <FaFacebook className="text-xl md:text-2xl text-[#1877F2] !w-1/2 !h-1/2" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="w-12 h-12 md:w-14 md:h-14"
-            >
-              <FaApple className="text-xl md:text-2xl !w-1/2 !h-1/2" />
-            </Button>
-          </div>
-
           <Button
             type="submit"
-            className="w-full bg-[#EE9254] cursor-pointer hover:bg-[#EE9254] h-10 md:h-12 text-white text-base md:text-lg"
+            className="w-full bg-[#EE9254] cursor-pointer hover:bg-[#e97e3a] h-10 md:h-12 text-white text-base md:text-lg"
           >
             Sign In
           </Button>
-          <div className="flex justify-center gap-x-2 md:gap-x-4">
+
+          <div className="flex items-center gap-4 my-2">
+            <div className="flex-grow h-px bg-gray-300" />
+            <span className="text-gray-500 text-sm md:text-base font-light">
+              OR
+            </span>
+            <div className="flex-grow h-px bg-gray-300" />
+          </div>
+
+          <Button
+            type="button"
+            size="lg"
+            onClick={() => signIn("google")}
+            className="w-full flex items-center justify-center gap-3 bg-white text-black border hover:bg-white border-gray-300 rounded-lg shadow-sm hover:shadow-md transition text-sm md:text-base py-2 md:py-3"
+          >
+            <FcGoogle className="w-5 h-5 md:w-6 md:h-6" />
+            Continue with Google
+          </Button>
+
+          <div className="flex justify-center gap-x-2 md:gap-x-4 pt-2">
             <p className="text-base md:text-lg text-center font-light">
-              Don&apos;t Have An Account?{" "}
-              <a href="/signup" className="text-black font-bold underline">
-                SignUp
-              </a>
+              Don&apos;t have an account?{" "}
+              <Link href="/signup" className="text-black font-bold underline">
+                Sign up
+              </Link>
             </p>
           </div>
         </form>

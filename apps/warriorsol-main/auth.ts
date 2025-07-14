@@ -4,7 +4,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { signInSchema } from "@/lib/utils";
 import type { AuthOptions, User } from "next-auth";
 
-// Extend NextAuth types
+// 🔥 EXTEND TYPES 🔥
 declare module "next-auth" {
   interface User {
     id: string;
@@ -13,6 +13,7 @@ declare module "next-auth" {
     lastName: string;
     role: string;
     token: string;
+    loginMethod: string;
   }
   interface Session {
     user: User;
@@ -26,6 +27,7 @@ declare module "next-auth/jwt" {
     lastName: string;
     role?: string;
     accessToken: string;
+    loginMethod: string;
   }
 }
 
@@ -46,7 +48,6 @@ const authConfig: AuthOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
-
     Credentials({
       credentials: {
         email: {},
@@ -56,6 +57,7 @@ const authConfig: AuthOptions = {
         try {
           const { email, password } =
             await signInSchema.parseAsync(credentials);
+
           const formData = new URLSearchParams();
           formData.append("email", email);
           if (password) formData.append("password", password);
@@ -92,6 +94,7 @@ const authConfig: AuthOptions = {
             lastName,
             role: userData.role || "user",
             token: userData.token,
+            loginMethod: "credentials",
           };
         } catch (error) {
           if (error instanceof InvalidLoginError) throw error;
@@ -120,22 +123,20 @@ const authConfig: AuthOptions = {
           const data = await res.json();
 
           if (!res.ok || !data.data?.token) {
-            // 👇 BLOCK and REDIRECT with error query param
             throw new Error("GOOGLE_LOGIN_BLOCKED");
           }
 
-          // ✅ Inject token and user data
           account.access_token = data.data.token;
+
           user.id = data.data.id;
           user.name = data.data.name;
           user.token = data.data.token;
           user.role = data.data.role || "user";
-
+          user.loginMethod = "google";
           return true;
         } catch (err: unknown) {
           const message = err instanceof Error ? err.message : String(err);
           console.error("❌ Google sync failed:", message);
-          // 👇 Prevent login if sync fails
           throw new Error("GOOGLE_LOGIN_BLOCKED");
         }
       }
@@ -150,9 +151,9 @@ const authConfig: AuthOptions = {
           token.email = user.email!;
           token.firstName = user.name?.split(" ")[0] || "";
           token.lastName = user.name?.split(" ").slice(1).join(" ") || "";
-
-          // ✅ Use the backend token injected into account
           token.accessToken = account.access_token!;
+          token.role = user.role || "user";
+          token.loginMethod = "google";
         } else {
           token.id = (user as User).id;
           token.email = (user as User).email;
@@ -160,20 +161,22 @@ const authConfig: AuthOptions = {
           token.lastName = (user as User).lastName;
           token.accessToken = (user as User).token;
           token.role = (user as User).role || "user";
+          token.loginMethod = (user as User).loginMethod || "credentials";
         }
       }
 
       return token;
     },
 
-    async session({ session, token }) {
+    session: async ({ session, token }) => {
       session.user = {
-        id: token.id as string,
-        email: token.email as string,
-        firstName: token.firstName as string,
-        lastName: token.lastName as string,
-        token: token.accessToken as string,
-        role: (token.role as string) || "user",
+        id: token.id,
+        email: token.email,
+        firstName: token.firstName,
+        lastName: token.lastName,
+        token: token.accessToken,
+        role: token.role || "user",
+        loginMethod: token.loginMethod,
       };
       return session;
     },

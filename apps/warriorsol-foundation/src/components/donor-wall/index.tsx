@@ -2,11 +2,12 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import DonorWallImage from "@/assets/donorWall.svg";
+import DonorWallShowcase from "./donorWallShowcase";
 
 export default function DonorWall() {
   return (
     <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
-      <Card className="relative w-full h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden rounded-none">
+      <Card className="relative w-full h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden rounded-lg">
         <Image
           src={DonorWallImage}
           alt="Donor Wall"
@@ -40,6 +41,15 @@ export default function DonorWall() {
           </div>
         </div>
       </Card>
+      <div className="mt-8 sm:mt-12 lg:mt-16 text-center">
+        <h2 className="text-[32px] sm:text-[42px] lg:text-[62px] text-center md:text-start leading-tight sm:leading-[1.1] lg:leading-[62px] font-['Cormorant_SC'] font-normal text-[#1F1F1F] capitalize">
+          Our Amazing Donors
+        </h2>
+        <p className="text-[16px] sm:text-[18px] lg:text-[20px] text-center md:text-start font-light font-['Inter'] text-[#1F1F1F]/70 capitalize mt-2 sm:mt-3">
+          Thank you to all the warriors who make our mission possible
+        </p>
+      </div>
+      <DonorWallShowcase />
     </section>
   );
 }

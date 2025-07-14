@@ -108,7 +108,7 @@ const AdminStoriesPage: React.FC = () => {
 
       <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-[#EE9254] text-center sm:text-left">
-          Pending User Stories
+          Review User Stories
         </h1>
 
         {loading ? (
