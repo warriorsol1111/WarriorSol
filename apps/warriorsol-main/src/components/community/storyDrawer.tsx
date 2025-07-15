@@ -50,27 +50,57 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
   });
   const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      if (
-        file.type === "image/svg+xml" ||
-        file.name.toLowerCase().endsWith(".svg")
-      ) {
-        setFileError("SVG files are not allowed ");
+    if (!file) return;
+
+    const isSvg = file.type === "image/svg+xml" || file.name.endsWith(".svg");
+    const isTooBig = file.size > 10 * 1024 * 1024;
+
+    if (isSvg) {
+      setFileError("SVG files are not allowed");
+      setFormData((prev) => ({ ...prev, image: null }));
+      toast.error("SVG files are not allowed");
+      return;
+    }
+
+    if (isTooBig) {
+      setFileError("File size must be under 10MB");
+      setFormData((prev) => ({ ...prev, image: null }));
+      toast.error("File size must be under 10MB");
+      return;
+    }
+
+    if (file.type.startsWith("video/")) {
+      const video = document.createElement("video");
+      video.preload = "metadata";
+      video.onloadedmetadata = () => {
+        window.URL.revokeObjectURL(video.src);
+        if (video.duration > 60) {
+          setFileError("Video must be 1 minute or less");
+          setFormData((prev) => ({ ...prev, image: null }));
+          toast.error("Video must be 1 minute or less");
+        } else {
+          setFileError("");
+          setFormData((prev) => ({ ...prev, image: file }));
+        }
+      };
+      video.onerror = () => {
+        setFileError("Could not load video file");
         setFormData((prev) => ({ ...prev, image: null }));
-        toast.error("SVG files are not allowed ");
-        return;
-      }
-      if (file.size > 5 * 1024 * 1024) {
-        setFileError("File size must be under 5MB ");
-        setFormData((prev) => ({ ...prev, image: null }));
-        toast.error("File size must be under 5MB ");
-        return;
-      }
+        toast.error("Could not load video file");
+      };
+      video.src = URL.createObjectURL(file);
+    } else {
       setFileError("");
       setFormData((prev) => ({ ...prev, image: file }));
     }
+  };
+
+  const handleRemoveFile = () => {
+    setFormData((prev) => ({ ...prev, image: null }));
+    setFileError("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -105,17 +135,15 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
       newErrors.image = fileError;
       hasError = true;
     }
+
     setErrors(newErrors);
     if (hasError) return;
 
     setIsLoading(true);
     const form = new FormData();
-    if (formData.image) {
-      form.append("attachment", formData.image);
-    }
+    if (formData.image) form.append("attachment", formData.image);
     form.append("title", formData.title);
-    if (isAnonymous) form.append("userName", "Anonymous");
-    else form.append("userName", formData.name);
+    form.append("userName", isAnonymous ? "Anonymous" : formData.name);
     form.append("description", formData.story);
     form.append("userType", formData.role);
     form.append("isAnonymous", isAnonymous ? "True" : "False");
@@ -132,13 +160,9 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to submit story");
-      }
+      if (!response.ok) throw new Error("Failed to submit story");
 
-      toast.success(
-        "Your story has been submitted and will be reviewed by our team before going live! "
-      );
+      toast.success("Your story has been submitted for review!");
       setFormData({
         name: "",
         role: "",
@@ -151,7 +175,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
       onOpenChange(false);
     } catch (error) {
       console.error(error);
-      toast.error("Something went wrong. Please try again ");
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -201,7 +225,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                 }}
                 required
               >
-                <SelectTrigger className="mt-2 w-full border border-gray-300 !h-12 cursor-pointer">
+                <SelectTrigger className="mt-2 w-full border border-gray-300 h-12 cursor-pointer">
                   <SelectValue placeholder="Select your role" />
                 </SelectTrigger>
                 <SelectContent>
@@ -220,11 +244,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                     },
                     { value: "supporter", label: "The Ally - Supporter" },
                   ].map(({ value, label }) => (
-                    <SelectItem
-                      key={value}
-                      className="cursor-pointer hover:!bg-gray-200"
-                      value={value}
-                    >
+                    <SelectItem key={value} value={value}>
                       {label}
                     </SelectItem>
                   ))}
@@ -279,14 +299,28 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
 
             <div>
               <Label htmlFor="image">Share Image/Video*</Label>
-              <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-                <div className="text-center">
-                  <div className="mt-4 flex text-sm leading-6 text-gray-600">
+              <div className="mt-2 flex justify-center items-center flex-col border border-dashed border-gray-400 rounded-lg px-6 py-10 text-center">
+                {formData.image && !fileError ? (
+                  <div className="flex items-center gap-2 justify-center">
+                    <p className="text-sm text-green-600 font-medium truncate max-w-[200px]">
+                      {formData.image.name}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={handleRemoveFile}
+                      className="ml-2 text-red-500 hover:text-red-700 text-lg font-bold"
+                      aria-label="Remove file"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ) : (
+                  <>
                     <label
                       htmlFor="image"
-                      className="relative cursor-pointer rounded-md bg-white font-semibold text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2 hover:text-blue-500"
+                      className="cursor-pointer inline-flex items-center justify-center px-4 py-2 bg-blue-100 text-blue-600 font-semibold rounded-md hover:bg-blue-200 transition-all"
                     >
-                      <span>Upload a file</span>
+                      Upload a file
                       <input
                         id="image"
                         name="image"
@@ -294,26 +328,20 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                         className="sr-only"
                         accept="image/png,image/jpeg,image/jpg,image/gif,video/mp4,video/*"
                         onChange={handleFileChange}
-                        required
                       />
                     </label>
-                    <p className="pl-1">or drag and drop</p>
-                  </div>
-                  <p className="text-xs leading-5 text-gray-600">
-                    PNG, JPG, GIF, MP4 up to 5MB
-                  </p>
-                  {fileError && (
-                    <p className="text-xs text-red-500 mt-2">{fileError}</p>
-                  )}
-                  {errors.image && (
-                    <p className="text-xs text-red-500 mt-1">{errors.image}</p>
-                  )}
-                  {formData.image && !fileError && (
-                    <p className="text-xs text-green-600 mt-2">
-                      {formData.image.name}
+                    <p className="mt-2 text-sm text-gray-500">
+                      PNG, JPG, GIF, or MP4 only. Max size:{" "}
+                      <strong>10MB</strong>.<br />
+                      Max video duration: <strong>1 minute</strong>.
                     </p>
-                  )}
-                </div>
+                  </>
+                )}
+                {(fileError || errors.image) && (
+                  <p className="text-xs text-red-500 mt-2">
+                    {fileError || errors.image}
+                  </p>
+                )}
               </div>
             </div>
 

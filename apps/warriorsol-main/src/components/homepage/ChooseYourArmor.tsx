@@ -229,6 +229,10 @@ const ChooseYourArmor: React.FC = () => {
     }
   };
 
+  const extractShopifyId = (gid: string) => {
+    const match = gid.match(/\/Product\/(\d+)/);
+    return match ? match[1] : gid;
+  };
   return (
     <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
       {/* Heading */}
@@ -266,7 +270,7 @@ const ChooseYourArmor: React.FC = () => {
             >
               <Link
                 className="no-underline block"
-                href={`/products/${product.handle}`}
+                href={`/products/${extractShopifyId(product.id)}`}
               >
                 {/* Image Card */}
                 <div className="relative w-full aspect-[3/4] sm:h-[400px] lg:h-[534px]">

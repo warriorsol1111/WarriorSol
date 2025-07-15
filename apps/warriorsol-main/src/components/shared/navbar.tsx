@@ -130,26 +130,34 @@ export default function Navbar() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-48">
-              <DropdownMenuLabel className="text-lg text-gray-500">
-                Signed in as
-              </DropdownMenuLabel>
-              <DropdownMenuLabel className="font-medium text-lg truncate">
-                {userName}
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild className="cursor-pointer">
-                <Link href="/account">Account</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  document.cookie =
-                    "cartId=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-                  signOut();
-                }}
-                className="cursor-pointer"
-              >
-                Log out
-              </DropdownMenuItem>
+              {session?.user ? (
+                <>
+                  <DropdownMenuLabel className="text-lg text-gray-500">
+                    Signed in as
+                  </DropdownMenuLabel>
+                  <DropdownMenuLabel className="font-medium text-lg truncate">
+                    {userName}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild className="cursor-pointer">
+                    <Link href="/account">Account</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      document.cookie =
+                        "cartId=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+                      signOut();
+                    }}
+                    className="cursor-pointer"
+                  >
+                    Log out
+                  </DropdownMenuItem>
+                </>
+              ) : (
+                <DropdownMenuLabel className="text-sm text-gray-500">
+                  Not signed in
+                </DropdownMenuLabel>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
 

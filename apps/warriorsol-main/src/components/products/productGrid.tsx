@@ -187,43 +187,46 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
               </p>
             </div>
           </a>
-          {/* Overlay with icons OUTSIDE the anchor */}
-          <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex flex-row gap-2 sm:gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <Button
-              variant="link"
-              className="p-1.5 sm:p-2 bg-white/90 backdrop-blur-sm cursor-pointer hover:bg-white transition-colors shadow-md rounded-full"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleToggleWishlist(product);
-              }}
-              disabled={wishlistLoading === product.id}
-            >
-              {wishlistLoading === product.id ? (
-                <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
-              ) : wishlist[product.id] ? (
-                <AiFillHeart className="h-4 w-4 sm:h-5 sm:w-5 text-red-500" />
-              ) : (
-                <AiOutlineHeart className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500" />
-              )}
-            </Button>
-            <Button
-              variant="link"
-              className="p-1.5 sm:p-2 bg-white/90 backdrop-blur-sm cursor-pointer hover:bg-white transition-colors shadow-md rounded-full"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleAddToCart(product);
-              }}
-              disabled={cartLoading === product.id || !product.availableForSale}
-            >
-              {cartLoading === product.id ? (
-                <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
-              ) : (
-                <AiOutlineShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
-              )}
-            </Button>
-          </div>
+          {session?.user && (
+            <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex flex-row gap-2 sm:gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <Button
+                variant="link"
+                className="p-1.5 sm:p-2 bg-white/90 backdrop-blur-sm cursor-pointer hover:bg-white transition-colors shadow-md rounded-full"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleToggleWishlist(product);
+                }}
+                disabled={wishlistLoading === product.id}
+              >
+                {wishlistLoading === product.id ? (
+                  <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
+                ) : wishlist[product.id] ? (
+                  <AiFillHeart className="h-4 w-4 sm:h-5 sm:w-5 text-red-500" />
+                ) : (
+                  <AiOutlineHeart className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500" />
+                )}
+              </Button>
+              <Button
+                variant="link"
+                className="p-1.5 sm:p-2 bg-white/90 backdrop-blur-sm cursor-pointer hover:bg-white transition-colors shadow-md rounded-full"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleAddToCart(product);
+                }}
+                disabled={
+                  cartLoading === product.id || !product.availableForSale
+                }
+              >
+                {cartLoading === product.id ? (
+                  <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
+                ) : (
+                  <AiOutlineShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
+                )}
+              </Button>
+            </div>
+          )}
         </div>
       ))}
     </div>

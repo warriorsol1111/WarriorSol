@@ -2,7 +2,16 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { PUBLIC_ROUTES } from "@/lib/app-routes";
-
+function isPublicRoute(pathname: string) {
+  return PUBLIC_ROUTES.some((route) => {
+    if (route.includes("[id]")) {
+      // Convert "/products/[id]" to regex: ^/products/[^/]+$
+      const regex = new RegExp("^" + route.replace("[id]", "[^/]+") + "$");
+      return regex.test(pathname);
+    }
+    return route === pathname;
+  });
+}
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -15,7 +24,9 @@ export async function middleware(request: NextRequest) {
   if (pathname === "/login" && token) {
     return NextResponse.redirect(new URL("/home", request.url)); // redirect to home or dashboard
   }
-
+  if (isPublicRoute(pathname)) {
+    return NextResponse.next();
+  }
   // 👇 Allow public routes without auth
   if (PUBLIC_ROUTES.includes(pathname)) {
     return NextResponse.next();

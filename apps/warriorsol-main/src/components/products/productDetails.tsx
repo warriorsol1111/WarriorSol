@@ -1,6 +1,10 @@
 "use client";
 import React, { useState, useMemo, useEffect } from "react";
-import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
+import {
+  AiOutlineMinus,
+  AiOutlinePlus,
+  AiOutlineShoppingCart,
+} from "react-icons/ai";
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatPrice } from "@/lib/utils";
@@ -56,7 +60,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const variantIdFromUrl = searchParams.get("variant");
-
+  const [isLoading, setIsLoading] = useState(false);
   const { addItem, openCart } = useCartStore();
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -270,6 +274,35 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
       `${pathname}${params.toString() ? "?" + params.toString() : ""}`
     );
   };
+  const handleBuyProduct = async () => {
+    if (!selectedVariant) return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/shopify/createCheckout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          variantId: selectedVariant.id,
+          quantity: quantity,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create checkout");
+      }
+
+      const data = await response.json();
+      window.location.href = data.checkoutUrl;
+    } catch (error) {
+      console.error("Error creating checkout:", error);
+      alert("Failed to create checkout. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -420,57 +453,78 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Button
-                variant="link"
-                size="lg"
-                disabled={!selectedVariant?.availableForSale}
-                onClick={toggleWishlist}
-                className={`flex items-center justify-center gap-2 border border-black transition-all duration-200 px-4 py-2 rounded-md group
-    ${
-      isInWishlist
-        ? "bg-red-100 text-red-600 border-red-200 hover:bg-red-200 hover:text-red-800"
-        : "bg-white text-gray-800 hover:bg-gray-100 hover:text-black"
-    }`}
-              >
-                {wishListLoading ? (
-                  <Loader2 className="animate-spin h-5 w-5" />
-                ) : isInWishlist ? (
-                  <>
-                    <FaRegHeart
-                      size={20}
-                      className="text-red-600 animate-pulse"
-                    />
-                    <span className="font-medium">Remove from Wishlist</span>
-                  </>
-                ) : (
-                  <>
-                    <FaRegHeart size={20} />
-                    <span className="font-medium">Add to Wishlist</span>
-                  </>
-                )}
-              </Button>
+            {/* Action Buttons - Conditional based on authentication */}
+            {session ? (
+              // If user is logged in, show Add to Wishlist and Add to Cart buttons
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Button
+                  variant="link"
+                  size="lg"
+                  onClick={toggleWishlist}
+                  className={`flex items-center justify-center gap-2 border border-black transition-all duration-200 px-4 py-2 rounded-md group
+        ${
+          isInWishlist
+            ? "bg-red-100 text-red-600 border-red-200 hover:bg-red-200 hover:text-red-800"
+            : "bg-white text-gray-800 hover:bg-gray-100 hover:text-black"
+        }`}
+                >
+                  {wishListLoading ? (
+                    <Loader2 className="animate-spin h-5 w-5" />
+                  ) : isInWishlist ? (
+                    <>
+                      <FaRegHeart
+                        size={20}
+                        className="text-red-600 animate-pulse"
+                      />
+                      <span className="font-medium">Remove from Wishlist</span>
+                    </>
+                  ) : (
+                    <>
+                      <FaRegHeart size={20} />
+                      <span className="font-medium">Add to Wishlist</span>
+                    </>
+                  )}
+                </Button>
 
-              <Button
-                variant="outline"
-                size="lg"
-                disabled={!selectedVariant?.availableForSale}
-                onClick={() => {
-                  handleAddItemToCart();
-                }}
-                className="flex items-center justify-center gap-2 bg-[#EE9254] text-white hover:text-white hover:bg-[#EE9254] 0 transition-colors"
-              >
-                {loading ? (
-                  <Loader2 className="animate-spin h-5 w-5" />
-                ) : (
-                  <>
-                    <BsCart2 size={20} />
-                    Add to Cart
-                  </>
-                )}
-              </Button>
-            </div>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  disabled={!selectedVariant?.availableForSale}
+                  onClick={() => {
+                    handleAddItemToCart();
+                  }}
+                  className="flex items-center justify-center gap-2 bg-[#EE9254] text-white hover:text-white hover:bg-[#EE9254] transition-colors"
+                >
+                  {loading ? (
+                    <Loader2 className="animate-spin h-5 w-5" />
+                  ) : (
+                    <>
+                      <BsCart2 size={20} />
+                      Add to Cart
+                    </>
+                  )}
+                </Button>
+              </div>
+            ) : (
+              // If user is not logged in, show only Buy Now button
+              <div className="w-full">
+                <Button
+                  className="flex items-center w-full cursor-pointer justify-center gap-2 py-3 px-6 bg-[#EE9254] text-white rounded-lg text-base font-medium hover:bg-orange-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={!selectedVariant?.availableForSale || isLoading}
+                  onClick={handleBuyProduct}
+                  size="lg"
+                >
+                  <AiOutlineShoppingCart size={20} />
+                  {isLoading ? (
+                    <Loader2 className="animate-spin h-5 w-5" />
+                  ) : selectedVariant?.availableForSale ? (
+                    "Buy Now"
+                  ) : (
+                    "Out of Stock"
+                  )}
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>
