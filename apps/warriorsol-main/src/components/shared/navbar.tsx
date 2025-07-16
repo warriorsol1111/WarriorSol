@@ -30,6 +30,7 @@ export default function Navbar() {
   const toggleCart = useCartStore((state) => state.toggleCart);
   const { data: session } = useSession();
 
+  const foundationURL = process.env.NEXT_PUBLIC_FOUNDATION_URL!;
   useEffect(() => {
     hydrateCart();
   }, [hydrateCart]);
@@ -48,7 +49,6 @@ export default function Navbar() {
       <div className="flex items-center justify-between px-3 sm:px-6 py-3 sm:py-4 bg-white relative">
         {/* Left: Sidebar menu + Logo */}
         <div className="flex items-center space-x-1 sm:space-x-3">
-          {/* Mobile Menu Trigger */}
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="lg:hidden p-1">
@@ -68,9 +68,17 @@ export default function Navbar() {
                 <Link href="/about">About</Link>
                 <Link href="/contacts">Contacts</Link>
                 {session?.user?.role === "admin" && (
-                  <Link href="/admin-story-review">Review Stories </Link>
+                  <Link href="/admin-story-review">Review Stories</Link>
                 )}
               </nav>
+              <a
+                href={foundationURL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-[#EE9254] text-white px-6 py-2 rounded-full font-semibold text-sm hover:bg-[#e5772e] transition-all shadow-md w-fit mx-auto mt-4 mb-2"
+              >
+                Visit Foundation
+              </a>
             </SheetContent>
           </Sheet>
 
@@ -90,7 +98,7 @@ export default function Navbar() {
         </div>
 
         {/* Center: Navigation Links (desktop only) */}
-        <nav className="absolute hidden lg:flex left-1/2 transform -translate-x-1/2 space-x-6 text-sm text-center text-black font-light">
+        <nav className="absolute hidden lg:flex left-1/2 transform -translate-x-1/2 space-x-6 text-sm text-center text-black font-light items-center">
           <Link href="/home" className="hover:underline">
             Home
           </Link>
@@ -114,6 +122,15 @@ export default function Navbar() {
               Review Stories
             </Link>
           )}
+
+          <a
+            href="https://foundation.yoursite.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-[#EE9254] text-white px-4 py-2 rounded-full text-center font-semibold text-sm hover:bg-[#e5772e] transition-all shadow-md"
+          >
+            Visit Foundation Site
+          </a>
         </nav>
 
         {/* Right: Search / User / Cart */}
@@ -169,17 +186,7 @@ export default function Navbar() {
           >
             <MdOutlineShoppingBag className="h-5 w-5" />
             {itemCount > 0 && (
-              <span
-                className="
-                  absolute -top-1 -right-1.5
-                  h-5 w-5
-                  flex items-center justify-center
-                  text-xs font-bold text-black border border-black
-                  
-                  rounded-full
-                  shadow-sm
-                "
-              >
+              <span className="absolute -top-1 -right-1.5 h-5 w-5 flex items-center justify-center text-xs font-bold text-black border border-black rounded-full shadow-sm">
                 {itemCount}
               </span>
             )}

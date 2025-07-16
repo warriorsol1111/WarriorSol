@@ -1,4 +1,4 @@
-import Signup from "@/components/auth/signup";
+import SignupPageWithSuspense from "@/components/auth/signup";
 
 export const metadata = {
   title: "Warrior Sol - Signup",
@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function SignupPage() {
-  return <Signup />;
+  return <SignupPageWithSuspense />;
 }

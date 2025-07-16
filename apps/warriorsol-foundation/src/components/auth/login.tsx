@@ -7,30 +7,25 @@ import { Button } from "@/components/ui/button";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
-import { useEffect, useState } from "react";
-import SignupImage from "@/assets/auth/signup.svg";
+import { useEffect, useState, Suspense } from "react";
+import LoginImage from "@/assets/auth/login.svg";
 import Logo from "@/assets/auth/logo.svg";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { toast } from "react-hot-toast";
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
-function SignupPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+function LoginPage() {
   const router = useRouter();
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
+
   useEffect(() => {
     if (error) {
       if (error === "GOOGLE_LOGIN_BLOCKED") {
@@ -47,70 +42,58 @@ function SignupPage() {
     }
   }, [searchParams, error]);
 
-  const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword(!showConfirmPassword);
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const body = {
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
-    };
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/register`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
+    const { email, password } = formData;
+
+    const response = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    console.log("Login response:", response);
+    if (response?.error) {
+      if (response.error.includes("User is not verified")) {
+        toast.error("User not verified");
+        router.push(`/verify-email?email=${email}`);
+      } else if (response.error.includes("Invalid credentials")) {
+        toast.error("Invalid credentials");
+      } else if (
+        response.error.includes("linked to a Google account") ||
+        response.error.includes("sign in with Google")
+      ) {
+        toast.error(
+          "This account is linked to Google. Please sign in with Google."
+        );
+      } else {
+        toast.error("Something went wrong. Please try again.");
       }
-    );
-    const data = await response.json();
-    if (data.status === "success") {
-      toast.success(
-        "Signup successful! Please check your email to verify your account."
-      );
-      router.push("/verify-email?email=" + formData.email);
+    } else {
+      toast.success("Login successful");
+      router.replace("/");
     }
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen">
+    <div className="flex min-h-screen flex-col md:flex-row">
       {/* Left Section */}
-      <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-4 md:p-12 md:px-24">
-        <form
-          onSubmit={handleSubmit}
-          className="w-full space-y-4 md:space-y-6 mt-12"
-        >
+      <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-6 md:p-12 md:px-24">
+        <form onSubmit={handleSubmit} className="w-full space-y-4 md:space-y-6">
           <div>
             <h1 className="text-3xl md:text-5xl font-serif font-normal">
-              Hello There!
+              Welcome Back!
             </h1>
             <p className="font-light text-base md:text-lg">
-              Welcome to warriorsol, Enter details to create your account{" "}
+              Enter Your Credentials To Access Your Account
             </p>
           </div>
 
-          <div className="space-y-2 md:space-y-4">
-            <Label htmlFor="name">Your Name</Label>
-            <Input
-              id="name"
-              name="name"
-              type="text"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="space-y-2 md:space-y-4">
+          <div className="space-y-2">
             <Label htmlFor="email">Email Address</Label>
             <Input
               id="email"
@@ -122,7 +105,7 @@ function SignupPage() {
             />
           </div>
 
-          <div className="space-y-2 md:space-y-4">
+          <div className="space-y-1">
             <Label htmlFor="password">Password</Label>
             <div className="relative">
               <Input
@@ -135,9 +118,9 @@ function SignupPage() {
                 className="pr-10"
               />
               <Button
-                type="button"
                 variant="ghost"
                 size="icon"
+                type="button"
                 onClick={togglePasswordVisibility}
                 className="absolute right-3 top-1/2 cursor-pointer -translate-y-1/2 text-gray-500 hover:text-gray-700"
               >
@@ -148,40 +131,16 @@ function SignupPage() {
                 )}
               </Button>
             </div>
-            <div className="space-y-2 md:space-y-4 mt-4">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <div className="relative">
-                <Input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type={showConfirmPassword ? "text" : "password"}
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  required
-                  className="pr-10"
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={toggleConfirmPasswordVisibility}
-                  className="absolute right-3 top-1/2 cursor-pointer -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                >
-                  {showConfirmPassword ? (
-                    <FaEyeSlash className="w-4 h-4 md:w-5 md:h-5" />
-                  ) : (
-                    <FaEye className="w-4 h-4 md:w-5 md:h-5" />
-                  )}
-                </Button>
-              </div>
+            <div className="text-right text-sm md:text-base text-[#1F1F1F99] font-light mt-2">
+              <Link href="/forgot-password">Forgot Password?</Link>
             </div>
           </div>
 
           <Button
             type="submit"
-            className="w-full bg-[#EE9254] cursor-pointer hover:bg-[#EE9254] h-10 md:h-12 text-white mt-4"
+            className="w-full bg-[#EE9254] cursor-pointer hover:bg-[#e97e3a] h-10 md:h-12 text-white text-base md:text-lg"
           >
-            Get Started
+            Sign In
           </Button>
 
           <div className="flex items-center gap-4 my-2">
@@ -202,21 +161,21 @@ function SignupPage() {
             Continue with Google
           </Button>
 
-          <div className="flex justify-center gap-x-2 md:gap-x-4">
+          <div className="flex justify-center gap-x-2 md:gap-x-4 pt-2">
             <p className="text-base md:text-lg text-center font-light">
-              Already Have An Account?{" "}
-              <a href="/login" className="text-black font-bold underline">
-                SignIn
-              </a>
+              Don&apos;t have an account?{" "}
+              <Link href="/signup" className="text-black font-bold underline">
+                Sign up
+              </Link>
             </p>
           </div>
         </form>
       </div>
 
       {/* Right Section */}
-      <div className="w-full md:w-1/2 relative h-[300px] md:h-auto">
+      <div className="w-full md:w-1/2 h-[300px] md:h-auto relative">
         <Image
-          src={SignupImage}
+          src={LoginImage}
           alt="Login Background"
           fill
           className="object-cover"
@@ -238,10 +197,12 @@ function SignupPage() {
   );
 }
 
-export default function SignupPageWithSuspense() {
+function LoginPageWithSuspense() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <SignupPage />
+      <LoginPage />
     </Suspense>
   );
 }
+
+export default LoginPageWithSuspense;

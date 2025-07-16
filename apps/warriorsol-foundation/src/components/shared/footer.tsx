@@ -31,7 +31,7 @@ const Footer = () => {
       {/* Bottom Bar */}
       <div className=" mt-10 pt-6 border-t border-[#353534] flex flex-col md:flex-row items-center justify-between">
         <div className="text-sm text-white   mb-4 md:mb-0">
-          © 2024 Warrior Sol. Rooted in light. All rights reserved.
+          © 2025 Warrior Sol. Rooted in light. All rights reserved.
         </div>
         <div className="flex space-x-6 text-sm text-white">
           <a href="#" className="hover:text-white transition-colors font-light">
