@@ -30,7 +30,7 @@ export default function Navbar() {
   const toggleCart = useCartStore((state) => state.toggleCart);
   const { data: session } = useSession();
 
-  const foundationURL = process.env.NEXT_PUBLIC_FOUNDATION_URL!;
+  const foundationURL = process.env.NEXT_PUBLIC_WARRIOR_SOL_FOUNDATION_APP_URL;
   useEffect(() => {
     hydrateCart();
   }, [hydrateCart]);
@@ -124,7 +124,7 @@ export default function Navbar() {
           )}
 
           <a
-            href="https://foundation.yoursite.com"
+            href={`${foundationURL}`}
             target="_blank"
             rel="noopener noreferrer"
             className="bg-[#EE9254] text-white px-4 py-2 rounded-full text-center font-semibold text-sm hover:bg-[#e5772e] transition-all shadow-md"
