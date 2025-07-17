@@ -345,7 +345,7 @@ export default function ForgotPasswordPage() {
         />
 
         {/* Overlay Content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-white text-center px-4">
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/20 text-white text-center px-4">
           <Image
             src={Logo}
             alt="Warrior Sol Logo"

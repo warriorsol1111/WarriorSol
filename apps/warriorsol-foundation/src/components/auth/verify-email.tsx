@@ -137,7 +137,7 @@ export default function VerifyEmailPage() {
         />
 
         {/* Overlay Content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 px-4 text-center text-white">
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/20 px-4 text-center text-white">
           <Image
             src={Logo}
             alt="Warrior Sol Logo"

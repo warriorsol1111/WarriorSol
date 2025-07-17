@@ -14,104 +14,115 @@ export default function DonationForm() {
   const [donationType, setDonationType] = useState("one-time");
   const [amount, setAmount] = useState("50");
   const [customAmount, setCustomAmount] = useState("");
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+
+  async function handleDonate() {
+    const selectedAmount = customAmount || amount;
+
+    const res = await fetch("/api/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        amount: parseInt(selectedAmount),
+        donationType,
+        email,
+        name,
+      }),
+    });
+
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert("Failed to create checkout session");
+    }
+  }
 
   return (
     <>
-      <div className="text-center mb-8 mt-10 md:mb-16">
-        <h2 className='text-[32px] sm:text-[42px] md:text-[52px] lg:text-[62px] leading-tight md:leading-[62px] font-["Cormorant_SC"] font-normal text-[#1F1F1F] mb-3 md:mb-4'>
+      <div className="text-center mb-8 mt-10 md:mb-16 px-4">
+        <h2 className='text-[28px] sm:text-[36px] md:text-[52px] lg:text-[62px] leading-tight font-["Cormorant_SC"] font-normal text-[#1F1F1F] mb-3'>
           Make a Difference Today
         </h2>
-        <p className='text-[16px] sm:text-[18px] md:text-[20px] font-light font-["Inter"] text-[#1F1F1F]/70 mx-auto'>
+        <p className='text-[15px] sm:text-[17px] md:text-[20px] font-light font-["Inter"] text-[#1F1F1F]/70 mx-auto max-w-xl'>
           Every donation helps families facing their greatest challenges. Your
           support provides hope, resources, and healing.
         </p>
       </div>
-      <div className="flex flex-col md:flex-row w-full min-h-screen bg-neutral-900">
-        <div className="md:w-1/2 w-full">
+
+      <div className="flex flex-col md:flex-row w-full min-h-full bg-neutral-900">
+        {/* Image */}
+        <div className="w-full md:w-1/2 h-[250px] md:h-auto relative">
           <Image
             src={DonationFormImage}
             alt="Family Image"
-            width={800}
-            height={800}
-            className="object-cover w-full h-full"
+            fill
+            className="object-cover"
           />
         </div>
 
-        <div className="md:w-1/2 w-full bg-[#FFEBCC] flex p-8 md:p-12">
+        {/* Form Section */}
+        <div className="w-full md:w-1/2 bg-[#FFEBCC] flex p-6 sm:p-8 md:p-12">
           <Card className="w-full shadow-none border-none bg-[#FFF9F5]">
-            <CardContent className="flex flex-col justify-between h-full space-y-8 p-8">
-              <h2 className="text-[52px] font-light font-['Cormorant_SC'] text-center flex gap-2">
-                <FaRegHeart className="w-12 h-12 mt-4 text-[#EE9254]" />
+            <CardContent className="flex flex-col justify-between h-full space-y-8 p-6 sm:p-8">
+              <h2 className="text-3xl sm:text-4xl font-light font-['Cormorant_SC'] text-center flex gap-2 justify-center">
+                <FaRegHeart className="w-10 h-10 mt-1 text-[#EE9254]" />
                 Donation Form
               </h2>
 
               <div className="space-y-6 flex-grow">
-                <div className="mb-8">
-                  <Label className="text-xl mb-4 block">Donation Type</Label>
+                {/* Donation Type */}
+                <div>
+                  <Label className="text-lg sm:text-xl mb-4 block">
+                    Donation Type
+                  </Label>
                   <RadioGroup
                     value={donationType}
                     onValueChange={setDonationType}
-                    className="flex flex-col gap-4 rounded-sm"
+                    className="flex flex-col gap-4"
                   >
-                    <div
-                      onClick={() => setDonationType("one-time")}
-                      className={`flex items-center gap-2 p-3 border cursor-pointer ${
-                        donationType === "one-time"
-                          ? "bg-[#EE9254] text-white border-none"
-                          : "bg-white border-gray-200"
-                      }`}
-                    >
-                      <RadioGroupItem
-                        value="one-time"
-                        id="one-time"
-                        className={
-                          donationType === "one-time"
-                            ? "text-white"
-                            : "text-[#EE9254]"
-                        }
-                      />
-                      <Label
-                        htmlFor="one-time"
-                        className="cursor-pointer text-lg"
+                    {[
+                      { id: "one-time", label: "One-Time Donation" },
+                      { id: "monthly", label: "Monthly Recurring Donation" },
+                    ].map(({ id, label }) => (
+                      <div
+                        key={id}
+                        onClick={() => setDonationType(id)}
+                        className={`flex items-center gap-2 p-3 border rounded cursor-pointer ${
+                          donationType === id
+                            ? "bg-[#EE9254] text-white border-none"
+                            : "bg-white border-gray-200"
+                        }`}
                       >
-                        One-Time Donation
-                      </Label>
-                    </div>
-                    <div
-                      onClick={() => setDonationType("monthly")}
-                      className={`flex items-center gap-2 p-3 border cursor-pointer ${
-                        donationType === "monthly"
-                          ? "bg-[#EE9254] text-white border-none"
-                          : "bg-white border-gray-200"
-                      }`}
-                    >
-                      <RadioGroupItem
-                        value="monthly"
-                        id="monthly"
-                        className={
-                          donationType === "monthly"
-                            ? "text-white"
-                            : "text-[#EE9254]"
-                        }
-                      />
-                      <Label
-                        htmlFor="monthly"
-                        className="cursor-pointer text-lg"
-                      >
-                        Monthly Recurring Donation
-                      </Label>
-                    </div>
+                        <RadioGroupItem
+                          value={id}
+                          id={id}
+                          className={
+                            donationType === id
+                              ? "text-white"
+                              : "text-[#EE9254]"
+                          }
+                        />
+                        <Label htmlFor={id} className="cursor-pointer text-lg">
+                          {label}
+                        </Label>
+                      </div>
+                    ))}
                   </RadioGroup>
                 </div>
 
-                <div className="mb-8">
-                  <Label className="text-xl mb-4 block">Donation Amount</Label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {["25", "50", "100", "250", "500"].map((val) => (
+                {/* Donation Amount */}
+                <div>
+                  <Label className="text-lg sm:text-xl mb-4 block">
+                    Donation Amount
+                  </Label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {["10", "25", "50", "100", "250", "500"].map((val) => (
                       <Button
                         key={val}
                         variant="outline"
-                        className={`rounded-none text-lg h-12 ${
+                        className={`rounded text-lg h-10 sm:h-12 ${
                           amount === val
                             ? "bg-[#EE9254] text-white border-none"
                             : "bg-white border-gray-200"
@@ -122,36 +133,52 @@ export default function DonationForm() {
                       </Button>
                     ))}
                   </div>
-                  <div className="relative mt-2">
-                    <Input
-                      placeholder="Custom ($)"
-                      type="number"
-                      value={customAmount}
-                      onChange={(e) => setCustomAmount(e.target.value)}
-                      className="rounded-none pr-10 bg-white border-gray-200"
-                    />
-                  </div>
+                  {donationType !== "monthly" && (
+                    <div className="mt-2">
+                      <Input
+                        placeholder="Custom ($)"
+                        type="number"
+                        value={customAmount}
+                        onChange={(e) => setCustomAmount(e.target.value)}
+                        className="rounded bg-white border-gray-200"
+                      />
+                    </div>
+                  )}
                 </div>
 
+                {/* Name & Email */}
                 <div className="space-y-5">
-                  <div className="mb-5">
-                    <Label className="text-xl mb-4 block">Full Name</Label>
+                  <div>
+                    <Label className="text-lg sm:text-xl mb-2 block">
+                      Full Name
+                    </Label>
                     <Input
                       placeholder="Enter your full name"
-                      className="rounded-none bg-white border-gray-200"
+                      className="rounded bg-white border-gray-200"
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                     />
                   </div>
                   <div>
-                    <Label className="text-xl mb-4 block">Email Address</Label>
+                    <Label className="text-lg sm:text-xl mb-2 block">
+                      Email Address
+                    </Label>
                     <Input
                       placeholder="Enter your email address"
-                      className="rounded-none bg-white border-gray-200"
+                      className="rounded bg-white border-gray-200"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
                 </div>
               </div>
 
-              <Button className="w-full bg-[#EE9254] hover:bg-[#e76b1f] rounded-none text-white h-12">
+              <Button
+                className="w-full bg-[#EE9254] hover:bg-[#e76b1f] rounded text-white h-12"
+                onClick={handleDonate}
+              >
                 Donate Now 💸
               </Button>
             </CardContent>
