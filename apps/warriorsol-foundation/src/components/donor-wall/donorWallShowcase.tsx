@@ -1,29 +1,29 @@
 import React from "react";
 import Image from "next/image";
-import DonorWallImage from "@/assets/donor-wall-total.svg"; // Replace with your image
+import DonorWallImage from "@/assets/donor-wall-total.svg";
 import { Card } from "@/components/ui/card";
 import * as Progress from "@radix-ui/react-progress";
+import { Donation } from "./index";
 
-const topContributors = [
-  { name: "David Kim", donations: 12, amount: 1000 },
-  { name: "Sarah Johnson", donations: 8, amount: 1000 },
-  { name: "Emily Rodriguez", donations: 6, amount: 1000 },
-  { name: "Michael Smith", donations: 5, amount: 1000 },
-  { name: "Jessica Lee", donations: 4, amount: 1000 },
-];
+type DonorWallShowcaseProps = {
+  topDonations: Donation[];
+  recentDonations: Donation[];
+};
 
-const recentDonations = [
-  { name: "Olivia Brown", amount: 250, date: "2024-06-01" },
-  { name: "Liam Wilson", amount: 100, date: "2024-05-31" },
-  { name: "Sophia Martinez", amount: 75, date: "2024-05-30" },
-  { name: "Noah Lee", amount: 50, date: "2024-05-29" },
-  { name: "Emma Davis", amount: 25, date: "2024-05-28" },
-];
+export default function DonorWallShowcase({
+  topDonations = [],
+  recentDonations = [],
+}: DonorWallShowcaseProps) {
+  const totalRaised = topDonations.reduce((sum, d) => sum + d.amount, 0);
 
-export default function DonorWallShowcase() {
-  const totalRaised = 12847;
-  const fundingGoal = 23000;
+  const fundingGoal = 23000 * 100;
   const progressPercentage = Math.min((totalRaised / fundingGoal) * 100, 100);
+
+  const uniqueInvestors = Array.from(new Set(topDonations.map((d) => d.email)));
+
+  const topIndividualDonations = [...topDonations]
+    .sort((a, b) => b.amount - a.amount)
+    .slice(0, 5);
 
   return (
     <>
@@ -41,7 +41,9 @@ export default function DonorWallShowcase() {
             <div className="text-[#1F1F1F] text-[42px] font-medium ">
               Total Raised
             </div>
-            <div className="text-[52px] font-bold ">$12,847</div>
+            <div className="text-[52px] font-bold ">
+              ${(totalRaised / 100).toLocaleString()}
+            </div>
             <Progress.Root
               className="relative overflow-hidden bg-[#F5E0C3] rounded-full w-full h-2 my-2"
               value={progressPercentage}
@@ -55,7 +57,7 @@ export default function DonorWallShowcase() {
             </Progress.Root>
 
             <div className="flex justify-between text-2xl font-semibold">
-              <span>23 investors</span>
+              <span>{uniqueInvestors.length} investors</span>
               <span>{progressPercentage.toFixed()}%</span>
             </div>
           </Card>
@@ -63,19 +65,17 @@ export default function DonorWallShowcase() {
 
         {/* Right: Top Contributors */}
         <div className="flex-1 min-w-[350px] h-full flex flex-col">
-          <h2 className="text-3xl font-['Cormorant_SC'] mb-6">
-            Top Contributors
-          </h2>
+          <h2 className="text-3xl font-['Cormorant_SC'] mb-6">Top Donations</h2>
           <div className="flex flex-col gap-4 flex-1 justify-center">
-            {topContributors.slice(0, 5).map((contributor) => {
-              const initials = contributor.name
+            {topIndividualDonations.map((donation) => {
+              const initials = donation.name
                 .split(" ")
                 .map((n: string) => n[0])
                 .join("")
                 .toUpperCase();
               return (
                 <div
-                  key={contributor.name}
+                  key={donation.id}
                   className="flex items-center justify-between bg-[#FAFAFA] rounded-lg p-8 shadow-sm border-l-4 border-[#EE9254] hover:shadow-md transition-shadow"
                 >
                   <div className="flex items-center gap-4">
@@ -84,15 +84,23 @@ export default function DonorWallShowcase() {
                     </div>
                     <div>
                       <div className="font-medium text-2xl">
-                        {contributor.name}
+                        {donation.name}
                       </div>
                       <div className="text-xs">
-                        {contributor.donations} Donations
+                        Donated on{" "}
+                        {new Date(donation.createdAt).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          }
+                        )}
                       </div>
                     </div>
                   </div>
                   <div className="text-2xl font-bold">
-                    ${contributor.amount}
+                    ${(donation.amount / 100).toLocaleString()}
                   </div>
                 </div>
               );
@@ -115,7 +123,7 @@ export default function DonorWallShowcase() {
 
             return (
               <div
-                key={idx}
+                key={donation.id || idx}
                 className="flex items-center justify-between bg-white rounded-xl px-6 py-5 shadow-sm border border-[#F5E0C3] hover:shadow-md transition-all"
               >
                 <div className="flex items-center gap-4">
@@ -128,16 +136,19 @@ export default function DonorWallShowcase() {
                     </div>
                     <div className="text-sm text-[#777]">
                       Donated on{" "}
-                      {new Date(donation.date).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
+                      {new Date(donation.createdAt).toLocaleDateString(
+                        "en-US",
+                        {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        }
+                      )}
                     </div>
                   </div>
                 </div>
                 <div className="text-xl font-bold text-[#1F1F1F]">
-                  ${donation.amount}
+                  ${(donation.amount / 100).toLocaleString()}
                 </div>
               </div>
             );

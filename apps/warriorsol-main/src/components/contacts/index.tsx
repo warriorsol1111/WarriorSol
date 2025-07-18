@@ -21,7 +21,6 @@ type FormData = {
 const Contacts = () => {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
-  console.log("Session data:", session?.user.token);
   const {
     register,
     handleSubmit,

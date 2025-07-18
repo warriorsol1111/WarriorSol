@@ -4,6 +4,7 @@ import ChangeLife from "@/assets/changeLife.svg";
 import { BiDonateHeart } from "react-icons/bi";
 import { HiOutlineUsers } from "react-icons/hi2";
 import DonationForm from "./DonationForm";
+import SessionProviderWrapper from "../shared/sessionProvider";
 
 export default function Donations() {
   return (
@@ -108,7 +109,9 @@ export default function Donations() {
           </div>
         </div>
       </div>
-      <DonationForm />
+      <SessionProviderWrapper>
+        <DonationForm />
+      </SessionProviderWrapper>
     </section>
   );
 }

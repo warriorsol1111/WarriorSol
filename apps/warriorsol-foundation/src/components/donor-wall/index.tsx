@@ -3,8 +3,28 @@ import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import DonorWallImage from "@/assets/donorWall.svg";
 import DonorWallShowcase from "./donorWallShowcase";
-
-export default function DonorWall() {
+export type Donation = {
+  id: string;
+  userId: string;
+  stripeSessionId: string;
+  stripeReceiptUrl: string;
+  stripeSubscriptionId: string | null;
+  name: string;
+  email: string;
+  amount: number;
+  currency: string;
+  donationType: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string | null;
+};
+export default function DonorWall({
+  topDonations = [],
+  recentDonations = [],
+}: {
+  topDonations: Donation[];
+  recentDonations: Donation[];
+}) {
   return (
     <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
       <Card className="relative w-full h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden rounded-lg">
@@ -49,7 +69,10 @@ export default function DonorWall() {
           Thank you to all the warriors who make our mission possible
         </p>
       </div>
-      <DonorWallShowcase />
+      <DonorWallShowcase
+        topDonations={topDonations}
+        recentDonations={recentDonations}
+      />
     </section>
   );
 }

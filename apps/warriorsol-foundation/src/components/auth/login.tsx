@@ -56,7 +56,6 @@ function LoginPage() {
       redirect: false,
     });
 
-    console.log("Login response:", response);
     if (response?.error) {
       if (response.error.includes("User is not verified")) {
         toast.error("User not verified");

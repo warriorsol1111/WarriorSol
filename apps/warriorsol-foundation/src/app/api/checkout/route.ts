@@ -1,4 +1,3 @@
-// app/api/checkout/route.ts (Edge not needed)
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -9,7 +8,7 @@ export async function POST(req: Request) {
 
   const body = await req.json();
 
-  const { amount, email, name, donationType } = body;
+  const { amount, email, name, donationType, userId } = body;
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -34,11 +33,14 @@ export async function POST(req: Request) {
               quantity: 1,
             },
       ],
+
       customer_email: email,
       metadata: {
         donor_name: name,
         donation_type: donationType,
+        user_id: userId ?? "anonymous",
       },
+
       success_url: process.env.STRIPE_SUCCESS_URL!,
       cancel_url: process.env.STRIPE_CANCEL_URL!,
     });
@@ -50,7 +52,6 @@ export async function POST(req: Request) {
   }
 }
 
-// Mock mapping function
 function getRecurringPriceId(amount: string) {
   const map: Record<string, string> = {
     "10": "price_1RlrihPTBH0WqyTA1CxIZsyo",
@@ -60,5 +61,5 @@ function getRecurringPriceId(amount: string) {
     "250": "price_1RlrkoPTBH0WqyTApnq4mndb",
     "500": "price_1RlrlDPTBH0WqyTAJyzMT6a9",
   };
-  return map[amount] ?? "price_1RlrihPTBH0WqyTA1CxIZsyo"; // Fallback if needed
+  return map[amount] ?? "price_1RlrihPTBH0WqyTA1CxIZsyo";
 }

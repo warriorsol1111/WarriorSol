@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import DonationFormImage from "@/assets/donationForm.svg";
 import { FaRegHeart } from "react-icons/fa6";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useSession } from "next-auth/react";
 
 export default function DonationForm() {
   const [donationType, setDonationType] = useState("one-time");
@@ -16,8 +17,48 @@ export default function DonationForm() {
   const [customAmount, setCustomAmount] = useState("");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const { data: session } = useSession();
+
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    amount: "",
+  });
+
+  function validateEmail(email: string) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  function validate() {
+    let valid = true;
+    const newErrors = { name: "", email: "", amount: "" };
+
+    if (!name.trim()) {
+      newErrors.name = "Full name is required.";
+      valid = false;
+    }
+    if (!email.trim()) {
+      newErrors.email = "Email is required.";
+      valid = false;
+    } else if (!validateEmail(email)) {
+      newErrors.email = "Please enter a valid email address.";
+      valid = false;
+    }
+    const selectedAmount = customAmount || amount;
+    if (
+      !selectedAmount ||
+      isNaN(Number(selectedAmount)) ||
+      Number(selectedAmount) <= 0
+    ) {
+      newErrors.amount = "Please enter a valid donation amount.";
+      valid = false;
+    }
+    setErrors(newErrors);
+    return valid;
+  }
 
   async function handleDonate() {
+    if (!validate()) return;
     const selectedAmount = customAmount || amount;
 
     const res = await fetch("/api/checkout", {
@@ -28,6 +69,7 @@ export default function DonationForm() {
         donationType,
         email,
         name,
+        userId: session?.user?.id || null,
       }),
     });
 
@@ -144,6 +186,11 @@ export default function DonationForm() {
                       />
                     </div>
                   )}
+                  {errors.amount && (
+                    <div className="text-red-500 text-sm mt-1">
+                      {errors.amount}
+                    </div>
+                  )}
                 </div>
 
                 {/* Name & Email */}
@@ -159,6 +206,11 @@ export default function DonationForm() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                     />
+                    {errors.name && (
+                      <div className="text-red-500 text-sm mt-1">
+                        {errors.name}
+                      </div>
+                    )}
                   </div>
                   <div>
                     <Label className="text-lg sm:text-xl mb-2 block">
@@ -171,6 +223,11 @@ export default function DonationForm() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
+                    {errors.email && (
+                      <div className="text-red-500 text-sm mt-1">
+                        {errors.email}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

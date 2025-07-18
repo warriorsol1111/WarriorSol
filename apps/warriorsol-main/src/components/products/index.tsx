@@ -61,7 +61,6 @@ const Products = () => {
 
   const transformProducts = (data: ShopifyProductResponse): Product[] => {
     if (!data.products?.edges) return [];
-    console.log("Transforming products:", data.products.edges);
 
     return data.products.edges.map((edge: ShopifyProductEdge) => {
       const product = edge.node;
@@ -141,7 +140,6 @@ const Products = () => {
         }
 
         const data = await response.json();
-        console.log("Fetched products data:", data);
         const transformedProducts = transformProducts(data);
         setProducts(transformedProducts);
       } catch (error) {

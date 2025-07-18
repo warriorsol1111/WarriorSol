@@ -61,7 +61,6 @@ const WarriorProducts = () => {
 
   const transformProducts = (data: ShopifyProductResponse): Product[] => {
     if (!data.products?.edges) return [];
-    console.log("Transforming products:", data.products.edges);
 
     return data.products.edges.map((edge: ShopifyProductEdge) => {
       const product = edge.node;

@@ -9,7 +9,6 @@ import Footer from "@/components/shared/footer";
 import Image from "next/image";
 import ThankYouImage from "@/assets/thank_you.svg";
 export default function ThankYouPage() {
-  // State to track if we're on the client
   const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
@@ -47,6 +46,7 @@ export default function ThankYouPage() {
 
           <Button
             asChild
+            size="lg"
             className="rounded-lg bg-[#EE9254] hover:bg-[#e76b1f] text-white text-lg px-8 py-4"
           >
             <Link href="/">Back to Home</Link>
