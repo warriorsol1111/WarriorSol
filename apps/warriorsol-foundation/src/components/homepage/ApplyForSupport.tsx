@@ -28,6 +28,8 @@ import {
 import { useSession } from "next-auth/react";
 import { toast } from "react-hot-toast";
 import { Loader2 } from "lucide-react";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 export default function ApplyForSupport() {
   const { data: session } = useSession();
@@ -141,19 +143,26 @@ export default function ApplyForSupport() {
                   value={session?.user?.email || form.contactEmail}
                   onChange={handleChange}
                   required
-                  disabled={!!session?.user?.email}
                 />
               </div>
               <div className="space-y-2">
                 <Label className="text-xl" htmlFor="contactPhone">
                   Contact Phone
                 </Label>
-                <Input
-                  id="contactPhone"
-                  type="tel"
-                  placeholder="Enter your phone number"
+                <PhoneInput
+                  country={"pk"}
                   value={form.contactPhone}
-                  onChange={handleChange}
+                  onChange={(phone) =>
+                    setForm((prev) => ({ ...prev, contactPhone: phone }))
+                  }
+                  inputProps={{
+                    name: "contactPhone",
+                    required: true,
+                    id: "contactPhone",
+                    className:
+                      "w-full py-2 px-12 border border-gray-300 rounded-md !h-12 text-lg",
+                  }}
+                  containerStyle={{ width: "100%" }}
                 />
               </div>
               <div className="space-y-2">
