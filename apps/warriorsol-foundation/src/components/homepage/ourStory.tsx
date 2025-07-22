@@ -27,7 +27,7 @@ export default function OurStory() {
           <div className="flex items-center justify-center mb-12">
             <RiDoubleQuotesL className="text-[62px] text-[#EE9254] " />
           </div>
-          <div className="space-y-6 text-gray-800">
+          <div className="space-y-6 text-center md:text-start text-gray-800">
             <p className="text-2xl">
               When I First Met Tasha, She Was Just Eight Years Old, Facing
               Challenges That No Child Should Ever Have To Endure. Her Courage
@@ -50,7 +50,7 @@ export default function OurStory() {
               Toughest Battles.
             </p>
 
-            <blockquote className="border-l-4 border-[#EE9254] pl-6 italic mt-8 text-base font-bold">
+            <blockquote className="border-l-4  border-[#EE9254] pl-6 italic mt-8 text-base font-bold">
               &quot;Tasha Taught Me That Being A Warrior Isn&apos;t About
               Fighting Alone—It&apos;s About Having The Courage To Accept Help
               And The Strength To Keep Going, Knowing That Your Community

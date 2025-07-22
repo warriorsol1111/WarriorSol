@@ -1,37 +1,36 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
-import rebellionImage from "@/assets/rebellion-image.png"; // update the path if needed
+import rebellionImage from "@/assets/rebellion-image.png";
 
 const RebellionSection: React.FC = () => {
   return (
-    <section className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[596px] text-[#1F1F1F]">
-      {/* Background Image */}
-      <Image
-        src={rebellionImage}
-        alt="Rebellion"
-        fill
-        className="object-cover z-0"
-        priority
-      />
-
-      {/* Bottom Gradient Overlay */}
-      <div
-        className="absolute inset-0 z-10"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(31, 31, 31, 0) 0%, rgba(31, 31, 31, 0.6) 100%)",
-        }}
-      />
-
-      {/* Top White Block with Text and Circle */}
-      <div className="absolute top-0 left-0 right-0 bg-white px-4 sm:px-8 md:px-12 lg:px-16 py-6 sm:py-8 md:py-10 lg:py-12 z-20">
-        {/* Left-aligned Text */}
-        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[62px] leading-tight lg:leading-[62px] font-['Cormorant_SC'] font-normal text-left capitalize max-w-full lg:max-w-[900px]">
+    <div className="w-full text-[#1F1F1F]">
+      {/* Text Section */}
+      <section className="w-full bg-white px-4 sm:px-8 md:px-12 lg:px-16 py-10 sm:py-12 md:py-16 lg:py-20">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[62px] leading-tight lg:leading-[62px] font-['Cormorant_SC'] font-normal text-left capitalize max-w-full  mx-auto">
           Not Just Apparel.
           <br className="hidden sm:block" />A Rebellion Wrapped In Thread.
         </h2>
-      </div>
-    </section>
+      </section>
+
+      {/* Image Banner Section */}
+      <section className="relative w-full overflow-hidden">
+        <div className="w-full">
+          <Image
+            src={rebellionImage}
+            alt="Rebellion"
+            className="w-full h-auto object-cover object-center"
+            placeholder="blur"
+            priority
+          />
+        </div>
+
+        {/* Bottom Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#1F1F1F]/60 pointer-events-none" />
+      </section>
+    </div>
   );
 };
 

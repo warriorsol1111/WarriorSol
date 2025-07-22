@@ -46,9 +46,9 @@ export default function Navbar() {
         &quot;Your Story Is Your Strength. Wear It With Pride.&quot;
       </div>
 
-      <div className="flex items-center justify-between px-3 sm:px-6 py-3 sm:py-4 bg-white relative">
+      <div className="flex items-start justify-between px-3 sm:px-6 py-3 sm:py-4 bg-white relative">
         {/* Left: Sidebar menu + Logo */}
-        <div className="flex items-center space-x-1 sm:space-x-3">
+        <div className="flex items-center space-x-1 sm:space-x-3 flex-shrink-0">
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="lg:hidden p-1">
@@ -97,44 +97,60 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Center: Navigation Links (desktop only) */}
-        <nav className="absolute hidden lg:flex left-1/2 transform -translate-x-1/2 space-x-6 text-sm text-center text-black font-light items-center">
-          <Link href="/home" className="hover:underline">
-            Home
-          </Link>
-          <Link href="/products" className="hover:underline">
-            All Products
-          </Link>
-          <Link href="/warrior-products" className="hover:underline">
-            Warrior Products
-          </Link>
-          <Link href="/community" className="hover:underline">
-            Community
-          </Link>
-          <Link href="/about" className="hover:underline">
-            About
-          </Link>
-          <Link href="/contacts" className="hover:underline">
-            Contacts
-          </Link>
-          {session?.user?.role === "admin" && (
-            <Link href="/admin-story-review" className="hover:underline">
-              Review Stories
+        {/* Center: Navigation Links (desktop only) - Now allows wrapping */}
+        <nav className="hidden lg:flex flex-1 justify-center items-center px-4 max-w-2xl xl:max-w-none mx-auto">
+          <div className="flex flex-wrap xl:flex-nowrap justify-center items-center gap-x-4 lg:gap-x-6 gap-y-2 text-sm text-black font-light">
+            <Link href="/home" className="hover:underline whitespace-nowrap">
+              Home
             </Link>
-          )}
-
-          <a
-            href={`${foundationURL}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-[#EE9254] text-white px-4 py-2 rounded-full text-center font-semibold text-sm hover:bg-[#e5772e] transition-all shadow-md"
-          >
-            Visit Foundation Site
-          </a>
+            <Link
+              href="/products"
+              className="hover:underline whitespace-nowrap"
+            >
+              All Products
+            </Link>
+            <Link
+              href="/warrior-products"
+              className="hover:underline whitespace-nowrap"
+            >
+              Warrior Products
+            </Link>
+            <Link
+              href="/community"
+              className="hover:underline whitespace-nowrap"
+            >
+              Community
+            </Link>
+            <Link href="/about" className="hover:underline whitespace-nowrap">
+              About
+            </Link>
+            <Link
+              href="/contacts"
+              className="hover:underline whitespace-nowrap"
+            >
+              Contacts
+            </Link>
+            {session?.user?.role === "admin" && (
+              <Link
+                href="/admin-story-review"
+                className="hover:underline whitespace-nowrap"
+              >
+                Review Stories
+              </Link>
+            )}
+            <a
+              href={`${foundationURL}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#EE9254] text-white px-4 py-2 rounded-full text-center font-semibold text-sm hover:bg-[#e5772e] transition-all shadow-md whitespace-nowrap"
+            >
+              Visit Foundation Site
+            </a>
+          </div>
         </nav>
 
         {/* Right: Search / User / Cart */}
-        <div className="flex items-center sm:gap-4">
+        <div className="flex items-center sm:gap-4 flex-shrink-0">
           <Button variant="link" className="p-1 sm:p-2">
             <Search className="h-5 w-5" />
           </Button>

@@ -45,7 +45,7 @@ export default function Navbar() {
           {/* Mobile Menu Trigger */}
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden p-1">
+              <Button variant="ghost" size="icon" className="lg:hidden p-1">
                 <MdMenu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
@@ -56,9 +56,12 @@ export default function Navbar() {
             >
               <nav className="flex flex-col gap-4 font-medium">
                 <Link href="/">Home</Link>
-                <Link href="/support">Support</Link>
+                <Link href="/support">Apply For Support</Link>
                 <Link href="/donations">Donations</Link>
                 <Link href="/donor-wall">Donor Wall</Link>
+                {session?.user?.role === "admin" && (
+                  <Link href="/support-applications">View Applications</Link>
+                )}
               </nav>
 
               {/* 🔥 CTA Button */}
@@ -89,12 +92,12 @@ export default function Navbar() {
         </div>
 
         {/* Center: Desktop Navigation */}
-        <nav className="absolute hidden md:flex left-1/2 transform -translate-x-1/2 space-x-6 text-sm text-center text-black font-light items-center">
+        <nav className="hidden lg:flex flex-1 justify-center items-center space-x-6 text-sm text-black font-light overflow-x-auto">
           <Link href="/" className="hover:underline">
             Home
           </Link>
           <Link href="/support" className="hover:underline">
-            Support
+            Apply For Support
           </Link>
           <Link href="/donations" className="hover:underline">
             Donations
@@ -102,6 +105,11 @@ export default function Navbar() {
           <Link href="/donor-wall" className="hover:underline">
             Donor Wall
           </Link>
+          {session?.user?.role === "admin" && (
+            <Link href="/support-applications" className="hover:underline">
+              View Applications
+            </Link>
+          )}
 
           {/* Desktop CTA Button */}
           <a

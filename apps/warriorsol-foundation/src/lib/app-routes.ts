@@ -5,8 +5,5 @@ export const PUBLIC_ROUTES = [
   "/forgot-password",
   "/reset-password",
   "/verify-email",
-  "/products",
-  "/products/[id]",
-  "/warrior-products",
-  "/warrior-products/[id]",
+  "/",
 ];
