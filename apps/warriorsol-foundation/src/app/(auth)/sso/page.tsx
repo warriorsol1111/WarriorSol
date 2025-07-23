@@ -20,6 +20,7 @@ function SSOLoginPage() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          credentials: "include",
           method: "POST",
         }
       );

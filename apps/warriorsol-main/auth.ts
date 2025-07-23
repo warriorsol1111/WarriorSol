@@ -59,6 +59,7 @@ export const authConfig: AuthOptions = {
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/validate-token`,
             {
               method: "POST",
+              credentials: "include",
               headers: {
                 Authorization: `Bearer ${token}`,
               },
