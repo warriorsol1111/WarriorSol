@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { PUBLIC_ROUTES } from "@/lib/app-routes";
+import type { NextApiRequest } from "next";
+
 function isPublicRoute(pathname: string) {
   return PUBLIC_ROUTES.some((route) => {
     if (route.includes("[id]")) {
@@ -16,7 +18,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const token = await getToken({
-    req: request,
+    req: request as unknown as NextApiRequest,
     secret: process.env.NEXTAUTH_SECRET,
   });
 

@@ -72,7 +72,7 @@ export default function Navbar() {
                 )}
               </nav>
               <a
-                href={foundationURL}
+                href={`${foundationURL}/sso?token=${session?.user.token}}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-[#EE9254] text-white px-6 py-2 rounded-full font-semibold text-sm hover:bg-[#e5772e] transition-all shadow-md w-fit mx-auto mt-4 mb-2"
@@ -139,7 +139,7 @@ export default function Navbar() {
               </Link>
             )}
             <a
-              href={`${foundationURL}`}
+              href={`${foundationURL}/sso?token=${session?.user.token}}`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-[#EE9254] text-white px-4 py-2 rounded-full text-center font-semibold text-sm hover:bg-[#e5772e] transition-all shadow-md whitespace-nowrap"

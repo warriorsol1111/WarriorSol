@@ -1,5 +1,8 @@
 // /app/api/cart/create/route.ts
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import type { NextApiRequest } from "next";
+
 import { fetchShopify } from "../../../../lib/shopify";
 import { cookies } from "next/headers";
 import { getToken } from "next-auth/jwt";
@@ -66,7 +69,7 @@ export async function POST(request: NextRequest) {
       maxAge: 60 * 60 * 24 * 30, // 30 days
       httpOnly: false,
     });
-    const token = await getToken({ req: request });
+    const token = await getToken({ req: request as unknown as NextApiRequest });
 
     if (!token) {
       return new Response("Unauthorized", { status: 401 });

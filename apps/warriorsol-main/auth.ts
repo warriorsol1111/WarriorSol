@@ -1,10 +1,9 @@
 import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
+import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { signInSchema } from "@/lib/utils";
-import type { AuthOptions, User } from "next-auth";
+import type { AuthOptions } from "next-auth";
 
-// 🔥 EXTEND TYPES 🔥
+// 🔥 Extend types
 declare module "next-auth" {
   interface User {
     id: string;
@@ -31,59 +30,46 @@ declare module "next-auth/jwt" {
   }
 }
 
-class InvalidLoginError extends Error {
-  code = "custom";
-  redirectUrl?: string;
-
-  constructor(message: string, redirectUrl?: string) {
-    super(message);
-    this.code = message;
-    this.redirectUrl = redirectUrl;
-  }
-}
-
-const authConfig: AuthOptions = {
+export const authConfig: AuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
-    Credentials({
+
+    CredentialsProvider({
+      name: "Credentials",
       credentials: {
         email: {},
         password: {},
+        token: {},
       },
-      authorize: async (credentials) => {
-        try {
-          const { email, password } =
-            await signInSchema.parseAsync(credentials);
+      async authorize(credentials) {
+        if (!credentials) throw new Error("Missing credentials");
 
-          const formData = new URLSearchParams();
-          formData.append("email", email);
-          if (password) formData.append("password", password);
+        const { email, password, token } = credentials as {
+          email?: string;
+          password?: string;
+          token?: string;
+        };
 
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`,
+        if (token) {
+          // 🪄 SSO flow
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/validate-token`,
             {
               method: "POST",
               headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
+                Authorization: `Bearer ${token}`,
               },
-              body: formData,
             }
           );
 
-          const data = await response.json();
+          if (!res.ok) throw new Error("Invalid or expired SSO token");
 
-          if (!response.ok) {
-            const redirectUrl = data.data?.redirectUrl;
-            const errorMessage = redirectUrl
-              ? `${data.message}|REDIRECT:${redirectUrl}`
-              : data.message;
-            throw new InvalidLoginError(errorMessage);
-          }
+          const json = await res.json();
+          const userData = json.data;
 
-          const userData = data.data;
           const [firstName, ...lastParts] = userData.name?.split(" ") || [];
           const lastName = lastParts.join(" ");
 
@@ -93,19 +79,47 @@ const authConfig: AuthOptions = {
             firstName,
             lastName,
             role: userData.role || "user",
-            token: userData.token,
-            loginMethod: "credentials",
+            token: token,
+            loginMethod: "sso",
           };
-        } catch (error) {
-          if (error instanceof InvalidLoginError) throw error;
-          throw new InvalidLoginError((error as { message: string }).message);
         }
+
+        // 💻 Normal login flow
+        const form = new URLSearchParams();
+        form.append("email", email!);
+        form.append("password", password!);
+
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: form.toString(),
+          }
+        );
+
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.message || "Login failed");
+
+        const userData = json.data;
+        const [firstName, ...lastParts] = userData.name?.split(" ") || [];
+        const lastName = lastParts.join(" ");
+
+        return {
+          id: userData.id,
+          email: userData.email,
+          firstName,
+          lastName,
+          role: userData.role || "user",
+          token: userData.token,
+          loginMethod: "credentials",
+        };
       },
     }),
   ],
 
   callbacks: {
-    signIn: async ({ user, account }) => {
+    async signIn({ user, account }) {
       if (account?.provider === "google") {
         try {
           const res = await fetch(
@@ -120,23 +134,20 @@ const authConfig: AuthOptions = {
             }
           );
 
-          const data = await res.json();
-
-          if (!res.ok || !data.data?.token) {
+          const json = await res.json();
+          if (!res.ok || !json.data?.token)
             throw new Error("GOOGLE_LOGIN_BLOCKED");
-          }
 
-          account.access_token = data.data.token;
-
-          user.id = data.data.id;
-          user.name = data.data.name;
-          user.token = data.data.token;
-          user.role = data.data.role || "user";
+          const { token, id, name, role } = json.data;
+          user.id = id;
+          user.name = name;
+          user.token = token;
+          user.role = role;
           user.loginMethod = "google";
+
           return true;
-        } catch (err: unknown) {
-          const message = err instanceof Error ? err.message : String(err);
-          console.error("❌ Google sync failed:", message);
+        } catch (err) {
+          console.error("❌ Google sync failed:", err);
           throw new Error("GOOGLE_LOGIN_BLOCKED");
         }
       }
@@ -144,31 +155,22 @@ const authConfig: AuthOptions = {
       return true;
     },
 
-    jwt: async ({ token, user, account }) => {
+    async jwt({ token, user, account }) {
       if (user && account) {
-        if (account.provider === "google") {
-          token.id = user.id;
-          token.email = user.email!;
-          token.firstName = user.name?.split(" ")[0] || "";
-          token.lastName = user.name?.split(" ").slice(1).join(" ") || "";
-          token.accessToken = account.access_token!;
-          token.role = user.role || "user";
-          token.loginMethod = "google";
-        } else {
-          token.id = (user as User).id;
-          token.email = (user as User).email;
-          token.firstName = (user as User).firstName;
-          token.lastName = (user as User).lastName;
-          token.accessToken = (user as User).token;
-          token.role = (user as User).role || "user";
-          token.loginMethod = (user as User).loginMethod || "credentials";
-        }
+        token.id = user.id;
+        token.email = user.email;
+        token.firstName =
+          user.firstName || (user.name?.split(" ")[0] as string);
+        token.lastName =
+          user.lastName || (user.name?.split(" ").slice(1).join(" ") as string);
+        token.accessToken = user.token;
+        token.role = user.role || "user";
+        token.loginMethod = user.loginMethod || account.provider;
       }
-
       return token;
     },
 
-    session: async ({ session, token }) => {
+    async session({ session, token }) {
       session.user = {
         id: token.id,
         email: token.email,
@@ -184,7 +186,7 @@ const authConfig: AuthOptions = {
 
   session: {
     strategy: "jwt",
-    maxAge: 24 * 60 * 60,
+    maxAge: 24 * 60 * 60, // 24 hrs
   },
 
   pages: {
@@ -195,5 +197,5 @@ const authConfig: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 };
 
-export { authConfig };
-export const { handlers, signIn, signOut, auth } = NextAuth(authConfig);
+const handler = NextAuth(authConfig);
+export { handler as GET, handler as POST };
