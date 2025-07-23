@@ -66,7 +66,7 @@ export default function Navbar() {
 
               {/* 🔥 CTA Button */}
               <a
-                href={`${mainURL}/sso?token=${session?.user.token}}`}
+                href={`${mainURL}/home`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block text-center bg-[#EE9254] text-white px-4 py-3 rounded-lg font-semibold text-sm hover:bg-[#e5772e] transition-all shadow-md mt-6"
@@ -113,7 +113,7 @@ export default function Navbar() {
 
           {/* Desktop CTA Button */}
           <a
-            href={`${mainURL}/sso?token=${session?.user.token}}`}
+            href={`${mainURL}/home`}
             target="_blank"
             rel="noopener noreferrer"
             className="ml-4 px-4 py-2 bg-[#EE9254] text-white rounded-full font-semibold text-sm hover:bg-[#e5772e] transition-all shadow-md"
