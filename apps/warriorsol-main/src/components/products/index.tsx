@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import Navbar from "../shared/navbar";
 import Footer from "../shared/footer";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -10,6 +10,12 @@ import { BsFilterLeft } from "react-icons/bs";
 import { Button } from "../ui/button";
 import { SocialLinks } from "../shared/socialLinks";
 
+interface Variant {
+  title: string;
+  price: string;
+  availableForSale: boolean;
+}
+
 interface Product {
   id: string;
   title: string;
@@ -18,6 +24,10 @@ interface Product {
   imageUrl: string;
   handle: string;
   availableForSale: boolean;
+  variants: Variant[];
+  colors: string[];
+  sizes: string[];
+  priceValue: number;
 }
 
 interface ShopifyProductEdge {
@@ -26,14 +36,8 @@ interface ShopifyProductEdge {
     title: string;
     productType: string;
     handle: string;
-    availableForSale: boolean;
     variants: {
-      edges: Array<{
-        node: {
-          price: string;
-          availableForSale: boolean;
-        };
-      }>;
+      edges: Array<{ node: Variant }>;
     };
     images: {
       edges: Array<{
@@ -42,128 +46,268 @@ interface ShopifyProductEdge {
         };
       }>;
     };
+    options: Array<{
+      name: string;
+      values: string[];
+    }>;
   };
+}
+
+interface Collection {
+  id: string;
+  title: string;
+  handle: string;
+  productHandles: string[];
 }
 
 interface ShopifyProductResponse {
   products: {
     edges: ShopifyProductEdge[];
   };
+  collections: Collection[];
 }
 
-const Products = () => {
+const Products: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("all");
-  const [products, setProducts] = useState<Product[]>([]);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [collections, setCollections] = useState<Collection[]>([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState<FilterState>(initialFilterState);
-
-  const transformProducts = (data: ShopifyProductResponse): Product[] => {
-    if (!data.products?.edges) return [];
-
-    return data.products.edges.map((edge: ShopifyProductEdge) => {
-      const product = edge.node;
-      const firstVariant = product.variants?.edges?.[0]?.node;
-      const firstImage = product.images?.edges?.[0]?.node;
-
-      // Check if ANY variant is available for sale
-      const hasAvailableVariant =
-        product.variants?.edges?.some(
-          (variantEdge) => variantEdge.node.availableForSale
-        ) ?? false;
-
-      return {
-        id: product.id,
-        title: product.title,
-        category: product.productType || "General",
-        price: firstVariant?.price ? `$${firstVariant.price}` : "$0.00",
-        imageUrl: firstImage?.originalSrc || "/placeholder-image.jpg",
-        handle: product.handle,
-        availableForSale: hasAvailableVariant, // Now checks all variants
-      };
+  const extractColorsFromVariants = (
+    variants: Variant[],
+    options: ShopifyProductEdge["node"]["options"]
+  ): string[] => {
+    const colorOption = options?.find(
+      (option) => option.name.toLowerCase() === "color"
+    );
+    if (colorOption) {
+      return colorOption.values.map((color) =>
+        color.toLowerCase().replace(/[^a-z]/g, "")
+      );
+    }
+    const colors = new Set<string>();
+    variants.forEach((variant) => {
+      const title = variant.title.toLowerCase();
+      if (title.includes("black")) colors.add("black");
+      if (title.includes("white")) colors.add("white");
+      if (title.includes("grey") || title.includes("gray")) colors.add("grey");
+      if (title.includes("charcoal")) colors.add("charcoal");
+      if (title.includes("cardinal")) colors.add("cardinal");
+      if (title.includes("loden")) colors.add("loden");
+      if (title.includes("red")) colors.add("red");
+      if (title.includes("blue")) colors.add("blue");
     });
+    return Array.from(colors);
   };
 
-  const fetchProducts = useCallback(
-    async (tabValue: string, currentFilters: FilterState) => {
-      const PUBLIC_URL = process.env.NEXT_PUBLIC_APP_URL;
-      setLoading(true);
-      setError(null);
-
-      try {
-        const endpoint = `${PUBLIC_URL}/api/shopify/getAllProducts`;
-        const queryParams = new URLSearchParams();
-
-        // Add tab value to query
-        switch (tabValue) {
-          case "bestsellers":
-            queryParams.append("type", "bestsellers");
-            break;
-          case "community":
-            queryParams.append("type", "community");
-            break;
-        }
-
-        // Add filters to query
-        if (currentFilters.productType.length > 0) {
-          queryParams.append(
-            "productType",
-            currentFilters.productType.join(",")
-          );
-        }
-        if (currentFilters.color.length > 0) {
-          queryParams.append("color", currentFilters.color.join(","));
-        }
-        if (currentFilters.size.length > 0) {
-          queryParams.append("size", currentFilters.size.join(","));
-        }
-        if (currentFilters.gender.length > 0) {
-          queryParams.append("gender", currentFilters.gender.join(","));
-        }
-        if (currentFilters.collection.length > 0) {
-          queryParams.append("collection", currentFilters.collection.join(","));
-        }
-        if (currentFilters.sortBy !== "New In") {
-          queryParams.append("sortBy", currentFilters.sortBy.toLowerCase());
-        }
-
-        const queryString = queryParams.toString();
-        const finalEndpoint = queryString
-          ? `${endpoint}?${queryString}`
-          : endpoint;
-
-        const response = await fetch(finalEndpoint);
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch products: ${response.status}`);
-        }
-
-        const data = await response.json();
-        const transformedProducts = transformProducts(data);
-        setProducts(transformedProducts);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-        setError(
-          error instanceof Error ? error.message : "Failed to fetch products"
-        );
-        setProducts([]);
-      } finally {
-        setLoading(false);
+  const extractSizesFromVariants = (
+    variants: Variant[],
+    options: ShopifyProductEdge["node"]["options"]
+  ): string[] => {
+    const sizeOption = options?.find(
+      (option) => option.name.toLowerCase() === "size"
+    );
+    if (sizeOption) {
+      return sizeOption.values;
+    }
+    const sizes = new Set<string>();
+    const sizePattern = /\b(2XS|XS|S|M|L|XL|2XL|3XL|4XL|5XL|6XL)\b/gi;
+    variants.forEach((variant) => {
+      const matches = variant.title.match(sizePattern);
+      if (matches) {
+        matches.forEach((size) => sizes.add(size.toUpperCase()));
       }
-    },
-    []
-  );
+    });
+    return Array.from(sizes);
+  };
+
+  const determineProductType = (title: string): string => {
+    const lowerTitle = title.toLowerCase();
+    if (lowerTitle.includes("t-shirt") || lowerTitle.includes("tshirt"))
+      return "T-Shirts";
+    if (
+      lowerTitle.includes("cap") ||
+      lowerTitle.includes("hat") ||
+      lowerTitle.includes("hummingbird")
+    )
+      return "Caps";
+    if (lowerTitle.includes("pants") || lowerTitle.includes("trouser"))
+      return "Pants";
+    if (lowerTitle.includes("hoodie")) return "Hoodie";
+    return "Other";
+  };
+  const fetchProducts = useCallback(async () => {
+    const transformProducts = (data: ShopifyProductResponse): Product[] => {
+      return data.products.edges.map((edge) => {
+        const product = edge.node;
+        const variants = product.variants.edges.map((v) => v.node);
+        const firstVariant = variants[0];
+        const firstImage = product.images?.edges?.[0]?.node;
+        const hasAvailableVariant = variants.some((v) => v.availableForSale);
+        const colors = extractColorsFromVariants(
+          variants,
+          product.options || []
+        );
+        const sizes = extractSizesFromVariants(variants, product.options || []);
+        const priceValue = firstVariant?.price
+          ? parseFloat(firstVariant.price)
+          : 0;
+
+        return {
+          id: product.id,
+          title: product.title,
+          category: determineProductType(product.title),
+          price: firstVariant?.price ? `$${firstVariant.price}` : "$0.00",
+          imageUrl: firstImage?.originalSrc || "/placeholder-image.jpg",
+          handle: product.handle,
+          availableForSale: hasAvailableVariant,
+          variants,
+          colors,
+          sizes,
+          priceValue,
+        };
+      });
+    };
+
+    const PUBLIC_URL = process.env.NEXT_PUBLIC_APP_URL;
+    setLoading(true);
+    setError(null);
+    try {
+      const endpoint = `${PUBLIC_URL}/api/shopify/getAllProducts`;
+      const response = await fetch(endpoint);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch products: ${response.status}`);
+      }
+      const data: ShopifyProductResponse = await response.json();
+      setCollections(data.collections);
+      const transformedProducts = transformProducts(data);
+      setAllProducts(transformedProducts);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      setError(
+        error instanceof Error ? error.message : "Failed to fetch products"
+      );
+      setAllProducts([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    fetchProducts(activeTab, filters);
-  }, [activeTab, filters, fetchProducts]);
+    fetchProducts();
+  }, [fetchProducts]);
 
-  const handleApplyFilters = () => {
-    setIsFilterOpen(false);
-    fetchProducts(activeTab, filters);
+  const filteredProducts = useMemo(() => {
+    let filtered = [...allProducts];
+
+    if (filters.productType.length > 0) {
+      filtered = filtered.filter((product) => {
+        const categoryMatch = filters.productType.includes(product.category);
+
+        const collectionMatch = filters.productType.some((filterType) => {
+          const matchedCollection = collections.find(
+            (c) => c.title === filterType
+          );
+          return (
+            matchedCollection &&
+            matchedCollection.productHandles.includes(product.handle)
+          );
+        });
+
+        return categoryMatch || collectionMatch;
+      });
+    }
+
+    if (filters.color.length > 0) {
+      filtered = filtered.filter((product) =>
+        product.colors.some((color) => filters.color.includes(color))
+      );
+    }
+
+    if (filters.size.length > 0) {
+      filtered = filtered.filter((product) =>
+        product.sizes.some((size) => filters.size.includes(size))
+      );
+    }
+
+    if (filters.priceRange.length > 0) {
+      filtered = filtered.filter((product) => {
+        const price = product.priceValue;
+        return filters.priceRange.some((range) => {
+          switch (range) {
+            case "Under $25":
+              return price < 25;
+            case "$25 - $50":
+              return price >= 25 && price <= 50;
+            case "$50 - $75":
+              return price >= 50 && price <= 75;
+            case "Over $75":
+              return price > 75;
+            default:
+              return false;
+          }
+        });
+      });
+    }
+
+    if (filters.availability.length > 0) {
+      filtered = filtered.filter((product) => {
+        if (filters.availability.includes("In Stock")) {
+          return product.availableForSale;
+        }
+        if (filters.availability.includes("Out of Stock")) {
+          return !product.availableForSale;
+        }
+        return true;
+      });
+    }
+
+    switch (filters.sortBy) {
+      case "Price Low To High":
+        filtered.sort((a, b) => a.priceValue - b.priceValue);
+        break;
+      case "Price High To Low":
+        filtered.sort((a, b) => b.priceValue - a.priceValue);
+        break;
+      case "A-Z":
+        filtered.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      case "Z-A":
+        filtered.sort((a, b) => b.title.localeCompare(a.title));
+        break;
+      default:
+        break;
+    }
+
+    return filtered;
+  }, [allProducts, filters, collections]);
+
+  const handleApplyFilters = () => setIsFilterOpen(false);
+
+  const uniqueCategories = useMemo(() => {
+    return Array.from(new Set(allProducts.map((p) => p.category)));
+  }, [allProducts]);
+
+  const getTabProducts = (): Product[] => {
+    if (activeTab === "all") return filteredProducts;
+    if (activeTab === "bestsellers") {
+      return filteredProducts.filter((product) => product.availableForSale);
+    }
+    if (activeTab === "community") {
+      return filteredProducts.filter((product) => product.priceValue > 25);
+    }
+    const matchedCollection = collections.find((c) => c.handle === activeTab);
+    if (matchedCollection) {
+      return filteredProducts.filter((p) =>
+        matchedCollection.productHandles.includes(p.handle)
+      );
+    }
+    return filteredProducts.filter((p) => p.category === activeTab);
   };
 
+  const displayProducts = getTabProducts();
   return (
     <div>
       <Navbar />
@@ -183,6 +327,20 @@ const Products = () => {
           >
             <BsFilterLeft size={16} />
             <span>Sort & Filter</span>
+            {filters.productType.length +
+              filters.color.length +
+              filters.size.length +
+              filters.priceRange.length +
+              filters.availability.length >
+              0 && (
+              <span className="bg-[#EE9254] text-white text-xs rounded-full ml-1 w-5 h-5 flex items-center justify-center min-w-[20px]">
+                {filters.productType.length +
+                  filters.color.length +
+                  filters.size.length +
+                  filters.priceRange.length +
+                  filters.availability.length}
+              </span>
+            )}
           </Button>
         </div>
 
@@ -198,18 +356,43 @@ const Products = () => {
           className="md:hidden w-full border border-gray-300 py-3 px-4 flex items-center justify-between text-base hover:bg-gray-50 transition mb-6"
         >
           <span>Sort & Filter</span>
-          <BsFilterLeft size={20} />
+          <div className="flex items-center gap-2">
+            {filters.productType.length +
+              filters.color.length +
+              filters.size.length +
+              filters.priceRange.length +
+              filters.availability.length >
+              0 && (
+              <span className="bg-[#EE9254] text-white text-xs px-2 py-2 rounded-full">
+                {filters.productType.length +
+                  filters.color.length +
+                  filters.size.length +
+                  filters.priceRange.length +
+                  filters.availability.length}
+              </span>
+            )}
+            <BsFilterLeft size={20} />
+          </div>
         </Button>
-
         <Filter
           isOpen={isFilterOpen}
           onOpenChange={setIsFilterOpen}
           filters={filters}
           onFiltersChange={setFilters}
           onApplyFilters={handleApplyFilters}
+          collections={collections}
+          allProducts={allProducts}
         />
       </div>
+
       <div className="px-4 sm:px-6 md:px-8 lg:px-10">
+        {/* Results summary */}
+        {!loading && (
+          <div className="mb-4 text-sm text-gray-600">
+            Showing {displayProducts.length} of {allProducts.length} products
+          </div>
+        )}
+
         <Tabs
           defaultValue="all"
           className="w-full"
@@ -217,23 +400,29 @@ const Products = () => {
             setActiveTab(value);
           }}
         >
-          <TabsList className="grid grid-cols-1 sm:grid-cols-3 w-full max-w-full sm:max-w-fit gap-2 sm:gap-0 mb-6 h-auto sm:h-auto bg-transparent p-0">
-            <TabsTrigger
-              value="all"
-              className="w-full py-3 px-4 border border-gray-300 text-center text-sm sm:text-base hover:bg-gray-50 transition data-[state=active]:bg-[#EE9254] data-[state=active]:text-white data-[state=active]:border-black rounded-none sm:rounded-l-md"
-            >
-              All
+          <TabsList className="flex overflow-x-auto sm:justify-center w-full gap-2 sm:gap-4 mb-6 p-1 bg-white border border-gray-200 rounded-lg scrollbar-hide">
+            <TabsTrigger value="all" className="whitespace-nowrap">
+              All ({allProducts.length})
             </TabsTrigger>
-            <TabsTrigger
-              value="bestsellers"
-              className="w-full py-3 px-4 border border-gray-300 text-center text-sm sm:text-base hover:bg-gray-50 transition data-[state=active]:bg-[#EE9254] data-[state=active]:text-white data-[state=active]:border-black rounded-none sm:border-l-0"
-            >
+            {collections.map((collection) => (
+              <TabsTrigger key={collection.handle} value={collection.handle}>
+                {collection.title}
+              </TabsTrigger>
+            ))}
+            {uniqueCategories.map((category) => (
+              <TabsTrigger
+                key={category}
+                value={category}
+                className="whitespace-nowrap"
+              >
+                {category}
+              </TabsTrigger>
+            ))}
+
+            <TabsTrigger value="bestsellers" className="whitespace-nowrap">
               Bestsellers
             </TabsTrigger>
-            <TabsTrigger
-              value="community"
-              className="w-full py-3 px-4 border border-gray-300 text-center text-sm sm:text-base hover:bg-gray-50 transition data-[state=active]:bg-[#EE9254] data-[state=active]:text-white data-[state=active]:border-black rounded-none sm:rounded-r-md sm:border-l-0"
-            >
+            <TabsTrigger value="community" className="whitespace-nowrap">
               Community Picks
             </TabsTrigger>
           </TabsList>
@@ -251,10 +440,25 @@ const Products = () => {
                   Please try again later
                 </p>
               </div>
+            ) : displayProducts.length === 0 ? (
+              <div className="text-center py-20">
+                <p className="text-lg text-gray-600 mb-2">No products found</p>
+                <p className="text-sm text-gray-500">
+                  Try adjusting your filters
+                </p>
+                <Button
+                  onClick={() => setFilters(initialFilterState)}
+                  variant="link"
+                  className="mt-4 text-[#E97451] hover:text-[#E97451]/80"
+                >
+                  Clear all filters
+                </Button>
+              </div>
             ) : (
-              <ProductGrid products={products} />
+              <ProductGrid products={displayProducts} />
             )}
           </TabsContent>
+
           <TabsContent value="bestsellers">
             {loading ? (
               <div className="flex justify-center items-center py-20">
@@ -268,10 +472,20 @@ const Products = () => {
                   Please try again later
                 </p>
               </div>
+            ) : displayProducts.length === 0 ? (
+              <div className="text-center py-20">
+                <p className="text-lg text-gray-600 mb-2">
+                  No bestsellers found
+                </p>
+                <p className="text-sm text-gray-500">
+                  Try adjusting your filters
+                </p>
+              </div>
             ) : (
-              <ProductGrid products={products} />
+              <ProductGrid products={displayProducts} />
             )}
           </TabsContent>
+
           <TabsContent value="community">
             {loading ? (
               <div className="flex justify-center items-center py-20">
@@ -285,10 +499,76 @@ const Products = () => {
                   Please try again later
                 </p>
               </div>
+            ) : displayProducts.length === 0 ? (
+              <div className="text-center py-20">
+                <p className="text-lg text-gray-600 mb-2">
+                  No community picks found
+                </p>
+                <p className="text-sm text-gray-500">
+                  Try adjusting your filters
+                </p>
+              </div>
             ) : (
-              <ProductGrid products={products} />
+              <ProductGrid products={displayProducts} />
             )}
           </TabsContent>
+          {uniqueCategories.map((category) => (
+            <TabsContent key={category} value={category}>
+              {loading ? (
+                <div className="flex justify-center items-center py-20">
+                  <AiOutlineLoading3Quarters className="w-8 h-8 animate-spin" />
+                  <span className="ml-2">Loading {category}...</span>
+                </div>
+              ) : error ? (
+                <div className="text-center py-20 text-red-600">
+                  <p>Error: {error}</p>
+                  <p className="text-sm text-gray-600 mt-2">
+                    Please try again later
+                  </p>
+                </div>
+              ) : displayProducts.length === 0 ? (
+                <div className="text-center py-20">
+                  <p className="text-lg text-gray-600 mb-2">
+                    No products found
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Try adjusting your filters
+                  </p>
+                </div>
+              ) : (
+                <ProductGrid products={displayProducts} />
+              )}
+            </TabsContent>
+          ))}
+
+          {collections.map((collection) => (
+            <TabsContent key={collection.handle} value={collection.handle}>
+              {loading ? (
+                <div className="flex justify-center items-center py-20">
+                  <AiOutlineLoading3Quarters className="w-8 h-8 animate-spin" />
+                  <span className="ml-2">Loading {collection.title}...</span>
+                </div>
+              ) : error ? (
+                <div className="text-center py-20 text-red-600">
+                  <p>Error: {error}</p>
+                  <p className="text-sm text-gray-600 mt-2">
+                    Please try again later
+                  </p>
+                </div>
+              ) : displayProducts.length === 0 ? (
+                <div className="text-center py-20">
+                  <p className="text-lg text-gray-600 mb-2">
+                    No products found in {collection.title}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Try adjusting your filters
+                  </p>
+                </div>
+              ) : (
+                <ProductGrid products={displayProducts} />
+              )}
+            </TabsContent>
+          ))}
         </Tabs>
       </div>
 

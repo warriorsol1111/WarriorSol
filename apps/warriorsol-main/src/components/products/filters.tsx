@@ -17,8 +17,8 @@ export interface FilterState {
   productType: string[];
   color: string[];
   size: string[];
-  gender: string[];
-  collection: string[];
+  priceRange: string[];
+  availability: string[];
 }
 
 export const initialFilterState: FilterState = {
@@ -26,9 +26,30 @@ export const initialFilterState: FilterState = {
   productType: [],
   color: [],
   size: [],
-  gender: [],
-  collection: [],
+  priceRange: [],
+  availability: [],
 };
+
+interface Collection {
+  id: string;
+  title: string;
+  handle: string;
+  productHandles: string[];
+}
+
+interface Product {
+  id: string;
+  title: string;
+  category: string;
+  price: string;
+  imageUrl: string;
+  handle: string;
+  availableForSale: boolean;
+  variants: unknown[];
+  colors: string[];
+  sizes: string[];
+  priceValue: number;
+}
 
 interface FilterProps {
   isOpen: boolean;
@@ -36,19 +57,45 @@ interface FilterProps {
   filters: FilterState;
   onFiltersChange: (filters: FilterState) => void;
   onApplyFilters: () => void;
+  collections: Collection[];
+  allProducts: Product[];
 }
 
 const sortOptions = [
   "New In",
-  "Trending",
   "Price Low To High",
   "Price High To Low",
+  "A-Z",
+  "Z-A",
 ];
-const productTypes = ["Shirts", "Caps", "Hoodies", "Cancer Wear"];
-const colors = ["brown", "coral", "beige", "black"];
-const sizes = ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
-const genders = ["Men", "Women"];
-const collections = ["Warriors Collection"];
+
+const colors = [
+  { name: "Black", value: "black", color: "#000000" },
+  { name: "White", value: "white", color: "#FFFFFF" },
+  { name: "Charcoal", value: "charcoal", color: "#36454F" },
+  { name: "Grey", value: "grey", color: "#808080" },
+  { name: "Cardinal", value: "cardinal", color: "#C41E3A" },
+  { name: "Loden", value: "loden", color: "#6B8E23" },
+  { name: "Red", value: "red", color: "#FF0000" },
+  { name: "Blue", value: "blue", color: "#0000FF" },
+];
+
+const sizes = [
+  "2XS",
+  "XS",
+  "S",
+  "M",
+  "L",
+  "XL",
+  "2XL",
+  "3XL",
+  "4XL",
+  "5XL",
+  "6XL",
+];
+
+const priceRanges = ["Under $25", "$25 - $50", "$50 - $75", "Over $75"];
+const availabilityOptions = ["In Stock", "Out of Stock"];
 
 export const Filter: React.FC<FilterProps> = ({
   isOpen,
@@ -56,6 +103,8 @@ export const Filter: React.FC<FilterProps> = ({
   filters,
   onFiltersChange,
   onApplyFilters,
+  collections,
+  allProducts,
 }) => {
   const toggleFilter = (category: keyof FilterState, value: string) => {
     if (category === "sortBy") {
@@ -75,18 +124,43 @@ export const Filter: React.FC<FilterProps> = ({
     onFiltersChange(initialFilterState);
   };
 
+  const getActiveFiltersCount = () => {
+    return (
+      filters.productType.length +
+      filters.color.length +
+      filters.size.length +
+      filters.priceRange.length +
+      filters.availability.length +
+      (filters.sortBy !== "New In" ? 1 : 0)
+    );
+  };
+
+  const productTypes = [
+    ...Array.from(new Set(allProducts.map((p) => p.category))),
+    ...collections.map((c) => c.title),
+  ].filter((type) => type !== "Other");
+
   return (
     <Drawer open={isOpen} onOpenChange={onOpenChange}>
       <DrawerContent className="h-full">
         <DrawerHeader className="border-b border-gray-200">
           <div className="flex justify-between items-center">
-            <DrawerTitle>Sort & Filter</DrawerTitle>
+            <DrawerTitle className="flex items-center gap-2">
+              Sort & Filter
+              {getActiveFiltersCount() > 0 && (
+                <span className="bg-[#EE9254] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center min-w-[20px]">
+                  {getActiveFiltersCount()}
+                </span>
+              )}
+            </DrawerTitle>
             <DrawerClose className="p-2">
               <IoClose size={24} />
             </DrawerClose>
           </div>
         </DrawerHeader>
+
         <div className="px-6 py-4 space-y-6 overflow-y-auto flex-1">
+          {/* Sort By */}
           <div>
             <h3 className="font-medium mb-3">Sort By</h3>
             <div className="flex flex-wrap gap-2">
@@ -96,10 +170,10 @@ export const Filter: React.FC<FilterProps> = ({
                   variant="link"
                   key={option}
                   onClick={() => toggleFilter("sortBy", option)}
-                  className={`px-4 py-2 rounded-full border ${
+                  className={`px-4 py-2 rounded-full border transition-colors ${
                     filters.sortBy === option
-                      ? "bg-black text-white"
-                      : "bg-white text-black"
+                      ? "bg-black text-white border-black"
+                      : "bg-white text-black border-gray-300 hover:border-gray-400"
                   }`}
                 >
                   {option}
@@ -108,6 +182,7 @@ export const Filter: React.FC<FilterProps> = ({
             </div>
           </div>
 
+          {/* Product Type (dynamic from collections) */}
           <div>
             <h3 className="font-medium mb-3">Product Type</h3>
             <div className="flex flex-wrap gap-2">
@@ -117,10 +192,10 @@ export const Filter: React.FC<FilterProps> = ({
                   variant="link"
                   key={type}
                   onClick={() => toggleFilter("productType", type)}
-                  className={`px-4 py-2 rounded-full border ${
+                  className={`px-4 py-2 rounded-full border transition-colors ${
                     filters.productType.includes(type)
-                      ? "bg-black text-white"
-                      : "bg-white text-black"
+                      ? "bg-black text-white border-black"
+                      : "bg-white text-black border-gray-300 hover:border-gray-400"
                   }`}
                 >
                   {type}
@@ -129,24 +204,41 @@ export const Filter: React.FC<FilterProps> = ({
             </div>
           </div>
 
+          {/* Color */}
           <div>
             <h3 className="font-medium mb-3">Color</h3>
-            <div className="flex gap-2">
-              {colors.map((color) => (
-                <Button
-                  size="lg"
-                  variant="link"
-                  key={color}
-                  onClick={() => toggleFilter("color", color)}
-                  className={`w-12 h-12 rounded-full border ${
-                    filters.color.includes(color) ? "ring-2 ring-black" : ""
-                  }`}
-                  style={{ backgroundColor: color }}
-                ></Button>
+            <div className="flex flex-wrap gap-3">
+              {colors.map((colorOption) => (
+                <div
+                  key={colorOption.value}
+                  className="flex flex-col items-center gap-1"
+                >
+                  <Button
+                    size="lg"
+                    variant="link"
+                    onClick={() => toggleFilter("color", colorOption.value)}
+                    className={`w-12 h-12 rounded-full border-2 transition-all ${
+                      filters.color.includes(colorOption.value)
+                        ? "ring-2 ring-black ring-offset-2"
+                        : "border-gray-300 hover:border-gray-400"
+                    } ${colorOption.value === "white" ? "border-gray-400" : ""}`}
+                    style={{
+                      backgroundColor: colorOption.color,
+                      border:
+                        colorOption.value === "white"
+                          ? "2px solid #d1d5db"
+                          : `2px solid ${colorOption.color}`,
+                    }}
+                  />
+                  <span className="text-xs text-gray-600">
+                    {colorOption.name}
+                  </span>
+                </div>
               ))}
             </div>
           </div>
 
+          {/* Size */}
           <div>
             <h3 className="font-medium mb-3">Size</h3>
             <div className="flex flex-wrap gap-2">
@@ -156,10 +248,10 @@ export const Filter: React.FC<FilterProps> = ({
                   variant="link"
                   key={size}
                   onClick={() => toggleFilter("size", size)}
-                  className={`px-4 py-2 rounded-full border ${
+                  className={`px-4 py-2 rounded-full border transition-colors ${
                     filters.size.includes(size)
-                      ? "bg-black text-white"
-                      : "bg-white text-black"
+                      ? "bg-black text-white border-black"
+                      : "bg-white text-black border-gray-300 hover:border-gray-400"
                   }`}
                 >
                   {size}
@@ -168,43 +260,45 @@ export const Filter: React.FC<FilterProps> = ({
             </div>
           </div>
 
+          {/* Price Range */}
           <div>
-            <h3 className="font-medium mb-3">Gender</h3>
-            <div className="flex gap-2">
-              {genders.map((gender) => (
+            <h3 className="font-medium mb-3">Price Range</h3>
+            <div className="flex flex-wrap gap-2">
+              {priceRanges.map((range) => (
                 <Button
                   size="lg"
                   variant="link"
-                  key={gender}
-                  onClick={() => toggleFilter("gender", gender)}
-                  className={`px-4 py-2 rounded-full border ${
-                    filters.gender.includes(gender)
-                      ? "bg-black text-white"
-                      : "bg-white text-black"
+                  key={range}
+                  onClick={() => toggleFilter("priceRange", range)}
+                  className={`px-4 py-2 rounded-full border transition-colors ${
+                    filters.priceRange.includes(range)
+                      ? "bg-black text-white border-black"
+                      : "bg-white text-black border-gray-300 hover:border-gray-400"
                   }`}
                 >
-                  {gender}
+                  {range}
                 </Button>
               ))}
             </div>
           </div>
 
+          {/* Availability */}
           <div>
-            <h3 className="font-medium mb-3">Warrior Corner</h3>
+            <h3 className="font-medium mb-3">Availability</h3>
             <div className="flex gap-2">
-              {collections.map((collection) => (
+              {availabilityOptions.map((option) => (
                 <Button
                   size="lg"
                   variant="link"
-                  key={collection}
-                  onClick={() => toggleFilter("collection", collection)}
-                  className={`px-4 py-2 rounded-full border ${
-                    filters.collection.includes(collection)
-                      ? "bg-black text-white"
-                      : "bg-white text-black"
+                  key={option}
+                  onClick={() => toggleFilter("availability", option)}
+                  className={`px-4 py-2 rounded-full border transition-colors ${
+                    filters.availability.includes(option)
+                      ? "bg-black text-white border-black"
+                      : "bg-white text-black border-gray-300 hover:border-gray-400"
                   }`}
                 >
-                  {collection}
+                  {option}
                 </Button>
               ))}
             </div>
@@ -217,15 +311,16 @@ export const Filter: React.FC<FilterProps> = ({
               size="lg"
               onClick={handleClearFilters}
               variant="link"
-              className="flex-1 py-3 px-4 border rounded-lg hover:bg-gray-50"
+              className="flex-1 py-3 px-4  rounded-lg border border-black hover:bg-gray-50 transition-colors"
+              disabled={getActiveFiltersCount() === 0}
             >
-              Clear Filter
+              Clear All ({getActiveFiltersCount()})
             </Button>
             <Button
               size="lg"
               onClick={onApplyFilters}
               variant="link"
-              className="flex-1 py-3 px-4 bg-[#E97451] text-white rounded-lg hover:bg-[#E97451]/90"
+              className="flex-1 py-3 px-4 bg-[#EE9254] text-white rounded-lg hover:bg-[#E97451]/90 transition-colors"
             >
               Apply Filters
             </Button>

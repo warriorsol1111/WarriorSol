@@ -22,7 +22,6 @@ export default function AccountPage() {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-  console.log("Data from session:", session);
 
   const handleVerifyPassword = async (e: React.FormEvent) => {
     e.preventDefault();

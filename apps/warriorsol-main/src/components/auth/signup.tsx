@@ -57,27 +57,49 @@ function SignupPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // simple password match check
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+
     const body = {
       name: formData.name,
       email: formData.email,
       password: formData.password,
     };
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/register`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (response.status === 400 || response.status === 409) {
+          toast.error("Email is already registered. Try logging in instead.");
+        } else {
+          toast.error(data.message || "Signup failed. Please try again.");
+        }
+        return;
       }
-    );
-    const data = await response.json();
-    if (data.status === "success") {
+
       toast.success(
         "Signup successful! Please check your email to verify your account."
       );
       router.push("/verify-email?email=" + formData.email);
+    } catch (err) {
+      console.error("Signup error:", err);
+      toast.error("Something went wrong. Please try again later.");
     }
   };
 
@@ -195,7 +217,7 @@ function SignupPage() {
           <Button
             type="button"
             size="lg"
-            onClick={() => signIn("google")}
+            onClick={() => signIn("google", { callbackUrl: "/home" })}
             className="w-full flex items-center justify-center gap-3 bg-white text-black border hover:bg-white border-gray-300 rounded-lg shadow-sm hover:shadow-md transition text-sm md:text-base py-2 md:py-3"
           >
             <FcGoogle className="w-5 h-5 md:w-6 md:h-6" />

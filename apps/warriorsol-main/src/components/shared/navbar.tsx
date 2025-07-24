@@ -1,13 +1,13 @@
 "use client";
 
-import { Search, User } from "lucide-react";
+import { User } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "../../assets/logo.svg";
 import { MdOutlineShoppingBag, MdMenu } from "react-icons/md";
 import { Button } from "../ui/button";
 import { useCartStore } from "@/store/cart-store";
-import { useSession, signOut } from "next-auth/react";
+import { useSession, signOut, signIn } from "next-auth/react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -23,6 +23,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useEffect } from "react";
+import NavbarSearchDrawer from "./navbarDrawer";
 
 export default function Navbar() {
   const hydrateCart = useCartStore((state) => state.hydrateCart);
@@ -71,6 +72,39 @@ export default function Navbar() {
                   <Link href="/admin-story-review">Review Stories</Link>
                 )}
               </nav>
+
+              {/* Auth section in mobile menu */}
+              <div className="border-t pt-4">
+                {session?.user ? (
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600">Signed in as</p>
+                    <p className="font-medium truncate">{userName}</p>
+                    <div className="flex flex-col gap-2 mt-3">
+                      <Link href="/account" className="text-sm hover:underline">
+                        Account Settings
+                      </Link>
+                      <button
+                        onClick={() => {
+                          document.cookie =
+                            "cartId=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+                          signOut();
+                        }}
+                        className="text-sm text-left hover:underline text-red-600"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => signIn()}
+                    className="w-full bg-[#EE9254] text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-[#e5772e] transition-colors"
+                  >
+                    Sign In
+                  </button>
+                )}
+              </div>
+
               <a
                 href={foundationURL}
                 target="_blank"
@@ -151,9 +185,7 @@ export default function Navbar() {
 
         {/* Right: Search / User / Cart */}
         <div className="flex items-center sm:gap-4 flex-shrink-0">
-          <Button variant="link" className="p-1 sm:p-2">
-            <Search className="h-5 w-5" />
-          </Button>
+          <NavbarSearchDrawer />
 
           {/* User Dropdown */}
           <DropdownMenu>
@@ -165,15 +197,15 @@ export default function Navbar() {
             <DropdownMenuContent className="w-48">
               {session?.user ? (
                 <>
-                  <DropdownMenuLabel className="text-lg text-gray-500">
+                  <DropdownMenuLabel className="text-sm text-gray-500">
                     Signed in as
                   </DropdownMenuLabel>
-                  <DropdownMenuLabel className="font-medium text-lg truncate">
+                  <DropdownMenuLabel className="font-medium text-base truncate">
                     {userName}
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild className="cursor-pointer">
-                    <Link href="/account">Account</Link>
+                    <Link href="/account">Account Settings</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
@@ -181,15 +213,27 @@ export default function Navbar() {
                         "cartId=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
                       signOut();
                     }}
-                    className="cursor-pointer"
+                    className="cursor-pointer text-red-600 focus:text-red-600"
                   >
-                    Log out
+                    Sign Out
                   </DropdownMenuItem>
                 </>
               ) : (
-                <DropdownMenuLabel className="text-sm text-gray-500">
-                  Not signed in
-                </DropdownMenuLabel>
+                <>
+                  <DropdownMenuLabel className="text-sm text-gray-500">
+                    Not signed in
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => signIn()}
+                    className="cursor-pointer font-medium text-[#EE9254] focus:text-[#EE9254]"
+                  >
+                    Sign In
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="cursor-pointer">
+                    <Link href="/signup">Create Account</Link>
+                  </DropdownMenuItem>
+                </>
               )}
             </DropdownMenuContent>
           </DropdownMenu>
