@@ -2,14 +2,37 @@
 
 import React from "react";
 import Image from "next/image";
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { Loader2, Minus, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/cart-store";
 import RecommendedProducts from "../community/recommendedProducts";
 
 export default function CartPage() {
-  const { items, subtotal, updateQuantity, removeItem } = useCartStore();
+  const { items,
+    subtotal,
+    updateQuantity,
+    removeItem,
+    itemLoading,
+    cartLoading, } = useCartStore();
   const isEmpty = items.length === 0;
+  const [loading, setLoading] = React.useState(false);
+
+  const handleCheckout = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/shopify/getCheckout");
+      const data = await res.json();
+      if (res.ok && data.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+      } else {
+        console.error(data.error || "Failed to get checkout URL");
+      }
+    } catch (error) {
+      console.error("Failed to get checkout URL", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -99,34 +122,51 @@ export default function CartPage() {
 
                     {/* Quantity Controls */}
                     <div className="flex justify-center items-center flex-wrap gap-2">
-                      <button
-                        className="w-7 h-7 flex items-center justify-center rounded-full border border-gray-300 bg-white text-gray-500 hover:bg-gray-100"
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() =>
-                          updateQuantity(item.id, item.quantity - 1)
+                          item.lineId &&
+                          updateQuantity(item.lineId, item.quantity - 1)
                         }
-                        aria-label="Decrease quantity"
+                        className="h-8 w-8 p-0 border-gray-300"
+                        disabled={
+                          cartLoading ||
+                          (!!item.lineId && itemLoading[item.lineId])
+                        }
                       >
-                        <Minus className="w-4 h-4" />
-                      </button>
+                        <Minus className="h-3 w-3" />
+                      </Button>
                       <span className="w-8 text-center font-medium text-base">
                         {String(item.quantity).padStart(2, "0")}
                       </span>
-                      <button
-                        className="w-7 h-7 flex items-center justify-center rounded-full border border-gray-300 bg-white text-gray-500 hover:bg-gray-100"
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() =>
-                          updateQuantity(item.id, item.quantity + 1)
+                          item.lineId &&
+                          updateQuantity(item.lineId, item.quantity + 1)
                         }
-                        aria-label="Increase quantity"
+                        className="h-8 w-8 p-0 border-gray-300"
+                        disabled={
+                          cartLoading ||
+                          (!!item.lineId && itemLoading[item.lineId])
+                        }
                       >
-                        <Plus className="w-4 h-4" />
-                      </button>
-                      <button
-                        className="w-7 h-7 flex items-center justify-center rounded-full bg-red-50 text-red-500 hover:bg-red-100"
-                        onClick={() => removeItem(item.id)}
-                        aria-label="Remove item"
+                        <Plus className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => item.lineId && removeItem(item.lineId)}
+                        className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50"
+                        disabled={
+                          cartLoading ||
+                          (!!item.lineId && itemLoading[item.lineId])
+                        }
                       >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
 
                     {/* Total */}
@@ -152,8 +192,16 @@ export default function CartPage() {
                   <span>Grand Total</span>
                   <span>${subtotal.toFixed(2)}</span>
                 </div>
-                <Button className="w-full py-3 mt-4 bg-[#EE9254] hover:bg-[#e07d38] text-white text-lg rounded">
-                  Checkout
+                <Button
+                  className="w-full py-3 mt-4 bg-[#EE9254] hover:bg-[#e07d38] text-white text-lg rounded"
+                  disabled={loading}
+                  onClick={handleCheckout}
+                >
+                  {loading ? (
+                    <Loader2 className="animate-spin h-5 w-5 mr-2 inline-block" />
+                  ) : (
+                    "Checkout"
+                  )}
                 </Button>
               </div>
             </>

@@ -5,6 +5,12 @@ import changeLifeImg from "@/assets/changeLife.svg";
 import Navbar from "@/components/shared/navbar";
 import Footer from "@/components/shared/footer";
 
+export const metadata = {
+  title: "Support | WarriorSol Foundation",
+  description:
+    "At WarriorSol Foundation, we provide support to families facing unexpected challenges. Our mission is to offer financial assistance and resources to help you navigate through difficult times.",
+};  
+
 export default function SupportPage() {
   return (
     <>

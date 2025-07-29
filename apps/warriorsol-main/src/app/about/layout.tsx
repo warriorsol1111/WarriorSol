@@ -6,6 +6,11 @@ interface CommunityLayoutProps {
     children: ReactNode;
 }
 
+export const metadata = {
+    title: "About | WarriorSol",
+    description: "Learn more about WarriorSol, our mission, and how we support families in need. Join our community and discover how you can make a difference.",
+};
+
 const CommunityLayout: React.FC<CommunityLayoutProps> = ({ children }) => {
     return (
         <div className="community-layout">

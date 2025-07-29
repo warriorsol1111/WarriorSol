@@ -95,6 +95,7 @@ const WhyIWearMine: React.FC = () => {
 
   const isVideo = (url: string | undefined) =>
     url?.match(/\.(mp4|webm|ogg)$/i) !== null;
+  if (!session) return null;
 
   return (
     <>
@@ -113,6 +114,7 @@ const WhyIWearMine: React.FC = () => {
             variant="outline"
             size="lg"
             className="w-full sm:w-auto border border-black px-4 sm:px-5 py-2.5 sm:py-3 text-base sm:text-lg lg:text-[20px] font-['Inter'] capitalize flex items-center justify-center sm:justify-start gap-2 hover:bg-black hover:text-white transition"
+            onClick={() => (window.location.href = "/community")}
           >
             Read All Stories ↗
           </Button>

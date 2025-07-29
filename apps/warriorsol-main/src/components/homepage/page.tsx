@@ -7,7 +7,6 @@ import ChooseYourArmor from "./ChooseYourArmor";
 import WhyIWearMine from "./WhyIWearMine";
 import PurchasePower from "./PurchasePower";
 import CircleThatNeverCloses from "./CircleThatNeverCloses";
-import GiveMeaning from "./GiveMeaning";
 import RebellionNewsletter from "./RebellionNewsletter";
 
 const HomePage = () => {
@@ -20,7 +19,6 @@ const HomePage = () => {
       <WhyIWearMine />
       <PurchasePower />
       <CircleThatNeverCloses />
-      <GiveMeaning />
       <RebellionNewsletter />
       <Footer />
     </div>

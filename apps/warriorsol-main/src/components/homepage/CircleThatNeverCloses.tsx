@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import FamilyPhoto1 from "@/assets/image 1.png";
 import FamilyPhoto2 from "@/assets/image 2.png";
@@ -7,6 +8,8 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 const CircleThatNeverCloses = () => {
+  const foundationURL = process.env.NEXT_PUBLIC_WARRIOR_SOL_FOUNDATION_APP_URL;
+
   return (
     <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
       <div className="flex flex-col sm:flex-row justify-between items-start gap-6 sm:gap-8 mb-8 lg:mb-12">
@@ -22,6 +25,7 @@ const CircleThatNeverCloses = () => {
         <Button
           variant="outline"
           size="lg"
+          onClick={() => window.open(`${foundationURL}`, "_blank")}
           className="w-full sm:w-auto border border-black px-4 sm:px-5 py-2.5 sm:py-3 text-base sm:text-lg lg:text-[20px] font-['Inter'] capitalize flex items-center justify-center sm:justify-start gap-2 hover:bg-black hover:text-white transition"
         >
           Join The Movement ↗

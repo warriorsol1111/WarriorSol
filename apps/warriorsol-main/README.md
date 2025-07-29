@@ -1,36 +1,111 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ✨ WarriorSol - Born of Fire. Built To Shine.
 
-## Getting Started
+> _A mission-driven site for those who fight, survive, and support._
 
-First, run the development server:
+Welcome to the **WarriorSol Main Website** – a Next.js-powered storefront designed to inspire resilience and community. This project combines clean aesthetics, seamless Shopify integration, and powerful authentication features to support our cause.
+
+---
+
+## ✨ Features
+
+- **Public Homepage** – accessible without login
+- **Product Catalog** – powered by Shopify Storefront API
+- **Advanced Cart** – real-time state updates using Zustand
+- **Authentication** – secure login/signup with NextAuth.js
+- **Responsive UI** – mobile-first with Tailwind CSS
+- **Accessibility** – screen reader & keyboard support
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 15 (App Router)
+- **Styling**: Tailwind CSS + Cormorant SC / Inter fonts
+- **Animations**: Framer Motion
+- **Auth**: NextAuth.js + Zod + Middleware
+- **State**: Zustand (UI) + React Query (server state)
+- **E-commerce**: Shopify Storefront API
+- **Form Handling**: React Hook Form + Sonner (toasts)
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js >= 18
+- Yarn or pnpm
+- Shopify Storefront API credentials
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Clone the repo
+$ git clone https://github.com/Areeb-Saqib/warriorsol.git
+$ cd warriorsol/apps/warriorsol-main
+
+# Install dependencies
+$ yarn install  # or pnpm install
+
+# Setup environment variables
+$ cp .env.local.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Development
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Run local dev server
+$ yarn dev
+# or
+$ pnpm dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Visit [http://localhost:3000](http://localhost:3000) to view the site.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📁 Key Folders
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+apps/warriorsol-main/
+├── app/           # App router
+├── components/    # UI components
+├── lib/           # Utils/configs
+├── store/         # Zustand state
+├── middleware.ts  # Route protection
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🔧 Environment Variables
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Example `.env.local`:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```env
+NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
+NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN=your-token
+NEXTAUTH_SECRET=your-secret
+NEXTAUTH_URL=http://localhost:3000
+```
+
+---
+
+## 🧪 Scripts
+
+```bash
+yarn dev          # Run dev server
+yarn build        # Build for production
+yarn lint         # Lint code
+yarn format       # Prettify code
+yarn check-types  # Type checking
+```
+
+---
+
+## 📄 License
+
+This project is proprietary and intended for WarriorSol Foundation internal use.
+
+---
+
+> Built to honor the fighters. Made to inspire the future. 🔥

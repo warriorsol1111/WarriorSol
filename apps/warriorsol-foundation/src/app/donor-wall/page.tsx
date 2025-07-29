@@ -5,6 +5,12 @@ import { SocialLinks } from "@/components/shared/socialLinks";
 import { getServerSession } from "next-auth";
 import { authConfig } from "../../../auth";
 
+export const metadata = {
+  title: "Donor Wall | WarriorSol Foundation",
+  description:
+    "Explore the Donor Wall of the WarriorSol Foundation, honoring our generous supporters who make a difference in the lives of families in need.",
+};
+
 export default async function DonorWallPage() {
   const session = await getServerSession(authConfig);
 

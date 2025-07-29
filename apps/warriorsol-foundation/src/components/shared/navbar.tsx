@@ -12,7 +12,7 @@ import {
   SheetTrigger,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { useSession, signOut } from "next-auth/react";
+import { useSession, signOut, signIn } from "next-auth/react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -125,7 +125,7 @@ export default function Navbar() {
         {/* Right Icons */}
         <div className="flex items-center sm:gap-4">
           {/* User Dropdown */}
-          <DropdownMenu>
+             <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="link" className="p-1 sm:p-2">
                 <User className="h-5 w-5" />
@@ -134,15 +134,15 @@ export default function Navbar() {
             <DropdownMenuContent className="w-48">
               {session?.user ? (
                 <>
-                  <DropdownMenuLabel className="text-lg text-gray-500">
+                  <DropdownMenuLabel className="text-sm text-gray-500">
                     Signed in as
                   </DropdownMenuLabel>
-                  <DropdownMenuLabel className="font-medium text-lg truncate">
+                  <DropdownMenuLabel className="font-medium text-base truncate">
                     {userName}
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild className="cursor-pointer">
-                    <Link href="/account">Account</Link>
+                    <Link href="/account">Account Settings</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
@@ -150,15 +150,27 @@ export default function Navbar() {
                         "cartId=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
                       signOut();
                     }}
-                    className="cursor-pointer"
+                    className="cursor-pointer text-red-600 focus:text-red-600"
                   >
-                    Log out
+                    Sign Out
                   </DropdownMenuItem>
                 </>
               ) : (
-                <DropdownMenuLabel className="text-sm text-gray-500">
-                  Not signed in
-                </DropdownMenuLabel>
+                <>
+                  <DropdownMenuLabel className="text-sm text-gray-500">
+                    Not signed in
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => signIn()}
+                    className="cursor-pointer font-medium text-[#EE9254] focus:text-[#EE9254]"
+                  >
+                    Sign In
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="cursor-pointer">
+                    <Link href="/signup">Create Account</Link>
+                  </DropdownMenuItem>
+                </>
               )}
             </DropdownMenuContent>
           </DropdownMenu>
