@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Cormorant_SC } from "next/font/google";
-import { Toaster } from "react-hot-toast";
 import SessionProviderWrapper from "@/components/shared/sessionProvider";
+import NextTopLoader from "nextjs-toploader";
+import CustomToaster from "@/lib/custom-toaster";
+
 const cormorantSC = Cormorant_SC({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
@@ -16,8 +18,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "WarriorSol Foundation",
-  description: "Warriorol Foundation",
+  title: "WarriorSol Main",
+  description: "WarriorSol Main",
 };
 
 export default function RootLayout({
@@ -30,11 +32,9 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${cormorantSC.className} antialiased`}
       >
-        <Toaster
-          toastOptions={{
-            className: "!font-bold",
-          }}
-        />
+        <NextTopLoader height={5} showSpinner={false} />
+            <CustomToaster />
+
         <SessionProviderWrapper>{children}</SessionProviderWrapper>
       </body>
     </html>

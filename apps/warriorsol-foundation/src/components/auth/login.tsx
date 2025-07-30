@@ -14,25 +14,38 @@ import { signIn } from "next-auth/react";
 import { toast } from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { loginSchema } from "./login-schema";
+import { Loader2 } from "lucide-react";
 
 function LoginPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({ email: "", password: "" });
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    
+    // Clear field error when user starts typing
+    if (fieldErrors[name as keyof typeof fieldErrors]) {
+      setFieldErrors({ ...fieldErrors, [name]: "" });
+    }
   };
 
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
-
+  const [loading, setLoading] = useState(false);
+  
   useEffect(() => {
     if (error) {
       if (error === "GOOGLE_LOGIN_BLOCKED") {
+        toast.dismiss();
         toast.error(
           "This email is registered with a password. Please use email/password to log in."
         );
       } else {
+        toast.dismiss();
         toast.error("Something went wrong.");
       }
 
@@ -46,9 +59,61 @@ function LoginPage() {
     setShowPassword(!showPassword);
   };
 
+  const validateForm = () => {
+    const errors = { email: "", password: "" };
+    let isValid = true;
+
+    // Email validation
+    if (!formData.email.trim()) {
+      errors.email = "Email is required";
+      isValid = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.email = "Please enter a valid email address";
+      isValid = false;
+    }
+
+    // Password validation
+    if (!formData.password.trim()) {
+      errors.password = "Password is required";
+      isValid = false;
+    } else if (formData.password.length < 6) {
+      errors.password = "Password must be at least 6 characters long";
+      isValid = false;
+    }
+
+    setFieldErrors(errors);
+    return isValid;
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { email, password } = formData;
+    setLoading(true);
+
+    // Custom validation first
+    if (!validateForm()) {
+      // Show toast for the first error found
+      if (fieldErrors.email) {
+        toast.dismiss();
+        toast.error(fieldErrors.email);
+      } else if (fieldErrors.password) {
+        toast.dismiss();
+        toast.error(fieldErrors.password);
+      }
+      setLoading(false);
+      return;
+    }
+
+    // Schema validation as backup
+    const validation = loginSchema.safeParse(formData);
+    if (!validation.success) {
+      const errorMsg = validation.error.errors[0]?.message || "Invalid input";
+      toast.dismiss();
+      toast.error(errorMsg);
+      setLoading(false);
+      return;
+    }
+
+    const { email, password } = validation.data;
 
     const response = await signIn("credentials", {
       email,
@@ -56,26 +121,39 @@ function LoginPage() {
       redirect: false,
     });
 
-    if (response?.error) {
-      if (response.error.includes("User is not verified")) {
+    const error = response?.error?.toLowerCase().trim();
+
+    if (error) {
+      if (error.includes("user is not verified")) {
+        toast.dismiss();
         toast.error("User not verified");
         router.push(`/verify-email?email=${email}`);
-      } else if (response.error.includes("Invalid credentials")) {
-        toast.error("Invalid credentials");
+      } else if (error.includes("invalid credentials")) {
+        toast.dismiss();
+        toast.error("Invalid email or password");
       } else if (
-        response.error.includes("linked to a Google account") ||
-        response.error.includes("sign in with Google")
+        error.includes("linked to a google account") ||
+        error.includes("sign in with google")
       ) {
-        toast.error(
-          "This account is linked to Google. Please sign in with Google."
-        );
+        toast.dismiss();
+        toast.error("This account is linked to Google. Please sign in with Google.");
+      } else if (
+        error.includes("account is locked") || 
+        error.includes("disabled")
+      ) {
+        toast.dismiss();
+        toast.error("Your account has been locked or disabled.");
       } else {
+        toast.dismiss();
         toast.error("Something went wrong. Please try again.");
+        console.error("Uncaught login error →", response?.error);
       }
     } else {
+      toast.dismiss();
       toast.success("Login successful");
-      router.replace("/");
+      router.replace("/home");
     }
+    setLoading(false);
   };
 
   return (
@@ -84,10 +162,10 @@ function LoginPage() {
       <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-6 md:p-12 md:px-24">
         <form onSubmit={handleSubmit} className="w-full space-y-4 md:space-y-6">
           <div>
-            <h1 className="text-3xl md:text-5xl font-serif font-normal">
+            <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] !font-[Cormorant SC] font-normal">
               Welcome Back!
             </h1>
-            <p className="font-light text-base md:text-lg">
+            <p className="font-light font-[Inter] text-[#1F1F1F] opacity-60 text-base md:text-lg">
               Enter Your Credentials To Access Your Account
             </p>
           </div>
@@ -100,8 +178,11 @@ function LoginPage() {
               type="email"
               value={formData.email}
               onChange={handleChange}
-              required
+              className={fieldErrors.email ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}
             />
+            {fieldErrors.email && (
+              <p className="text-red-500 text-sm mt-1">{fieldErrors.email}</p>
+            )}
           </div>
 
           <div className="space-y-1">
@@ -113,8 +194,7 @@ function LoginPage() {
                 type={showPassword ? "text" : "password"}
                 value={formData.password}
                 onChange={handleChange}
-                required
-                className="pr-10"
+                className={`pr-10 ${fieldErrors.password ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
               />
               <Button
                 variant="ghost"
@@ -130,16 +210,20 @@ function LoginPage() {
                 )}
               </Button>
             </div>
-            <div className="text-right text-sm md:text-base text-[#1F1F1F99] font-light mt-2">
+            {fieldErrors.password && (
+              <p className="text-red-500 text-sm mt-1">{fieldErrors.password}</p>
+            )}
+            <div className="text-right text-sm md:text-lg text-[#1F1F1F] opacity-60 font-[Inter] font-light mt-2">
               <Link href="/forgot-password">Forgot Password?</Link>
             </div>
           </div>
 
           <Button
             type="submit"
-            className="w-full bg-[#EE9254] cursor-pointer hover:bg-[#e97e3a] h-10 md:h-12 text-white text-base md:text-lg"
+            disabled={loading}
+            className="w-full bg-[#EE9254] cursor-pointer hover:bg-[#e97e3a] h-10 md:h-12 text-white text-base md:text-xl font-[Inter]"
           >
-            Sign In
+            {loading ? <Loader2 className="animate-spin w-5 h-5 mr-2" /> : "Login"}
           </Button>
 
           <div className="flex items-center gap-4 my-2">
@@ -161,9 +245,9 @@ function LoginPage() {
           </Button>
 
           <div className="flex justify-center gap-x-2 md:gap-x-4 pt-2">
-            <p className="text-base md:text-lg text-center font-light">
+            <p className="text-base md:text-lg font-[Inter] opacity-60 text-[#1F1F1F] text-center font-light">
               Don&apos;t have an account?{" "}
-              <Link href="/signup" className="text-black font-bold underline">
+              <Link href="/signup" className="text-[#1F1F1F] font-bold underline">
                 Sign up
               </Link>
             </p>
@@ -182,7 +266,7 @@ function LoginPage() {
         />
 
         {/* Overlay Content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/20 text-white text-center px-4">
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-white text-center px-4">
           <Image
             src={Logo}
             alt="Warrior Sol Logo"

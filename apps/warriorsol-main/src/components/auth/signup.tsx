@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+import { Loader2 } from "lucide-react";
 
 function SignupPage() {
   const [formData, setFormData] = useState({
@@ -25,7 +26,14 @@ function SignupPage() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [formErrors, setFormErrors] = useState({
+    name: false,
+    password: false,
+    confirmPassword: false,
+  });
   const router = useRouter();
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -57,13 +65,68 @@ function SignupPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
+    setFormErrors({ name: false, password: false, confirmPassword: false });
 
-    // simple password match check
-    if (formData.password !== formData.confirmPassword) {
-      toast.error("Passwords do not match.");
+    const trimmedName = formData.name.trim();
+
+    // Validate name
+    if (trimmedName.length < 4) {
+      setFormErrors((prev) => ({ ...prev, name: true }));
+      toast.dismiss();
+      toast.error("Name must be at least 4 characters long.");
+      setLoading(false);
       return;
     }
 
+    if (formData.email.trim() === "") {
+      setFormErrors((prev) => ({ ...prev, name: true }));
+      toast.dismiss();
+      toast.error("Email is required.");
+      setLoading(false);
+      return;
+    }
+
+    const nameRegex = /^[A-Za-z]+(?: [A-Za-z]+)*$/;
+    if (!nameRegex.test(trimmedName)) {
+      setFormErrors((prev) => ({ ...prev, name: true }));
+      toast.dismiss();
+      toast.error("Please enter a valid full name (letters and spaces only).");
+      setLoading(false);
+      return;
+    }
+
+    // Validate password
+    if (formData.password.length < 8) {
+      setFormErrors((prev) => ({ ...prev, password: true }));
+      toast.dismiss();
+      toast.error("Password must be at least 8 characters.");
+      setLoading(false);
+      return;
+    }
+
+    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+    if (!specialCharRegex.test(formData.password)) {
+      setFormErrors((prev) => ({ ...prev, password: true }));
+      toast.dismiss();
+      toast.error("Password must contain at least one special character.");
+      setLoading(false);
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setFormErrors((prev) => ({
+        ...prev,
+        password: true,
+        confirmPassword: true,
+      }));
+      toast.dismiss();
+      toast.error("Passwords do not match.");
+      setLoading(false);
+      return;
+    }
+
+    // Send to backend
     const body = {
       name: formData.name,
       email: formData.email,
@@ -85,21 +148,35 @@ function SignupPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        if (response.status === 400 || response.status === 409) {
+        toast.dismiss();
+
+        if (response.status === 400 && data.message?.includes("not verified")) {
+          toast.error(
+            "Email is already registered but not verified. Please check your inbox."
+          );
+          router.push(
+            `/verify-email?email=${encodeURIComponent(formData.email)}`
+          );
+        } else if (response.status === 400 || response.status === 409) {
           toast.error("Email is already registered. Try logging in instead.");
         } else {
           toast.error(data.message || "Signup failed. Please try again.");
         }
+
         return;
       }
 
+      toast.dismiss();
       toast.success(
         "Signup successful! Please check your email to verify your account."
       );
-      router.push("/verify-email?email=" + formData.email);
+      router.push(`/verify-email?email=${encodeURIComponent(formData.email)}`);
     } catch (err) {
       console.error("Signup error:", err);
+      toast.dismiss();
       toast.error("Something went wrong. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -112,10 +189,10 @@ function SignupPage() {
           className="w-full space-y-4 md:space-y-6 mt-12"
         >
           <div>
-            <h1 className="text-3xl md:text-5xl font-serif font-normal">
+            <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] font-serif font-normal">
               Hello There!
             </h1>
-            <p className="font-light text-base md:text-lg">
+            <p className="font-light text-base md:text-lg text-[#1F1F1F] opacity-[60%]">
               Welcome to warriorsol, Enter details to create your account{" "}
             </p>
           </div>
@@ -127,8 +204,8 @@ function SignupPage() {
               name="name"
               type="text"
               value={formData.name}
+              className={formErrors.name ? "border-red-500" : ""}
               onChange={handleChange}
-              required
             />
           </div>
 
@@ -139,8 +216,8 @@ function SignupPage() {
               name="email"
               type="email"
               value={formData.email}
+              className={formErrors.name ? "border-red-500" : ""}
               onChange={handleChange}
-              required
             />
           </div>
 
@@ -153,8 +230,7 @@ function SignupPage() {
                 type={showPassword ? "text" : "password"}
                 value={formData.password}
                 onChange={handleChange}
-                required
-                className="pr-10"
+                className={`pr-10 ${formErrors.password ? "border-red-500" : ""}`}
               />
               <Button
                 type="button"
@@ -179,8 +255,7 @@ function SignupPage() {
                   type={showConfirmPassword ? "text" : "password"}
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  required
-                  className="pr-10"
+                  className={`pr-10 ${formErrors.confirmPassword ? "border-red-500 border-2" : ""}`}
                 />
                 <Button
                   type="button"
@@ -201,9 +276,14 @@ function SignupPage() {
 
           <Button
             type="submit"
-            className="w-full bg-[#EE9254] cursor-pointer hover:bg-[#EE9254] h-10 md:h-12 text-white mt-4"
+            disabled={loading}
+            className="w-full bg-[#EE9254] !font-[Inter] !text-xl cursor-pointer hover:bg-[#EE9254] h-10 md:h-12 text-white mt-4"
           >
-            Get Started
+            {loading ? (
+              <Loader2 className="animate-spin w-5 h-5" />
+            ) : (
+              "Get Started"
+            )}
           </Button>
 
           <div className="flex items-center gap-4 my-2">
@@ -225,7 +305,7 @@ function SignupPage() {
           </Button>
 
           <div className="flex justify-center gap-x-2 md:gap-x-4">
-            <p className="text-base md:text-lg text-center font-light">
+            <p className="text-base md:text-lg !font-[Inter] !text-[#1F1F1F] opacity-60 text-center font-light">
               Already Have An Account?{" "}
               <a href="/login" className="text-black font-bold underline">
                 SignIn

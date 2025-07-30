@@ -27,7 +27,7 @@ export default function DonorWallShowcase({
       {/* Total Raised + Top Donors */}
       <section className="w-full flex flex-col lg:flex-row gap-8 bg-white py-8 px-4 sm:px-6 rounded-lg shadow-md mt-8">
         {/* Image + Stats */}
-        <div className="relative w-full lg:w-1/2 h-[400px] sm:h-[500px] lg:h-auto rounded-lg overflow-hidden">
+        <div className="relative w-full lg:w-1/2 h-[500px] sm:h-[600px] lg:h-[600px] rounded-lg overflow-hidden">
           <Image
             src={DonorWallImage}
             alt="Donor Wall"
@@ -61,44 +61,52 @@ export default function DonorWallShowcase({
         </div>
 
         {/* Top Donors */}
-        <div className="w-full lg:w-1/2 flex flex-col justify-center">
+        <div className="w-full lg:w-1/2 flex flex-col">
           <h2 className="text-2xl sm:text-3xl font-['Cormorant_SC'] mb-4">
             Top Donations
           </h2>
-          <div className="flex flex-col gap-4">
-            {topIndividualDonations.map((donation) => {
-              const initials = donation.name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")
-                .toUpperCase();
+          {topIndividualDonations.length === 0 ? (
+            <p className="text-sm text-gray-500 font-light italic">
+              No top donations yet. Be the first to support!
+            </p>
+          ) : (
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4">
+                {topIndividualDonations.map((donation) => {
+                  const initials = donation.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .toUpperCase();
 
-              return (
-                <div
-                  key={donation.id}
-                  className="flex items-center justify-between bg-[#FAFAFA] rounded-lg p-4 sm:p-6 shadow-sm border-l-4 border-[#EE9254]"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-[#EE9254] text-white font-bold text-lg sm:text-xl">
-                      {initials}
-                    </div>
-                    <div>
-                      <div className="font-medium text-lg sm:text-xl">
-                        {donation.name}
+                  return (
+                    <div
+                      key={donation.id}
+                      className="flex items-center justify-between bg-[#FAFAFA] rounded-lg p-4 sm:p-6 shadow-sm border-l-4 border-[#EE9254]"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-[#EE9254] text-white font-bold text-lg sm:text-xl">
+                          {initials}
+                        </div>
+                        <div>
+                          <div className="font-medium text-lg sm:text-xl">
+                            {donation.name}
+                          </div>
+                          <div className="text-xs sm:text-sm text-gray-500">
+                            Donated on{" "}
+                            {new Date(donation.createdAt).toLocaleDateString()}
+                          </div>
+                        </div>
                       </div>
-                      <div className="text-xs sm:text-sm text-gray-500">
-                        Donated on{" "}
-                        {new Date(donation.createdAt).toLocaleDateString()}
+                      <div className="text-lg sm:text-xl font-bold">
+                        ${(donation.amount / 100).toLocaleString()}
                       </div>
                     </div>
-                  </div>
-                  <div className="text-lg sm:text-xl font-bold">
-                    ${(donation.amount / 100).toLocaleString()}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -107,40 +115,46 @@ export default function DonorWallShowcase({
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-['Cormorant_SC'] font-semibold mb-6 text-[#1F1F1F]">
           Recent Donations
         </h2>
-        <div className="flex flex-col gap-4">
-          {recentDonations.map((donation, idx) => {
-            const initials = donation.name
-              .split(" ")
-              .map((n) => n[0])
-              .join("")
-              .toUpperCase();
+        {recentDonations.length === 0 ? (
+          <p className="text-sm text-gray-500 font-light italic">
+            No recent donations available at the moment.
+          </p>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {recentDonations.map((donation, idx) => {
+              const initials = donation.name
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .toUpperCase();
 
-            return (
-              <div
-                key={donation.id || idx}
-                className="flex flex-col sm:flex-row sm:items-center justify-between bg-white rounded-xl px-4 sm:px-6 py-4 sm:py-5 shadow-sm border border-[#F5E0C3]"
-              >
-                <div className="flex items-center gap-4 mb-2 sm:mb-0">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-[#F2994A]/90 text-white font-bold text-base sm:text-lg shadow-sm">
-                    {initials}
+              return (
+                <div
+                  key={donation.id || idx}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between bg-white rounded-xl px-4 sm:px-6 py-4 sm:py-5 shadow-sm border border-[#F5E0C3]"
+                >
+                  <div className="flex items-center gap-4 mb-2 sm:mb-0">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-[#F2994A]/90 text-white font-bold text-base sm:text-lg shadow-sm">
+                      {initials}
+                    </div>
+                    <div>
+                      <div className="font-semibold text-sm sm:text-base text-[#1F1F1F]">
+                        {donation.name}
+                      </div>
+                      <div className="text-xs text-[#777]">
+                        Donated on{" "}
+                        {new Date(donation.createdAt).toLocaleDateString()}
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="font-semibold text-sm sm:text-base text-[#1F1F1F]">
-                      {donation.name}
-                    </div>
-                    <div className="text-xs text-[#777]">
-                      Donated on{" "}
-                      {new Date(donation.createdAt).toLocaleDateString()}
-                    </div>
+                  <div className="text-sm sm:text-lg font-bold text-[#1F1F1F]">
+                    ${(donation.amount / 100).toLocaleString()}
                   </div>
                 </div>
-                <div className="text-sm sm:text-lg font-bold text-[#1F1F1F]">
-                  ${(donation.amount / 100).toLocaleString()}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </section>
     </>
   );

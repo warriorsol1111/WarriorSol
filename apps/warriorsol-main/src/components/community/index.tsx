@@ -86,7 +86,7 @@ const Community: React.FC = () => {
             </div>
           ) : error ? (
             <p className="text-center text-lg text-red-500">
-              Failed to load stories. Please try again later. 😢
+              Failed to load stories. Please reload the page to see if the issue persists.
             </p>
           ) : stories.length === 0 ? (
             <div className="text-center text-gray-500 py-12">

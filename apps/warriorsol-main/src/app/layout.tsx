@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Cormorant_SC } from "next/font/google";
-import { Toaster } from "react-hot-toast";
 import SessionProviderWrapper from "@/components/shared/sessionProvider";
 import CartDrawer from "@/components/cart/cartDrawer";
 import NextTopLoader from "nextjs-toploader";
+import CustomToaster from "@/lib/custom-toaster";
 
 const cormorantSC = Cormorant_SC({
   weight: ["400", "500", "600", "700"],
@@ -34,11 +34,8 @@ export default function RootLayout({
         className={`${inter.variable} ${cormorantSC.className} antialiased`}
       >
         <NextTopLoader height={5} showSpinner={false} />
-        <Toaster
-          toastOptions={{
-            className: "!font-[Inter]",
-          }}
-        />
+            <CustomToaster />
+
         <SessionProviderWrapper>{children}</SessionProviderWrapper>
         <CartDrawer />
       </body>

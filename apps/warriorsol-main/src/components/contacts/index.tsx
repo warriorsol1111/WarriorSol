@@ -11,6 +11,8 @@ import { Textarea } from "../ui/textarea";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
+import clsx from "clsx";
+import { FaArrowRightLong } from "react-icons/fa6";
 
 type FormData = {
   fullName: string;
@@ -21,6 +23,7 @@ type FormData = {
 const Contacts = () => {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -68,10 +71,10 @@ const Contacts = () => {
 
   return (
     <section className="w-full bg-white py-16 px-6 sm:px-12 lg:px-24">
-      <h1 className="text-4xl sm:text-5xl text-center font-semibold">
+      <h1 className="text-4xl md:text-[62px] text-[#1F1F1F] text-center font-semibold">
         Contact
       </h1>
-      <p className="text-center mt-4 text-lg sm:text-xl text-gray-600 mx-auto">
+      <p className="text-center mt-4 text-lg font-[Inter] opacity-70 sm:text-xl text-[#1F1F1F] mx-auto">
         Whether you have questions about our products, need assistance with your
         order, or just want to say hello, feel free to reach out. Our dedicated
         team is here to help you with any inquiries you may have.
@@ -91,15 +94,36 @@ const Contacts = () => {
             onSubmit={handleSubmit(onSubmit)}
             className="bg-white h-full p-6 sm:p-8 rounded-md space-y-6 shadow-md"
           >
+            {/* Full Name */}
             <div>
               <Label className="block text-sm font-medium mb-1">
                 Full Name
               </Label>
               <Input
-                {...register("fullName", { required: "Full name is required" })}
+                {...register("fullName", {
+                  validate: (value) => {
+                    const trimmed = value?.trim();
+
+                    if (!trimmed || trimmed.length < 3) {
+                      return "Name must be at least 3 characters.";
+                    }
+
+                    const wordCount = trimmed.split(/\s+/).length;
+                    if (wordCount < 2 && !/^[A-Za-z]{4,}$/.test(trimmed)) {
+                      return "Please enter a valid full name.";
+                    }
+
+                    return true;
+                  },
+                })}
                 type="text"
                 placeholder="Enter your full name"
-                className="w-full px-4 py-2 rounded-md border border-gray-300 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-300"
+                className={clsx(
+                  "w-full px-4 py-2 rounded-md border text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-300",
+                  errors.fullName
+                    ? "border-red-500 focus:ring-red-300"
+                    : "border-gray-300"
+                )}
               />
               {errors.fullName && (
                 <p className="text-red-500 text-sm mt-1">
@@ -108,21 +132,28 @@ const Contacts = () => {
               )}
             </div>
 
+            {/* Email */}
             <div>
               <Label className="block text-sm font-medium mb-1">
                 Email Address
               </Label>
               <Input
                 {...register("email", {
-                  required: "Email is required",
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: "Invalid email address",
+                  validate: (value) => {
+                    if (!value) return "Email is required.";
+                    const pattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+                    if (!pattern.test(value)) return "Invalid email address.";
+                    return true;
                   },
                 })}
                 type="email"
                 placeholder="Enter your email address"
-                className="w-full px-4 py-2 rounded-md border border-gray-300 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-300"
+                className={clsx(
+                  "w-full px-4 py-2 rounded-md border text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-300",
+                  errors.email
+                    ? "border-red-500 focus:ring-red-300"
+                    : "border-gray-300"
+                )}
               />
               {errors.email && (
                 <p className="text-red-500 text-sm mt-1">
@@ -131,13 +162,26 @@ const Contacts = () => {
               )}
             </div>
 
+            {/* Message */}
             <div>
               <Label className="block text-sm font-medium mb-1">Message</Label>
               <Textarea
-                {...register("message", { required: "Message is required" })}
+                {...register("message", {
+                  validate: (value) => {
+                    if (!value || value.trim().length < 10)
+                      return "Message must be at least 10 characters.";
+                    return true;
+                  },
+                })}
                 placeholder="Your Message..."
-                className="w-full min-h-[300px] px-4 py-2 rounded-md border border-gray-300 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-300 resize-none"
+                className={clsx(
+                  "w-full h-[300px] px-4 py-2 rounded-md border text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-300 resize-none overflow-y-auto",
+                  errors.message
+                    ? "border-red-500 focus:ring-red-300"
+                    : "border-gray-300"
+                )}
               />
+
               {errors.message && (
                 <p className="text-red-500 text-sm mt-1">
                   {errors.message.message}
@@ -150,12 +194,16 @@ const Contacts = () => {
               size="lg"
               variant="default"
               disabled={loading}
-              className="w-full py-3 rounded-md text-white bg-[#EE9254] hover:bg-[#e9823b] font-medium flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-md text-xl font-[Inter] text-white bg-[#EE9254] hover:bg-[#e9823b] font-medium flex items-center justify-center gap-2"
             >
-              {loading && (
+              {loading ? (
                 <Loader2 className="animate-spin h-5 w-5 text-white" />
-              )}
+              ) : 
+              <>
               <span className="text-lg">Send Message</span>
+              <FaArrowRightLong className="h-5 w-5" />
+              </>
+            }
             </Button>
           </form>
         </div>
