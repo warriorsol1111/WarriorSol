@@ -44,6 +44,7 @@
     "react-phone-input-2": "^2.15.1",
     "react-player": "^3.1.0",
     "react-toast": "^1.0.3",
+    "reactjs-otp-input": "^2.0.10",
     "sonner": "^2.0.5",
     "stripe": "^18.3.0",
     "tailwind-merge": "^3.3.1",
