@@ -8,6 +8,7 @@ import { MdOutlineShoppingBag, MdMenu } from "react-icons/md";
 import { Button } from "../ui/button";
 import { useCartStore } from "@/store/cart-store";
 import { useSession, signOut, signIn } from "next-auth/react";
+import { usePathname } from "next/navigation"; 
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -30,8 +31,10 @@ export default function Navbar() {
   const itemCount = useCartStore((state) => state.itemCount);
   const toggleCart = useCartStore((state) => state.toggleCart);
   const { data: session } = useSession();
+  const pathname = usePathname();
 
   const foundationURL = process.env.NEXT_PUBLIC_WARRIOR_SOL_FOUNDATION_APP_URL;
+
   useEffect(() => {
     hydrateCart();
   }, [hydrateCart]);
@@ -40,6 +43,11 @@ export default function Navbar() {
     session?.user?.firstName || session?.user?.lastName
       ? `${session?.user?.firstName ?? ""} ${session?.user?.lastName ?? ""}`.trim()
       : "Guest";
+
+  const isActive = (path: string) =>
+    pathname === path
+      ? "text-[#EE9254] font-semibold underline underline-offset-4"
+      : "hover:underline";
 
   return (
     <header>
@@ -62,18 +70,17 @@ export default function Navbar() {
               className="p-4 pt-10 space-y-6 w-[250px] sm:w-64 bg-white text-black"
             >
               <nav className="flex flex-col gap-4 font-medium">
-                <Link href="/home">Home</Link>
-                <Link href="/products">All Products</Link>
-                <Link href="/warrior-products">Warrior Products</Link>
-                <Link href="/community">Community</Link>
-                <Link href="/about">About</Link>
-                <Link href="/contacts">Contacts</Link>
+                <Link className={isActive("/home")} href="/home">Home</Link>
+                <Link className={isActive("/products")} href="/products">All Products</Link>
+                <Link className={isActive("/warrior-products")} href="/warrior-products">Warrior Products</Link>
+                <Link className={isActive("/community")} href="/community">Community</Link>
+                <Link className={isActive("/about")} href="/about">About</Link>
+                <Link className={isActive("/contacts")} href="/contacts">Contacts</Link>
                 {session?.user?.role === "admin" && (
-                  <Link href="/admin-story-review">Review Stories</Link>
+                  <Link className={isActive("/admin-story-review")} href="/admin-story-review">Review Stories</Link>
                 )}
               </nav>
 
-              {/* Auth section in mobile menu */}
               <div className="border-t pt-4">
                 {session?.user ? (
                   <div className="space-y-2">
@@ -116,7 +123,6 @@ export default function Navbar() {
             </SheetContent>
           </Sheet>
 
-          {/* Logo */}
           <Link href="/home" className="text-lg font-semibold tracking-wide">
             <div className="flex items-center px-1 sm:px-3">
               <Image
@@ -131,49 +137,20 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Center: Navigation Links (desktop only) - Now allows wrapping */}
+        {/* Desktop Nav */}
         <nav className="hidden lg:flex flex-1 justify-center items-center px-4 max-w-2xl xl:max-w-none mx-auto">
           <div className="flex flex-wrap xl:flex-nowrap justify-center items-center gap-x-4 lg:gap-x-6 gap-y-2 text-sm text-black font-light">
-            <Link href="/home" className="hover:underline whitespace-nowrap">
-              Home
-            </Link>
-            <Link
-              href="/products"
-              className="hover:underline whitespace-nowrap"
-            >
-              All Products
-            </Link>
-            <Link
-              href="/warrior-products"
-              className="hover:underline whitespace-nowrap"
-            >
-              Warrior Products
-            </Link>
-            <Link
-              href="/community"
-              className="hover:underline whitespace-nowrap"
-            >
-              Community
-            </Link>
-            <Link href="/about" className="hover:underline whitespace-nowrap">
-              About
-            </Link>
-            <Link
-              href="/contacts"
-              className="hover:underline whitespace-nowrap"
-            >
-              Contacts
-            </Link>
+            <Link className={isActive("/home")} href="/home">Home</Link>
+            <Link className={isActive("/products")} href="/products">All Products</Link>
+            <Link className={isActive("/warrior-products")} href="/warrior-products">Warrior Products</Link>
+            <Link className={isActive("/community")} href="/community">Community</Link>
+            <Link className={isActive("/about")} href="/about">About</Link>
+            <Link className={isActive("/contacts")} href="/contacts">Contacts</Link>
             {session?.user?.role === "admin" && (
-              <Link
-                href="/admin-story-review"
-                className="hover:underline whitespace-nowrap"
-              >
-                Review Stories
-              </Link>
+              <Link className={isActive("/admin-story-review")} href="/admin-story-review">Review Stories</Link>
             )}
             <a
-              href={`${foundationURL}`}
+              href={foundationURL}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-[#EE9254] text-white px-4 py-2 rounded-full text-center font-semibold text-sm hover:bg-[#e5772e] transition-all shadow-md whitespace-nowrap"
@@ -187,7 +164,6 @@ export default function Navbar() {
         <div className="flex items-center sm:gap-4 flex-shrink-0">
           <NavbarSearchDrawer />
 
-          {/* User Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="link" className="p-1 sm:p-2">
@@ -197,12 +173,8 @@ export default function Navbar() {
             <DropdownMenuContent className="w-48">
               {session?.user ? (
                 <>
-                  <DropdownMenuLabel className="text-sm text-gray-500">
-                    Signed in as
-                  </DropdownMenuLabel>
-                  <DropdownMenuLabel className="font-medium text-base truncate">
-                    {userName}
-                  </DropdownMenuLabel>
+                  <DropdownMenuLabel className="text-sm text-gray-500">Signed in as</DropdownMenuLabel>
+                  <DropdownMenuLabel className="font-medium text-base truncate">{userName}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild className="cursor-pointer">
                     <Link href="/account">Account Settings</Link>
@@ -220,9 +192,7 @@ export default function Navbar() {
                 </>
               ) : (
                 <>
-                  <DropdownMenuLabel className="text-sm text-gray-500">
-                    Not signed in
-                  </DropdownMenuLabel>
+                  <DropdownMenuLabel className="text-sm text-gray-500">Not signed in</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={() => signIn()}
@@ -238,7 +208,6 @@ export default function Navbar() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Cart Icon */}
           <Button
             variant="link"
             className="relative p-1 sm:p-2"

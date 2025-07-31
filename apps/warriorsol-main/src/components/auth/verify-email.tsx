@@ -56,6 +56,7 @@ export default function VerifyEmailPage() {
         toast.success("Email verified successfully");
         setStep(2);
       } else {
+        toast.dismiss();
         toast.error("Invalid verification code");
       }
     } catch (err) {
@@ -81,9 +82,17 @@ export default function VerifyEmailPage() {
       const data = await response.json();
 
       if (data.status === "success") {
+        toast.dismiss();
         toast.success("Verification code resent successfully");
       } else {
+        if(data.message === "Email already verified") {
+          toast.dismiss();
+          toast.error("Email already verified");
+        }
+        else {
+        toast.dismiss();
         toast.error("Failed to resend verification code");
+        }
       }
     } catch (err) {
       console.error("Error during resend code:", err);
@@ -111,7 +120,7 @@ export default function VerifyEmailPage() {
               </p>
             </div>
             <div className="space-y-4">
-              <Label htmlFor="verificationCode">Please Enter Code</Label>
+              <Label className="text-[#1F1F1F]" htmlFor="verificationCode">Please Enter Code</Label>
               <OtpInput
                 value={verificationCode}
                 onChange={(val) => {

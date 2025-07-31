@@ -21,7 +21,7 @@ export default function CustomToaster() {
               </div>
               <button
                 onClick={() => toast.dismiss(t.id)}
-                className="text-gray-500 hover:text-black"
+                className="text-gray-500 hover:text-black cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
