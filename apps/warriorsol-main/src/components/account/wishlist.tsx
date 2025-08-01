@@ -7,11 +7,12 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import Image from "next/image";
 import { Loader2 } from "lucide-react";
+
 interface VariantDetail {
   title: string;
   image: string;
   price: string;
-  productId: string; // For linking like /products/123
+  productId: string;
   productTitle: string;
 }
 
@@ -29,6 +30,50 @@ export default function Wishlist() {
   const [loading, setLoading] = useState(true);
   const [count, setCount] = useState(0);
   const [deleteLoading, setDeleteLoading] = useState(false);
+
+  const [removingItems, setRemovingItems] = useState<Set<string>>(new Set());
+
+  const handleRemoveItem = async (variantId: string) => {
+    try {
+      setRemovingItems((prev) => new Set(prev).add(variantId));
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/wishlist`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ variantId }),
+        }
+      );
+
+      const result = await res.json();
+
+      if (res.ok && result.status === "success") {
+        toast.dismiss();
+        toast.success("Item removed from wishlist");
+        setWishlistItems((prev) =>
+          prev.filter((item) => item.variantId !== variantId)
+        );
+        setCount((prev) => prev - 1);
+      } else {
+        toast.dismiss();
+        toast.error(result.message || "Failed to remove item");
+      }
+    } catch (error) {
+      console.error("Error removing item from wishlist:", error);
+      toast.dismiss();
+      toast.error("Something went wrong");
+    } finally {
+      setRemovingItems((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(variantId);
+        return newSet;
+      });
+    }
+  };
 
   const token = session?.user?.token;
 
@@ -113,10 +158,12 @@ export default function Wishlist() {
       const result = await res.json();
 
       if (res.ok) {
+        toast.dismiss();
         toast.success("Wishlist cleared successfully");
         setWishlistItems([]);
         setCount(0);
       } else {
+        toast.dismiss();
         toast.error(result.message || "Failed to clear wishlist");
       }
     } catch (error) {
@@ -128,10 +175,10 @@ export default function Wishlist() {
 
   return (
     <div className="min-h-screen py-6 sm:py-10 px-2 sm:px-4 flex flex-col items-center">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-center">
+      <h1 className="text-2xl sm:text-[42px] font-bold mb-2 text-center">
         Your Wishlist
       </h1>
-      <p className="text-gray-600 mb-6 text-center">
+      <p className="text-gray-600 mb-6 text-xl text-center">
         {count} item{count !== 1 && "s"} saved
       </p>
 
@@ -141,7 +188,7 @@ export default function Wishlist() {
         </div>
       ) : count === 0 ? (
         <>
-          <p className="text-gray-500 mb-8 text-center">
+          <p className="text-gray-500 mb-8 text-xl text-center">
             Your wishlist is currently empty.
           </p>
           <Link
@@ -173,6 +220,8 @@ export default function Wishlist() {
             {wishlistItems.map((item) => {
               const d = item.details;
               if (!d) return null;
+
+              const isRemoving = removingItems.has(item.variantId);
 
               return (
                 <li
@@ -211,10 +260,23 @@ export default function Wishlist() {
                     <div className="flex flex-col items-end gap-2 min-w-0 sm:min-w-[140px] w-full sm:w-auto">
                       <Link
                         href={`/products/${d.productId}?variant=${item.variantId}`}
-                        className="text-lg text-white hover:underline bg-[#EE9254] px-4 py-2 border border-[#EE9254] rounded-lg font-bold transition w-full sm:w-auto text-center"
+                        className="text-lg font-[Inter] text-white hover:underline bg-[#EE9254] px-4 py-2 border border-[#EE9254] rounded-lg font-bold transition w-full sm:w-auto text-center"
                       >
                         View Product
                       </Link>
+
+                      <Button
+                        variant="outline"
+                        className="product-button w-full h-10 !text-red-600 !border-red-300 hover:!bg-red-50 hover:!text-red-700"
+                        onClick={() => handleRemoveItem(item.variantId)}
+                        disabled={isRemoving}
+                      >
+                        {isRemoving ? (
+                          <Loader2 className="animate-spin h-4 w-4" />
+                        ) : (
+                          "Remove from Wishlist"
+                        )}
+                      </Button>
                     </div>
                   </div>
                 </li>

@@ -53,13 +53,16 @@ export default function VerifyEmailPage() {
       const data = await response.json();
 
       if (data.status === "success") {
+        toast.dismiss();
         toast.success("Email verified successfully");
         setStep(2);
       } else {
+        toast.dismiss();
         toast.error("Invalid verification code");
       }
     } catch (err) {
       console.error("Error during email verification:", err);
+      toast.dismiss();
       toast.error("Something went wrong. Try again.");
     } finally {
       setLoading(false);
@@ -81,12 +84,15 @@ export default function VerifyEmailPage() {
       const data = await response.json();
 
       if (data.status === "success") {
+        toast.dismiss();
         toast.success("Verification code resent successfully");
       } else {
+        toast.dismiss();
         toast.error("Failed to resend verification code");
       }
     } catch (err) {
       console.error("Error during resend code:", err);
+      toast.dismiss();
       toast.error("Something went wrong. Try again.");
     } finally {
       setResending(false);

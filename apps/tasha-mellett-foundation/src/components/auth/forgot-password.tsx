@@ -74,6 +74,7 @@ export default function ForgotPasswordPage() {
         );
         const data = await response.json();
         if (data.status === "success") {
+          toast.dismiss();
           toast.success("Verification code sent successfully");
           setStep("verify");
         } else {
@@ -83,10 +84,12 @@ export default function ForgotPasswordPage() {
               "This email is linked to a Google account. Please sign in with Google."
             )
           ) {
+            toast.dismiss();
             toast.error(
               "This email is linked to a Google account. Please sign in with Google."
             );
           } else {
+            toast.dismiss();
             toast.error("Failed to send verification code");
           }
         }
@@ -108,14 +111,17 @@ export default function ForgotPasswordPage() {
         );
         const verifyData = await verifyResponse.json();
         if (verifyData.status === "success") {
+          toast.dismiss();
           toast.success("Verification code verified successfully");
           setStep("newPassword");
         } else {
+          toast.dismiss();
           toast.error("Failed to verify verification code");
         }
         break;
       case "newPassword":
         if (!isValidPassword(formData.newPassword)) {
+          toast.dismiss();
           toast.error(
             "Password must be at least 8 characters and include a letter, number, and special character"
           );
@@ -142,17 +148,21 @@ export default function ForgotPasswordPage() {
               updateData.message ===
               "New password cannot be the same as your current password"
             ) {
+              toast.dismiss();
               toast.error(
                 "New password cannot be the same as your current password"
               );
             } else {
+              toast.dismiss();
               toast.success("Password updated successfully");
               setStep("success");
             }
           } else {
+            toast.dismiss();
             toast.error("Failed to update password");
           }
         } else {
+          toast.dismiss();
           toast.error("Passwords don't match");
           console.error("Passwords don't match");
         }

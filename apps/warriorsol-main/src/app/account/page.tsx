@@ -1,11 +1,11 @@
+// TypeScript (React/Next.js)
+import { Suspense } from "react";
 import AccountPage from "./accountPage";
 
-export const metadata = {
-  title: "Account | WarriorSol Foundation",
-  description:
-    "Manage your account at WarriorSol Foundation. Update your profile, view donation history, and manage your settings.",
-};
-
-export default function AccountsPageWrapper() {
-  return <AccountPage />;
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AccountPage />
+    </Suspense>
+  );
 }

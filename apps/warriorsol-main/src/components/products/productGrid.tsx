@@ -32,32 +32,48 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
   const [cartLoading, setCartLoading] = useState<string | null>(null);
   const { data: session } = useSession();
   const { addItem, openCart } = useCartStore();
+  const [availabilityMap, setAvailabilityMap] = useState<{
+    [id: string]: boolean;
+  }>({});
 
   // Helper to get first variantId for a product
-  const getFirstVariantId = async (id: string): Promise<string | null> => {
+  const getFirstVariantIdAndAvailability = async (
+    id: string
+  ): Promise<{ variantId: string | null; available: boolean }> => {
     try {
       const res = await fetch(
         `/api/shopify/getProductById?id=${encodeURIComponent(id)}`
       );
       const data = await res.json();
-      const variantId =
-        data?.variants?.[0]?.id ||
-        data?.variant?.id ||
-        data?.variants?.edges?.[0]?.node?.id;
-      return variantId || null;
+
+      const variant =
+        data?.variants?.[0] ||
+        data?.variant ||
+        data?.variants?.edges?.[0]?.node;
+      const variantId = variant?.id || null;
+      const available = variant?.availableForSale ?? true;
+
+      return { variantId, available };
     } catch {
-      return null;
+      return { variantId: null, available: true };
     }
   };
 
-  // Check wishlist status for each product
   useEffect(() => {
-    const checkAllWishlists = async () => {
+    const checkAllProductData = async () => {
       if (!session) return;
+
       const newWishlist: { [id: string]: boolean } = {};
+      const newAvailability: { [id: string]: boolean } = {};
+
       for (const product of products) {
-        const variantId = await getFirstVariantId(product.id);
+        const { variantId, available } = await getFirstVariantIdAndAvailability(
+          product.id
+        );
         if (!variantId) continue;
+
+        newAvailability[product.id] = available;
+
         try {
           const res = await fetch(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/wishlist/check?variantId=${variantId}`,
@@ -75,20 +91,40 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
           newWishlist[product.id] = false;
         }
       }
+
       setWishlist(newWishlist);
+      setAvailabilityMap(newAvailability);
     };
-    if (products.length && session) checkAllWishlists();
+
+    if (products.length && session) checkAllProductData();
   }, [products, session]);
+  const getFirstVariantId = async (id: string): Promise<string | null> => {
+    try {
+      const res = await fetch(
+        `/api/shopify/getProductById?id=${encodeURIComponent(id)}`
+      );
+      const data = await res.json();
+      const variantId =
+        data?.variants?.[0]?.id ||
+        data?.variant?.id ||
+        data?.variants?.edges?.[0]?.node?.id;
+      return variantId || null;
+    } catch {
+      return null;
+    }
+  };
 
   const handleToggleWishlist = async (product: Product) => {
     setWishlistLoading(product.id);
     const variantId = await getFirstVariantId(product.id);
     if (!variantId) {
+      toast.dismiss();
       toast.error("Could not find product variant.");
       setWishlistLoading(null);
       return;
     }
     if (!session) {
+      toast.dismiss();
       toast.error("Please log in to use wishlist.");
       setWishlistLoading(null);
       return;
@@ -109,14 +145,17 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
       );
       const result = await res.json();
       if (res.ok) {
+        toast.dismiss();
         toast.success(
           isInWishlist ? "Item removed from Wishlist" : "Item Added to Wishlist"
         );
         setWishlist((prev) => ({ ...prev, [product.id]: !isInWishlist }));
       } else {
+        toast.dismiss();
         toast.error(result?.message || "Something went wrong");
       }
     } catch {
+      toast.dismiss();
       toast.error("Failed to update wishlist. Please try again.");
     } finally {
       setWishlistLoading(null);
@@ -127,6 +166,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
     setCartLoading(product.id);
     const variantId = await getFirstVariantId(product.id);
     if (!variantId) {
+      toast.dismiss();
       toast.error("Could not find product variant.");
       setCartLoading(null);
       return;
@@ -144,6 +184,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
         1
       );
       openCart();
+      toast.dismiss();
       toast.success("Added to cart!");
     } catch {
       toast.error("Failed to add item to cart. Please try again.");
@@ -174,6 +215,11 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
                 height={500}
                 className="h-full w-full object-cover object-center transform transition-transform duration-300 group-hover:scale-105"
               />
+              {availabilityMap[product.id] === false && (
+                <div className="absolute top-2 left-2 bg-gradient-to-r from-red-600 to-red-500 text-white text-[11px] font-semibold uppercase px-2.5 py-1 rounded-full shadow-lg tracking-wider backdrop-blur-sm ring-1 ring-white/10">
+                  Out of Stock
+                </div>
+              )}
             </div>
             <div className="p-3 sm:p-4">
               <h3 className="text-sm sm:text-base font-medium text-gray-900 truncate">

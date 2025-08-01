@@ -46,11 +46,13 @@ const RebellionNewsletter = () => {
       );
       const data = await response.json();
       if (data.message === "Email already exists") {
+        toast.dismiss();
         toast.error("Email already exists in the waitlist");
         setEmail("");
         setNotifyLoading(false);
         return;
       }
+      toast.dismiss();
       toast.success("Email added to waitlist");
       setEmail("");
       setNotifyLoading(false);
@@ -58,6 +60,7 @@ const RebellionNewsletter = () => {
       setCount((prev) => prev + 1);
     } catch (error) {
       console.error("Error adding email to waitlist:", error);
+      toast.dismiss();
       toast.error("Failed to add email to waitlist");
       setNotifyLoading(false);
     }

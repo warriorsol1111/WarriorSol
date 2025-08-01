@@ -31,7 +31,8 @@ export default function ForgotPasswordPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
-  const toggleConfirmPasswordVisibility = () => setShowConfirmPassword(!showConfirmPassword);
+  const toggleConfirmPasswordVisibility = () =>
+    setShowConfirmPassword(!showConfirmPassword);
 
   const isValidPassword = (password: string) => {
     const passwordRegex =
@@ -74,6 +75,7 @@ export default function ForgotPasswordPage() {
           );
           const data = await response.json();
           if (data.status === "success") {
+            toast.dismiss();
             toast.success("Verification code sent successfully");
             setStep("verify");
           } else {
@@ -82,8 +84,12 @@ export default function ForgotPasswordPage() {
                 "This email is linked to a Google account. Please sign in with Google."
               )
             ) {
-              toast.error("This email is linked to a Google account. Please sign in with Google.");
+              toast.dismiss();
+              toast.error(
+                "This email is linked to a Google account. Please sign in with Google."
+              );
             } else {
+              toast.dismiss();
               toast.error("Failed to send verification code");
             }
           }
@@ -104,15 +110,18 @@ export default function ForgotPasswordPage() {
           );
           const verifyData = await verifyResponse.json();
           if (verifyData.status === "success") {
+            toast.dismiss();
             toast.success("Verification code verified successfully");
             setStep("newPassword");
           } else {
+            toast.dismiss();
             toast.error("Failed to verify verification code");
           }
           break;
 
         case "newPassword":
           if (!isValidPassword(formData.newPassword)) {
+            toast.dismiss();
             toast.error(
               "Password must be at least 8 characters and include a letter, number, and special character"
             );
@@ -120,6 +129,7 @@ export default function ForgotPasswordPage() {
           }
 
           if (formData.newPassword !== formData.confirmPassword) {
+            toast.dismiss();
             toast.error("Passwords don't match");
             return;
           }
@@ -141,18 +151,24 @@ export default function ForgotPasswordPage() {
               updateData.message ===
               "New password cannot be the same as your current password"
             ) {
-              toast.error("New password cannot be the same as your current password");
+              toast.dismiss();
+              toast.error(
+                "New password cannot be the same as your current password"
+              );
             } else {
+              toast.dismiss();
               toast.success("Password updated successfully");
               setStep("success");
             }
           } else {
+            toast.dismiss();
             toast.error("Failed to update password");
           }
           break;
       }
     } catch (err) {
       console.error("Error during forgot password process:", err);
+      toast.dismiss();
       toast.error("Something went wrong");
     } finally {
       setLoading(false);
@@ -259,7 +275,11 @@ export default function ForgotPasswordPage() {
                   onClick={togglePasswordVisibility}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                 >
-                  {showPassword ? <FaEyeSlash className="w-5 h-5" /> : <FaEye className="w-5 h-5" />}
+                  {showPassword ? (
+                    <FaEyeSlash className="w-5 h-5" />
+                  ) : (
+                    <FaEye className="w-5 h-5" />
+                  )}
                 </Button>
               </div>
             </div>

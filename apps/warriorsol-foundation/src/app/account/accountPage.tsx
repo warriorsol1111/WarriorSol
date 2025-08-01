@@ -39,7 +39,7 @@ export default function SettingsPage() {
 
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -64,15 +64,19 @@ export default function SettingsPage() {
       );
       const data = await res.json();
       if (data.status === "success") {
+        toast.dismiss();
         toast.success("Current password verified.");
 
         setStep(2);
       } else {
         setMessage(data.message || "Invalid current password.");
+        toast.dismiss();
         toast.error(data.message || "Invalid current password.");
       }
     } catch {
       setMessage("Something went wrong. Try again.");
+      toast.dismiss();
+      toast.error("Something went wrong. Try again.");
     } finally {
       setPasswordLoading(false);
     }
@@ -107,6 +111,7 @@ export default function SettingsPage() {
     setMessage("");
     if (newPassword !== confirmPassword) {
       setMessage("New passwords do not match.");
+      toast.dismiss();
       toast.error("New passwords do not match.");
       return;
     }
@@ -129,10 +134,12 @@ export default function SettingsPage() {
         setOldPassword("");
         setNewPassword("");
         setConfirmPassword("");
+        toast.dismiss();
         toast.success("Password changed successfully!");
         setStep(1); // Reset to initial step
       } else {
         setMessage(data.message || "Failed to change password.");
+        toast.dismiss();
         toast.error(data.message || "Failed to change password.");
       }
     } catch {
@@ -251,7 +258,9 @@ export default function SettingsPage() {
                             <Button
                               type="button"
                               variant="link"
-                              onClick={() => setShowOldPassword((prev) => !prev)}
+                              onClick={() =>
+                                setShowOldPassword((prev) => !prev)
+                              }
                               className="absolute right-2 top-2 text-gray-500 hover:text-gray-800"
                             >
                               {showOldPassword ? (
@@ -279,7 +288,9 @@ export default function SettingsPage() {
                               <Button
                                 type="button"
                                 variant="link"
-                                onClick={() => setShowNewPassword((prev) => !prev)}
+                                onClick={() =>
+                                  setShowNewPassword((prev) => !prev)
+                                }
                                 className="absolute right-2 top-2 text-gray-500 hover:text-gray-800"
                               >
                                 {showNewPassword ? (
@@ -291,19 +302,25 @@ export default function SettingsPage() {
                             </div>
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                            <Label htmlFor="confirmPassword">
+                              Confirm New Password
+                            </Label>
                             <div className="relative">
                               <Input
                                 id="confirmPassword"
                                 type={showConfirmPassword ? "text" : "password"}
                                 value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                onChange={(e) =>
+                                  setConfirmPassword(e.target.value)
+                                }
                                 required
                               />
                               <Button
                                 type="button"
                                 variant={"link"}
-                                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                                onClick={() =>
+                                  setShowConfirmPassword((prev) => !prev)
+                                }
                                 className="absolute right-2 top-2 text-gray-500 hover:text-gray-800"
                               >
                                 {showConfirmPassword ? (
@@ -316,7 +333,6 @@ export default function SettingsPage() {
                           </div>
                         </>
                       )}
-
 
                       {message && (
                         <div className="text-sm text-red-600 font-medium">
@@ -398,7 +414,7 @@ export default function SettingsPage() {
                             className={clsx(
                               "text-sm sm:text-lg px-2 py-0.5 mt-1 rounded-full capitalize font-medium",
                               typeColors[donation.donationType] ||
-                              "bg-gray-100 text-gray-700"
+                                "bg-gray-100 text-gray-700"
                             )}
                           >
                             {donation.donationType.replace("_", " ")}

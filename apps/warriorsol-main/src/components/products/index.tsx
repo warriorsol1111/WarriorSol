@@ -75,6 +75,19 @@ const Products: React.FC = () => {
   const [collections, setCollections] = useState<Collection[]>([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState<FilterState>(initialFilterState);
+
+  // Helper function to get active filters count (consistent with Filter component)
+  const getActiveFiltersCount = () => {
+    return (
+      filters.productType.length +
+      filters.color.length +
+      filters.size.length +
+      filters.priceRange.length +
+      filters.availability.length +
+      (filters.sortBy !== "New In" ? 1 : 0)
+    );
+  };
+
   const extractColorsFromVariants = (
     variants: Variant[],
     options: ShopifyProductEdge["node"]["options"]
@@ -327,18 +340,9 @@ const Products: React.FC = () => {
           >
             <BsFilterLeft size={16} />
             <span>Sort & Filter</span>
-            {filters.productType.length +
-              filters.color.length +
-              filters.size.length +
-              filters.priceRange.length +
-              filters.availability.length >
-              0 && (
+            {getActiveFiltersCount() > 0 && (
               <span className="bg-[#EE9254] text-white text-xs rounded-full ml-1 w-5 h-5 flex items-center justify-center min-w-[20px]">
-                {filters.productType.length +
-                  filters.color.length +
-                  filters.size.length +
-                  filters.priceRange.length +
-                  filters.availability.length}
+                {getActiveFiltersCount()}
               </span>
             )}
           </Button>
@@ -357,18 +361,9 @@ const Products: React.FC = () => {
         >
           <span>Sort & Filter</span>
           <div className="flex items-center gap-2">
-            {filters.productType.length +
-              filters.color.length +
-              filters.size.length +
-              filters.priceRange.length +
-              filters.availability.length >
-              0 && (
+            {getActiveFiltersCount() > 0 && (
               <span className="bg-[#EE9254] text-white text-xs px-2 py-2 rounded-full">
-                {filters.productType.length +
-                  filters.color.length +
-                  filters.size.length +
-                  filters.priceRange.length +
-                  filters.availability.length}
+                {getActiveFiltersCount()}
               </span>
             )}
             <BsFilterLeft size={20} />

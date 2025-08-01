@@ -120,6 +120,7 @@ export default function ForgotPasswordPage() {
       }
     } catch (err) {
       console.error("Error during resend code:", err);
+      toast.dismiss();
       toast.error("Something went wrong. Try again.");
     } finally {
       setResending(false);
@@ -168,6 +169,7 @@ export default function ForgotPasswordPage() {
           );
           const data = await response.json();
           if (data.status === "success") {
+            toast.dismiss();
             toast.success("Verification code sent successfully");
             setStep("verify");
           } else {
@@ -176,10 +178,12 @@ export default function ForgotPasswordPage() {
                 "This email is linked to a Google account. Please sign in with Google."
               )
             ) {
+              toast.dismiss();
               toast.error(
                 "This email is linked to a Google account. Please sign in with Google."
               );
             } else {
+              toast.dismiss();
               toast.error("Failed to send verification code");
             }
           }
@@ -200,9 +204,11 @@ export default function ForgotPasswordPage() {
           );
           const verifyData = await verifyResponse.json();
           if (verifyData.status === "success") {
+            toast.dismiss();
             toast.success("Verification code verified successfully");
             setStep("newPassword");
           } else {
+            toast.dismiss();
             toast.error("Failed to verify verification code");
           }
           break;
@@ -215,6 +221,7 @@ export default function ForgotPasswordPage() {
                 "Password must be at least 8 characters and include a capital letter, number, and special character",
               confirmPassword: "",
             });
+            toast.dismiss();
             toast.error("Invalid password");
             return;
           }
@@ -225,6 +232,7 @@ export default function ForgotPasswordPage() {
               newPassword: "",
               confirmPassword: "Passwords don't match",
             });
+            toast.dismiss();
             toast.error("Passwords don't match");
             return;
           }
@@ -280,6 +288,7 @@ export default function ForgotPasswordPage() {
       }
     } catch (err) {
       console.error("Error during forgot password process:", err);
+      toast.dismiss();
       toast.error("Something went wrong");
     } finally {
       setLoading(false);
@@ -410,7 +419,7 @@ export default function ForgotPasswordPage() {
               <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] font-[Cormorant SC] font-normal">
                 Create New Password
               </h1>
-              <p className="font-light text-[#1F1F1F] font-[Inter] opacity-60 text-base md:text-lg">
+              <p className="font-light text-[#1F1F1F] opacity-60 font-[Inter]  text-base md:text-lg">
                 Enter your new password{" "}
               </p>
             </div>

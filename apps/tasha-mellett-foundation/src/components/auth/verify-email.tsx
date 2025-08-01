@@ -33,9 +33,11 @@ export default function VerifyEmailPage() {
     );
     const data = await response.json();
     if (data.status === "success") {
+      toast.dismiss();
       toast.success("Email verified successfully");
       router.push("/login");
     } else {
+      toast.dismiss();
       toast.error("Invalid verification code");
     }
   };
@@ -58,8 +60,10 @@ export default function VerifyEmailPage() {
     const data = await response.json();
 
     if (data.status === "success") {
+      toast.dismiss();
       toast.success("Verification code resent successfully");
     } else {
+      toast.dismiss();
       toast.error("Failed to resend verification code");
     }
   };

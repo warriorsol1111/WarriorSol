@@ -54,14 +54,16 @@ const Contacts = () => {
       const result = await res.json();
 
       if (!res.ok) throw new Error(result.message || "Failed to send message");
-
+      toast.dismiss();
       toast.success("Message sent successfully!");
       reset();
     } catch (err) {
       console.error("Send message error:", err);
       if (err instanceof Error) {
+        toast.dismiss();
         toast.error(err.message || "Something went wrong.");
       } else {
+        toast.dismiss();
         toast.error("Something went wrong.");
       }
     } finally {
@@ -198,12 +200,12 @@ const Contacts = () => {
             >
               {loading ? (
                 <Loader2 className="animate-spin h-5 w-5 text-white" />
-              ) : 
-              <>
-              <span className="text-lg">Send Message</span>
-              <FaArrowRightLong className="h-5 w-5" />
-              </>
-            }
+              ) : (
+                <>
+                  <span className="text-lg">Send Message</span>
+                  <FaArrowRightLong className="h-5 w-5" />
+                </>
+              )}
             </Button>
           </form>
         </div>

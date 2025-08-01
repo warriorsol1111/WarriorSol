@@ -159,11 +159,13 @@ const RecommendedProducts: React.FC = () => {
     setWishlistLoading(product.id);
     const variantId = await getFirstVariantId(product.id);
     if (!variantId) {
+      toast.dismiss();
       toast.error("Could not find product variant.");
       setWishlistLoading(null);
       return;
     }
     if (!session) {
+      toast.dismiss();
       toast.error("Please log in to use wishlist.");
       setWishlistLoading(null);
       return;
@@ -184,14 +186,17 @@ const RecommendedProducts: React.FC = () => {
       );
       const result = await res.json();
       if (res.ok) {
+        toast.dismiss();
         toast.success(
           isInWishlist ? "Item removed from Wishlist" : "Item Added to Wishlist"
         );
         setWishlist((prev) => ({ ...prev, [product.id]: !isInWishlist }));
       } else {
+        toast.dismiss();
         toast.error(result?.message || "Something went wrong");
       }
     } catch {
+      toast.dismiss();
       toast.error("Failed to update wishlist. Please try again.");
     } finally {
       setWishlistLoading(null);
@@ -202,6 +207,7 @@ const RecommendedProducts: React.FC = () => {
     setCartLoading(product.id);
     const variantId = await getFirstVariantId(product.id);
     if (!variantId) {
+      toast.dismiss();
       toast.error("Could not find product variant.");
       setCartLoading(null);
       return;
@@ -219,8 +225,10 @@ const RecommendedProducts: React.FC = () => {
         1
       );
       openCart();
+      toast.dismiss();
       toast.success("Added to cart!");
     } catch {
+      toast.dismiss();
       toast.error("Failed to add item to cart. Please try again.");
     } finally {
       setCartLoading(null);

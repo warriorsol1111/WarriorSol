@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
-import React from "react";
 import mainImage from "@/assets/Rectangle 215.png";
-import missionImage from "@/assets/mission.png";
 import coleImage from "@/assets/cole.png";
 import jimmyImage from "@/assets/jimmy.png";
+import missionImage from "@/assets/mission.png";
 import { SocialLinks } from "@/components/shared/socialLinks";
+import Image from "next/image";
+import React from "react";
 
 const CommunityPage = () => {
   return (
@@ -113,7 +113,9 @@ const CommunityPage = () => {
               placeholder="blur"
             />
             <h3 className="mt-4 text-2xl font-normal font-cormorant">Cole</h3>
-            <p className="text-[16px] text-[#1F1F1F99] font-[Inter]">Creative Lead & Storykeeper</p>
+            <p className="text-[16px] text-[#1F1F1F99] font-[Inter]">
+              Creative Lead & Storykeeper
+            </p>
             <p className="mt-2 text-[16px] font-light text-[#1F1F1FB2] font-[Inter] ">
               Cole brings vision, voice, and vulnerability to the heart of the
               brand. A designer with a mission, and a son who carries strength
@@ -130,7 +132,49 @@ const CommunityPage = () => {
               placeholder="blur"
             />
             <h3 className="mt-4 text-2xl font-normal font-cormorant">Jimmy</h3>
-            <p className="text-[16px] text-[#1F1F1F99] font-[Inter]">Founder, Warrior #2</p>
+            <p className="text-[16px] text-[#1F1F1F99] font-[Inter]">
+              Founder, Warrior #2
+            </p>
+            <p className="mt-2 text-[16px] font-light text-[#1F1F1FB2] font-[Inter] ">
+              A father, a husband, and now, a messenger of light. After losing
+              his wife Tasha, Jimmy turned grief into fuel. Warrior Sol is his
+              way of saying: &quot;We&apos;re still here. We&apos;re still
+              fighting.&quot;
+            </p>
+          </div>
+        </div>
+        <div className="mt-12 grid md:grid-cols-2 gap-12">
+          {/* Cole */}
+          <div className="flex flex-col items-start text-left">
+            <Image
+              src={coleImage}
+              alt="Cole"
+              className="w-full h-auto rounded"
+              placeholder="blur"
+            />
+            <h3 className="mt-4 text-2xl font-normal font-cormorant">Cole</h3>
+            <p className="text-[16px] text-[#1F1F1F99] font-[Inter]">
+              Creative Lead & Storykeeper
+            </p>
+            <p className="mt-2 text-[16px] font-light text-[#1F1F1FB2] font-[Inter] ">
+              Cole brings vision, voice, and vulnerability to the heart of the
+              brand. A designer with a mission, and a son who carries strength
+              in his blood.
+            </p>
+          </div>
+
+          {/* Jimmy */}
+          <div className="flex flex-col items-start text-left">
+            <Image
+              src={jimmyImage}
+              alt="Jimmy"
+              className="w-full h-auto rounded"
+              placeholder="blur"
+            />
+            <h3 className="mt-4 text-2xl font-normal font-cormorant">Jimmy</h3>
+            <p className="text-[16px] text-[#1F1F1F99] font-[Inter]">
+              Founder, Warrior #2
+            </p>
             <p className="mt-2 text-[16px] font-light text-[#1F1F1FB2] font-[Inter] ">
               A father, a husband, and now, a messenger of light. After losing
               his wife Tasha, Jimmy turned grief into fuel. Warrior Sol is his

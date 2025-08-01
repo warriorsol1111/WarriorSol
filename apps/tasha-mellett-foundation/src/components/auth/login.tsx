@@ -29,10 +29,12 @@ function LoginPage() {
   useEffect(() => {
     if (error) {
       if (error === "GOOGLE_LOGIN_BLOCKED") {
+        toast.dismiss();
         toast.error(
           "This email is registered with a password. Please use email/password to log in."
         );
       } else {
+        toast.dismiss();
         toast.error("Something went wrong.");
       }
 
@@ -58,21 +60,26 @@ function LoginPage() {
 
     if (response?.error) {
       if (response.error.includes("User is not verified")) {
+        toast.dismiss();
         toast.error("User not verified");
         router.push(`/verify-email?email=${email}`);
       } else if (response.error.includes("Invalid credentials")) {
+        toast.dismiss();
         toast.error("Invalid credentials");
       } else if (
         response.error.includes("linked to a Google account") ||
         response.error.includes("sign in with Google")
       ) {
+        toast.dismiss();
         toast.error(
           "This account is linked to Google. Please sign in with Google."
         );
       } else {
+        toast.dismiss();
         toast.error("Something went wrong. Please try again.");
       }
     } else {
+      toast.dismiss();
       toast.success("Login successful");
       router.replace("/");
     }

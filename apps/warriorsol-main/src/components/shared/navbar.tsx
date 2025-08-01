@@ -1,6 +1,7 @@
 "use client";
 
 import { User } from "lucide-react";
+import { AiOutlineHeart } from "react-icons/ai";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "../../assets/logo.svg";
@@ -8,7 +9,7 @@ import { MdOutlineShoppingBag, MdMenu } from "react-icons/md";
 import { Button } from "../ui/button";
 import { useCartStore } from "@/store/cart-store";
 import { useSession, signOut, signIn } from "next-auth/react";
-import { usePathname } from "next/navigation"; 
+import { usePathname } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -46,7 +47,7 @@ export default function Navbar() {
 
   const isActive = (path: string) =>
     pathname === path
-      ? "text-[#EE9254] font-semibold underline underline-offset-4"
+      ? "text-[#EE9254] font-bold  underline underline-offset-4"
       : "hover:underline";
 
   return (
@@ -70,14 +71,34 @@ export default function Navbar() {
               className="p-4 pt-10 space-y-6 w-[250px] sm:w-64 bg-white text-black"
             >
               <nav className="flex flex-col gap-4 font-medium">
-                <Link className={isActive("/home")} href="/home">Home</Link>
-                <Link className={isActive("/products")} href="/products">All Products</Link>
-                <Link className={isActive("/warrior-products")} href="/warrior-products">Warrior Products</Link>
-                <Link className={isActive("/community")} href="/community">Community</Link>
-                <Link className={isActive("/about")} href="/about">About</Link>
-                <Link className={isActive("/contacts")} href="/contacts">Contacts</Link>
+                <Link className={isActive("/home")} href="/home">
+                  Home
+                </Link>
+                <Link className={isActive("/products")} href="/products">
+                  All Products
+                </Link>
+                <Link
+                  className={isActive("/warrior-products")}
+                  href="/warrior-products"
+                >
+                  Warrior Products
+                </Link>
+                <Link className={isActive("/community")} href="/community">
+                  Community
+                </Link>
+                <Link className={isActive("/about")} href="/about">
+                  About
+                </Link>
+                <Link className={isActive("/contacts")} href="/contacts">
+                  Contacts
+                </Link>
                 {session?.user?.role === "admin" && (
-                  <Link className={isActive("/admin-story-review")} href="/admin-story-review">Review Stories</Link>
+                  <Link
+                    className={isActive("/admin-story-review")}
+                    href="/admin-story-review"
+                  >
+                    Review Stories
+                  </Link>
                 )}
               </nav>
 
@@ -140,14 +161,34 @@ export default function Navbar() {
         {/* Desktop Nav */}
         <nav className="hidden lg:flex flex-1 justify-center items-center px-4 max-w-2xl xl:max-w-none mx-auto">
           <div className="flex flex-wrap xl:flex-nowrap justify-center items-center gap-x-4 lg:gap-x-6 gap-y-2 text-sm text-black font-light">
-            <Link className={isActive("/home")} href="/home">Home</Link>
-            <Link className={isActive("/products")} href="/products">All Products</Link>
-            <Link className={isActive("/warrior-products")} href="/warrior-products">Warrior Products</Link>
-            <Link className={isActive("/community")} href="/community">Community</Link>
-            <Link className={isActive("/about")} href="/about">About</Link>
-            <Link className={isActive("/contacts")} href="/contacts">Contacts</Link>
+            <Link className={isActive("/home")} href="/home">
+              Home
+            </Link>
+            <Link className={isActive("/products")} href="/products">
+              All Products
+            </Link>
+            <Link
+              className={isActive("/warrior-products")}
+              href="/warrior-products"
+            >
+              Warrior Products
+            </Link>
+            <Link className={isActive("/community")} href="/community">
+              Community
+            </Link>
+            <Link className={isActive("/about")} href="/about">
+              About
+            </Link>
+            <Link className={isActive("/contacts")} href="/contacts">
+              Contacts
+            </Link>
             {session?.user?.role === "admin" && (
-              <Link className={isActive("/admin-story-review")} href="/admin-story-review">Review Stories</Link>
+              <Link
+                className={isActive("/admin-story-review")}
+                href="/admin-story-review"
+              >
+                Review Stories
+              </Link>
             )}
             <a
               href={foundationURL}
@@ -173,8 +214,12 @@ export default function Navbar() {
             <DropdownMenuContent className="w-48">
               {session?.user ? (
                 <>
-                  <DropdownMenuLabel className="text-sm text-gray-500">Signed in as</DropdownMenuLabel>
-                  <DropdownMenuLabel className="font-medium text-base truncate">{userName}</DropdownMenuLabel>
+                  <DropdownMenuLabel className="text-sm text-gray-500">
+                    Signed in as
+                  </DropdownMenuLabel>
+                  <DropdownMenuLabel className="font-medium text-base truncate">
+                    {userName}
+                  </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild className="cursor-pointer">
                     <Link href="/account">Account Settings</Link>
@@ -192,7 +237,9 @@ export default function Navbar() {
                 </>
               ) : (
                 <>
-                  <DropdownMenuLabel className="text-sm text-gray-500">Not signed in</DropdownMenuLabel>
+                  <DropdownMenuLabel className="text-sm text-gray-500">
+                    Not signed in
+                  </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={() => signIn()}
@@ -208,6 +255,15 @@ export default function Navbar() {
             </DropdownMenuContent>
           </DropdownMenu>
 
+          {/* Wishlist Button */}
+          <Link
+            href="/account?tab=wishlist"
+            className="relative p-1 sm:p-2  transition-colors"
+          >
+            <AiOutlineHeart className="h-5 w-5" />
+          </Link>
+
+          {/* Cart Button */}
           <Button
             variant="link"
             className="relative p-1 sm:p-2"

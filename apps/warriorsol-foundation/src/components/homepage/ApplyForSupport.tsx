@@ -58,8 +58,11 @@ export default function ApplyForSupport() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isLoggedIn)
-      return toast.error("You must be logged in to submit the form.");
+    if (!isLoggedIn) {
+      toast.dismiss();
+      toast.error("You must be logged in to submit the form.");
+      return;
+    }
     setLoading(true);
     try {
       const response = await fetch(
@@ -84,6 +87,7 @@ export default function ApplyForSupport() {
         }
       );
       if (response.ok) {
+        toast.dismiss();
         toast.success("Application submitted successfully");
         setForm({
           familyName: "",
@@ -95,9 +99,11 @@ export default function ApplyForSupport() {
           situation: "",
         });
       } else {
+        toast.dismiss();
         toast.error("Error submitting application");
       }
     } catch {
+      toast.dismiss();
       toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);

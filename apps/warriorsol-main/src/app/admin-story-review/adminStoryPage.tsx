@@ -83,12 +83,14 @@ const AdminStoriesPage: React.FC = () => {
 
       if (res.ok) {
         setStories((prev) => prev.filter((story) => story.id !== id));
+        toast.dismiss();
         toast.success(
           action === "approve"
             ? "Story approved successfully!"
             : "Story rejected successfully!"
         );
       } else {
+        toast.dismiss();
         toast.error(
           action === "approve"
             ? "Failed to approve story"
@@ -96,6 +98,7 @@ const AdminStoriesPage: React.FC = () => {
         );
       }
     } catch {
+      toast.dismiss();
       toast.error("Action failed. Try again later.");
     } finally {
       setActionLoading(null);

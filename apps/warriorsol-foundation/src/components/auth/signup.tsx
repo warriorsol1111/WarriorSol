@@ -42,10 +42,12 @@ function SignupPage() {
   useEffect(() => {
     if (error) {
       if (error === "GOOGLE_LOGIN_BLOCKED") {
+        toast.dismiss();
         toast.error(
           "This email is registered with a password. Please use email/password to log in."
         );
       } else {
+        toast.dismiss();
         toast.error("Something went wrong.");
       }
 

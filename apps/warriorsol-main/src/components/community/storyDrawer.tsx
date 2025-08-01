@@ -61,6 +61,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
     if (isSvg) {
       setFileError("SVG files are not allowed");
       setFormData((prev) => ({ ...prev, image: null }));
+      toast.dismiss();
       toast.error("SVG files are not allowed");
       return;
     }
@@ -68,6 +69,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
     if (isTooBig) {
       setFileError("File size must be under 10MB");
       setFormData((prev) => ({ ...prev, image: null }));
+      toast.dismiss();
       toast.error("File size must be under 10MB");
       return;
     }
@@ -80,6 +82,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
         if (video.duration > 60) {
           setFileError("Video must be 1 minute or less");
           setFormData((prev) => ({ ...prev, image: null }));
+          toast.dismiss();
           toast.error("Video must be 1 minute or less");
         } else {
           setFileError("");
@@ -89,6 +92,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
       video.onerror = () => {
         setFileError("Could not load video file");
         setFormData((prev) => ({ ...prev, image: null }));
+        toast.dismiss();
         toast.error("Could not load video file");
       };
       video.src = URL.createObjectURL(file);
@@ -161,7 +165,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
       );
 
       if (!response.ok) throw new Error("Failed to submit story");
-
+      toast.dismiss();
       toast.success("Your story has been submitted for review!");
       setFormData({
         name: "",
@@ -175,6 +179,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
       onOpenChange(false);
     } catch (error) {
       console.error(error);
+      toast.dismiss();
       toast.error("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import {
   Drawer,
@@ -106,32 +106,40 @@ export const Filter: React.FC<FilterProps> = ({
   collections,
   allProducts,
 }) => {
+  const [tempFilters, setTempFilters] = useState<FilterState>(filters);
+
+  useEffect(() => {
+    if (isOpen) {
+      setTempFilters(filters);
+    }
+  }, [isOpen, filters]);
+
   const toggleFilter = (category: keyof FilterState, value: string) => {
     if (category === "sortBy") {
-      onFiltersChange({ ...filters, sortBy: value });
+      setTempFilters({ ...tempFilters, sortBy: value });
       return;
     }
 
-    const currentFilters = filters[category] as string[];
+    const currentFilters = tempFilters[category] as string[];
     const updatedFilters = currentFilters.includes(value)
       ? currentFilters.filter((item) => item !== value)
       : [...currentFilters, value];
 
-    onFiltersChange({ ...filters, [category]: updatedFilters });
+    setTempFilters({ ...tempFilters, [category]: updatedFilters });
   };
 
   const handleClearFilters = () => {
-    onFiltersChange(initialFilterState);
+    setTempFilters(initialFilterState);
   };
 
   const getActiveFiltersCount = () => {
     return (
-      filters.productType.length +
-      filters.color.length +
-      filters.size.length +
-      filters.priceRange.length +
-      filters.availability.length +
-      (filters.sortBy !== "New In" ? 1 : 0)
+      tempFilters.productType.length +
+      tempFilters.color.length +
+      tempFilters.size.length +
+      tempFilters.priceRange.length +
+      tempFilters.availability.length +
+      (tempFilters.sortBy !== "New In" ? 1 : 0)
     );
   };
 
@@ -145,7 +153,7 @@ export const Filter: React.FC<FilterProps> = ({
       <DrawerContent className="h-full">
         <DrawerHeader className="border-b border-gray-200">
           <div className="flex justify-between items-center">
-            <DrawerTitle className="flex items-center gap-2">
+            <DrawerTitle className="flex items-center text-[21px] md:text-[42px] text-[#1F1F1F] gap-2">
               Sort & Filter
               {getActiveFiltersCount() > 0 && (
                 <span className="bg-[#EE9254] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center min-w-[20px]">
@@ -153,7 +161,7 @@ export const Filter: React.FC<FilterProps> = ({
                 </span>
               )}
             </DrawerTitle>
-            <DrawerClose className="p-2">
+            <DrawerClose className="p-2 cursor-pointer">
               <IoClose size={24} />
             </DrawerClose>
           </div>
@@ -162,7 +170,9 @@ export const Filter: React.FC<FilterProps> = ({
         <div className="px-6 py-4 space-y-6 overflow-y-auto flex-1">
           {/* Sort By */}
           <div>
-            <h3 className="font-medium mb-3">Sort By</h3>
+            <h3 className="font-medium mb-3 font-[Inter] text-xl text-[#1F1F1F]">
+              Sort By
+            </h3>
             <div className="flex flex-wrap gap-2">
               {sortOptions.map((option) => (
                 <Button
@@ -170,8 +180,8 @@ export const Filter: React.FC<FilterProps> = ({
                   variant="link"
                   key={option}
                   onClick={() => toggleFilter("sortBy", option)}
-                  className={`px-4 py-2 rounded-full border transition-colors ${
-                    filters.sortBy === option
+                  className={`px-4 py-2 rounded-md text-lg font-[Inter] text-[#1F1F1F] border transition-colors opacity-60 ${
+                    tempFilters.sortBy === option
                       ? "bg-black text-white border-black"
                       : "bg-white text-black border-gray-300 hover:border-gray-400"
                   }`}
@@ -182,9 +192,11 @@ export const Filter: React.FC<FilterProps> = ({
             </div>
           </div>
 
-          {/* Product Type (dynamic from collections) */}
+          {/* Product Type */}
           <div>
-            <h3 className="font-medium mb-3">Product Type</h3>
+            <h3 className="font-medium mb-3 font-[Inter] text-xl text-[#1F1F1F]">
+              Product Type
+            </h3>
             <div className="flex flex-wrap gap-2">
               {productTypes.map((type) => (
                 <Button
@@ -192,8 +204,8 @@ export const Filter: React.FC<FilterProps> = ({
                   variant="link"
                   key={type}
                   onClick={() => toggleFilter("productType", type)}
-                  className={`px-4 py-2 rounded-full border transition-colors ${
-                    filters.productType.includes(type)
+                  className={`px-4 py-2 rounded-md text-lg font-[Inter] text-[#1F1F1F] border transition-colors opacity-60 ${
+                    tempFilters.productType.includes(type)
                       ? "bg-black text-white border-black"
                       : "bg-white text-black border-gray-300 hover:border-gray-400"
                   }`}
@@ -206,7 +218,9 @@ export const Filter: React.FC<FilterProps> = ({
 
           {/* Color */}
           <div>
-            <h3 className="font-medium mb-3">Color</h3>
+            <h3 className="font-medium mb-3 font-[Inter] text-xl text-[#1F1F1F]">
+              Color
+            </h3>
             <div className="flex flex-wrap gap-3">
               {colors.map((colorOption) => (
                 <div
@@ -217,11 +231,11 @@ export const Filter: React.FC<FilterProps> = ({
                     size="lg"
                     variant="link"
                     onClick={() => toggleFilter("color", colorOption.value)}
-                    className={`w-12 h-12 rounded-full border-2 transition-all ${
-                      filters.color.includes(colorOption.value)
-                        ? "ring-2 ring-black ring-offset-2"
+                    className={`w-10 h-10 rounded-md border transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                      tempFilters.color.includes(colorOption.value)
+                        ? "ring-2 ring-black ring-offset-2 border-black"
                         : "border-gray-300 hover:border-gray-400"
-                    } ${colorOption.value === "white" ? "border-gray-400" : ""}`}
+                    }`}
                     style={{
                       backgroundColor: colorOption.color,
                       border:
@@ -240,7 +254,9 @@ export const Filter: React.FC<FilterProps> = ({
 
           {/* Size */}
           <div>
-            <h3 className="font-medium mb-3">Size</h3>
+            <h3 className="font-medium mb-3 font-[Inter] text-xl text-[#1F1F1F]">
+              Size
+            </h3>
             <div className="flex flex-wrap gap-2">
               {sizes.map((size) => (
                 <Button
@@ -248,8 +264,8 @@ export const Filter: React.FC<FilterProps> = ({
                   variant="link"
                   key={size}
                   onClick={() => toggleFilter("size", size)}
-                  className={`px-4 py-2 rounded-full border transition-colors ${
-                    filters.size.includes(size)
+                  className={`px-4 py-2 rounded-md text-lg font-[Inter] text-[#1F1F1F] border transition-colors opacity-60 ${
+                    tempFilters.size.includes(size)
                       ? "bg-black text-white border-black"
                       : "bg-white text-black border-gray-300 hover:border-gray-400"
                   }`}
@@ -262,7 +278,9 @@ export const Filter: React.FC<FilterProps> = ({
 
           {/* Price Range */}
           <div>
-            <h3 className="font-medium mb-3">Price Range</h3>
+            <h3 className="font-medium mb-3 font-[Inter] text-xl text-[#1F1F1F]">
+              Price Range
+            </h3>
             <div className="flex flex-wrap gap-2">
               {priceRanges.map((range) => (
                 <Button
@@ -270,8 +288,8 @@ export const Filter: React.FC<FilterProps> = ({
                   variant="link"
                   key={range}
                   onClick={() => toggleFilter("priceRange", range)}
-                  className={`px-4 py-2 rounded-full border transition-colors ${
-                    filters.priceRange.includes(range)
+                  className={`px-4 py-2 rounded-md text-lg font-[Inter] text-[#1F1F1F] border opacity-60 transition-colors ${
+                    tempFilters.priceRange.includes(range)
                       ? "bg-black text-white border-black"
                       : "bg-white text-black border-gray-300 hover:border-gray-400"
                   }`}
@@ -284,7 +302,9 @@ export const Filter: React.FC<FilterProps> = ({
 
           {/* Availability */}
           <div>
-            <h3 className="font-medium mb-3">Availability</h3>
+            <h3 className="font-medium mb-3 font-[Inter] text-xl text-[#1F1F1F]">
+              Availability
+            </h3>
             <div className="flex gap-2">
               {availabilityOptions.map((option) => (
                 <Button
@@ -292,8 +312,8 @@ export const Filter: React.FC<FilterProps> = ({
                   variant="link"
                   key={option}
                   onClick={() => toggleFilter("availability", option)}
-                  className={`px-4 py-2 rounded-full border transition-colors ${
-                    filters.availability.includes(option)
+                  className={`px-4 py-2 rounded-md text-lg font-[Inter] text-[#1F1F1F] opacity-60 border transition-colors ${
+                    tempFilters.availability.includes(option)
                       ? "bg-black text-white border-black"
                       : "bg-white text-black border-gray-300 hover:border-gray-400"
                   }`}
@@ -309,20 +329,23 @@ export const Filter: React.FC<FilterProps> = ({
           <div className="flex gap-4">
             <Button
               size="lg"
-              onClick={handleClearFilters}
+              onClick={() => {
+                onFiltersChange(tempFilters);
+                onApplyFilters();
+              }}
               variant="link"
-              className="flex-1 py-3 px-4  rounded-lg border border-black hover:bg-gray-50 transition-colors"
-              disabled={getActiveFiltersCount() === 0}
+              className="flex-1 py-3 px-4 bg-[#EE9254] !text-lg text-white rounded-sm hover:bg-[#E97451]/90 transition-colors"
             >
-              Clear All ({getActiveFiltersCount()})
+              Apply Filters
             </Button>
             <Button
               size="lg"
-              onClick={onApplyFilters}
+              onClick={handleClearFilters}
               variant="link"
-              className="flex-1 py-3 px-4 bg-[#EE9254] text-white rounded-lg hover:bg-[#E97451]/90 transition-colors"
+              className="flex-1 py-3 px-4 !text-lg rounded-sm border border-black hover:bg-gray-50 transition-colors"
+              disabled={getActiveFiltersCount() === 0}
             >
-              Apply Filters
+              Clear All ({getActiveFiltersCount()})
             </Button>
           </div>
         </DrawerFooter>

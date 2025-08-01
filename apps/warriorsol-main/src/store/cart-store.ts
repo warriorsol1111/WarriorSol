@@ -81,6 +81,7 @@ export const useCartStore = create<CartState>((set, get) => ({
 
   addItem: async (item, quantity = 1) => {
     set({ cartLoading: true });
+    toast.dismiss();
     toast.loading("Adding item to cart...");
     try {
       const res = await fetch("/api/shopify/addItemToCart", {
@@ -128,6 +129,8 @@ export const useCartStore = create<CartState>((set, get) => ({
         const { [lineId]: _removed, ...rest } = state.itemLoading;
         return { itemLoading: rest };
       });
+      toast.dismiss();
+      toast.success("Item removed successfully");
     }
   },
 
@@ -149,6 +152,8 @@ export const useCartStore = create<CartState>((set, get) => ({
         const { [lineId]: _unused, ...rest } = state.itemLoading;
         return { itemLoading: rest };
       });
+      toast.dismiss();
+      toast.success("Item updated successfully");
     }
   },
 

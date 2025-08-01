@@ -214,6 +214,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
       const result = await res.json();
       if (res.ok) {
+        toast.dismiss();
         toast.success(
           isInWishlist ? "Item removed from Wishlist" : "Item Added to Wishlist"
         );
@@ -223,6 +224,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
       }
     } catch (error) {
       console.error("Error toggling wishlist:", error);
+      toast.dismiss();
       toast.error("Failed to update wishlist. Please try again.");
     } finally {
       setWishlistLoading(false);
@@ -246,6 +248,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
       openCart();
     } catch (error) {
       console.error("Error adding item to cart:", error);
+      toast.dismiss();
       toast.error("Failed to add item to cart. Please try again.");
     } finally {
       setLoading(false);
@@ -298,7 +301,8 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
       window.location.href = data.checkoutUrl;
     } catch (error) {
       console.error("Error creating checkout:", error);
-      alert("Failed to create checkout. Please try again.");
+      toast.dismiss();
+      toast.error("Failed to create checkout. Please try again.");
     } finally {
       setIsLoading(false);
     }

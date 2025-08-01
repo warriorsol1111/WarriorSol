@@ -87,12 +87,14 @@ export default function AdminSupportApplicationsPage() {
 
       if (res.ok) {
         setApplications((prev) => prev.filter((app) => app.id !== id));
+        toast.dismiss();
         toast.success(
           action === "accept"
             ? "Application approved successfully!"
             : "Application rejected successfully!"
         );
       } else {
+        toast.dismiss();
         toast.error(
           action === "accept"
             ? "Failed to approve application"
@@ -100,6 +102,7 @@ export default function AdminSupportApplicationsPage() {
         );
       }
     } catch {
+      toast.dismiss();
       toast.error("Action failed. Try again later.");
     } finally {
       setActionLoading({ id: null, type: null });
@@ -264,5 +267,4 @@ export default function AdminSupportApplicationsPage() {
       <Footer />
     </>
   );
-};
-
+}

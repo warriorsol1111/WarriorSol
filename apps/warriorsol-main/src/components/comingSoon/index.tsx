@@ -82,14 +82,17 @@ export default function ComingSoon() {
       const data = await response.json();
 
       if (data.message === "Email already exists") {
+        toast.dismiss();
         toast.error("Email already exists in the waitlist");
       } else {
+        toast.dismiss();
         toast.success("Email added to waitlist");
       }
 
       setEmail("");
     } catch (error) {
       console.error("Error adding email to waitlist:", error);
+      toast.dismiss();
       toast.error("Failed to add email to waitlist");
     } finally {
       setNotifyLoading(false);
