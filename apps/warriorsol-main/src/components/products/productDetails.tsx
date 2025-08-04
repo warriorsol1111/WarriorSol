@@ -16,6 +16,7 @@ import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import Reviews from "./reviews";
 
 interface ProductVariant {
   id: string;
@@ -536,15 +537,18 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
         <Tabs defaultValue="description" className="w-full">
           <TabsList className="flex h-auto p-0 bg-transparent rounded-none space-x-2 sm:space-x-4 overflow-x-auto">
             <TabsTrigger
+              className="rounded-lg cursor-pointer"
               value="description"
-              className="px-4 sm:px-6 lg:px-8 py-2 text-base md:text-lg border rounded-md border-[#E5E5E5] data-[state=active]:!text-white data-[state=active]:!bg-[#EE9254] data-[state=active]:!border-primary whitespace-nowrap"
             >
               Description
+            </TabsTrigger>
+            <TabsTrigger className="rounded-lg cursor-pointer" value="reviews">
+              Reviews
             </TabsTrigger>
           </TabsList>
           <TabsContent value="description" className="mt-6 lg:mt-8">
             <div
-              className="space-y-4 text-base md:text-lg font-inter prose prose-base md:prose-lg max-w-none"
+              className="space-y-4 text-base md:text-3xl font-inter prose prose-base md:prose-lg max-w-none"
               dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
             />
             <style jsx global>{`
@@ -572,6 +576,9 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 background-color: #f5f5f5;
               }
             `}</style>
+          </TabsContent>
+          <TabsContent value="reviews" className="mt-6 lg:mt-8">
+            <Reviews />
           </TabsContent>
         </Tabs>
       </div>

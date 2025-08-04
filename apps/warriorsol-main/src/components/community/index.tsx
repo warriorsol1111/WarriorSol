@@ -9,12 +9,19 @@ import { MdArrowOutward } from "react-icons/md";
 import { useSession } from "next-auth/react";
 
 interface Story {
-  id: string;
-  title: string;
-  description: string;
-  userName: string;
-  userType: string;
-  attachment?: string;
+  story: {
+    id: string;
+    title: string;
+    description: string;
+    userName: string;
+    userType: string;
+    attachment?: string;
+    isAnonymous: boolean;
+  };
+  user: {
+    name: string;
+    profilePhoto: string | null;
+  };
 }
 
 const Community: React.FC = () => {
@@ -59,6 +66,7 @@ const Community: React.FC = () => {
   return (
     <>
       <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
+        {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6 mb-8 sm:mb-12">
           <div>
             <h2 className="text-4xl sm:text-5xl lg:text-[62px] leading-tight lg:leading-[62px] font-['Cormorant_SC'] text-[#1F1F1F] capitalize">
@@ -78,7 +86,7 @@ const Community: React.FC = () => {
           </Button>
         </div>
 
-        {/* Loader / Error / Fallback / Grid */}
+        {/* Story List */}
         <div className="min-h-[300px]">
           {loading ? (
             <div className="flex justify-center items-center py-20">
@@ -86,7 +94,8 @@ const Community: React.FC = () => {
             </div>
           ) : error ? (
             <p className="text-center text-lg text-red-500">
-              Failed to load stories. Please reload the page to see if the issue persists.
+              Failed to load stories. Please reload the page to see if the issue
+              persists.
             </p>
           ) : stories.length === 0 ? (
             <div className="text-center text-gray-500 py-12">
@@ -97,7 +106,7 @@ const Community: React.FC = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-3">
-              {stories.map((story) => (
+              {stories.map(({ story, user }) => (
                 <StoryCard
                   key={story.id}
                   id={story.id}
@@ -105,8 +114,9 @@ const Community: React.FC = () => {
                   background={story.attachment || "/default-story-bg.jpg"}
                   link={`/community/${story.id}`}
                   author={{
-                    name: story.userName,
+                    name: story.isAnonymous ? "Anonymous" : user.name,
                     role: story.userType,
+                    avatar: story.isAnonymous ? null : user.profilePhoto,
                   }}
                 />
               ))}

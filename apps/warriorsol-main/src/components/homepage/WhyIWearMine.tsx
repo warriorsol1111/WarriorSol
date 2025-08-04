@@ -6,14 +6,22 @@ import { Button } from "../ui/button";
 import { useSession } from "next-auth/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 interface Story {
-  id: string;
-  title: string;
-  description: string;
-  userName: string;
-  userType: string;
-  attachment?: string;
+  story: {
+    id: string;
+    title: string;
+    description: string;
+    userName: string;
+    userType: string;
+    attachment?: string;
+  };
+  user: {
+    id: string;
+    name: string;
+    profilePhoto: string | null;
+  };
 }
 
 const variants = {
@@ -68,6 +76,7 @@ const WhyIWearMine: React.FC = () => {
           }
         );
         const data = await res.json();
+        console.log("Fetched stories:", data);
         if (data.status === "success") {
           setStories(data.data);
         }
@@ -137,7 +146,7 @@ const WhyIWearMine: React.FC = () => {
               <AnimatePresence custom={direction} initial={false}>
                 {currentStory && (
                   <motion.div
-                    key={currentStory.id}
+                    key={currentStory.story.id}
                     custom={direction}
                     variants={variants}
                     initial="enter"
@@ -151,10 +160,10 @@ const WhyIWearMine: React.FC = () => {
                     style={{ position: "absolute" }}
                   >
                     {/* Background */}
-                    {currentStory.attachment &&
-                      (isVideo(currentStory.attachment) ? (
+                    {currentStory.story.attachment &&
+                      (isVideo(currentStory.story.attachment) ? (
                         <video
-                          src={currentStory.attachment}
+                          src={currentStory.story.attachment}
                           autoPlay
                           muted
                           loop
@@ -163,7 +172,7 @@ const WhyIWearMine: React.FC = () => {
                         />
                       ) : (
                         <Image
-                          src={currentStory.attachment}
+                          src={currentStory.story.attachment}
                           alt="Background"
                           fill
                           className="object-cover"
@@ -186,14 +195,14 @@ const WhyIWearMine: React.FC = () => {
                           &ldquo;
                         </div>
                         <p className="text-[24px] sm:text-[32px] md:text-[36px] lg:text-[42px] font-['Cormorant'] leading-tight">
-                          {currentStory.title}
+                          {currentStory.story.title}
                         </p>
                         <Button
                           variant="default"
                           size="lg"
                           className="mt-4 text-white text-center items-center text-[16px] sm:text-[18px] bg-transparent border border-white"
                           onClick={() =>
-                            (window.location.href = `/community/${currentStory.id}`)
+                            (window.location.href = `/community/${currentStory.story.id}`)
                           }
                         >
                           Read Full Story ↗
@@ -202,13 +211,28 @@ const WhyIWearMine: React.FC = () => {
 
                       {/* Bottom */}
                       <div className="absolute bottom-6 ml-4 inset-x-4 flex justify-between items-center">
-                        <div>
-                          <p className="font-medium text-base">
-                            {currentStory.userName}
-                          </p>
-                          <p className="text-sm text-white/70 capitalize">
-                            {currentStory.userType}
-                          </p>
+                        <div className="flex items-center gap-3">
+                          <Avatar className="w-10 h-10">
+                            <AvatarImage
+                              src={currentStory.user.profilePhoto ?? undefined}
+                              alt={currentStory.user.name}
+                            />
+                            <AvatarFallback>
+                              {currentStory.user.name
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")
+                                .toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="font-medium text-base">
+                              {currentStory.story.userName}
+                            </p>
+                            <p className="text-sm text-white/70 capitalize">
+                              {currentStory.story.userType}
+                            </p>
+                          </div>
                         </div>
 
                         <div className="flex gap-2">

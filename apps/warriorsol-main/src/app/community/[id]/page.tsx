@@ -23,11 +23,16 @@ export default async function ProductPage(props: { params: Params }) {
   );
 
   const result = await res.json();
-  const story = result?.data?.[0];
+  console.log("Community details:", result);
+
+  const storyData = result?.data?.[0];
+  const story = storyData?.story;
+  const user = storyData?.user;
+
   return (
     <div>
       <Navbar />
-      <CommunityDetails story={story} />
+      <CommunityDetails story={story} user={user} />
       <Footer />
     </div>
   );

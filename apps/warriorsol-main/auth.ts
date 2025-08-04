@@ -14,6 +14,7 @@ declare module "next-auth" {
     role: string;
     token: string;
     loginMethod: string;
+    profilePhoto: string;
   }
   interface Session {
     user: User;
@@ -28,6 +29,7 @@ declare module "next-auth/jwt" {
     role?: string;
     accessToken: string;
     loginMethod: string;
+    profilePhoto?: string;
   }
 }
 
@@ -95,6 +97,7 @@ const authConfig: AuthOptions = {
             role: userData.role || "user",
             token: userData.token,
             loginMethod: "credentials",
+            profilePhoto: userData.profilePhoto || "",
           };
         } catch (error) {
           if (error instanceof InvalidLoginError) throw error;
@@ -133,6 +136,7 @@ const authConfig: AuthOptions = {
           user.token = data.data.token;
           user.role = data.data.role || "user";
           user.loginMethod = "google";
+          user.profilePhoto = data.data.profilePhoto || "";
           return true;
         } catch (err: unknown) {
           const message = err instanceof Error ? err.message : String(err);
@@ -154,6 +158,7 @@ const authConfig: AuthOptions = {
           token.accessToken = account.access_token!;
           token.role = user.role || "user";
           token.loginMethod = "google";
+          token.profilePhoto = (user as User).profilePhoto || undefined;
         } else {
           token.id = (user as User).id;
           token.email = (user as User).email;
@@ -162,6 +167,7 @@ const authConfig: AuthOptions = {
           token.accessToken = (user as User).token;
           token.role = (user as User).role || "user";
           token.loginMethod = (user as User).loginMethod || "credentials";
+          token.profilePhoto = (user as User).profilePhoto || undefined;
         }
       }
 
@@ -177,6 +183,7 @@ const authConfig: AuthOptions = {
         token: token.accessToken,
         role: token.role || "user",
         loginMethod: token.loginMethod,
+        profilePhoto: token.profilePhoto || "",
       };
       return session;
     },

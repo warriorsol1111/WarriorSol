@@ -12,10 +12,13 @@ import Wishlist from "@/components/account/wishlist";
 import toast from "react-hot-toast";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
+import Image from "next/image";
+
+import OrdersPage from "./orders";
 
 export default function AccountPage() {
-  const { data: session } = useSession();
-
+  const { data: session, update } = useSession();
+  console.log("Session data:", session);
   const [step, setStep] = useState<1 | 2>(1);
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -41,7 +44,9 @@ export default function AccountPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [imageLoading, setImageLoading] = useState(false);
   const handleVerifyPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage("");
@@ -76,6 +81,46 @@ export default function AccountPage() {
     }
   };
 
+  const handleSave = async () => {
+    if (!selectedImage) return;
+
+    const formData = new FormData();
+    formData.append("photo", selectedImage);
+
+    try {
+      setImageLoading(true);
+      toast.loading("Uploading...");
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/upload-photo`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${session?.user.token}`,
+          },
+          body: formData,
+        }
+      );
+
+      const data = await res.json();
+      toast.dismiss();
+
+      if (res.ok && data.status === "success") {
+        toast.success("Photo updated! Refreshing...");
+        await update({
+          profilePhoto: data.data,
+        });
+      } else {
+        toast.error(data.message || "Upload failed");
+      }
+    } catch (err) {
+      toast.dismiss();
+      toast.error("Something went wrong");
+      console.error("Upload error:", err);
+    } finally {
+      setImageLoading(false);
+    }
+  };
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage("");
@@ -130,14 +175,17 @@ export default function AccountPage() {
         <Tabs
           value={activeTab}
           onValueChange={handleTabChange}
-          className="w-full"
+          className="w-full !bg-transparent"
         >
-          <TabsList className="flex flex-col items-center gap-2 mb-8 sm:flex-row sm:justify-center sm:gap-4">
+          <TabsList className="flex bg-transparent flex-col items-center gap-2 mb-8 sm:flex-row sm:justify-center sm:gap-4">
             <TabsTrigger className="rounded-lg cursor-pointer" value="personal">
               Personal Info
             </TabsTrigger>
             <TabsTrigger className="rounded-lg cursor-pointer" value="wishlist">
               Wishlist
+            </TabsTrigger>
+            <TabsTrigger className="rounded-lg cursor-pointer" value="orders">
+              Orders
             </TabsTrigger>
           </TabsList>
 
@@ -157,6 +205,78 @@ export default function AccountPage() {
                     <span className="font-semibold text-gray-900">Email:</span>{" "}
                     {session?.user?.email}
                   </p>
+                </div>
+              </div>
+              <div className="space-y-6 text-center">
+                <h2 className="text-2xl font-bold text-gray-800">
+                  Profile Photo
+                </h2>
+
+                <div className="flex flex-col items-center gap-4">
+                  {session?.user?.profilePhoto ? (
+                    <Image
+                      src={previewUrl || session?.user?.profilePhoto}
+                      width={128}
+                      height={128}
+                      alt="Profile"
+                      className="w-32 h-32 rounded-full object-contain border-2 border-gray-300 shadow-sm"
+                    />
+                  ) : (
+                    <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                      No Photo
+                    </div>
+                  )}
+
+                  {/* Upload Button */}
+
+                  {/* Hidden File Input */}
+                  <input
+                    id="photoUpload"
+                    type="file"
+                    name="photo"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      setSelectedImage(file);
+                      setPreviewUrl(URL.createObjectURL(file));
+                    }}
+                  />
+
+                  {/* Buttons */}
+                  {selectedImage ? (
+                    <div className="flex gap-4">
+                      <Button
+                        onClick={handleSave}
+                        className="bg-[#EE9254] hover:[#EE9254] text-white"
+                      >
+                        {imageLoading ? (
+                          <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                        ) : (
+                          "Save"
+                        )}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setSelectedImage(null);
+                          setPreviewUrl(null);
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                      className="bg-[#EE9254] text-white hover:bg-[#e97e3a]"
+                      onClick={() =>
+                        document.getElementById("photoUpload")?.click()
+                      }
+                    >
+                      Upload
+                    </Button>
+                  )}
                 </div>
               </div>
 
@@ -308,6 +428,9 @@ export default function AccountPage() {
 
           <TabsContent value="wishlist">
             <Wishlist />
+          </TabsContent>
+          <TabsContent value="orders">
+            <OrdersPage />
           </TabsContent>
         </Tabs>
       </main>

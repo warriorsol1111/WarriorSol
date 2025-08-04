@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface StoryCardProps {
   id: string;
@@ -10,6 +11,7 @@ interface StoryCardProps {
   author: {
     name: string;
     role: string;
+    avatar?: string | null;
   };
   background: string;
   link: string;
@@ -17,13 +19,23 @@ interface StoryCardProps {
 }
 
 export const StoryCard: React.FC<StoryCardProps> = ({
-  id,
   title,
   author,
   background,
+  link,
   className,
 }) => {
   const isVideo = background.endsWith(".mp4");
+
+  // Utility: get initials
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
   return (
     <div
@@ -62,16 +74,22 @@ export const StoryCard: React.FC<StoryCardProps> = ({
         </p>
       </div>
 
-      {/* Footer */}
-      <div className="absolute bottom-6 left-6 text-base">
-        <p className="font-bold">{author.name}</p>
-        <p className="opacity-80 font-medium">{author.role}</p>
+      {/* Author */}
+      <div className="absolute bottom-6 left-6 flex items-center gap-3">
+        <Avatar className="w-10 h-10 border border-white">
+          <AvatarImage src={author.avatar ?? undefined} alt={author.name} />
+          <AvatarFallback>{getInitials(author.name)}</AvatarFallback>
+        </Avatar>
+        <div className="text-white">
+          <p className="font-bold leading-none">{author.name}</p>
+          <p className="opacity-80 font-medium text-sm">{author.role}</p>
+        </div>
       </div>
 
-      {/* Button */}
+      {/* Read Story Button */}
       <Link
-        href={`/community/${id}`}
-        className="absolute bottom-6 right-6 px-5 py-2.5 text-base font-medium bg-[#EE9254] text-white border border-[#EE9254] rounded-lg hover:bg-[#EE9254] transition"
+        href={link}
+        className="absolute bottom-6 right-6 px-5 py-2.5 text-base font-medium bg-[#EE9254] text-white border border-[#EE9254] rounded-lg hover:bg-[#EE9254]/90 transition"
       >
         Read Story →
       </Link>
