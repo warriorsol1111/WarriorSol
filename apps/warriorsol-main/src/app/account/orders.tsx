@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import {
   Accordion,
   AccordionItem,
@@ -7,7 +9,6 @@ import {
 } from "@/components/ui/accordion";
 import Image from "next/image";
 import { format } from "date-fns";
-import { useState, useEffect } from "react";
 
 type LineItem = {
   id: string;
@@ -112,8 +113,9 @@ export default function OrdersPage() {
       setOrders(mockOrders);
     }, 1000);
   }, []);
+
   return (
-    <>
+    <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <Accordion type="single" collapsible className="w-full space-y-4">
         {orders.map((order) => (
           <AccordionItem
@@ -121,33 +123,36 @@ export default function OrdersPage() {
             value={order.id}
             className="border rounded-lg shadow-sm bg-white"
           >
-            <AccordionTrigger className="cursor-pointer px-4 py-3 flex justify-between items-center">
-              <div>
-                <p className="text-[32px] font-semibold text-[#1F1F1F]">
+            <AccordionTrigger className="cursor-pointer px-4 py-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+              <div className="text-left">
+                <p className="text-xl sm:text-2xl font-semibold text-[#1F1F1F]">
                   Order #{order.id}
                 </p>
-                <p className="text-[26px] text-gray-500">
+                <p className="text-base sm:text-lg text-gray-500">
                   {format(new Date(order.date), "PPP")}
                 </p>
               </div>
-              <p className="font-semibold text-[26px] text-[#EE9254]">
+              <p className="text-lg sm:text-xl font-semibold text-[#EE9254]">
                 ${order.total.toFixed(2)}
               </p>
             </AccordionTrigger>
+
             <AccordionContent className="px-4 pb-4 space-y-3">
               {order.lineItems.map((item) => (
                 <div
                   key={item.id}
-                  className="flex gap-4 items-center border rounded p-2"
+                  className="flex flex-col sm:flex-row gap-4 items-center sm:items-start border rounded p-3"
                 >
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    width={64}
-                    height={64}
-                    className="w-16 h-16 rounded object-cover"
-                  />
-                  <div className="flex-1">
+                  <div className="w-24 h-24 flex-shrink-0 bg-gray-100 rounded overflow-hidden">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      width={96}
+                      height={96}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="text-center sm:text-left flex-1">
                     <p className="font-medium text-gray-800">{item.title}</p>
                     <p className="text-sm text-gray-500">
                       Qty: {item.quantity} × ${item.price.toFixed(2)}
@@ -159,6 +164,6 @@ export default function OrdersPage() {
           </AccordionItem>
         ))}
       </Accordion>
-    </>
+    </div>
   );
 }

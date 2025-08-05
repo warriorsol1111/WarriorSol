@@ -22,7 +22,7 @@ export default function Footer() {
               height={100}
             />
           </div>
-          <p className="text-lg leading-relaxed max-w-xs text-white">
+          <p className="text-[16px] font-[Inter] font-normal leading-relaxed max-w-xs text-[#FFFFFF99]">
             Born from experience.
             <br />
             Established 11:11. Apparel
@@ -36,27 +36,39 @@ export default function Footer() {
         <div className="w-full md:w-2/3 grid grid-cols-2 sm:grid-cols-3 gap-8 text-sm">
           {/* Quick Links */}
           <div>
-            <h4 className="text-white text-lg font-semibold mb-3">
+            <h4 className="text-white text-[16px] font-medium font-[Playfair] mb-3">
               Quick Links
             </h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="hover:underline text-white">
+                <Link
+                  href="/"
+                  className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+                >
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/support" className="hover:underline text-white">
+                <Link
+                  href="/support"
+                  className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+                >
                   Apply For Support
                 </Link>
               </li>
               <li>
-                <Link href="/donations" className="hover:underline text-white">
+                <Link
+                  href="/donations"
+                  className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+                >
                   Donations
                 </Link>
               </li>
               <li>
-                <Link href="/donor-wall" className="hover:underline text-white">
+                <Link
+                  href="/donor-wall"
+                  className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+                >
                   Donor Wall
                 </Link>
               </li>
@@ -65,10 +77,15 @@ export default function Footer() {
 
           {/* Account */}
           <div>
-            <h4 className="text-white text-lg font-semibold mb-3">Account</h4>
+            <h4 className="text-white text-[16px] font-medium font-[Playfair] mb-3">
+              Account
+            </h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/account" className="hover:underline text-white">
+                <Link
+                  href="/account"
+                  className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+                >
                   My Account
                 </Link>
               </li>
@@ -76,7 +93,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/support-applications"
-                    className="hover:underline text-white"
+                    className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
                   >
                     View Support Applications
                   </Link>
@@ -87,15 +104,23 @@ export default function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 className="text-white text-lg font-semibold mb-3">Legal</h4>
+            <h4 className="text-white text-[16px] font-medium font-[Playfair] mb-3">
+              Legal
+            </h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/privacy" className="hover:underline text-white">
+                <Link
+                  href="/privacy"
+                  className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+                >
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="hover:underline text-white">
+                <Link
+                  href="/terms"
+                  className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+                >
                   Terms of Service
                 </Link>
               </li>
@@ -106,12 +131,20 @@ export default function Footer() {
 
       {/* Bottom Bar */}
       <div className="mt-10 pt-6 border-t border-[#353534] text-sm text-white flex flex-col sm:flex-row justify-between items-center gap-4">
-        <div>© 2025 Warrior Sol Foundation. All rights reserved.</div>
+        <div className="text-sm font-[Inter] font-normal text-white mb-4 md:mb-0">
+          © 2025 Warrior Sol Foundation. Rooted in light. All rights reserved.
+        </div>
         <div className="flex gap-4">
-          <a href="/privacy" className="hover:underline">
+          <a
+            href="/privacy"
+            className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+          >
             Privacy
           </a>
-          <a href="/terms" className="hover:underline">
+          <a
+            href="/terms"
+            className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+          >
             Terms
           </a>
         </div>

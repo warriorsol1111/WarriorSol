@@ -17,6 +17,7 @@ export type Donation = {
   status: string;
   createdAt: string;
   updatedAt: string | null;
+  userProfilePhoto: string;
 };
 export default function DonorWall({
   topDonations = [],
@@ -53,7 +54,7 @@ export default function DonorWall({
               <br />
               mission of hope{" "}
             </h1>
-            <p className="text-xl md:text-xl max-w-2xl opacity-90 font-light">
+            <p className="text-xl md:text-xl font-[Inter] max-w-2xl opacity-90 font-light">
               Your generous donation helps us provide care, support, and lasting
               impact for those in need. Every contribution brings us closer to a
               brighter future.

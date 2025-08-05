@@ -17,9 +17,11 @@ export default function Donations() {
           <div className="mb-12">
             <div className="mb-4 flex flex-col items-start gap-3">
               <div className="ml-4 text-[#EE9254]">
-                <BiDonateHeart className="h-8 w-8" />
+                <BiDonateHeart className="h-14 w-14" />
               </div>
-              <h2 className="text-3xl font-medium text-gray-900">Donate Now</h2>
+              <h2 className="text-[28px] font-medium text-[#1F1F1F]">
+                Donate Now
+              </h2>
             </div>
             <p className="text-lg font-['Inter'] max-w-[400px] font-light">
               Your Financial Contributions Can Make A Real Difference. Every
@@ -31,9 +33,9 @@ export default function Donations() {
           <div className="mb-12">
             <div className="mb-4 flex flex-col items-start gap-3">
               <div className="ml-4 text-[#EE9254]">
-                <HiOutlineUsers className="h-8 w-8" />
+                <HiOutlineUsers className="h-14 w-14" />
               </div>
-              <h2 className="text-3xl font-medium text-gray-900">
+              <h2 className="text-[28px] font-medium text-[#1F1F1F]">
                 Become A Volunteer
               </h2>
             </div>
@@ -48,16 +50,26 @@ export default function Donations() {
             <div className="relative h-40 w-full">
               {/* First ribbon */}
               <div className="absolute left-[-10%] right-[-10%] top-12 -rotate-12 transform">
-                <div className="w-full bg-[#EE9254] py-2 text-center whitespace-nowrap">
-                  <span className="text-white inline-block mx-2">SUPPORT</span>
-                  <span className="text-white inline-block mx-2">★</span>
-                  <span className="text-white inline-block mx-2">
+                <div className="w-full bg-[#EE9254] py-2 text-2xl text-center whitespace-nowrap">
+                  <span className="text-white inline-block mx-2 text-2xl">
+                    SUPPORT
+                  </span>
+                  <span className="text-white inline-block mx-2 text-2xl">
+                    ★
+                  </span>
+                  <span className="text-white inline-block mx-2 text-2xl">
                     SEE SMILE
                   </span>
-                  <span className="text-white inline-block mx-2">★</span>
-                  <span className="text-white inline-block mx-2">SUPPORT</span>
-                  <span className="text-white inline-block mx-2">★</span>
-                  <span className="text-white inline-block mx-2">
+                  <span className="text-white inline-block mx-2 text-2xl">
+                    ★
+                  </span>
+                  <span className="text-white inline-block mx-2 text-2xl">
+                    SUPPORT
+                  </span>
+                  <span className="text-white inline-block mx-2 text-2xl">
+                    ★
+                  </span>
+                  <span className="text-white inline-block mx-2 text-2xl">
                     SEE SMILE
                   </span>
                   <span className="text-white inline-block mx-2">★</span>
@@ -67,15 +79,25 @@ export default function Donations() {
               {/* Second ribbon */}
               <div className="absolute left-[-10%] right-[-10%] top-20 rotate-12 transform">
                 <div className="w-full bg-black py-2 text-center whitespace-nowrap">
-                  <span className="text-white inline-block mx-2">SUPPORT</span>
-                  <span className="text-white inline-block mx-2">★</span>
-                  <span className="text-white inline-block mx-2">
+                  <span className="text-white inline-block mx-2 text-2xl">
+                    SUPPORT
+                  </span>
+                  <span className="text-white inline-block mx-2 text-2xl">
+                    ★
+                  </span>
+                  <span className="text-white inline-block mx-2 text-2xl">
                     SEE SMILE
                   </span>
-                  <span className="text-white inline-block mx-2">★</span>
-                  <span className="text-white inline-block mx-2">SUPPORT</span>
-                  <span className="text-white inline-block mx-2">★</span>
-                  <span className="text-white inline-block mx-2">
+                  <span className="text-white inline-block mx-2 text-2xl">
+                    ★
+                  </span>
+                  <span className="text-white inline-block mx-2 text-2xl">
+                    SUPPORT
+                  </span>
+                  <span className="text-white inline-block mx-2 text-2xl">
+                    ★
+                  </span>
+                  <span className="text-white inline-block mx-2 text-2xl">
                     SEE SMILE
                   </span>
                   <span className="text-white inline-block mx-2">★</span>
@@ -87,11 +109,11 @@ export default function Donations() {
 
         {/* Right Column - Main Content */}
         <div className="bg-[#EE9254] p-8 text-white">
-          <div className="mb-8">
-            <h1 className="mb-4 text-4xl font-bold">
+          <div className="mb-8 max-w-lg">
+            <h1 className="mb-4 text-[62px] font-normal">
               Changing Life For The Better...!
             </h1>
-            <p className="text-lg">
+            <p className="text-xl font-['Inter'] font-normal">
               Supporting Families Through Life&apos;s Most Challenging Moments
               With Compassion, Resources, And Hope.
             </p>

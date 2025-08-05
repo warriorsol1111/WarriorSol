@@ -10,6 +10,7 @@ import DonationFormImage from "@/assets/donationForm.svg";
 import { FaRegHeart } from "react-icons/fa6";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useSession } from "next-auth/react";
+import { BiDonateHeart } from "react-icons/bi";
 
 export default function DonationForm() {
   const [donationType, setDonationType] = useState("one-time");
@@ -108,7 +109,7 @@ export default function DonationForm() {
         <div className="w-full md:w-1/2 bg-[#FFEBCC] flex p-6 sm:p-8 md:p-12">
           <Card className="w-full shadow-none border-none bg-[#FFF9F5]">
             <CardContent className="flex flex-col justify-between h-full space-y-8 p-6 sm:p-8">
-              <h2 className="text-3xl sm:text-4xl font-light font-['Cormorant_SC'] text-center flex gap-2 justify-center">
+              <h2 className="text-3xl sm:text-[52px] font-light font-['Cormorant_SC'] text-center flex gap-2 justify-start items-center">
                 <FaRegHeart className="w-10 h-10 mt-1 text-[#EE9254]" />
                 Donation Form
               </h2>
@@ -164,7 +165,7 @@ export default function DonationForm() {
                       <Button
                         key={val}
                         variant="outline"
-                        className={`rounded text-lg h-10 sm:h-12 ${
+                        className={`rounded text-lg font-[Inter] h-10 sm:h-12 ${
                           amount === val
                             ? "bg-[#EE9254] text-white border-none"
                             : "bg-white border-gray-200"
@@ -233,10 +234,11 @@ export default function DonationForm() {
               </div>
 
               <Button
-                className="w-full bg-[#EE9254] hover:bg-[#e76b1f] rounded text-white h-12"
+                className="w-full bg-[#EE9254] hover:bg-[#e76b1f] text-xl font-[Inter] font-normal rounded text-white h-12"
                 onClick={handleDonate}
               >
-                Donate Now 💸
+                Donate Now
+                <BiDonateHeart className="h-6 w-6" />
               </Button>
             </CardContent>
           </Card>

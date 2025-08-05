@@ -117,14 +117,17 @@ export default function ApplyForSupport() {
           <CardTitle className="text-[62px] font-normal font-['Cormorant_SC']">
             Apply For Support
           </CardTitle>
-          <CardDescription className="text-lg text-muted-foreground font-['Inter']">
+          <CardDescription className="text-lg text-[#1F1F1FB2] font-['Inter']">
             We&apos;re Here To Help During Your Family&apos;s Most Challenging
             Times. Apply for Donations, Gift Cards, or Scholarships through our
             Grant Program.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form
+            className="space-y-6 max-w-3xl items-center justify-center mx-auto"
+            onSubmit={handleSubmit}
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label className="text-xl" htmlFor="familyName">

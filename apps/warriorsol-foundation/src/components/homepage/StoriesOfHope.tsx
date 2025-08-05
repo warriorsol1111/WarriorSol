@@ -73,14 +73,14 @@ export default function StoriesOfHope() {
 
   return (
     <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-12">
-      <div className="max-w-screen-xl mx-auto">
+      <div className=" mx-auto">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
           <div>
-            <h2 className="text-4xl sm:text-5xl font-['Cormorant_SC'] font-normal leading-tight">
+            <h2 className="text-4xl sm:text-[62px] font-['Cormorant_SC'] font-normal leading-tight">
               Stories Of Hope
             </h2>
-            <p className="text-lg text-gray-600 mt-2 max-w-md">
+            <p className="text-xl whitespace-nowrap font-[Inter] text-[#1F1F1FB2] mt-2 max-w-md">
               Hear From Families Whose Lives Have Been Touched By Our Community
               Of Warriors
             </p>
@@ -91,7 +91,7 @@ export default function StoriesOfHope() {
             <Button
               onClick={prevSlide}
               variant="outline"
-              className="bg-white p-2 rounded-lg shadow hover:bg-gray-50 transition"
+              className="bg-white p-2 rounded-base shadow hover:bg-gray-50 transition border border-black"
               aria-label="Previous review"
             >
               <IoIosArrowBack className="w-6 h-6 text-gray-600" />
@@ -99,7 +99,7 @@ export default function StoriesOfHope() {
             <Button
               onClick={nextSlide}
               variant="outline"
-              className="bg-white p-2 rounded-lg shadow hover:bg-gray-50 transition"
+              className="bg-white p-2 rounded-base shadow hover:bg-gray-50 transition border border-black"
               aria-label="Next review"
             >
               <IoIosArrowForward className="w-6 h-6 text-gray-600" />

@@ -534,19 +534,31 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
         </div>
       </div>
       <div className="w-full mb-10 p-4 sm:p-6 md:p-8 lg:p-10 mx-auto">
-        <Tabs defaultValue="description" className="w-full">
-          <TabsList className="flex h-auto p-0 bg-transparent rounded-none space-x-2 sm:space-x-4 overflow-x-auto">
+        <Tabs defaultValue="description" className="w-full min-w-0">
+          {/* TabsList: stacked on mobile, horizontal on sm+ */}
+          <TabsList
+            className="
+      flex flex-col sm:flex-row
+      gap-3 sm:gap-4
+      h-auto p-0 bg-transparent rounded-none
+      w-full
+    "
+          >
             <TabsTrigger
-              className="rounded-lg cursor-pointer"
+              className="w-full sm:w-auto rounded-lg text-center"
               value="description"
             >
               Description
             </TabsTrigger>
-            <TabsTrigger className="rounded-lg cursor-pointer" value="reviews">
+            <TabsTrigger
+              className="w-full sm:w-auto rounded-lg text-center"
+              value="reviews"
+            >
               Reviews
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="description" className="mt-6 lg:mt-8">
+
+          <TabsContent value="description" className="mt-6 lg:mt-8 min-w-0">
             <div
               className="space-y-4 text-base md:text-3xl font-inter prose prose-base md:prose-lg max-w-none"
               dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
@@ -577,7 +589,8 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
               }
             `}</style>
           </TabsContent>
-          <TabsContent value="reviews" className="mt-6 lg:mt-8">
+
+          <TabsContent value="reviews" className="mt-6 lg:mt-8 min-w-0">
             <Reviews />
           </TabsContent>
         </Tabs>

@@ -18,7 +18,6 @@ import OrdersPage from "./orders";
 
 export default function AccountPage() {
   const { data: session, update } = useSession();
-  console.log("Session data:", session);
   const [step, setStep] = useState<1 | 2>(1);
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -106,10 +105,11 @@ export default function AccountPage() {
       toast.dismiss();
 
       if (res.ok && data.status === "success") {
-        toast.success("Photo updated! Refreshing...");
+        toast.success("Photo updated!");
         await update({
           profilePhoto: data.data,
         });
+        setSelectedImage(null);
       } else {
         toast.error(data.message || "Upload failed");
       }
@@ -213,9 +213,11 @@ export default function AccountPage() {
                 </h2>
 
                 <div className="flex flex-col items-center gap-4">
-                  {session?.user?.profilePhoto ? (
+                  {previewUrl || session?.user?.profilePhoto ? (
                     <Image
-                      src={previewUrl || session?.user?.profilePhoto}
+                      src={
+                        previewUrl || (session?.user?.profilePhoto as string)
+                      }
                       width={128}
                       height={128}
                       alt="Profile"
@@ -226,8 +228,6 @@ export default function AccountPage() {
                       No Photo
                     </div>
                   )}
-
-                  {/* Upload Button */}
 
                   {/* Hidden File Input */}
                   <input

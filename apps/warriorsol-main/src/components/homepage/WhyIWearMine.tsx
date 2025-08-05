@@ -76,7 +76,6 @@ const WhyIWearMine: React.FC = () => {
           }
         );
         const data = await res.json();
-        console.log("Fetched stories:", data);
         if (data.status === "success") {
           setStories(data.data);
         }

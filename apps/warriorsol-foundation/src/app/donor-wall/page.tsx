@@ -50,7 +50,6 @@ export default async function DonorWallPage() {
     }
   } catch (error) {
     console.error("Failed to fetch donor wall data:", error);
-    // Continue rendering with empty arrays
      
   }
 

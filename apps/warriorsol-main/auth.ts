@@ -4,7 +4,6 @@ import GoogleProvider from "next-auth/providers/google";
 import { signInSchema } from "@/lib/utils";
 import type { AuthOptions, User } from "next-auth";
 
-// 🔥 EXTEND TYPES 🔥
 declare module "next-auth" {
   interface User {
     id: string;
@@ -148,7 +147,11 @@ const authConfig: AuthOptions = {
       return true;
     },
 
-    jwt: async ({ token, user, account }) => {
+    jwt: async ({ token, user, account, trigger, session }) => {
+      if (trigger === "update" && session?.profilePhoto) {
+        token.profilePhoto = session.profilePhoto;
+      }
+
       if (user && account) {
         if (account.provider === "google") {
           token.id = user.id;

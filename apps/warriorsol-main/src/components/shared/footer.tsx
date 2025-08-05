@@ -24,7 +24,7 @@ const Footer = () => {
               height={100}
             />
           </div>
-          <p className="text-lg leading-relaxed max-w-xs text-white">
+          <p className="text-[16px] font-[Inter] font-normal leading-relaxed max-w-xs text-[#FFFFFF99]">
             Born from experience.
             <br />
             Established 11:11. Apparel
@@ -40,12 +40,14 @@ const Footer = () => {
           <div className="w-full md:w-2/3 mt-2 flex flex-col sm:flex-row gap-8 md:gap-16">
             {/* Shop Column */}
             <div className="flex-1">
-              <h4 className="text-white text-2xl font-semibold mb-3">Shop</h4>
+              <h4 className="text-white text-[16px] font-medium font-[Playfair] mb-3">
+                Shop
+              </h4>
               <ul className="space-y-2">
                 <li>
                   <Link
                     href="/products"
-                    className="hover:underline text-white transition-colors"
+                    className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
                   >
                     All Products
                   </Link>
@@ -53,7 +55,7 @@ const Footer = () => {
                 <li>
                   <Link
                     href="/warrior-products"
-                    className="hover:underline text-white transition-colors"
+                    className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
                   >
                     Warrior Products
                   </Link>
@@ -62,12 +64,14 @@ const Footer = () => {
             </div>
             {/* About Column */}
             <div className="flex-1">
-              <h4 className="text-white font-semibold text-2xl mb-3">About</h4>
+              <h4 className="text-white text-[16px] font-medium font-[Playfair] mb-3">
+                About
+              </h4>
               <ul className="space-y-2">
                 <li>
                   <Link
                     href="/home"
-                    className="hover:underline text-white transition-colors"
+                    className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
                   >
                     Home
                   </Link>
@@ -75,7 +79,7 @@ const Footer = () => {
                 <li>
                   <Link
                     href="/community"
-                    className="hover:underline text-white transition-colors"
+                    className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
                   >
                     Community
                   </Link>
@@ -83,7 +87,7 @@ const Footer = () => {
                 <li>
                   <Link
                     href="/about"
-                    className="hover:underline text-white transition-colors"
+                    className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
                   >
                     About
                   </Link>
@@ -92,14 +96,14 @@ const Footer = () => {
             </div>
             {/* Support Column */}
             <div className="flex-1">
-              <h4 className="text-white font-semibold text-2xl mb-3">
+              <h4 className="text-white text-[16px] font-medium font-[Playfair] mb-3">
                 Support
               </h4>
               <ul className="space-y-2">
                 <li>
                   <Link
                     href="/contacts"
-                    className="hover:underline text-white transition-colors"
+                    className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
                   >
                     Contacts
                   </Link>
@@ -112,10 +116,10 @@ const Footer = () => {
 
       {/* Bottom Bar */}
       <div className="mt-10 pt-6 border-t border-[#353534] flex flex-col md:flex-row items-center justify-between">
-        <div className="text-sm text-white mb-4 md:mb-0">
-          © 2025 Warrior Sol. Rooted in light. All rights reserved.
+        <div className="text-sm font-[Inter] font-normal text-white mb-4 md:mb-0">
+          © 2025 Warrior Sol. Rooted in light. All rights reserved.{" "}
         </div>
-        <div className="flex space-x-6 text-sm text-white">
+        <div className="text-sm flex space-x-6 font-[Inter] font-normal text-white mb-4 md:mb-0">
           <a href="#" className="hover:text-white transition-colors font-light">
             Privacy Policy
           </a>

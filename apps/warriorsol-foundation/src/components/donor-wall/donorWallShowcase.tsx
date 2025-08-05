@@ -4,6 +4,7 @@ import DonorWallImage from "@/assets/donor-wall-total.svg";
 import { Card } from "@/components/ui/card";
 import * as Progress from "@radix-ui/react-progress";
 import { Donation } from "./index";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 type DonorWallShowcaseProps = {
   topDonations: Donation[];
@@ -36,10 +37,10 @@ export default function DonorWallShowcase({
             priority
           />
           <Card className="absolute bottom-4 left-4 right-4 bg-[#FFEBCC] p-6 rounded-lg shadow-md">
-            <h3 className="text-xl sm:text-2xl font-medium text-[#1F1F1F]">
+            <h3 className="text-xl sm:text-[42px] font-medium text-[#1F1F1F]">
               Total Raised
             </h3>
-            <p className="text-3xl sm:text-4xl font-bold">
+            <p className="text-3xl sm:text-[52px] font-[Geist] font-medium">
               ${(totalRaised / 100).toLocaleString()}
             </p>
             <Progress.Root
@@ -53,7 +54,7 @@ export default function DonorWallShowcase({
                 }}
               />
             </Progress.Root>
-            <div className="flex justify-between text-sm sm:text-lg font-semibold">
+            <div className="flex justify-between text-sm sm:text-lg font-[Geist] font-medium">
               <span>{uniqueInvestors.length} investors</span>
               <span>{progressPercentage.toFixed()}%</span>
             </div>
@@ -62,8 +63,8 @@ export default function DonorWallShowcase({
 
         {/* Top Donors */}
         <div className="w-full lg:w-1/2 flex flex-col">
-          <h2 className="text-2xl sm:text-3xl font-['Cormorant_SC'] mb-4">
-            Top Donations
+          <h2 className="text-2xl sm:text-[42px] font-['Cormorant_SC'] mb-4">
+            Top Contributors
           </h2>
           {topIndividualDonations.length === 0 ? (
             <p className="text-sm text-gray-500 font-light italic">
@@ -85,20 +86,24 @@ export default function DonorWallShowcase({
                       className="flex items-center justify-between bg-[#FAFAFA] rounded-lg p-4 sm:p-6 shadow-sm border-l-4 border-[#EE9254]"
                     >
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-[#EE9254] text-white font-bold text-lg sm:text-xl">
-                          {initials}
-                        </div>
+                        <Avatar>
+                          <AvatarImage
+                            className="object-cover rounded-full"
+                            src={donation.userProfilePhoto}
+                          />
+                          <AvatarFallback>{initials}</AvatarFallback>
+                        </Avatar>
                         <div>
-                          <div className="font-medium text-lg sm:text-xl">
+                          <div className="font-medium text-lg sm:text-[26px] font-[Geist]">
                             {donation.name}
                           </div>
-                          <div className="text-xs sm:text-sm text-gray-500">
+                          <div className="text-xs sm:text-lg font-[Geist] text-gray-500">
                             Donated on{" "}
                             {new Date(donation.createdAt).toLocaleDateString()}
                           </div>
                         </div>
                       </div>
-                      <div className="text-lg sm:text-xl font-bold">
+                      <div className="text-lg sm:text-[26px] font-[Geist] font-medium">
                         ${(donation.amount / 100).toLocaleString()}
                       </div>
                     </div>
@@ -112,7 +117,7 @@ export default function DonorWallShowcase({
 
       {/* Recent Donations */}
       <section className="w-full mt-8 bg-[#FFF8F0] rounded-xl shadow-lg p-4 sm:p-6 md:p-8">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-['Cormorant_SC'] font-semibold mb-6 text-[#1F1F1F]">
+        <h2 className="text-2xl sm:text-[42px] font-['Cormorant_SC'] mb-4">
           Recent Donations
         </h2>
         {recentDonations.length === 0 ? (
@@ -134,20 +139,21 @@ export default function DonorWallShowcase({
                   className="flex flex-col sm:flex-row sm:items-center justify-between bg-white rounded-xl px-4 sm:px-6 py-4 sm:py-5 shadow-sm border border-[#F5E0C3]"
                 >
                   <div className="flex items-center gap-4 mb-2 sm:mb-0">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-[#F2994A]/90 text-white font-bold text-base sm:text-lg shadow-sm">
-                      {initials}
-                    </div>
+                    <Avatar>
+                      <AvatarImage src={donation.userProfilePhoto} />
+                      <AvatarFallback>{initials}</AvatarFallback>
+                    </Avatar>
                     <div>
-                      <div className="font-semibold text-sm sm:text-base text-[#1F1F1F]">
+                      <div className="font-medium text-lg sm:text-[26px] font-[Geist]">
                         {donation.name}
                       </div>
-                      <div className="text-xs text-[#777]">
+                      <div className="text-xs sm:text-lg font-[Geist] text-gray-500">
                         Donated on{" "}
                         {new Date(donation.createdAt).toLocaleDateString()}
                       </div>
                     </div>
                   </div>
-                  <div className="text-sm sm:text-lg font-bold text-[#1F1F1F]">
+                  <div className="text-lg sm:text-[26px] font-[Geist] font-medium">
                     ${(donation.amount / 100).toLocaleString()}
                   </div>
                 </div>
