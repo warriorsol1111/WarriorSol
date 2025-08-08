@@ -21,12 +21,18 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { usePathname } from "next/navigation";
 
 const mainURL = process.env.NEXT_PUBLIC_WARRIOR_SOL_MAIN_APP_URL;
 
 export default function Navbar() {
   const { data: session } = useSession();
+  const pathname = usePathname();
 
+  const isActive = (path: string) =>
+    pathname === path
+      ? "text-[#EE9254] font-bold  underline underline-offset-4"
+      : "hover:underline";
   const userName =
     session?.user?.firstName || session?.user?.lastName
       ? `${session?.user?.firstName ?? ""} ${session?.user?.lastName ?? ""}`.trim()
@@ -55,12 +61,25 @@ export default function Navbar() {
               className="p-4 pt-10 space-y-6 w-[250px] sm:w-64 bg-white text-black"
             >
               <nav className="flex flex-col gap-4 font-medium">
-                <Link href="/">Home</Link>
-                <Link href="/support">Apply For Support</Link>
-                <Link href="/donations">Donations</Link>
-                <Link href="/donor-wall">Donor Wall</Link>
+                <Link className={isActive("/")} href="/">
+                  Home
+                </Link>
+                <Link className={isActive("/support")} href="/support">
+                  Apply For Support
+                </Link>
+                <Link className={isActive("/donations")} href="/donations">
+                  Donations
+                </Link>
+                <Link className={isActive("/donor-wall")} href="/donor-wall">
+                  Donor Wall
+                </Link>
                 {session?.user?.role === "admin" && (
-                  <Link href="/support-applications">View Applications</Link>
+                  <Link
+                    className={isActive("/support-applications")}
+                    href="/support-applications"
+                  >
+                    View Applications
+                  </Link>
                 )}
               </nav>
 
@@ -93,20 +112,23 @@ export default function Navbar() {
 
         {/* Center: Desktop Navigation */}
         <nav className="hidden lg:flex flex-1 justify-center items-center space-x-6 text-sm text-black font-light overflow-x-auto">
-          <Link href="/" className="hover:underline">
+          <Link href="/" className={isActive("/")}>
             Home
           </Link>
-          <Link href="/support" className="hover:underline">
+          <Link href="/support" className={isActive("/support")}>
             Apply For Support
           </Link>
-          <Link href="/donations" className="hover:underline">
+          <Link href="/donations" className={isActive("/donations")}>
             Donations
           </Link>
-          <Link href="/donor-wall" className="hover:underline">
+          <Link href="/donor-wall" className={isActive("/donor-wall")}>
             Donor Wall
           </Link>
           {session?.user?.role === "admin" && (
-            <Link href="/support-applications" className="hover:underline">
+            <Link
+              href="/support-applications"
+              className={isActive("/support-applications")}
+            >
               View Applications
             </Link>
           )}
@@ -125,7 +147,7 @@ export default function Navbar() {
         {/* Right Icons */}
         <div className="flex items-center sm:gap-4">
           {/* User Dropdown */}
-             <DropdownMenu>
+          <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="link" className="p-1 sm:p-2">
                 <User className="h-5 w-5" />

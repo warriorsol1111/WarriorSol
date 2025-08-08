@@ -38,14 +38,14 @@ export default function Homepage() {
         <Button
           size="default"
           variant="outline"
-          className="hover:underline h-13 text-xl font-[Inter] font-normal hover:text-black w-64 border border-black"
+          className="hover:underline h-13 !text-[#1F1F1F] text-xl font-[Inter] rounded-none font-normal hover:text-black w-64 border border-black"
           onClick={() => router.push("/support")}
         >
           Apply For Support <GoArrowUpRight className="!w-6 !h-6" />
         </Button>
         <Button
           size="default"
-          className="bg-[#EE9254] text-xl font-[Inter] font-normal hover:bg-[#EE9254]/90 text-white w-52 h-13"
+          className="bg-[#EE9254] text-xl font-[Inter] rounded-none font-normal hover:bg-[#EE9254]/90 text-white w-52 h-13"
           onClick={() => router.push("/donations")}
         >
           Donate Now <BiDonateHeart className="!w-6 !h-6" />

@@ -5,7 +5,6 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import userImage from "@/assets/user.svg";
 import { Button } from "../ui/button";
 
-// Sample data - in a real app, this would come from an API or CMS
 const reviews = [
   {
     quote:
@@ -30,7 +29,7 @@ const reviews = [
   },
   {
     quote:
-      "We felt seen, heard, and supported. I’ll never forget the warmth they brought into our lives.",
+      "We felt seen, heard, and supported. I'll never forget the warmth they brought into our lives.",
     authorName: "Liam J.",
     authorRole: "Single father",
     authorImage: userImage,
@@ -41,7 +40,6 @@ export default function StoriesOfHope() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [cardsPerView, setCardsPerView] = useState(1);
 
-  // Handle responsive behavior
   useEffect(() => {
     const updateCardsPerView = () => {
       const width = window.innerWidth;
@@ -59,22 +57,31 @@ export default function StoriesOfHope() {
     return () => window.removeEventListener("resize", updateCardsPerView);
   }, []);
 
+  const infiniteReviews = Array.from(
+    { length: reviews.length * 50 },
+    (_, index) => ({
+      ...reviews[index % reviews.length],
+      id: index,
+    })
+  );
+
+  const initialIndex = reviews.length * 25;
+
+  useEffect(() => {
+    setCurrentIndex(initialIndex);
+  }, [initialIndex]);
+
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex >= reviews.length - cardsPerView ? 0 : prevIndex + 1
-    );
+    setCurrentIndex((prevIndex) => prevIndex + 1);
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? reviews.length - cardsPerView : prevIndex - 1
-    );
+    setCurrentIndex((prevIndex) => prevIndex - 1);
   };
 
   return (
     <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-12">
-      <div className=" mx-auto">
-        {/* Section Header */}
+      <div className="mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
           <div>
             <h2 className="text-4xl sm:text-[62px] font-['Cormorant_SC'] font-normal leading-tight">
@@ -110,20 +117,35 @@ export default function StoriesOfHope() {
         {/* Slider */}
         <div className="overflow-hidden">
           <div
-            className="flex transition-transform duration-500 ease-in-out gap-6"
+            className="flex transition-transform duration-700 ease-in-out gap-6"
             style={{
               transform: `translateX(-${(100 / cardsPerView) * currentIndex}%)`,
-              width: `${(100 / cardsPerView) * reviews.length}%`,
             }}
           >
-            {reviews.map((review, index) => (
+            {infiniteReviews.map((review, index) => (
               <div
-                key={index}
-                className="w-full"
-                style={{ flex: `0 0 ${100 / reviews.length}%` }}
+                key={`${review.id}-${index}`}
+                className="flex-shrink-0"
+                style={{ width: `${100 / cardsPerView}%` }}
               >
                 <ReviewCard {...review} />
               </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Progress Indicator */}
+        <div className="flex justify-center mt-6">
+          <div className="flex gap-2">
+            {reviews.map((_, index) => (
+              <div
+                key={index}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  currentIndex % reviews.length === index
+                    ? "bg-gray-800 scale-125"
+                    : "bg-gray-300"
+                }`}
+              />
             ))}
           </div>
         </div>

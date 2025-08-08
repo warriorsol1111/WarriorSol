@@ -19,9 +19,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { IoClose } from "react-icons/io5";
+import { FaAsterisk } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
+import { Textarea } from "../ui/textarea";
 
 interface StoryDrawerProps {
   isOpen: boolean;
@@ -54,6 +56,49 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    // Allowed mime types and extensions
+    const allowedImageTypes = [
+      "image/png",
+      "image/jpeg",
+      "image/jpg",
+      "image/gif",
+    ];
+    const allowedVideoTypes = [
+      "video/mp4",
+      "video/webm",
+      "video/quicktime", // mov
+      "video/x-msvideo", // avi
+    ];
+    const allowedExtensions = [
+      ".png",
+      ".jpg",
+      ".jpeg",
+      ".gif",
+      ".mp4",
+      ".webm",
+      ".mov",
+      ".avi",
+    ];
+
+    const fileTypeAllowed =
+      allowedImageTypes.includes(file.type) ||
+      allowedVideoTypes.includes(file.type);
+    const fileExtensionAllowed = allowedExtensions.some((ext) =>
+      file.name.toLowerCase().endsWith(ext)
+    );
+
+    if (!(fileTypeAllowed && fileExtensionAllowed)) {
+      setFileError(
+        "Only PNG, JPG, JPEG, GIF images and MP4, WEBM, MOV, AVI videos are allowed."
+      );
+      setFormData((prev) => ({ ...prev, image: null }));
+      toast.dismiss();
+      toast.error(
+        "Only PNG, JPG, JPEG, GIF images and MP4, WEBM, MOV, AVI videos are allowed."
+      );
+      return;
+    }
 
     const isSvg = file.type === "image/svg+xml" || file.name.endsWith(".svg");
     const isTooBig = file.size > 10 * 1024 * 1024;
@@ -112,9 +157,19 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
     const newErrors = { name: "", role: "", title: "", story: "", image: "" };
     let hasError = false;
 
-    if (!isAnonymous && !formData.name.trim()) {
-      newErrors.name = "Name is required unless sharing as anonymous.";
-      hasError = true;
+    if (!isAnonymous) {
+      const name = formData.name;
+      if (!name.trim()) {
+        newErrors.name = "Name is required unless sharing as anonymous.";
+        hasError = true;
+      } else if (!/^[A-Za-z\s'-]+$/.test(name)) {
+        newErrors.name =
+          "Name can only contain letters, spaces, hyphens, and apostrophes.";
+        hasError = true;
+      } else if (/^\s+$/.test(name)) {
+        newErrors.name = "Name cannot be just whitespace.";
+        hasError = true;
+      }
     }
     if (!formData.role) {
       newErrors.role = "Role is required.";
@@ -191,49 +246,57 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
       <DrawerContent className="h-full p-2">
         <DrawerHeader className="border-b border-gray-200">
           <div className="flex justify-between items-center">
-            <DrawerTitle className="text-2xl font-light">
+            <DrawerTitle className="text-[42px] text-[#1F1F1F] font-light">
               Share Your Story
             </DrawerTitle>
-            <DrawerClose className="p-2">
+            <DrawerClose className="p-2 cursor-pointer">
               <IoClose size={24} />
             </DrawerClose>
           </div>
         </DrawerHeader>
 
         <div className="p-6 overflow-y-auto flex-1">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <Label htmlFor="name">Your Name{!isAnonymous && "*"}</Label>
+          <form onSubmit={handleSubmit} className="space-y-10">
+            <div className="space-y-4">
+              <Label htmlFor="name">
+                Your Name
+                {!isAnonymous && (
+                  <FaAsterisk className="inline text-red-500 text-[10px] ml-[-5px] mb-2" />
+                )}
+              </Label>
               <Input
                 id="name"
-                required={!isAnonymous}
                 value={formData.name}
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, name: e.target.value }))
                 }
                 placeholder="Martin Mallet"
-                className="mt-2"
+                className={`mt-2 ${errors.name ? "border-red-500 focus:border-red-500 focus:ring-red-300" : ""}`}
                 disabled={isAnonymous}
               />
               {errors.name && (
-                <p className="text-xs text-red-500 mt-1">{errors.name}</p>
+                <p className="text-xs text-red-500">{errors.name}</p>
               )}
             </div>
 
-            <div>
-              <Label htmlFor="role">You Are*</Label>
+            <div className="space-y-4">
+              <Label htmlFor="role">
+                You Are
+                <FaAsterisk className="inline text-red-500 text-[10px] ml-[-5px] mb-2" />
+              </Label>
               <Select
                 value={formData.role}
                 onValueChange={(value) => {
                   setFormData((prev) => ({ ...prev, role: value }));
                   setErrors((prev) => ({ ...prev, role: "" }));
                 }}
-                required
               >
-                <SelectTrigger className="mt-2 w-full border border-gray-300 h-12 cursor-pointer">
+                <SelectTrigger
+                  className={`mt-2 w-full border !text-lg !text-[#1F1F1FCC] !font-[Inter] !h-12 !cursor-pointer ${errors.role ? "border-red-500 focus:border-red-500 focus:ring-red-300" : "border-gray-300"}`}
+                >
                   <SelectValue placeholder="Select your role" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="cursor-pointer">
                   {[
                     { value: "warrior", label: "The Warrior" },
                     { value: "spouse", label: "The Lock - Spouse/Partner" },
@@ -249,81 +312,92 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                     },
                     { value: "supporter", label: "The Ally - Supporter" },
                   ].map(({ value, label }) => (
-                    <SelectItem key={value} value={value}>
+                    <SelectItem
+                      key={value}
+                      value={value}
+                      className="cursor-pointer !text-lg !text-[#1F1F1FCC] !font-[Inter]"
+                    >
                       {label}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
               {errors.role && (
-                <p className="text-xs text-red-500 mt-1">{errors.role}</p>
+                <p className="text-xs text-red-500">{errors.role}</p>
               )}
             </div>
 
-            <div>
-              <Label htmlFor="title">Title Of The Story*</Label>
+            <div className="space-y-4">
+              <Label htmlFor="title">
+                Title Of The Story
+                <FaAsterisk className="inline text-red-500 text-[10px] ml-[-5px] mb-2" />
+              </Label>
               <Input
                 id="title"
-                required
                 value={formData.title}
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, title: e.target.value }))
                 }
                 placeholder="This Hoodie Wrapped Me In Warmth When The World Felt Cold"
                 maxLength={255}
-                className="mt-2"
+                className={`mt-2 ${errors.title ? "border-red-500 focus:border-red-500 focus:ring-red-300" : ""}`}
               />
               <span className="text-sm text-gray-500 float-right">
                 {formData.title.length}/255
               </span>
               {errors.title && (
-                <p className="text-xs text-red-500 mt-1">{errors.title}</p>
+                <p className="text-xs text-red-500">{errors.title}</p>
               )}
             </div>
 
-            <div>
-              <Label htmlFor="story">Tell Us Your Story*</Label>
-              <textarea
+            <div className="space-y-4">
+              <Label htmlFor="story">
+                Tell Us Your Story
+                <FaAsterisk className="inline text-red-500 text-[10px] ml-[-5px] mb-2" />
+              </Label>
+              <Textarea
                 id="story"
-                required
                 value={formData.story}
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, story: e.target.value }))
                 }
                 placeholder="This Hoodie Wrapped Me In Warmth When The World Felt Cold. Now It Reminds Me I'm Stronger Than I Knew."
-                className="flex min-h-[150px] w-full rounded-md border bg-white px-4 py-2 text-base shadow-sm transition-all duration-200 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-300 mt-2"
+                className={`flex min-h-[150px] w-full rounded-md border bg-white px-4 py-2 text-base shadow-sm transition-all duration-200 mt-2 ${errors.story ? "border-red-500 focus:border-red-500 focus:ring-red-300" : "border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-300"}`}
                 maxLength={1800}
               />
               <span className="text-sm text-gray-500 float-right">
                 {formData.story.length}/1800
               </span>
               {errors.story && (
-                <p className="text-xs text-red-500 mt-1">{errors.story}</p>
+                <p className="text-xs text-red-500">{errors.story}</p>
               )}
             </div>
 
-            <div>
-              <Label htmlFor="image">Share Image/Video*</Label>
+            <div className="space-y-4">
+              <Label htmlFor="image">
+                Share Image/Video
+                <FaAsterisk className="inline text-red-500 text-[10px] ml-[-5px] mb-2" />
+              </Label>
               <div className="mt-2 flex justify-center items-center flex-col border border-dashed border-gray-400 rounded-lg px-6 py-10 text-center">
                 {formData.image && !fileError ? (
                   <div className="flex items-center gap-2 justify-center">
-                    <p className="text-sm text-green-600 font-medium truncate max-w-[200px]">
+                    <p className="text-lg !font-[Inter] text-green-600 font-medium">
                       {formData.image.name}
                     </p>
                     <button
                       type="button"
                       onClick={handleRemoveFile}
-                      className="ml-2 text-red-500 hover:text-red-700 text-lg font-bold"
+                      className="ml-4 px-3 py-1 bg-red-50 text-red-600 hover:bg-red-100 rounded transition-all duration-150 !text-base !font-[Inter] font-semibold border border-red-200"
                       aria-label="Remove file"
                     >
-                      ×
+                      Remove
                     </button>
                   </div>
                 ) : (
                   <>
                     <label
                       htmlFor="image"
-                      className="cursor-pointer inline-flex items-center justify-center px-4 py-2 bg-blue-100 text-blue-600 font-semibold rounded-md hover:bg-blue-200 transition-all"
+                      className="cursor-pointer inline-flex items-center justify-center px-4 py-2 underline text-[#1F1F1FCC] !text-lg !font-[Inter] font-semibold rounded-md hover:bg-blue-200 transition-all"
                     >
                       Upload a file
                       <input
@@ -335,7 +409,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                         onChange={handleFileChange}
                       />
                     </label>
-                    <p className="mt-2 text-sm text-gray-500">
+                    <p className="mt-2 text-sm text-[#1F1F1FCC] !font-[Inter]">
                       PNG, JPG, GIF, or MP4 only. Max size:{" "}
                       <strong>10MB</strong>.<br />
                       Max video duration: <strong>1 minute</strong>.
@@ -343,7 +417,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                   </>
                 )}
                 {(fileError || errors.image) && (
-                  <p className="text-xs text-red-500 mt-2">
+                  <p className="text-sm text-red-500 !font-[Inter]">
                     {fileError || errors.image}
                   </p>
                 )}
@@ -365,7 +439,8 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
 
             <Button
               type="submit"
-              className="w-full bg-[#EE9254] hover:bg-[#EE9254]/90 text-white flex items-center justify-center"
+              size="default"
+              className="w-full bg-[#EE9254] !text-lg !h-13 !font-[Inter] hover:bg-[#EE9254]/90 text-white flex items-center justify-center !rounded-sm"
               disabled={isLoading}
             >
               {isLoading ? (
