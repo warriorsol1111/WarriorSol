@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import Image from "next/image";
 import { Loader2 } from "lucide-react";
+import { IoTrashBin } from "react-icons/io5";
 
 interface VariantDetail {
   title: string;
@@ -179,7 +180,7 @@ export default function Wishlist() {
         Your Wishlist
       </h1>
       <p className="text-gray-600 mb-6 text-xl text-center">
-        {count} item{count !== 1 && "s"} saved
+        {loading ? <></> : count + " item" + (count !== 1 && "s") + " saved"}
       </p>
 
       {loading ? (
@@ -274,7 +275,10 @@ export default function Wishlist() {
                         {isRemoving ? (
                           <Loader2 className="animate-spin h-4 w-4" />
                         ) : (
-                          "Remove from Wishlist"
+                          <>
+                            Remove
+                            <IoTrashBin className="inline text-red-600 text-xl" />
+                          </>
                         )}
                       </Button>
                     </div>

@@ -24,13 +24,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import NavbarSearchDrawer from "./navbarDrawer";
 
 export default function Navbar() {
   const hydrateCart = useCartStore((state) => state.hydrateCart);
   const itemCount = useCartStore((state) => state.itemCount);
   const toggleCart = useCartStore((state) => state.toggleCart);
+  const [count, setCount] = useState(0);
   const { data: session } = useSession();
   const pathname = usePathname();
 
@@ -39,6 +40,31 @@ export default function Navbar() {
   useEffect(() => {
     hydrateCart();
   }, [hydrateCart]);
+
+  useEffect(() => {
+    if (!session?.user?.token) return;
+
+    const fetchWishlist = async () => {
+      try {
+        const countRes = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/wishlist/count`,
+          {
+            headers: { Authorization: `Bearer ${session?.user?.token}` },
+          }
+        );
+
+        const countData = await countRes.json();
+
+        if (countData?.data) {
+          setCount(Number(countData.data));
+        }
+      } catch (error) {
+        console.error("Error fetching wishlist:", error);
+      }
+    };
+
+    fetchWishlist();
+  }, [session?.user?.token]);
 
   const userName =
     session?.user?.firstName || session?.user?.lastName
@@ -261,6 +287,11 @@ export default function Navbar() {
             className="relative p-1 sm:p-2  transition-colors"
           >
             <AiOutlineHeart className="h-5 w-5" />
+            {count > 0 && (
+              <span className="absolute -top-1 -right-2.5 h-5 w-5 flex items-center justify-center text-xs font-bold text-black border border-black rounded-full shadow-sm">
+                {count}
+              </span>
+            )}
           </Link>
 
           {/* Cart Button */}

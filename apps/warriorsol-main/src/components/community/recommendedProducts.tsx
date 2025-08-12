@@ -248,7 +248,7 @@ const RecommendedProducts: React.FC = () => {
           variant="outline"
           size="lg"
           onClick={() => router.push("/products")}
-          className="w-full sm:w-auto border border-black px-4 sm:px-5 py-2.5 sm:py-3 text-base sm:text-lg lg:text-[20px] font-['Inter'] capitalize flex items-center justify-center sm:justify-start gap-2 hover:bg-black hover:text-white transition"
+          className="w-full sm:w-auto border !rounded-sm border-black px-4 sm:px-5 py-2.5 sm:py-3 text-base sm:text-lg lg:text-[20px] font-['Inter'] capitalize flex items-center justify-center sm:justify-start gap-2 hover:bg-black hover:text-white transition"
         >
           See All Products <MdArrowOutward className="w-6 h-6" />
         </Button>
@@ -268,14 +268,15 @@ const RecommendedProducts: React.FC = () => {
             >
               <Link href={`/products/${product.handle}`} className="block">
                 {/* Image Card */}
-                <div className="relative w-full aspect-[3/4] sm:h-[400px] lg:h-[534px]">
+                <div className="relative w-full h-[350px] sm:h-[450px] lg:h-[534px]">
                   <Image
                     src={product.imageUrl}
                     alt={product.title}
                     fill
-                    className="object-cover rounded-md"
+                    className="object-contain rounded-md bg-white"
                   />
                 </div>
+
                 {/* Details */}
                 <div className="flex justify-between px-1 sm:px-2">
                   <div>

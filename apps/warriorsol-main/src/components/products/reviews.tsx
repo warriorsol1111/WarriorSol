@@ -1,8 +1,10 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import React from "react";
 import { Star } from "lucide-react";
-import { Avatar } from "@radix-ui/react-avatar";
-import { AvatarFallback, AvatarImage } from "../ui/avatar";
+import { AvatarFallback, AvatarImage, Avatar } from "../ui/avatar";
+import { Review } from "./productDetails";
 
 interface ReviewCardProps {
   name: string;
@@ -12,49 +14,6 @@ interface ReviewCardProps {
   timestamp: string;
   className?: string;
 }
-
-const mockReviews = [
-  {
-    name: "Hayra Kul",
-    avatarUrl: "/avatars/hayra.png",
-    rating: 4.9,
-    review:
-      "Amazing service! Everything was seamless from start to finish. Highly recommended!",
-    timestamp: "1 month ago",
-  },
-  {
-    name: "Jamal Bhatti",
-    avatarUrl: "/avatars/jamal.png",
-    rating: 5.0,
-    review:
-      "Bro this was next-level. Super helpful team and my order arrived early. W?",
-    timestamp: "2 weeks ago",
-  },
-  {
-    name: "Lina Ahsan",
-    avatarUrl: "/avatars/lina.png",
-    rating: 2,
-    review:
-      "Loved the experience! A few minor issues but customer support was quick to resolve them.",
-    timestamp: "3 weeks ago",
-  },
-  {
-    name: "Tariq Sheikh",
-    avatarUrl: "/avatars/tariq.png",
-    rating: 4.8,
-    review:
-      "You guys deserve all the stars. I don’t usually leave reviews but this was worth it.",
-    timestamp: "5 days ago",
-  },
-  {
-    name: "Maya Noor",
-    avatarUrl: "/avatars/maya.png",
-    rating: 4.7,
-    review:
-      "The vibe, the quality, the delivery speed... *chef’s kiss*. Will def order again.",
-    timestamp: "2 days ago",
-  },
-];
 
 const ReviewCard: React.FC<ReviewCardProps> = ({
   name,
@@ -113,25 +72,45 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
   );
 };
 
-export default function Reviews() {
+export default function Reviews({ reviews }: { reviews: Review[] }) {
+  if (!reviews || reviews.length === 0) {
+    return (
+      <section className="w-full px-4 sm:px-6 md:px-8">
+        <h2 className="text-[36px] sm:text-[48px] md:text-[62px] font-normal text-[#1F1F1F]">
+          Ratings & Reviews (0)
+        </h2>
+        <p className="text-[16px] sm:text-[20px] text-[#1F1F1FB2] font-light font-[Inter] mt-1">
+          No reviews yet — be the first to share your thoughts!
+        </p>
+      </section>
+    );
+  }
+
   return (
     <section className="w-full px-4 sm:px-6 md:px-8">
       <h2 className="text-[36px] sm:text-[48px] md:text-[62px] font-normal text-[#1F1F1F]">
-        Ratings & Reviews (520)
+        Ratings & Reviews ({reviews.length})
       </h2>
       <p className="text-[16px] sm:text-[20px] text-[#1F1F1FB2] font-light font-[Inter] mt-1">
-        All the Authentic Reviews by our trusted clients
+        All the authentic reviews by our trusted clients
       </p>
 
       <div className="mt-8 flex flex-col gap-6">
-        {mockReviews.map((review, index) => (
+        {reviews.map((r) => (
           <ReviewCard
-            key={index}
-            name={review.name}
-            avatarUrl={review.avatarUrl}
-            rating={review.rating}
-            review={review.review}
-            timestamp={review.timestamp}
+            key={r.review.id}
+            name={r.user.name}
+            avatarUrl={r.user.profilePhoto}
+            rating={r.review.score}
+            review={r.review.review}
+            timestamp={new Date(r.review.createdAt).toLocaleDateString(
+              "en-US",
+              {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              }
+            )}
           />
         ))}
       </div>

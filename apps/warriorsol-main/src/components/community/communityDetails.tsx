@@ -64,12 +64,12 @@ export const CommunityDetails = ({
       <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
         {/* Header section with title and status */}
         <div className="text-center mb-8">
-          <div className="flex justify-center items-center gap-4 mb-4">
-            <h1 className="text-[42px] sm:text-[62px] font-semibold">
+          <div className="flex justify-center items-center gap-4">
+            <h1 className="text-[42px] sm:text-[62px] text-[#1F1F1F] font-[Cormorant SC] font-semibold">
               {story.title}
             </h1>
           </div>
-          <p className="text-xl font-light">
+          <p className="text-[20px] font-light text-[#1F1F1F99] font-[Inter]">
             Published on {new Date(story.createdAt).toDateString()}
           </p>
         </div>
@@ -103,7 +103,7 @@ export const CommunityDetails = ({
 
         {/* Description section */}
         <div className="flex justify-center items-center mt-10">
-          <p className="text-2xl font-light text-center mx-auto whitespace-pre-line max-w-4xl">
+          <p className="text-[24px] text-[#1F1F1F] font-[Inter] font-light text-center mx-auto whitespace-pre-line max-w-4xl">
             {story.description}
           </p>
         </div>
@@ -111,7 +111,7 @@ export const CommunityDetails = ({
         {/* Author section with avatar */}
         <div className="flex justify-center items-center mt-10">
           <div className="flex flex-col gap-4 items-center">
-            <Avatar className="w-16 h-16">
+            <Avatar className="w-[160px] h-[160px]">
               <AvatarImage
                 src={
                   story.isAnonymous
@@ -126,11 +126,11 @@ export const CommunityDetails = ({
             </Avatar>
 
             <div className="text-center">
-              <p className="text-3xl font-medium">
+              <p className="text-[#1F1F1F] text-[50px] font-medium">
                 {story.isAnonymous ? "Anonymous" : story.userName}
               </p>
-              <div className="flex items-center justify-center gap-2 mt-2">
-                <p className="text-xl font-light capitalize">
+              <div className="flex items-center justify-center gap-2">
+                <p className="text-[20px] text-[#1F1F1F] font-[Inter] font-light capitalize">
                   {story.userType}
                 </p>
                 {story.isAnonymous && (

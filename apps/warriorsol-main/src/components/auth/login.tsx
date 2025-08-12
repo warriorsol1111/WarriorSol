@@ -22,11 +22,11 @@ function LoginPage() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({ email: "", password: "" });
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    
+
     // Clear field error when user starts typing
     if (fieldErrors[name as keyof typeof fieldErrors]) {
       setFieldErrors({ ...fieldErrors, [name]: "" });
@@ -36,7 +36,7 @@ function LoginPage() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
   const [loading, setLoading] = useState(false);
-  
+
   useEffect(() => {
     if (error) {
       if (error === "GOOGLE_LOGIN_BLOCKED") {
@@ -76,8 +76,8 @@ function LoginPage() {
     if (!formData.password.trim()) {
       errors.password = "Password is required";
       isValid = false;
-    } else if (formData.password.length < 8) {
-      errors.password = "Password must be at least 8 characters long";
+    } else if (formData.password.length < 6) {
+      errors.password = "Password must be at least 6 characters long";
       isValid = false;
     }
 
@@ -119,6 +119,7 @@ function LoginPage() {
       email,
       password,
       redirect: false,
+      callbackUrl: searchParams.get("callbackUrl") || "/",
     });
 
     const error = response?.error?.toLowerCase().trim();
@@ -136,9 +137,11 @@ function LoginPage() {
         error.includes("sign in with google")
       ) {
         toast.dismiss();
-        toast.error("This account is linked to Google. Please sign in with Google.");
+        toast.error(
+          "This account is linked to Google. Please sign in with Google."
+        );
       } else if (
-        error.includes("account is locked") || 
+        error.includes("account is locked") ||
         error.includes("disabled")
       ) {
         toast.dismiss();
@@ -151,7 +154,10 @@ function LoginPage() {
     } else {
       toast.dismiss();
       toast.success("Login successful");
-      router.replace("/home");
+      const targetUrl = decodeURIComponent(
+        searchParams.get("callbackUrl") || "/"
+      );
+      router.replace(targetUrl === "/" ? "/home" : targetUrl);
     }
     setLoading(false);
   };
@@ -160,7 +166,10 @@ function LoginPage() {
     <div className="flex min-h-screen flex-col md:flex-row">
       {/* Left Section */}
       <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-6 md:p-12 md:px-24">
-        <form onSubmit={handleSubmit} className="w-full space-y-4 md:space-y-6">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full space-y-4 md:space-y-10"
+        >
           <div>
             <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] !font-[Cormorant SC] font-normal">
               Welcome Back!
@@ -178,7 +187,11 @@ function LoginPage() {
               type="email"
               value={formData.email}
               onChange={handleChange}
-              className={fieldErrors.email ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}
+              className={
+                fieldErrors.email
+                  ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                  : ""
+              }
             />
             {fieldErrors.email && (
               <p className="text-red-500 text-sm mt-1">{fieldErrors.email}</p>
@@ -211,7 +224,9 @@ function LoginPage() {
               </Button>
             </div>
             {fieldErrors.password && (
-              <p className="text-red-500 text-sm mt-1">{fieldErrors.password}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {fieldErrors.password}
+              </p>
             )}
             <div className="text-right text-sm md:text-lg text-[#1F1F1F] opacity-60 font-[Inter] font-light mt-2">
               <Link href="/forgot-password">Forgot Password?</Link>
@@ -223,7 +238,11 @@ function LoginPage() {
             disabled={loading}
             className="w-full bg-[#EE9254] cursor-pointer hover:bg-[#e97e3a] h-10 md:h-12 text-white text-base md:text-xl font-[Inter]"
           >
-            {loading ? <Loader2 className="animate-spin w-5 h-5 mr-2" /> : "Login"}
+            {loading ? (
+              <Loader2 className="animate-spin w-5 h-5 mr-2" />
+            ) : (
+              "Login"
+            )}
           </Button>
 
           <div className="flex items-center gap-4 my-2">
@@ -247,7 +266,10 @@ function LoginPage() {
           <div className="flex justify-center gap-x-2 md:gap-x-4 pt-2">
             <p className="text-base md:text-lg font-[Inter] opacity-60 text-[#1F1F1F] text-center font-light">
               Don&apos;t have an account?{" "}
-              <Link href="/signup" className="text-[#1F1F1F] font-bold underline">
+              <Link
+                href="/signup"
+                className="text-[#1F1F1F] font-bold underline"
+              >
                 Sign up
               </Link>
             </p>

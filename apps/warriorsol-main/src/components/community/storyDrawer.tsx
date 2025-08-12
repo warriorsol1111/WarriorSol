@@ -24,6 +24,7 @@ import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import { Textarea } from "../ui/textarea";
+import { IoTrashBin } from "react-icons/io5";
 
 interface StoryDrawerProps {
   isOpen: boolean;
@@ -56,6 +57,9 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    // Clear image error when a new file is selected
+    setErrors((prev) => ({ ...prev, image: "" }));
 
     // Allowed mime types and extensions
     const allowedImageTypes = [
@@ -150,6 +154,8 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
   const handleRemoveFile = () => {
     setFormData((prev) => ({ ...prev, image: null }));
     setFileError("");
+    // Clear image error when file is removed
+    setErrors((prev) => ({ ...prev, image: "" }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -267,9 +273,11 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
               <Input
                 id="name"
                 value={formData.name}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, name: e.target.value }))
-                }
+                onChange={(e) => {
+                  setFormData((prev) => ({ ...prev, name: e.target.value }));
+                  // Clear name error when user starts typing
+                  setErrors((prev) => ({ ...prev, name: "" }));
+                }}
                 placeholder="Martin Mallet"
                 className={`mt-2 ${errors.name ? "border-red-500 focus:border-red-500 focus:ring-red-300" : ""}`}
                 disabled={isAnonymous}
@@ -335,9 +343,11 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
               <Input
                 id="title"
                 value={formData.title}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, title: e.target.value }))
-                }
+                onChange={(e) => {
+                  setFormData((prev) => ({ ...prev, title: e.target.value }));
+                  // Clear title error when user starts typing
+                  setErrors((prev) => ({ ...prev, title: "" }));
+                }}
                 placeholder="This Hoodie Wrapped Me In Warmth When The World Felt Cold"
                 maxLength={255}
                 className={`mt-2 ${errors.title ? "border-red-500 focus:border-red-500 focus:ring-red-300" : ""}`}
@@ -358,9 +368,11 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
               <Textarea
                 id="story"
                 value={formData.story}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, story: e.target.value }))
-                }
+                onChange={(e) => {
+                  setFormData((prev) => ({ ...prev, story: e.target.value }));
+                  // Clear story error when user starts typing
+                  setErrors((prev) => ({ ...prev, story: "" }));
+                }}
                 placeholder="This Hoodie Wrapped Me In Warmth When The World Felt Cold. Now It Reminds Me I'm Stronger Than I Knew."
                 className={`flex min-h-[150px] w-full rounded-md border bg-white px-4 py-2 text-base shadow-sm transition-all duration-200 mt-2 ${errors.story ? "border-red-500 focus:border-red-500 focus:ring-red-300" : "border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-300"}`}
                 maxLength={1800}
@@ -381,23 +393,23 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
               <div className="mt-2 flex justify-center items-center flex-col border border-dashed border-gray-400 rounded-lg px-6 py-10 text-center">
                 {formData.image && !fileError ? (
                   <div className="flex items-center gap-2 justify-center">
-                    <p className="text-lg !font-[Inter] text-green-600 font-medium">
+                    <p className="text-lg !font-[Inter] text-green-600 font-medium text-ellipsis overflow-hidden truncate max-w-[350px]">
                       {formData.image.name}
                     </p>
                     <button
                       type="button"
                       onClick={handleRemoveFile}
-                      className="ml-4 px-3 py-1 bg-red-50 text-red-600 hover:bg-red-100 rounded transition-all duration-150 !text-base !font-[Inter] font-semibold border border-red-200"
+                      className="ml-2 px-3 py-1 mb-1 bg-red-50 text-red-600 cursor-pointer rounded transition-all duration-150 !text-base !font-[Inter] font-semibold"
                       aria-label="Remove file"
                     >
-                      Remove
+                      <IoTrashBin className="inline text-red-600 text-xl  items-center justify-center" />
                     </button>
                   </div>
                 ) : (
                   <>
                     <label
                       htmlFor="image"
-                      className="cursor-pointer inline-flex items-center justify-center px-4 py-2 underline text-[#1F1F1FCC] !text-lg !font-[Inter] font-semibold rounded-md hover:bg-blue-200 transition-all"
+                      className="cursor-pointer inline-flex items-center justify-center px-4 py-2 underline text-[#1F1F1FCC] !text-lg !font-[Inter] font-semibold rounded-md  transition-all"
                     >
                       Upload a file
                       <input
@@ -429,7 +441,13 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                 id="isAnonymous"
                 type="checkbox"
                 checked={isAnonymous}
-                onChange={(e) => setIsAnonymous(e.target.checked)}
+                onChange={(e) => {
+                  setIsAnonymous(e.target.checked);
+                  // Clear name error when anonymous checkbox changes
+                  if (e.target.checked) {
+                    setErrors((prev) => ({ ...prev, name: "" }));
+                  }
+                }}
                 className="h-4 w-4 border-gray-300 rounded"
               />
               <Label htmlFor="isAnonymous" className="cursor-pointer">

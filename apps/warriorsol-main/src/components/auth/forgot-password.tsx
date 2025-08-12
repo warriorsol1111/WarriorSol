@@ -208,8 +208,13 @@ export default function ForgotPasswordPage() {
             toast.success("Verification code verified successfully");
             setStep("newPassword");
           } else {
-            toast.dismiss();
-            toast.error("Failed to verify verification code");
+            if (verifyData.message === "Invalid verification code") {
+              toast.dismiss();
+              toast.error("Invalid verification code");
+            } else {
+              toast.dismiss();
+              toast.error("Failed to verify verification code");
+            }
           }
           break;
 
@@ -310,7 +315,7 @@ export default function ForgotPasswordPage() {
                 Enter Your email, we&apos;ll send a verification code
               </p>
             </div>
-            <div className="space-y-2 w-full">
+            <div className="space-y-6 w-full">
               <Label htmlFor="email">Email Address</Label>
               <Input
                 id="email"
@@ -344,7 +349,7 @@ export default function ForgotPasswordPage() {
               </p>
             </div>
 
-            <div className="space-y-2 w-full">
+            <div className="space-y-6 w-full">
               <Label>Verification Code</Label>
               <div className="flex gap-2 justify-center">
                 <OtpInput
@@ -423,7 +428,7 @@ export default function ForgotPasswordPage() {
                 Enter your new password{" "}
               </p>
             </div>
-            <div className="space-y-2 w-full">
+            <div className="space-y-6 w-full">
               <Label htmlFor="newPassword">New Password</Label>
               <div className="relative w-full">
                 <Input
@@ -457,7 +462,7 @@ export default function ForgotPasswordPage() {
               )}
             </div>
 
-            <div className="space-y-2 w-full">
+            <div className="space-y-6 w-full">
               <Label htmlFor="confirmPassword">Confirm Password</Label>
               <div className="relative w-full">
                 <Input

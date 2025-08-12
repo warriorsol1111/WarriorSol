@@ -121,7 +121,7 @@ export default function VerifyEmailPage() {
                 {email}
               </p>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-6">
               <Label className="text-[#1F1F1F]" htmlFor="verificationCode">
                 Please Enter Code
               </Label>

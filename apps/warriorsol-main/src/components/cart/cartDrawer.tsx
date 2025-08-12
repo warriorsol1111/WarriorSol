@@ -30,7 +30,6 @@ export default function CartDrawer() {
     cartLoading,
   } = useCartStore();
   const [loading, setLoading] = useState(false);
-
   if (!isOpen) return null;
 
   return (
@@ -99,13 +98,16 @@ export default function CartDrawer() {
                               {item.name}
                             </p>
                           </div>
-
-                          <div>
-                            <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">
-                              Size
-                            </p>
-                            <p className="text-sm text-gray-900">{item.size}</p>
-                          </div>
+                          {item.size && (
+                            <div>
+                              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">
+                                Size
+                              </p>
+                              <p className="text-sm text-gray-900">
+                                {item.size}
+                              </p>
+                            </div>
+                          )}
                         </div>
 
                         {/* Color & Price */}
@@ -160,7 +162,8 @@ export default function CartDrawer() {
                           className="w-5 h-5 rounded-full border border-black text-gray-600 hover:text-black hover:border-black"
                           disabled={
                             cartLoading ||
-                            (!!item.lineId && itemLoading[item.lineId])
+                            (!!item.lineId && itemLoading[item.lineId]) ||
+                            item.quantity === 1
                           }
                         >
                           <Minus className="w-3 h-3" />

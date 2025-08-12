@@ -18,6 +18,22 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import Reviews from "./reviews";
 
+export interface Review {
+  review: {
+    id: string;
+    userId: string;
+    productId: string;
+    score: number;
+    review: string;
+    createdAt: string;
+  };
+  user: {
+    id: string;
+    name: string;
+    profilePhoto: string;
+  };
+}
+
 interface ProductVariant {
   id: string;
   title: string;
@@ -65,6 +81,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
   const { addItem, openCart } = useCartStore();
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [wishListLoading, setWishlistLoading] = useState(false);
 
   const { colors, sizes } = useMemo(() => {
@@ -151,6 +168,35 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     );
   }, [selectedColor, product.variants]);
 
+  const extractIDFromShopifyID = (id: string) => {
+    const parts = id.split("/");
+    return parts[parts.length - 1];
+  };
+  useEffect(() => {
+    const fetchReviews = async () => {
+      if (!session?.user.token) return;
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/reviews/${extractIDFromShopifyID(product.id)}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `Bearer ${session?.user.token}`,
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch reviews");
+        }
+        const { data } = await response.json();
+        setReviews(data);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+    fetchReviews();
+  }, [product.id, session?.user.token]);
   const selectedVariant = useMemo(() => {
     const isHatProduct = product.variants.every((variant) => {
       const parts = variant.title.split(" / ");
@@ -291,6 +337,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
         body: JSON.stringify({
           variantId: selectedVariant.id,
           quantity: quantity,
+          userId: session?.user?.id,
         }),
       });
 
@@ -591,7 +638,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           </TabsContent>
 
           <TabsContent value="reviews" className="mt-6 lg:mt-8 min-w-0">
-            <Reviews />
+            <Reviews reviews={reviews} />
           </TabsContent>
         </Tabs>
       </div>

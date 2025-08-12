@@ -119,6 +119,7 @@ function LoginPage() {
       email,
       password,
       redirect: false,
+      callbackUrl: searchParams.get("callbackUrl") || "/",
     });
 
     const error = response?.error?.toLowerCase().trim();
@@ -153,7 +154,10 @@ function LoginPage() {
     } else {
       toast.dismiss();
       toast.success("Login successful");
-      router.replace("/");
+      const targetUrl = decodeURIComponent(
+        searchParams.get("callbackUrl") || "/"
+      );
+      router.replace(targetUrl);
     }
     setLoading(false);
   };

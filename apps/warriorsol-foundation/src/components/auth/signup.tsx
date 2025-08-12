@@ -188,7 +188,7 @@ function SignupPage() {
       <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-4 md:p-12 md:px-24">
         <form
           onSubmit={handleSubmit}
-          className="w-full space-y-4 md:space-y-6 mt-12"
+          className="w-full space-y-4 md:space-y-10 mt-12"
         >
           <div>
             <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] font-serif font-normal">

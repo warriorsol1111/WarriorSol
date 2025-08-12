@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { fetchShopify } from "../../../../lib/shopify";
 
 const CREATE_CHECKOUT_MUTATION = `
-  mutation createCheckout($lineItems: [CartLineInput!]!) {
+  mutation createCheckout($lineItems: [CartLineInput!]!, $attributes: [AttributeInput!]!) {
     cartCreate(
       input: {
         lines: $lineItems
+        attributes: $attributes
       }
     ) {
       cart {
@@ -23,7 +24,7 @@ const CREATE_CHECKOUT_MUTATION = `
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { variantId, quantity } = body;
+    const { variantId, quantity, userId } = body;
 
     if (!variantId) {
       return NextResponse.json(
@@ -37,6 +38,12 @@ export async function POST(request: NextRequest) {
         {
           merchandiseId: variantId,
           quantity: quantity || 1,
+        },
+      ],
+      attributes: [
+        {
+          key: "user_id",
+          value: userId,
         },
       ],
     };

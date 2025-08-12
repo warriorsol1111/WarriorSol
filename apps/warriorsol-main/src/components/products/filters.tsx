@@ -156,7 +156,7 @@ export const Filter: React.FC<FilterProps> = ({
             <DrawerTitle className="flex items-center text-[21px] md:text-[42px] text-[#1F1F1F] gap-2">
               Sort & Filter
               {getActiveFiltersCount() > 0 && (
-                <span className="bg-[#EE9254] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center min-w-[20px]">
+                <span className="bg-[#EE9254] text-white text-lg rounded-full w-6 h-6 flex items-center justify-center">
                   {getActiveFiltersCount()}
                 </span>
               )}
@@ -182,7 +182,7 @@ export const Filter: React.FC<FilterProps> = ({
                   onClick={() => toggleFilter("sortBy", option)}
                   className={`px-4 py-2 rounded-md text-lg font-[Inter] text-[#1F1F1F] border transition-colors opacity-60 ${
                     tempFilters.sortBy === option
-                      ? "bg-black text-white border-black"
+                      ? "border-[4px] border-[#EE925466] "
                       : "bg-white text-black border-gray-300 hover:border-gray-400"
                   }`}
                 >
@@ -206,7 +206,7 @@ export const Filter: React.FC<FilterProps> = ({
                   onClick={() => toggleFilter("productType", type)}
                   className={`px-4 py-2 rounded-md text-lg font-[Inter] text-[#1F1F1F] border transition-colors opacity-60 ${
                     tempFilters.productType.includes(type)
-                      ? "bg-black text-white border-black"
+                      ? "border-[4px] border-[#EE925466] "
                       : "bg-white text-black border-gray-300 hover:border-gray-400"
                   }`}
                 >
@@ -266,7 +266,7 @@ export const Filter: React.FC<FilterProps> = ({
                   onClick={() => toggleFilter("size", size)}
                   className={`px-4 py-2 rounded-md text-lg font-[Inter] text-[#1F1F1F] border transition-colors opacity-60 ${
                     tempFilters.size.includes(size)
-                      ? "bg-black text-white border-black"
+                      ? "border-[4px] border-[#EE925466] "
                       : "bg-white text-black border-gray-300 hover:border-gray-400"
                   }`}
                 >
@@ -290,7 +290,7 @@ export const Filter: React.FC<FilterProps> = ({
                   onClick={() => toggleFilter("priceRange", range)}
                   className={`px-4 py-2 rounded-md text-lg font-[Inter] text-[#1F1F1F] border opacity-60 transition-colors ${
                     tempFilters.priceRange.includes(range)
-                      ? "bg-black text-white border-black"
+                      ? "border-[4px] border-[#EE925466] "
                       : "bg-white text-black border-gray-300 hover:border-gray-400"
                   }`}
                 >
@@ -314,7 +314,7 @@ export const Filter: React.FC<FilterProps> = ({
                   onClick={() => toggleFilter("availability", option)}
                   className={`px-4 py-2 rounded-md text-lg font-[Inter] text-[#1F1F1F] opacity-60 border transition-colors ${
                     tempFilters.availability.includes(option)
-                      ? "bg-black text-white border-black"
+                      ? "border-[4px] border-[#EE925466] "
                       : "bg-white text-black border-gray-300 hover:border-gray-400"
                   }`}
                 >
