@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Cormorant_SC } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import SessionProviderWrapper from "@/components/shared/sessionProvider";
-const cormorantSC = Cormorant_SC({
+import { Manrope } from "next/font/google";
+const manrope = Manrope({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   display: "swap",
@@ -27,9 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${inter.variable} ${cormorantSC.className} antialiased`}
-      >
+      <body className={`${inter.variable} ${manrope.className} antialiased`}>
         <Toaster
           toastOptions={{
             className: "!font-bold",

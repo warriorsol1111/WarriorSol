@@ -490,17 +490,17 @@
   resolved "https://registry.yarnpkg.com/@next/env/-/env-15.4.4.tgz#ada0a3bdecc5c11fedd2b8cbf4e2b0b999a5324f"
   integrity sha512-SJKOOkULKENyHSYXE5+KiFU6itcIb6wSBjgM92meK0HVKpo94dNOLZVdLLuS7/BxImROkGoPsjR4EnuDucqiiA==
 
-"@next/eslint-plugin-next@15.3.3", "@next/eslint-plugin-next@^15.3.0":
-  version "15.3.3"
-  resolved "https://registry.npmjs.org/@next/eslint-plugin-next/-/eslint-plugin-next-15.3.3.tgz"
-  integrity sha512-VKZJEiEdpKkfBmcokGjHu0vGDG+8CehGs90tBEy/IDoDDKGngeyIStt2MmE5FYNyU9BhgR7tybNWTAJY/30u+Q==
-  dependencies:
-    fast-glob "3.3.1"
-
 "@next/eslint-plugin-next@15.3.4":
   version "15.3.4"
   resolved "https://registry.npmjs.org/@next/eslint-plugin-next/-/eslint-plugin-next-15.3.4.tgz"
   integrity sha512-lBxYdj7TI8phbJcLSAqDt57nIcobEign5NYIKCiy0hXQhrUbTqLqOaSDi568U6vFg4hJfBdZYsG4iP/uKhCqgg==
+  dependencies:
+    fast-glob "3.3.1"
+
+"@next/eslint-plugin-next@^15.3.0":
+  version "15.3.3"
+  resolved "https://registry.npmjs.org/@next/eslint-plugin-next/-/eslint-plugin-next-15.3.3.tgz"
+  integrity sha512-VKZJEiEdpKkfBmcokGjHu0vGDG+8CehGs90tBEy/IDoDDKGngeyIStt2MmE5FYNyU9BhgR7tybNWTAJY/30u+Q==
   dependencies:
     fast-glob "3.3.1"
 
@@ -2778,22 +2778,6 @@ escodegen@^2.1.0:
     esutils "^2.0.2"
   optionalDependencies:
     source-map "~0.6.1"
-
-eslint-config-next@15.3.3:
-  version "15.3.3"
-  resolved "https://registry.yarnpkg.com/eslint-config-next/-/eslint-config-next-15.3.3.tgz#356ca4b8647a6024c332260addcd261d3b4b6c6d"
-  integrity sha512-QJLv/Ouk2vZnxL4b67njJwTLjTf7uZRltI0LL4GERYR4qMF5z08+gxkfODAeaK7TiC6o+cER91bDaEnwrTWV6Q==
-  dependencies:
-    "@next/eslint-plugin-next" "15.3.3"
-    "@rushstack/eslint-patch" "^1.10.3"
-    "@typescript-eslint/eslint-plugin" "^5.4.2 || ^6.0.0 || ^7.0.0 || ^8.0.0"
-    "@typescript-eslint/parser" "^5.4.2 || ^6.0.0 || ^7.0.0 || ^8.0.0"
-    eslint-import-resolver-node "^0.3.6"
-    eslint-import-resolver-typescript "^3.5.2"
-    eslint-plugin-import "^2.31.0"
-    eslint-plugin-jsx-a11y "^6.10.0"
-    eslint-plugin-react "^7.37.0"
-    eslint-plugin-react-hooks "^5.0.0"
 
 eslint-config-next@15.3.4:
   version "15.3.4"
@@ -5787,11 +5771,6 @@ tw-animate-css@^1.3.4:
   version "1.3.4"
   resolved "https://registry.npmjs.org/tw-animate-css/-/tw-animate-css-1.3.4.tgz"
   integrity sha512-dd1Ht6/YQHcNbq0znIT6dG8uhO7Ce+VIIhZUhjsryXsMPJQz3bZg7Q2eNzLwipb25bRZslGb2myio5mScd1TFg==
-
-tw-animate-css@^1.3.5:
-  version "1.3.5"
-  resolved "https://registry.yarnpkg.com/tw-animate-css/-/tw-animate-css-1.3.5.tgz#1bc393f6ac8b51f467235787561ac4334d523af2"
-  integrity sha512-t3u+0YNoloIhj1mMXs779P6MO9q3p3mvGn4k1n3nJPqJw/glZcuijG2qTSN4z4mgNRfW5ZC3aXJFLwDtiipZXA==
 
 type-check@^0.4.0, type-check@~0.4.0:
   version "0.4.0"
