@@ -1,4 +1,3 @@
-import { SocialLinks } from "@/components/shared/socialLinks";
 import Footer from "@/components/shared/footer";
 import Navbar from "@/components/shared/navbar";
 import HomePage from "@/components/homepage";
@@ -14,7 +13,6 @@ export default function Home() {
     <>
       <Navbar />
       <HomePage />
-      <SocialLinks />
       <Footer />
     </>
   );

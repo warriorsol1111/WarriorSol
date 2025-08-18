@@ -21,10 +21,16 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
   const { data: session } = useSession();
+  const pathname = usePathname();
 
+  const isActive = (path: string) =>
+    pathname === path
+      ? "text-[#C1E965] font-bold  underline underline-offset-4"
+      : "hover:underline";
   const userName =
     session?.user?.firstName || session?.user?.lastName
       ? `${session?.user?.firstName ?? ""} ${session?.user?.lastName ?? ""}`.trim()
@@ -49,12 +55,26 @@ export default function Navbar() {
               className="p-4 pt-10 space-y-6 w-[250px] sm:w-64 bg-white text-black"
             >
               <nav className="flex flex-col gap-4 font-medium">
-                <Link href="/">Home</Link>
-                <Link href="/community">Community</Link>
-                <Link href="/about">About</Link>
-                <Link href="/contacts">Contacts</Link>
+                <Link href="/" className={isActive("/")}>
+                  Home
+                </Link>
+                <Link href="/support" className={isActive("/support")}>
+                  {" "}
+                  Apply for Support
+                </Link>
+                <Link href="/donations" className={isActive("/donations")}>
+                  Donations
+                </Link>
+                <Link href="/donor-wall" className={isActive("/donor-wall")}>
+                  Donor Wall
+                </Link>
                 {session?.user?.role === "admin" && (
-                  <Link href="/support-applications">View Applications</Link>
+                  <Link
+                    href="/support-applications"
+                    className={isActive("/support-applications")}
+                  >
+                    View Applications
+                  </Link>
                 )}
               </nav>
               <a
@@ -82,18 +102,26 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center">
             <div className="h-6 w-px bg-[#999999] mx-4"></div>
             <nav className="flex gap-8 text-lg font-medium text-black">
-              <Link href="/" className="hover:underline">
+              <Link href="/" className={isActive("/")}>
                 Home
               </Link>
-              <Link href="/community" className="hover:underline">
-                Community
+              <Link href="/support" className={isActive("/support")}>
+                Apply for Support
               </Link>
-              <Link href="/about" className="hover:underline">
-                About
+              <Link href="/donations" className={isActive("/donations")}>
+                Donations
               </Link>
-              <Link href="/contacts" className="hover:underline">
-                Contacts
+              <Link href="/donor-wall" className={isActive("/donor-wall")}>
+                Donor Wall
               </Link>
+              {session?.user?.role === "admin" && (
+                <Link
+                  href="/support-applications"
+                  className={isActive("/support-applications")}
+                >
+                  View Applications
+                </Link>
+              )}
             </nav>
           </div>
         </div>

@@ -27,7 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${manrope.className} antialiased`}>
+      <body
+        className={`${inter.variable} ${manrope.className} antialiased text-[#1f1f1f]`}
+      >
         <Toaster
           toastOptions={{
             className: "!font-bold",
