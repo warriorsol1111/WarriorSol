@@ -142,7 +142,9 @@ export default function AdminSupportApplicationsPage() {
                     {app.familyName}
                   </h2>
                   <span className="self-start sm:self-auto bg-[#C1E965] text-black text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">
-                    {app.supportType}
+                    {app.supportType === "gift_card"
+                      ? "GIFT CARD"
+                      : app.supportType}
                   </span>
                 </div>
 

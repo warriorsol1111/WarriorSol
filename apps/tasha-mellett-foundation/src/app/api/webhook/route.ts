@@ -47,6 +47,7 @@ export async function POST(req: NextRequest) {
     const email = session.customer_email;
     const amount = session.amount_total;
     const userId = session.metadata?.user_id ?? null;
+    const foundation = session.metadata?.foundation;
 
     let receiptUrl = "";
 
@@ -63,27 +64,30 @@ export async function POST(req: NextRequest) {
     } catch (err) {
       console.error("🧾 Failed to extract receipt on session completion:", err);
     }
-
+    let endpoint = "";
+    if (foundation === "tasha-mellett-foundation") {
+      endpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL}/tasha-foundation/donations`;
+    } else if (foundation === "warriorsol-foundation") {
+      endpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL}/donations`;
+    }
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tasha-foundation/donations`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            stripeSessionId,
-            stripeReceiptUrl: receiptUrl,
-            stripeSubscriptionId: session.subscription || null,
-            name: donorName,
-            email,
-            amount: amount ?? 0,
-            currency: session.currency || "usd",
-            donationType,
-            status: session.payment_status ?? "succeeded",
-            userId,
-          }),
-        }
-      );
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          stripeSessionId,
+          stripeReceiptUrl: receiptUrl,
+          stripeSubscriptionId: session.subscription || null,
+          name: donorName,
+          email,
+          amount: amount ?? 0,
+          currency: session.currency || "usd",
+          donationType,
+          status: session.payment_status ?? "succeeded",
+          userId,
+          foundation,
+        }),
+      });
 
       if (!response.ok) {
         console.error("❌ Failed to save donation:", await response.text());
@@ -94,7 +98,6 @@ export async function POST(req: NextRequest) {
       console.error("💥 Error saving donation:", err);
     }
   }
-
   if (event.type === "charge.succeeded" || event.type === "charge.updated") {
     const charge = event.data.object as Stripe.Charge;
     const paymentIntentId = charge.payment_intent as string;
@@ -105,26 +108,34 @@ export async function POST(req: NextRequest) {
         limit: 1,
       });
 
-      const sessionId = sessions.data[0]?.id;
+      const session = sessions.data[0];
+      const foundation = session?.metadata?.foundation;
+      const sessionId = session?.id;
 
-      if (sessionId && charge.receipt_url) {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/tasha-foundation/donations/update-receipt-by-session/${sessionId}`,
-          {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ stripeReceiptUrl: charge.receipt_url }),
-          }
-        );
+      let endpoint = "";
+      if (foundation === "tasha-mellett-foundation") {
+        endpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL}/tasha-foundation/donations/update-receipt-by-session/${sessionId}`;
+      } else if (foundation === "warriorsol-foundation") {
+        endpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL}/donations/update-receipt-by-session/${sessionId}`;
+      }
+
+      if (sessionId && charge.receipt_url && endpoint) {
+        const res = await fetch(endpoint, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ stripeReceiptUrl: charge.receipt_url }),
+        });
 
         if (!res.ok) {
           console.error("Failed to update receipt:", await res.text());
         } else {
-          console.log("Receipt URL updated for one-time charge");
+          console.log(
+            `Receipt URL updated for one-time charge on ${foundation}`
+          );
         }
       }
     } catch (err) {
-      console.error(" Error updating receipt from charge event:", err);
+      console.error("Error updating receipt from charge event:", err);
     }
   }
 
@@ -133,31 +144,44 @@ export async function POST(req: NextRequest) {
       subscription?: string;
     };
     const subscriptionId = invoice.subscription;
+
+    const sessions = await stripe.checkout.sessions.list({
+      subscription: subscriptionId as string,
+      limit: 1,
+    });
+
+    const session = sessions.data[0];
+    const foundation = session?.metadata?.foundation;
+
+    let endpoint = "";
+    if (foundation === "tasha-mellett-foundation") {
+      endpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL}/tasha-foundation/donations`;
+    } else if (foundation === "warriorsol-foundation") {
+      endpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL}/donations`;
+    }
+
     const receiptUrl = extractBestReceipt(invoice);
     const amount = invoice.amount_paid;
     const currency = invoice.currency;
     const customerEmail =
       invoice.customer_email || (invoice.customer as string);
 
-    try {
-      // Create a new donation record for this recurring payment
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tasha-foundation/donations`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            stripeInvoiceId: invoice.id,
-            stripeSubscriptionId: subscriptionId,
-            stripeReceiptUrl: receiptUrl,
-            amount,
-            currency,
-            email: customerEmail,
-            donationType: "recurring",
-            status: "succeeded",
-          }),
-        }
-      );
+    if (endpoint) {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          stripeInvoiceId: invoice.id,
+          stripeSubscriptionId: subscriptionId,
+          stripeReceiptUrl: receiptUrl,
+          amount,
+          currency,
+          email: customerEmail,
+          donationType: "recurring",
+          status: "succeeded",
+          foundation,
+        }),
+      });
 
       if (!res.ok) {
         console.error(
@@ -165,10 +189,8 @@ export async function POST(req: NextRequest) {
           await res.text()
         );
       } else {
-        console.log("✅ Recurring donation saved to DB");
+        console.log(`✅ Recurring donation saved to DB for ${foundation}`);
       }
-    } catch (err) {
-      console.error("💥 Error saving recurring donation:", err);
     }
   }
 

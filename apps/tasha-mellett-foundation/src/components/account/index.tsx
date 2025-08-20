@@ -503,7 +503,7 @@ export default function SettingsPage() {
               <section>
                 {loading ? (
                   <Card className="flex flex-col items-center justify-center text-gray-500 py-8">
-                    <Loader2 className="animate-spin w-8 h-8 mb-2 text-indigo-500" />
+                    <Loader2 className="animate-spin w-8 h-8 mb-2 text-[#C1E965]" />
                     <span className="font-medium text-lg">
                       Loading your good deeds...
                     </span>
@@ -589,7 +589,7 @@ export default function SettingsPage() {
               <section>
                 {applicationsLoading ? (
                   <Card className="flex flex-col items-center justify-center text-gray-500 py-8">
-                    <Loader2 className="animate-spin w-8 h-8 mb-2 text-indigo-500" />
+                    <Loader2 className="animate-spin w-8 h-8 mb-2 text-[#C1E965]" />
                     <span className="font-medium text-lg">
                       Fetching applications...
                     </span>
@@ -619,8 +619,10 @@ export default function SettingsPage() {
                       >
                         <h3 className="text-xl sm:text-2xl font-semibold mb-1">
                           {app.familyName} —{" "}
-                          <span className="text-indigo-600">
-                            {app.supportType}
+                          <span className="text-indigo-600 capitalize">
+                            {app.supportType === "gift_card"
+                              ? "Gift Card"
+                              : app.supportType}
                           </span>
                         </h3>
                         <p className="text-base sm:text-lg text-gray-600 mb-1">

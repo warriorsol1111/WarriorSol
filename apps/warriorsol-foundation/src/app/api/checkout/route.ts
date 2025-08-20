@@ -8,7 +8,7 @@ export async function POST(req: Request) {
 
   const body = await req.json();
 
-  const { amount, email, name, donationType, userId } = body;
+  const { amount, email, name, donationType, userId, foundation } = body;
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -39,6 +39,7 @@ export async function POST(req: Request) {
         donor_name: name,
         donation_type: donationType,
         user_id: userId ?? "anonymous",
+        foundation,
       },
 
       success_url: process.env.STRIPE_SUCCESS_URL!,

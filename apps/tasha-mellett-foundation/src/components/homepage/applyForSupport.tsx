@@ -42,32 +42,57 @@ export default function ApplyForSupport({
 
   const [form, setForm] = useState({
     familyName: "",
-    contactEmail: "",
+    contactEmail: session?.user?.email || "",
     contactPhone: "",
     familySize: "",
     supportType: "",
     requestedAmount: "",
     situation: "",
   });
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setForm({ ...form, [e.target.id]: e.target.value });
+    setErrors((prev) => ({ ...prev, [e.target.id]: "" })); // clear error on typing
   };
 
   const handleSupportTypeChange = (value: string) => {
     setForm({ ...form, supportType: value });
+    setErrors((prev) => ({ ...prev, supportType: "" }));
+  };
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    if (!form.familyName) newErrors.familyName = "Family name is required.";
+    if (!form.contactEmail) newErrors.contactEmail = "Email is required.";
+    if (!form.contactPhone)
+      newErrors.contactPhone = "Phone number is required.";
+    if (!form.familySize) newErrors.familySize = "Family size is required.";
+    if (!form.supportType) newErrors.supportType = "Select a support type.";
+    if (!form.requestedAmount)
+      newErrors.requestedAmount = "Requested amount is required.";
+    if (!form.situation)
+      newErrors.situation = "Please describe your situation.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!isLoggedIn) {
       toast.dismiss();
       toast.error("You must be logged in to submit the form.");
       return;
     }
+
+    if (!validateForm()) return;
+
     setLoading(true);
     try {
       const response = await fetch(
@@ -80,15 +105,7 @@ export default function ApplyForSupport({
               Authorization: `Bearer ${session.user.token}`,
             }),
           },
-          body: JSON.stringify({
-            familyName: form.familyName,
-            contactEmail: form.contactEmail || session?.user?.email || "",
-            contactPhone: form.contactPhone,
-            familySize: form.familySize,
-            supportType: form.supportType,
-            requestedAmount: form.requestedAmount,
-            situation: form.situation,
-          }),
+          body: JSON.stringify(form),
         }
       );
       if (response.ok) {
@@ -103,6 +120,7 @@ export default function ApplyForSupport({
           requestedAmount: "",
           situation: "",
         });
+        setErrors({});
       } else {
         toast.dismiss();
         toast.error("Error submitting application");
@@ -118,8 +136,8 @@ export default function ApplyForSupport({
   return (
     <section className="w-full px-4 sm:px-6 md:px-8 lg:px-14 py-8 sm:py-12 lg:py-16">
       <TooltipProvider>
-        <Card className="w-full !shadow-none  mx-auto !border-none">
-          <CardHeader className="">
+        <Card className="w-full !shadow-none mx-auto !border-none">
+          <CardHeader>
             <CardTitle className="text-[44px] text-center font-extrabold ">
               {heading}
             </CardTitle>
@@ -128,8 +146,9 @@ export default function ApplyForSupport({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form className="space-y-6  mx-auto" onSubmit={handleSubmit}>
+            <form className="space-y-6 mx-auto" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Family Name */}
                 <div className="space-y-2">
                   <Label className="text-xl" htmlFor="familyName">
                     Family Name
@@ -139,9 +158,14 @@ export default function ApplyForSupport({
                     placeholder="Enter your family name"
                     value={form.familyName}
                     onChange={handleChange}
-                    required
+                    className={errors.familyName ? "border-red-500" : ""}
                   />
+                  {errors.familyName && (
+                    <p className="text-red-500 text-sm">{errors.familyName}</p>
+                  )}
                 </div>
+
+                {/* Email */}
                 <div className="space-y-2">
                   <Label className="text-xl" htmlFor="contactEmail">
                     Contact Email
@@ -150,11 +174,18 @@ export default function ApplyForSupport({
                     id="contactEmail"
                     type="email"
                     placeholder="Enter your email"
-                    value={session?.user?.email || form.contactEmail}
+                    value={form.contactEmail}
                     onChange={handleChange}
-                    required
+                    className={errors.contactEmail ? "border-red-500" : ""}
                   />
+                  {errors.contactEmail && (
+                    <p className="text-red-500 text-sm">
+                      {errors.contactEmail}
+                    </p>
+                  )}
                 </div>
+
+                {/* Phone */}
                 <div className="space-y-2">
                   <Label className="text-xl" htmlFor="contactPhone">
                     Contact Phone
@@ -167,14 +198,23 @@ export default function ApplyForSupport({
                     }
                     inputProps={{
                       name: "contactPhone",
-                      required: true,
                       id: "contactPhone",
-                      className:
-                        "w-full py-2 px-12 border border-gray-300 rounded-md !h-[55px] !rounded-full text-lg",
+                      className: `w-full py-2 px-12 border rounded-md !h-[55px] !rounded-full text-lg ${
+                        errors.contactPhone
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      }`,
                     }}
                     containerStyle={{ width: "100%" }}
                   />
+                  {errors.contactPhone && (
+                    <p className="text-red-500 text-sm">
+                      {errors.contactPhone}
+                    </p>
+                  )}
                 </div>
+
+                {/* Family Size */}
                 <div className="space-y-2">
                   <Label className="text-xl" htmlFor="familySize">
                     Family Size
@@ -186,9 +226,14 @@ export default function ApplyForSupport({
                     placeholder="Enter family size"
                     value={form.familySize}
                     onChange={handleChange}
-                    required
+                    className={errors.familySize ? "border-red-500" : ""}
                   />
+                  {errors.familySize && (
+                    <p className="text-red-500 text-sm">{errors.familySize}</p>
+                  )}
                 </div>
+
+                {/* Support Type */}
                 <div className="space-y-2">
                   <Label className="text-xl" htmlFor="supportType">
                     Type of Support Needed
@@ -196,11 +241,14 @@ export default function ApplyForSupport({
                   <Select
                     value={form.supportType}
                     onValueChange={handleSupportTypeChange}
-                    required
                   >
                     <SelectTrigger
                       id="supportType"
-                      className="mt-2 w-full border text-lg border-gray-300 !h-[55px] !rounded-full cursor-pointer"
+                      className={`mt-2 w-full border text-lg !h-[55px] !rounded-full cursor-pointer ${
+                        errors.supportType
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      }`}
                     >
                       <SelectValue placeholder="Select support type" />
                     </SelectTrigger>
@@ -210,7 +258,12 @@ export default function ApplyForSupport({
                       <SelectItem value="scholarship">Scholarship</SelectItem>
                     </SelectContent>
                   </Select>
+                  {errors.supportType && (
+                    <p className="text-red-500 text-sm">{errors.supportType}</p>
+                  )}
                 </div>
+
+                {/* Requested Amount */}
                 <div className="space-y-2">
                   <Label className="text-xl" htmlFor="requestedAmount">
                     Requested Amount
@@ -222,11 +275,17 @@ export default function ApplyForSupport({
                     placeholder="Enter amount needed"
                     value={form.requestedAmount}
                     onChange={handleChange}
-                    required
+                    className={errors.requestedAmount ? "border-red-500" : ""}
                   />
+                  {errors.requestedAmount && (
+                    <p className="text-red-500 text-sm">
+                      {errors.requestedAmount}
+                    </p>
+                  )}
                 </div>
               </div>
 
+              {/* Situation */}
               <div className="space-y-2">
                 <Label className="text-xl" htmlFor="situation">
                   Describe Your Situation
@@ -236,10 +295,14 @@ export default function ApplyForSupport({
                   placeholder="Please describe your current situation and why you need support"
                   value={form.situation}
                   onChange={handleChange}
-                  required
+                  className={errors.situation ? "border-red-500" : ""}
                 />
+                {errors.situation && (
+                  <p className="text-red-500 text-sm">{errors.situation}</p>
+                )}
               </div>
 
+              {/* Info Section */}
               <div className="bg-[#1877F20D] border border-[#1877F280] p-4 rounded-2xl space-y-2">
                 <h4 className="font-semibold text-[20px] ">
                   What Happens Next?
@@ -263,6 +326,7 @@ export default function ApplyForSupport({
                 </ul>
               </div>
 
+              {/* Submit */}
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div>

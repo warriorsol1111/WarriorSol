@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "../ui/button";
 import SupportImage1 from "../../assets/support1.svg";
 import SupportImage2 from "../../assets/support2.svg";
 import Image from "next/image";
@@ -17,16 +16,6 @@ export default function Donations() {
           Supporting families through life&apos;s most challenging moments with
           compassion, resources, and hope.
         </p>
-      </div>
-
-      {/* Donate Button */}
-      <div className="flex items-center justify-center mt-8 sm:mt-12">
-        <Button
-          className="bg-[#C1E965] rounded-full w-[130px] sm:w-[160px] h-[48px] sm:h-[60px] hover:bg-[#b3e06d] text-[#023729] text-base sm:text-lg md:text-[18px] font-medium"
-          size="lg"
-        >
-          Donate Now
-        </Button>
       </div>
 
       {/* Image + cards section */}

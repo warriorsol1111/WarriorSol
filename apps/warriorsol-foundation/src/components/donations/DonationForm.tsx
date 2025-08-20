@@ -71,6 +71,7 @@ export default function DonationForm() {
         email,
         name,
         userId: session?.user?.id || null,
+        foundation: "warriorsol-foundation",
       }),
     });
 

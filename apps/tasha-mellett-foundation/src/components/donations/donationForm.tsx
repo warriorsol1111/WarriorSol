@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import DonorWallImage from "@/assets/donorWallImage.svg";
-import { FaRegHeart } from "react-icons/fa6";
+import { FaHeart } from "react-icons/fa";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useSession } from "next-auth/react";
 import { BiDonateHeart } from "react-icons/bi";
@@ -71,6 +71,7 @@ export default function DonationForm() {
         email,
         name,
         userId: session?.user?.id || null,
+        foundation: "tasha-mellett-foundation",
       }),
     });
 
@@ -98,11 +99,11 @@ export default function DonationForm() {
         {/* Image */}
 
         {/* Form Section */}
-        <div className="w-full md:w-1/2 bg-[#FFEBCC] flex p-6 sm:p-8 md:p-12">
-          <Card className="w-full shadow-none border-none bg-[#FFF9F5]">
+        <div className="w-full md:w-1/2 bg-white flex p-6 sm:p-8 md:p-12">
+          <Card className="w-full shadow-none border-none bg-white">
             <CardContent className="flex flex-col justify-between h-full space-y-8 p-6 sm:p-8">
-              <h2 className="text-3xl sm:text-[52px] font-light font-['Cormorant_SC'] text-center flex gap-2 justify-start items-center">
-                <FaRegHeart className="w-10 h-10 mt-1 text-[#EE9254]" />
+              <h2 className="text-3xl sm:text-[44px] font-extrabold text-center flex gap-2 justify-start items-center">
+                <FaHeart className="w-10 h-10 mt-1 text-[#C1E965]" />
                 Donation Form
               </h2>
 
@@ -124,9 +125,9 @@ export default function DonationForm() {
                       <div
                         key={id}
                         onClick={() => setDonationType(id)}
-                        className={`flex items-center gap-2 p-3 border rounded cursor-pointer ${
+                        className={`flex items-center gap-2 p-3 border rounded-xl cursor-pointer ${
                           donationType === id
-                            ? "bg-[#EE9254] text-white border-none"
+                            ? "bg-[#C1E965B2] text-black border-none"
                             : "bg-white border-gray-200"
                         }`}
                       >
@@ -135,8 +136,8 @@ export default function DonationForm() {
                           id={id}
                           className={
                             donationType === id
-                              ? "text-white"
-                              : "text-[#EE9254]"
+                              ? "text-black"
+                              : "text-[#C1E965B2]"
                           }
                         />
                         <Label htmlFor={id} className="cursor-pointer text-lg">
@@ -157,9 +158,9 @@ export default function DonationForm() {
                       <Button
                         key={val}
                         variant="outline"
-                        className={`rounded text-lg font-[Inter] h-10 sm:h-12 ${
+                        className={`rounded-xl text-lg font-[Inter] h-10 sm:h-12 ${
                           amount === val
-                            ? "bg-[#EE9254] text-white border-none"
+                            ? "bg-[#C1E965B2] text-black border-none"
                             : "bg-white border-gray-200"
                         }`}
                         onClick={() => setAmount(val)}
@@ -175,7 +176,7 @@ export default function DonationForm() {
                         type="number"
                         value={customAmount}
                         onChange={(e) => setCustomAmount(e.target.value)}
-                        className="rounded bg-white border-gray-200"
+                        className="rounded-xl bg-white border-gray-200"
                       />
                     </div>
                   )}
@@ -194,7 +195,7 @@ export default function DonationForm() {
                     </Label>
                     <Input
                       placeholder="Enter your full name"
-                      className="rounded bg-white border-gray-200"
+                      className="rounded-xl bg-white border-gray-200"
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
@@ -211,7 +212,7 @@ export default function DonationForm() {
                     </Label>
                     <Input
                       placeholder="Enter your email address"
-                      className="rounded bg-white border-gray-200"
+                      className="rounded-xl bg-white border-gray-200"
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -226,7 +227,7 @@ export default function DonationForm() {
               </div>
 
               <Button
-                className="w-full bg-[#EE9254] hover:bg-[#e76b1f] text-xl font-[Inter] font-normal rounded text-white h-12"
+                className="w-full bg-[#C1E965] hover:bg-[#C1E965]/90 text-xl font-[Inter] font-normal rounded-xl text-black h-12"
                 onClick={handleDonate}
               >
                 Donate Now
