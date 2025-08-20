@@ -42,7 +42,7 @@ export default function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="/"
+                  href="/home"
                   className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
                 >
                   Home

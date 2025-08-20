@@ -32,7 +32,7 @@ const missionItems: MissionItem[] = [
 export default function OurMission() {
   return (
     <section className="w-full px-4 sm:px-6 md:px-8 lg:px-14 py-8 sm:py-12 lg:py-16">
-      <div className="items-start flex flex-col gap-4 mx-auto text-center mb-12">
+      <div className="items-center md:items-start flex flex-col gap-4 mx-auto text-center mb-12">
         <h2 className="text-3xl md:text-[44px] font-extrabold ">Our Mission</h2>
         <p className="mt-3 text-[#999999] font-medium text-[27px]">
           The Tasha Mellett Foundation is dedicated to supporting families

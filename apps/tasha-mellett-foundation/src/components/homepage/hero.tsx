@@ -19,23 +19,28 @@ export default function Hero() {
           <div className="absolute inset-0 flex flex-col p-6 sm:p-10">
             {/* Text */}
             <div className="mt-auto">
-              <p className="text-white mb-[-40px] text-[42px] font-extrabold">
+              <p className="text-white mb-[-20px] text-[28px] sm:text-[42px] font-extrabold">
                 Foundation
               </p>
-              <h1 className="text-white text-[200px] max-w-[200px] font-extrabold leading-tight">
+              <h1 className="text-white text-[64px] sm:text-[120px] md:text-[200px] max-w-[200px] font-extrabold leading-tight">
                 Tasha Mellett
               </h1>
             </div>
           </div>
         </div>
 
-        {/* Button - Positioned absolutely at the end of the row */}
-        <div className="absolute right-0 bottom-0 p-6 sm:p-10">
+        <div
+          className="
+            absolute 
+            top-0 right-0 p-4
+            xl:bottom-0 xl:top-auto xl:p-10
+          "
+        >
           <Button
             onClick={() => {
               window.location.href = "/donations";
             }}
-            className="inline-block bg-[#A4CF6D] !text-[32px] font-extrabold text-[#023729] w-[340px] h-[76px] items-center justify-center sm:text-base px-4 sm:px-6 py-2 sm:py-3 rounded-full hover:bg-[#92be5c] transition-colors"
+            className="inline-block bg-[#A4CF6D] !text-[18px] sm:!text-[32px] font-extrabold text-[#023729] w-[200px] sm:w-[340px] h-[50px] sm:h-[76px] items-center justify-center rounded-full hover:bg-[#92be5c] transition-colors"
           >
             Donate Now
           </Button>

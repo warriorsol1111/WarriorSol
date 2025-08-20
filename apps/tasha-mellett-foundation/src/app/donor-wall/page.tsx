@@ -19,22 +19,28 @@ export default async function DonorWallPage() {
 
   try {
     const [topRes, recentRes] = await Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/donations/top-donations`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.user.token}`,
-        },
-        method: "GET",
-        cache: "no-store",
-      }),
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/donations/recent`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.user.token}`,
-        },
-        method: "GET",
-        cache: "no-store",
-      }),
+      fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tasha-foundation/donations/top-donations`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.user.token}`,
+          },
+          method: "GET",
+          cache: "no-store",
+        }
+      ),
+      fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tasha-foundation/donations/recent`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.user.token}`,
+          },
+          method: "GET",
+          cache: "no-store",
+        }
+      ),
     ]);
 
     if (topRes.ok) {

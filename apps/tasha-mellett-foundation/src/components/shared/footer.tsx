@@ -41,7 +41,7 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="hover:underline text-white">
+                <Link href="/home" className="hover:underline text-white">
                   Home
                 </Link>
               </li>

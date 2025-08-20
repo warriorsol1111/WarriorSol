@@ -23,7 +23,7 @@ export async function middleware(request: NextRequest) {
 
   // 👇 Redirect signed-in users *away* from /login
   if (pathname === "/login" && token) {
-    return NextResponse.redirect(new URL("/", request.url)); // redirect to home or dashboard
+    return NextResponse.redirect(new URL("/home", request.url)); // redirect to home or dashboard
   }
   if (isPublicRoute(pathname)) {
     return NextResponse.next();

@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 
 const Footer = () => {
   const pathname = usePathname();
-  const isHome = pathname === "/";
+  const isHome = pathname === "/home";
 
   return (
     <footer className="bg-[#1F1F1F] text-[#e5e5e5] pt-12 pb-6 px-10">

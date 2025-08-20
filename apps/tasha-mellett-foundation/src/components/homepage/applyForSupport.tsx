@@ -71,7 +71,7 @@ export default function ApplyForSupport({
     setLoading(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/apply-for-support`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tasha-foundation/apply-for-support`,
         {
           method: "POST",
           headers: {

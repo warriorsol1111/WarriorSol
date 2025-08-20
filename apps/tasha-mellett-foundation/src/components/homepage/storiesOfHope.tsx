@@ -44,13 +44,17 @@ const stories: Story[] = [
   },
 ];
 
+// helper: split stories into chunks
 const chunkStories = (arr: Story[], size: number) =>
   Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
     arr.slice(i * size, i * size + size)
   );
 
 export default function StoriesOfHope() {
-  const chunks = chunkStories(stories, 2);
+  // 📱 On small screens show 1 story at a time, on md+ show 2
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+  const chunks = chunkStories(stories, isMobile ? 1 : 2);
+
   const [index, setIndex] = useState(0);
 
   const nextSlide = () => {
@@ -62,20 +66,20 @@ export default function StoriesOfHope() {
   };
 
   return (
-    <section className="w-full px-4 sm:px-6 md:px-8 lg:px-14 py-8 sm:py-12 lg:py-6">
+    <section className="w-full px-4 sm:px-6 md:px-8 lg:px-14 py-8 sm:py-12 lg:py-16">
       <div className="mx-auto">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
           <div>
-            <h2 className="text-3xl md:text-[44px] font-extrabold ">
+            <h2 className="text-2xl sm:text-3xl md:text-[44px] font-extrabold">
               Stories Of Hope
             </h2>
-            <p className="mt-2 text-[#999999] font-medium text-[27px]">
+            <p className="mt-2 text-[#999999] font-medium text-lg sm:text-xl md:text-[27px]">
               Hear from families whose lives have been touched by our community
               of warriors
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 self-end sm:self-auto">
             <button
               onClick={prevSlide}
               className="p-2 rounded-full border border-gray-300 hover:bg-gray-100 transition"
@@ -103,7 +107,10 @@ export default function StoriesOfHope() {
                 className="min-w-full grid grid-cols-1 md:grid-cols-2"
               >
                 {pair.map((story, i) => (
-                  <div key={i} className="grid grid-cols-1 md:grid-cols-2">
+                  <div
+                    key={i}
+                    className="grid grid-cols-1 sm:grid-cols-2 border border-gray-100"
+                  >
                     {/* Left: Image */}
                     <div className="relative">
                       <Image
@@ -113,25 +120,25 @@ export default function StoriesOfHope() {
                         height={400}
                         className="h-full w-full object-cover"
                       />
-                      <Quote className="absolute bottom-4 right-4 w-10 h-10 text-white opacity-90" />
+                      <Quote className="absolute bottom-4 right-4 w-8 h-8 sm:w-10 sm:h-10 text-white opacity-90" />
                     </div>
 
                     {/* Right: Card */}
                     <div
-                      className={`flex flex-col h-full p-8 ${
+                      className={`flex flex-col h-full p-6 sm:p-8 ${
                         (i + pairIndex * 2) % 2 === 0
                           ? "bg-[#002329] text-white"
                           : "bg-[#EDF1D3]"
                       }`}
                     >
                       {/* Stars at top */}
-                      <div className="flex mb-6 gap-x-4">
+                      <div className="flex mb-4 sm:mb-6 gap-x-2 sm:gap-x-4">
                         {Array(5)
                           .fill(0)
                           .map((_, starIndex) => (
                             <Star
                               key={starIndex}
-                              className={`w-8 h-8 ${
+                              className={`w-5 h-5 sm:w-8 sm:h-8 ${
                                 (i + pairIndex * 2) % 2 === 0
                                   ? "text-white"
                                   : "text-black"
@@ -144,7 +151,7 @@ export default function StoriesOfHope() {
                       {/* Quote in true center */}
                       <div className="flex flex-1 items-center justify-center">
                         <p
-                          className={`text-center text-[15px] font-medium leading-relaxed ${
+                          className={`text-center text-sm sm:text-base md:text-[15px] font-medium leading-relaxed ${
                             (i + pairIndex * 2) % 2 === 0
                               ? "text-[#EDF1D3]"
                               : "text-black"
@@ -155,9 +162,9 @@ export default function StoriesOfHope() {
                       </div>
 
                       {/* Name + Role at bottom */}
-                      <div>
+                      <div className="mt-4">
                         <p
-                          className={`font-medium text-lg ${
+                          className={`font-medium text-base sm:text-lg ${
                             (i + pairIndex * 2) % 2 === 0
                               ? "text-white"
                               : "text-black"
@@ -165,7 +172,9 @@ export default function StoriesOfHope() {
                         >
                           {story.name}
                         </p>
-                        <p className="text-[16px] opacity-80">{story.role}</p>
+                        <p className="text-sm sm:text-[16px] opacity-80">
+                          {story.role}
+                        </p>
                       </div>
                     </div>
                   </div>

@@ -119,7 +119,7 @@ function LoginPage() {
       email,
       password,
       redirect: false,
-      callbackUrl: searchParams.get("callbackUrl") || "/",
+      callbackUrl: searchParams.get("callbackUrl") || "/home",
     });
 
     const error = response?.error?.toLowerCase().trim();
@@ -155,7 +155,7 @@ function LoginPage() {
       toast.dismiss();
       toast.success("Login successful");
       const targetUrl = decodeURIComponent(
-        searchParams.get("callbackUrl") || "/"
+        searchParams.get("callbackUrl") || "/home"
       );
       router.replace(targetUrl === "/" ? "/home" : targetUrl);
     }

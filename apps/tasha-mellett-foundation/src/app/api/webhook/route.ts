@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/donations`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tasha-foundation/donations`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
 
       if (sessionId && charge.receipt_url) {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/donations/update-receipt-by-session/${sessionId}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/tasha-foundation/donations/update-receipt-by-session/${sessionId}`,
           {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -129,35 +129,46 @@ export async function POST(req: NextRequest) {
   }
 
   if (event.type === "invoice.payment_succeeded") {
-    const invoice = event.data.object as Stripe.Invoice;
-
-    const subscriptionId = (
-      invoice as Stripe.Invoice & { subscription?: string }
-    ).subscription;
+    const invoice = event.data.object as Stripe.Invoice & {
+      subscription?: string;
+    };
+    const subscriptionId = invoice.subscription;
     const receiptUrl = extractBestReceipt(invoice);
+    const amount = invoice.amount_paid;
+    const currency = invoice.currency;
+    const customerEmail =
+      invoice.customer_email || (invoice.customer as string);
 
-    if (subscriptionId) {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/donations/update-receipt-by-subscription/${subscriptionId}`,
-          {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ stripeReceiptUrl: receiptUrl }),
-          }
-        );
-
-        if (!res.ok) {
-          console.error(
-            "Failed to update subscription receipt:",
-            await res.text()
-          );
-        } else {
-          console.log("Subscription receipt URL updated");
+    try {
+      // Create a new donation record for this recurring payment
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tasha-foundation/donations`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            stripeInvoiceId: invoice.id,
+            stripeSubscriptionId: subscriptionId,
+            stripeReceiptUrl: receiptUrl,
+            amount,
+            currency,
+            email: customerEmail,
+            donationType: "recurring",
+            status: "succeeded",
+          }),
         }
-      } catch (err) {
-        console.error("Error updating subscription receipt:", err);
+      );
+
+      if (!res.ok) {
+        console.error(
+          "❌ Failed to save recurring donation:",
+          await res.text()
+        );
+      } else {
+        console.log("✅ Recurring donation saved to DB");
       }
+    } catch (err) {
+      console.error("💥 Error saving recurring donation:", err);
     }
   }
 

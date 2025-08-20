@@ -61,7 +61,7 @@ export default function Navbar() {
               className="p-4 pt-10 space-y-6 w-[250px] sm:w-64 bg-white text-black"
             >
               <nav className="flex flex-col gap-4 font-medium">
-                <Link className={isActive("/")} href="/">
+                <Link className={isActive("/home")} href="/home">
                   Home
                 </Link>
                 <Link className={isActive("/support")} href="/support">
@@ -96,7 +96,7 @@ export default function Navbar() {
           </Sheet>
 
           {/* Logo */}
-          <Link href="/" className="text-lg font-semibold tracking-wide">
+          <Link href="/home" className="text-lg font-semibold tracking-wide">
             <div className="flex items-center px-2 sm:px-5">
               <Image
                 src={Logo}
@@ -112,7 +112,7 @@ export default function Navbar() {
 
         {/* Center: Desktop Navigation */}
         <nav className="hidden lg:flex flex-1 justify-center items-center space-x-6 text-sm text-black font-light overflow-x-auto">
-          <Link href="/" className={isActive("/")}>
+          <Link href="/home" className={isActive("/home")}>
             Home
           </Link>
           <Link href="/support" className={isActive("/support")}>

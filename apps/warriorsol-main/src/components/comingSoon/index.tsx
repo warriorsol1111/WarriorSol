@@ -8,7 +8,7 @@ import Link from "next/link";
 import Logo from "../../assets/logo.svg";
 import { toast } from "react-hot-toast";
 import { Loader2 } from "lucide-react";
-
+import Singer from "@/assets/singer.svg";
 export default function ComingSoon() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const targetDate = new Date("2025-11-11T11:11:00").getTime();
@@ -176,37 +176,37 @@ export default function ComingSoon() {
         {/* Main Content */}
         <div className="relative z-10 flex flex-col flex-grow text-center px-4 sm:px-6 lg:px-8">
           <div className="mt-10 sm:mt-16 md:mt-20">
-            <h1 className="text-white text-lg sm:text-2xl md:text-4xl lg:text-5xl font-light mb-2 tracking-[0.15em] uppercase">
+            <h1 className="text-white text-lg sm:text-2xl md:text-4xl lg:text-[42px] font-extrabold font-[Cormorant-SC] mb-2 tracking-[0.15em] uppercase">
               Warrior Sol & The Warrior Sol Foundation...
             </h1>
-            <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-4xl font-light mb-12 sm:mb-16 tracking-[0.15em] uppercase">
+            <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-[42px] font-extrabold font-[Cormorant-SC] mb-12 sm:mb-16 tracking-[0.15em] uppercase">
               Rising 11:11
             </h2>
           </div>
 
-          <div className="mt-auto flex flex-col items-center">
-            <h3 className="text-white text-xs sm:text-sm md:text-base uppercase font-light tracking-[0.25em] mb-4">
+          <div className="mt-auto flex flex-col items-start">
+            <h3 className="text-white text-xs sm:text-sm md:text-[22px] uppercase font-extrabold font-[Cormorant-SC] tracking-[0.25em] mb-4">
               We&apos;re Launching Soon.
             </h3>
 
-            <div className="w-24 sm:w-32 md:w-64 h-[1px] bg-white/50 mb-6" />
+            <div className="w-24 sm:w-32 md:w-[400px] h-[1px] bg-white/50 mb-6" />
 
             {/* Countdown */}
-            <div className="flex space-x-2 sm:space-x-4 md:space-x-6 mb-6">
+            <div className="flex space-x-2 sm:space-x-4 md:space-x-6 mb-6 font-[Orbitron]">
               {["days", "hours", "minutes", "seconds"].map((unit, i) => (
                 <React.Fragment key={unit}>
                   {i !== 0 && (
-                    <div className="text-white text-lg sm:text-xl md:text-2xl">
+                    <div className="text-white text-lg sm:text-xl md:text-2xl font-[Orbitron]">
                       :
                     </div>
                   )}
                   <div className="text-center">
-                    <div className="text-xl sm:text-2xl md:text-4xl text-white font-light">
+                    <div className="text-white text-[10px] sm:text-xs md:text-sm lg:text-[34px] uppercase font-extrabold tracking-widest font-[Orbitron]">
                       {timeLeft[unit as keyof typeof timeLeft]
                         .toString()
                         .padStart(2, "0")}
                     </div>
-                    <div className="text-white text-[10px] sm:text-xs md:text-sm lg:text-base uppercase tracking-widest">
+                    <div className="text-white text-[10px] sm:text-xs md:text-sm lg:text-[8px] uppercase font-medium font-[Inter] tracking-widest ">
                       {unit}
                     </div>
                   </div>
@@ -224,20 +224,38 @@ export default function ComingSoon() {
                 placeholder="Your Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-transparent border-white/30 text-white placeholder-white/60 text-xs sm:text-sm h-10 sm:h-12"
+                className="bg-[#FFFFFF33] !rounded-lg border-white/30 text-white placeholder-white/60 text-xs sm:text-sm h-10 sm:h-12"
               />
               <Button
                 type="submit"
-                className="bg-orange-500 hover:bg-orange-600 h-10 sm:h-12 text-white px-4 sm:px-6 py-2 tracking-wide uppercase text-xs sm:text-sm flex items-center gap-2"
+                className="bg-[#EE9254] hover:bg-[#D97C38] h-10 sm:h-12 text-white px-4 sm:px-6 py-2 tracking-wide uppercase text-xs sm:text-sm flex items-center gap-2"
                 disabled={notifyLoading}
               >
                 {notifyLoading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
-                  "Notify Me"
+                  "Subscribe"
                 )}
               </Button>
             </form>
+          </div>
+        </div>
+        {/* Artist Credit (Bottom Right) */}
+        <div className="absolute bottom-10 right-4 z-20 flex items-center space-x-2 text-white/80 text-xs sm:text-sm font-light">
+          <Image
+            src={Singer}
+            alt="Artist Avatar"
+            width={40}
+            height={40}
+            className="rounded-full border border-white/30"
+          />
+          <div className="flex flex-col leading-tight">
+            <span className="uppercase font-[Inter] text-xs tracking-wide">
+              By a Legend
+            </span>
+            <span className="font-bold font-[Cormorant-SC] text-lg">
+              Coleman Mellett
+            </span>
           </div>
         </div>
       </div>

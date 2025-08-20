@@ -28,7 +28,7 @@ export default function DonorWall({
 }) {
   return (
     <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
-      <div className="flex flex-row justify-between">
+      <div className="flex flex-col lg:flex-row justify-between">
         <h2 className="text-3xl md:text-[64px] font-extrabold max-w-lg">
           Support Our Mission of Hope
         </h2>

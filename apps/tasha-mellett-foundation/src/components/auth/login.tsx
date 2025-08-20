@@ -81,7 +81,7 @@ function LoginPage() {
     } else {
       toast.dismiss();
       toast.success("Login successful");
-      router.replace("/");
+      router.replace("/home");
     }
   };
 

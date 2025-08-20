@@ -49,7 +49,7 @@ export default function ThankYouPage() {
             size="lg"
             className="rounded-lg bg-[#EE9254] hover:bg-[#e76b1f] text-white text-lg px-8 py-4"
           >
-            <Link href="/">Back to Home</Link>
+            <Link href="/home">Back to Home</Link>
           </Button>
         </div>
       </section>
