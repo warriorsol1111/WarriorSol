@@ -51,7 +51,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({
       {/* Background */}
       {isVideo ? (
         <video
-          className="w-full h-[100vh] object-cover"
+          className="w-full h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-[90vh] xl:h-[100vh] object-cover"
           autoPlay
           muted
           loop
@@ -66,41 +66,77 @@ export const StoryCard: React.FC<StoryCardProps> = ({
           alt="Background"
           width={1000}
           height={1000}
-          className="object-cover brightness-[0.1] shadow-2xl w-full h-[100vh]"
+          className="object-cover brightness-[0.1] shadow-2xl w-full h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-[90vh] xl:h-[100vh]"
           priority
         />
       )}
 
-      {/* Quote */}
-      <div className="absolute inset-0 flex items-center justify-center px-6 text-center">
-        <p className="text-2xl md:text-[42px] font-[Cormorant SC] max-w-7xl leading-relaxed font-semibold">
+      {/* Quote - Responsive Text and Positioning */}
+      <div className="absolute inset-0 flex items-center justify-center px-4 sm:px-6 md:px-8 text-center">
+        <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-[42px] font-[Cormorant SC] max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-7xl leading-relaxed font-semibold">
           &ldquo;{title}&rdquo;
         </p>
       </div>
 
-      {/* Author */}
-      <div className="absolute bottom-6 left-6 flex items-center gap-3">
-        <Avatar className="w-10 h-10 border border-white">
-          <AvatarImage src={author.avatar ?? undefined} alt={author.name} />
-          <AvatarFallback>{getInitials(author.name)}</AvatarFallback>
-        </Avatar>
-        <div className="text-white">
-          <p className="font-[Cormorant SC] text-2xl font-semibold leading-none">
-            {author.name}
-          </p>
-          <p className="opacity-80 font-[Inter] font-medium text-lg">
-            {capitalize(author.role)}
-          </p>
+      {/* Mobile Layout - Stacked Bottom Content */}
+      <div className="absolute bottom-0 left-0 right-0 sm:hidden">
+        <div className="bg-gradient-to-t from-black/80 via-black/40 to-transparent px-4 py-4 space-y-3">
+          {/* Author Info - Mobile */}
+          <div className="flex items-center gap-2">
+            <Avatar className="w-8 h-8 border border-white flex-shrink-0">
+              <AvatarImage src={author.avatar ?? undefined} alt={author.name} />
+              <AvatarFallback className="text-xs">
+                {getInitials(author.name)}
+              </AvatarFallback>
+            </Avatar>
+            <div className="text-white min-w-0 flex-1">
+              <p className="font-[Cormorant SC] text-base font-semibold leading-tight truncate">
+                {author.name}
+              </p>
+              <p className="opacity-80 font-[Inter] font-medium text-sm truncate">
+                {capitalize(author.role)}
+              </p>
+            </div>
+          </div>
+
+          {/* Read Story Button - Mobile Full Width */}
+          <Link
+            href={link}
+            className="block w-full px-4 py-2.5 text-center text-sm font-medium text-white border border-white rounded-lg hover:bg-white hover:text-black transition-all duration-300"
+          >
+            Read Story →
+          </Link>
         </div>
       </div>
 
-      {/* Read Story Button */}
-      <Link
-        href={link}
-        className="absolute bottom-6 right-6 px-5 py-2.5 text-[20px] font-medium  text-white border border-white rounded-base  transition"
-      >
-        Read Story →
-      </Link>
+      {/* Desktop Layout - Corner Positioned Content */}
+      <div className="hidden sm:block">
+        {/* Author - Bottom Left */}
+        <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 flex items-center gap-2 sm:gap-3">
+          <Avatar className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 border border-white flex-shrink-0">
+            <AvatarImage src={author.avatar ?? undefined} alt={author.name} />
+            <AvatarFallback className="text-xs sm:text-sm">
+              {getInitials(author.name)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="text-white min-w-0">
+            <p className="font-[Cormorant SC] text-lg sm:text-xl md:text-2xl font-semibold leading-none truncate max-w-[200px] sm:max-w-[250px] md:max-w-[300px]">
+              {author.name}
+            </p>
+            <p className="opacity-80 font-[Inter] font-medium text-sm sm:text-base md:text-lg truncate">
+              {capitalize(author.role)}
+            </p>
+          </div>
+        </div>
+
+        {/* Read Story Button - Bottom Right */}
+        <Link
+          href={link}
+          className="absolute bottom-4 sm:bottom-6 right-4 sm:right-6 px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 text-sm sm:text-base md:text-lg lg:text-[20px] font-medium text-white border border-white rounded-lg hover:bg-white hover:text-black transition-all duration-300 whitespace-nowrap"
+        >
+          Read Story →
+        </Link>
+      </div>
     </div>
   );
 };

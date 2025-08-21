@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import Reviews from "./reviews";
+import RecommendedProducts from "../community/recommendedProducts";
 
 export interface Review {
   review: {
@@ -642,6 +643,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           </TabsContent>
         </Tabs>
       </div>
+      <RecommendedProducts />
     </div>
   );
 }

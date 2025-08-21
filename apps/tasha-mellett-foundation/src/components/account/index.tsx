@@ -35,7 +35,7 @@ export default function SettingsPage() {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
+  const [photoError, setPhotoError] = useState<string | null>(null);
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -305,21 +305,53 @@ export default function SettingsPage() {
                       id="photoUpload"
                       type="file"
                       name="photo"
-                      accept="image/*"
+                      accept="image/jpeg,image/jpg,image/png"
                       className="hidden"
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (!file) return;
+
+                        // Must be an image
+                        if (!file.type.startsWith("image/")) {
+                          setPhotoError(
+                            "Only image files are allowed (jpg, png, etc)."
+                          );
+                          toast.dismiss();
+                          toast.error(
+                            "Invalid file type! Please select an image."
+                          );
+                          setSelectedImage(null);
+                          setPreviewUrl(null);
+                          return;
+                        }
+
+                        // Block SVGs
+                        if (
+                          file.type === "image/svg+xml" ||
+                          file.name.endsWith(".svg")
+                        ) {
+                          setPhotoError(
+                            "SVG files are not allowed for security reasons."
+                          );
+                          toast.dismiss();
+                          toast.error("SVG files are not allowed.");
+                          setSelectedImage(null);
+                          setPreviewUrl(null);
+                          return;
+                        }
+
+                        setPhotoError(null); // clear error
                         setSelectedImage(file);
                         setPreviewUrl(URL.createObjectURL(file));
                       }}
                     />
+
                     {/* Buttons */}
                     {selectedImage ? (
                       <div className="flex gap-4">
                         <Button
                           onClick={handleSave}
-                          className="bg-[#C1E965] hover:[#C1E965] text-black"
+                          className="bg-[#EE9254] hover:[#EE9254] text-white"
                         >
                           {imageLoading ? (
                             <Loader2 className="animate-spin h-4 w-4 mr-2" />
@@ -339,13 +371,18 @@ export default function SettingsPage() {
                       </div>
                     ) : (
                       <Button
-                        className="bg-[#C1E965] text-black hover:bg-[#e97e3a]"
+                        className="bg-[#EE9254] text-white hover:bg-[#e97e3a]"
                         onClick={() =>
                           document.getElementById("photoUpload")?.click()
                         }
                       >
                         Upload
                       </Button>
+                    )}
+                    {photoError && (
+                      <div className="text-sm text-red-600 font-medium mt-2">
+                        {photoError}
+                      </div>
                     )}
                   </div>
                 </div>

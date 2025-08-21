@@ -128,37 +128,6 @@ export default function Navbar() {
                 )}
               </nav>
 
-              <div className="border-t pt-4">
-                {session?.user ? (
-                  <div className="space-y-2">
-                    <p className="text-sm text-gray-600">Signed in as</p>
-                    <p className="font-medium truncate">{userName}</p>
-                    <div className="flex flex-col gap-2 mt-3">
-                      <Link href="/account" className="text-sm hover:underline">
-                        Account Settings
-                      </Link>
-                      <button
-                        onClick={() => {
-                          document.cookie =
-                            "cartId=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-                          signOut();
-                        }}
-                        className="text-sm text-left hover:underline text-red-600"
-                      >
-                        Sign Out
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => signIn()}
-                    className="w-full bg-[#EE9254] text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-[#e5772e] transition-colors"
-                  >
-                    Sign In
-                  </button>
-                )}
-              </div>
-
               <a
                 href={foundationURL}
                 target="_blank"
@@ -227,14 +196,17 @@ export default function Navbar() {
           </div>
         </nav>
 
-        {/* Right: Search / User / Cart */}
-        <div className="flex items-center sm:gap-4 flex-shrink-0">
-          <NavbarSearchDrawer />
+        {/* Right: Search (Desktop only) / User / Cart */}
+        <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+          {/* Search - Only visible on desktop */}
+          <div className="hidden lg:block">
+            <NavbarSearchDrawer />
+          </div>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="link" className="p-1 sm:p-2">
-                <User className="h-5 w-5" />
+              <Button variant="link" className="p-2 sm:p-2">
+                <User className="h-5 w-5 sm:h-6 sm:w-6" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-48">
@@ -284,11 +256,11 @@ export default function Navbar() {
           {/* Wishlist Button */}
           <Link
             href="/account?tab=wishlist"
-            className="relative p-1 sm:p-2  transition-colors"
+            className="relative p-2 sm:p-2 transition-colors"
           >
-            <AiOutlineHeart className="h-5 w-5" />
+            <AiOutlineHeart className="h-5 w-5 sm:h-6 sm:w-6" />
             {count > 0 && (
-              <span className="absolute -top-1 -right-2.5 h-5 w-5 flex items-center justify-center text-xs font-bold text-black border border-black rounded-full shadow-sm">
+              <span className="absolute -top-0.5 -right-0.5 h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center text-xs font-bold text-black border border-black rounded-full shadow-sm bg-white">
                 {count}
               </span>
             )}
@@ -297,12 +269,12 @@ export default function Navbar() {
           {/* Cart Button */}
           <Button
             variant="link"
-            className="relative p-1 sm:p-2"
+            className="relative p-2 sm:p-2"
             onClick={toggleCart}
           >
-            <MdOutlineShoppingBag className="h-5 w-5" />
+            <MdOutlineShoppingBag className="h-5 w-5 sm:h-6 sm:w-6" />
             {itemCount > 0 && (
-              <span className="absolute -top-1 -right-1.5 h-5 w-5 flex items-center justify-center text-xs font-bold text-black border border-black rounded-full shadow-sm">
+              <span className="absolute -top-0.5 -right-0.5 h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center text-xs font-bold text-black border border-black rounded-full shadow-sm bg-white">
                 {itemCount}
               </span>
             )}

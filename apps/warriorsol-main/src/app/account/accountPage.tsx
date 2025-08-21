@@ -21,6 +21,7 @@ export default function AccountPage() {
   const [step, setStep] = useState<1 | 2>(1);
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [photoError, setPhotoError] = useState<string | null>(null);
 
   const initialTab =
     searchParams.get("tab") === "wishlist" ? "wishlist" : "personal";
@@ -234,11 +235,42 @@ export default function AccountPage() {
                     id="photoUpload"
                     type="file"
                     name="photo"
-                    accept="image/*"
+                    accept="image/jpeg,image/jpg,image/png"
                     className="hidden"
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (!file) return;
+
+                      // Must be an image
+                      if (!file.type.startsWith("image/")) {
+                        setPhotoError(
+                          "Only image files are allowed (jpg, png, etc)."
+                        );
+                        toast.dismiss();
+                        toast.error(
+                          "Invalid file type! Please select an image."
+                        );
+                        setSelectedImage(null);
+                        setPreviewUrl(null);
+                        return;
+                      }
+
+                      // Block SVGs
+                      if (
+                        file.type === "image/svg+xml" ||
+                        file.name.endsWith(".svg")
+                      ) {
+                        setPhotoError(
+                          "SVG files are not allowed for security reasons."
+                        );
+                        toast.dismiss();
+                        toast.error("SVG files are not allowed.");
+                        setSelectedImage(null);
+                        setPreviewUrl(null);
+                        return;
+                      }
+
+                      setPhotoError(null); // clear error
                       setSelectedImage(file);
                       setPreviewUrl(URL.createObjectURL(file));
                     }}
@@ -276,6 +308,11 @@ export default function AccountPage() {
                     >
                       Upload
                     </Button>
+                  )}
+                  {photoError && (
+                    <div className="text-sm text-red-600 font-medium mt-2">
+                      {photoError}
+                    </div>
                   )}
                 </div>
               </div>

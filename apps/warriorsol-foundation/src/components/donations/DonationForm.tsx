@@ -85,8 +85,9 @@ export default function DonationForm() {
 
   return (
     <>
+      {/* Header Section */}
       <div className="text-center mb-8 mt-10 md:mb-16 px-4">
-        <h2 className='text-[28px] sm:text-[36px] md:text-[52px] lg:text-[62px] leading-tight font-["Cormorant_SC"] font-normal text-[#1F1F1F] mb-3'>
+        <h2 className='text-[26px] sm:text-[36px] md:text-[48px] lg:text-[62px] leading-tight font-["Cormorant_SC"] font-normal text-[#1F1F1F] mb-3'>
           Make a Difference Today
         </h2>
         <p className='text-[15px] sm:text-[17px] md:text-[20px] font-light font-["Inter"] text-[#1F1F1F]/70 mx-auto max-w-xl'>
@@ -95,36 +96,38 @@ export default function DonationForm() {
         </p>
       </div>
 
-      <div className="flex flex-col md:flex-row w-full min-h-full bg-neutral-900">
+      {/* Main Layout */}
+      <div className="flex flex-col lg:flex-row w-full min-h-full bg-neutral-900">
         {/* Image */}
-        <div className="w-full md:w-1/2 h-[250px] md:h-auto relative">
+        <div className="w-full lg:w-1/2 h-[220px] sm:h-[300px] md:h-[400px] lg:h-auto relative">
           <Image
             src={DonationFormImage}
             alt="Family Image"
             fill
             className="object-cover"
+            priority
           />
         </div>
 
         {/* Form Section */}
-        <div className="w-full md:w-1/2 bg-[#FFEBCC] flex p-6 sm:p-8 md:p-12">
+        <div className="w-full lg:w-1/2 bg-[#FFEBCC] flex p-4 sm:p-6 md:p-10">
           <Card className="w-full shadow-none border-none bg-[#FFF9F5]">
-            <CardContent className="flex flex-col justify-between h-full space-y-8 p-6 sm:p-8">
-              <h2 className="text-3xl sm:text-[52px] font-light font-['Cormorant_SC'] text-center flex gap-2 justify-start items-center">
-                <FaRegHeart className="w-10 h-10 mt-1 text-[#EE9254]" />
+            <CardContent className="flex flex-col justify-between h-full space-y-8 p-4 sm:p-6 md:p-10">
+              <h2 className="text-2xl sm:text-3xl md:text-[42px] font-light font-['Cormorant_SC'] text-center flex gap-2 justify-center lg:justify-start items-center">
+                <FaRegHeart className="w-8 h-8 sm:w-10 sm:h-10 mt-1 text-[#EE9254]" />
                 Donation Form
               </h2>
 
               <div className="space-y-6 flex-grow">
                 {/* Donation Type */}
                 <div>
-                  <Label className="text-lg sm:text-xl mb-4 block">
+                  <Label className="text-base sm:text-lg md:text-xl mb-4 block">
                     Donation Type
                   </Label>
                   <RadioGroup
                     value={donationType}
                     onValueChange={setDonationType}
-                    className="flex flex-col gap-4"
+                    className="flex flex-col gap-3"
                   >
                     {[
                       { id: "one-time", label: "One-Time Donation" },
@@ -133,22 +136,17 @@ export default function DonationForm() {
                       <div
                         key={id}
                         onClick={() => setDonationType(id)}
-                        className={`flex items-center gap-2 p-3 border rounded cursor-pointer ${
+                        className={`flex items-center gap-2 p-3 border rounded cursor-pointer transition ${
                           donationType === id
                             ? "bg-[#EE9254] text-white border-none"
                             : "bg-white border-gray-200"
                         }`}
                       >
-                        <RadioGroupItem
-                          value={id}
-                          id={id}
-                          className={
-                            donationType === id
-                              ? "text-white"
-                              : "text-[#EE9254]"
-                          }
-                        />
-                        <Label htmlFor={id} className="cursor-pointer text-lg">
+                        <RadioGroupItem value={id} id={id} />
+                        <Label
+                          htmlFor={id}
+                          className="cursor-pointer text-base sm:text-lg"
+                        >
                           {label}
                         </Label>
                       </div>
@@ -158,7 +156,7 @@ export default function DonationForm() {
 
                 {/* Donation Amount */}
                 <div>
-                  <Label className="text-lg sm:text-xl mb-4 block">
+                  <Label className="text-base sm:text-lg md:text-xl mb-4 block">
                     Donation Amount
                   </Label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -166,25 +164,28 @@ export default function DonationForm() {
                       <Button
                         key={val}
                         variant="outline"
-                        className={`rounded text-lg font-[Inter] h-10 sm:h-12 ${
+                        className={`rounded text-base sm:text-lg font-[Inter] h-10 sm:h-12 ${
                           amount === val
                             ? "bg-[#EE9254] text-white border-none"
                             : "bg-white border-gray-200"
                         }`}
-                        onClick={() => setAmount(val)}
+                        onClick={() => {
+                          setAmount(val);
+                          setCustomAmount("");
+                        }}
                       >
                         ${val}
                       </Button>
                     ))}
                   </div>
                   {donationType !== "monthly" && (
-                    <div className="mt-2">
+                    <div className="mt-3">
                       <Input
                         placeholder="Custom ($)"
                         type="number"
                         value={customAmount}
                         onChange={(e) => setCustomAmount(e.target.value)}
-                        className="rounded bg-white border-gray-200"
+                        className="rounded bg-white border-gray-200 h-10 sm:h-12"
                       />
                     </div>
                   )}
@@ -196,14 +197,14 @@ export default function DonationForm() {
                 </div>
 
                 {/* Name & Email */}
-                <div className="space-y-5">
+                <div className="space-y-4">
                   <div>
-                    <Label className="text-lg sm:text-xl mb-2 block">
+                    <Label className="text-base sm:text-lg md:text-xl mb-2 block">
                       Full Name
                     </Label>
                     <Input
                       placeholder="Enter your full name"
-                      className="rounded bg-white border-gray-200"
+                      className="rounded bg-white border-gray-200 h-10 sm:h-12"
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
@@ -215,12 +216,12 @@ export default function DonationForm() {
                     )}
                   </div>
                   <div>
-                    <Label className="text-lg sm:text-xl mb-2 block">
+                    <Label className="text-base sm:text-lg md:text-xl mb-2 block">
                       Email Address
                     </Label>
                     <Input
                       placeholder="Enter your email address"
-                      className="rounded bg-white border-gray-200"
+                      className="rounded bg-white border-gray-200 h-10 sm:h-12"
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -234,12 +235,13 @@ export default function DonationForm() {
                 </div>
               </div>
 
+              {/* Submit Button */}
               <Button
-                className="w-full bg-[#EE9254] hover:bg-[#e76b1f] text-xl font-[Inter] font-normal rounded text-white h-12"
+                className="w-full bg-[#EE9254] hover:bg-[#e76b1f] text-lg sm:text-xl font-[Inter] font-normal rounded text-white h-12 sm:h-14"
                 onClick={handleDonate}
               >
                 Donate Now
-                <BiDonateHeart className="h-6 w-6" />
+                <BiDonateHeart className="h-5 w-5 sm:h-6 sm:w-6 ml-2" />
               </Button>
             </CardContent>
           </Card>

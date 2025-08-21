@@ -40,15 +40,16 @@ export default function StoriesOfHope() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [cardsPerView, setCardsPerView] = useState(1);
 
+  // 🖥 Handle responsive card count
   useEffect(() => {
     const updateCardsPerView = () => {
       const width = window.innerWidth;
-      if (width >= 1024) {
-        setCardsPerView(3);
-      } else if (width >= 640) {
-        setCardsPerView(2);
+      if (width >= 1280) {
+        setCardsPerView(3); // desktop xl
+      } else if (width >= 768) {
+        setCardsPerView(2); // tablet
       } else {
-        setCardsPerView(1);
+        setCardsPerView(1); // mobile
       }
     };
 
@@ -57,6 +58,7 @@ export default function StoriesOfHope() {
     return () => window.removeEventListener("resize", updateCardsPerView);
   }, []);
 
+  // create long list for infinite effect
   const infiniteReviews = Array.from(
     { length: reviews.length * 50 },
     (_, index) => ({
@@ -71,34 +73,30 @@ export default function StoriesOfHope() {
     setCurrentIndex(initialIndex);
   }, [initialIndex]);
 
-  const nextSlide = () => {
-    setCurrentIndex((prevIndex) => prevIndex + 1);
-  };
-
-  const prevSlide = () => {
-    setCurrentIndex((prevIndex) => prevIndex - 1);
-  };
+  const nextSlide = () => setCurrentIndex((prevIndex) => prevIndex + 1);
+  const prevSlide = () => setCurrentIndex((prevIndex) => prevIndex - 1);
 
   return (
-    <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-12">
-      <div className="mx-auto">
+    <section className="w-full px-4 sm:px-6 lg:px-12 py-12">
+      <div className="mx-auto max-w-7xl">
+        {/* Header + Navigation */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
-          <div>
-            <h2 className="text-4xl sm:text-[62px] font-['Cormorant_SC'] font-normal leading-tight">
+          <div className="flex-1">
+            <h2 className="text-3xl sm:text-4xl lg:text-[62px] font-['Cormorant_SC'] leading-tight">
               Stories Of Hope
             </h2>
-            <p className="text-xl whitespace-nowrap font-[Inter] text-[#1F1F1FB2] mt-2 max-w-md">
+            <p className="text-base sm:text-lg lg:text-xl font-[Inter] text-[#1F1F1FB2] mt-2 max-w-lg">
               Hear From Families Whose Lives Have Been Touched By Our Community
               Of Warriors
             </p>
           </div>
 
           {/* Navigation Buttons */}
-          <div className="flex gap-3">
+          <div className="flex gap-3 shrink-0">
             <Button
               onClick={prevSlide}
               variant="outline"
-              className="bg-white p-2 rounded-base shadow hover:bg-gray-50 transition border border-black"
+              className="bg-white p-2 rounded-full shadow hover:bg-gray-50 transition border border-black"
               aria-label="Previous review"
             >
               <IoIosArrowBack className="w-6 h-6 text-gray-600" />
@@ -106,7 +104,7 @@ export default function StoriesOfHope() {
             <Button
               onClick={nextSlide}
               variant="outline"
-              className="bg-white p-2 rounded-base shadow hover:bg-gray-50 transition border border-black"
+              className="bg-white p-2 rounded-full shadow hover:bg-gray-50 transition border border-black"
               aria-label="Next review"
             >
               <IoIosArrowForward className="w-6 h-6 text-gray-600" />
@@ -122,9 +120,9 @@ export default function StoriesOfHope() {
               transform: `translateX(-${(100 / cardsPerView) * currentIndex}%)`,
             }}
           >
-            {infiniteReviews.map((review, index) => (
+            {infiniteReviews.map((review) => (
               <div
-                key={`${review.id}-${index}`}
+                key={review.id}
                 className="flex-shrink-0"
                 style={{ width: `${100 / cardsPerView}%` }}
               >
@@ -134,7 +132,7 @@ export default function StoriesOfHope() {
           </div>
         </div>
 
-        {/* Progress Indicator */}
+        {/* Progress Dots */}
         <div className="flex justify-center mt-6">
           <div className="flex gap-2">
             {reviews.map((_, index) => (
