@@ -44,6 +44,8 @@ export default function ApplyForSupport() {
     requestedAmount: "",
     situation: "",
   });
+
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(false);
 
   const handleChange = (
@@ -56,13 +58,68 @@ export default function ApplyForSupport() {
     setForm({ ...form, supportType: value });
   };
 
+  const validateForm = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    if (!form.familyName.trim()) {
+      newErrors.familyName = "Family name is required.";
+    } else if (form.familyName.length < 2) {
+      newErrors.familyName = "Family name must be at least 2 characters.";
+    }
+
+    if (!form.contactEmail.trim()) {
+      newErrors.contactEmail = "Email is required.";
+    } else if (
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(form.contactEmail)
+    ) {
+      newErrors.contactEmail = "Enter a valid email address.";
+    }
+
+    if (!form.contactPhone.trim()) {
+      newErrors.contactPhone = "Phone number is required.";
+    } else if (form.contactPhone.length < 10) {
+      newErrors.contactPhone = "Phone number must be at least 10 digits.";
+    }
+
+    if (!form.familySize) {
+      newErrors.familySize = "Family size is required.";
+    } else if (parseInt(form.familySize) <= 0) {
+      newErrors.familySize = "Family size must be greater than 0.";
+    }
+
+    if (!form.supportType) {
+      newErrors.supportType = "Please select a support type.";
+    }
+
+    if (!form.requestedAmount) {
+      newErrors.requestedAmount = "Requested amount is required.";
+    } else if (parseInt(form.requestedAmount) <= 0) {
+      newErrors.requestedAmount = "Amount must be greater than 0.";
+    }
+
+    if (!form.situation.trim()) {
+      newErrors.situation = "Please describe your situation.";
+    } else if (form.situation.length < 20) {
+      newErrors.situation = "Description must be at least 20 characters.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!isLoggedIn) {
       toast.dismiss();
       toast.error("You must be logged in to submit the form.");
       return;
     }
+
+    if (!validateForm()) {
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await fetch(
@@ -76,16 +133,12 @@ export default function ApplyForSupport() {
             }),
           },
           body: JSON.stringify({
-            familyName: form.familyName,
+            ...form,
             contactEmail: form.contactEmail || session?.user?.email || "",
-            contactPhone: form.contactPhone,
-            familySize: form.familySize,
-            supportType: form.supportType,
-            requestedAmount: form.requestedAmount,
-            situation: form.situation,
           }),
         }
       );
+
       if (response.ok) {
         toast.dismiss();
         toast.success("Application submitted successfully");
@@ -98,6 +151,7 @@ export default function ApplyForSupport() {
           requestedAmount: "",
           situation: "",
         });
+        setErrors({});
       } else {
         toast.dismiss();
         toast.error("Error submitting application");
@@ -110,187 +164,237 @@ export default function ApplyForSupport() {
     }
   };
 
+  const inputClass = (field: string) =>
+    `w-full ${errors[field] ? "border-red-500" : "border-gray-300"} border rounded-md !h-12 text-lg`;
+
   return (
-    <TooltipProvider>
-      <Card className="w-full max-w-5xl mx-auto !border-none">
-        <CardHeader className="text-center">
-          <CardTitle className="text-[62px] font-normal font-['Cormorant_SC']">
-            Apply For Support
-          </CardTitle>
-          <CardDescription className="text-lg text-[#1F1F1FB2] font-['Inter']">
-            We&apos;re Here To Help During Your Family&apos;s Most Challenging
-            Times. Apply for Donations, Gift Cards, or Scholarships through our
-            Grant Program.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form
-            className="space-y-6 max-w-3xl items-center justify-center mx-auto"
-            onSubmit={handleSubmit}
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-xl" htmlFor="familyName">
-                  Family Name
-                </Label>
-                <Input
-                  id="familyName"
-                  placeholder="Enter your family name"
-                  value={form.familyName}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-xl" htmlFor="contactEmail">
-                  Contact Email
-                </Label>
-                <Input
-                  id="contactEmail"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={session?.user?.email || form.contactEmail}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-xl" htmlFor="contactPhone">
-                  Contact Phone
-                </Label>
-                <PhoneInput
-                  country={"pk"}
-                  value={form.contactPhone}
-                  onChange={(phone) =>
-                    setForm((prev) => ({ ...prev, contactPhone: phone }))
-                  }
-                  inputProps={{
-                    name: "contactPhone",
-                    required: true,
-                    id: "contactPhone",
-                    className:
-                      "w-full py-2 px-12 border border-gray-300 rounded-md !h-12 text-lg",
-                  }}
-                  containerStyle={{ width: "100%" }}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-xl" htmlFor="familySize">
-                  Family Size
-                </Label>
-                <Input
-                  id="familySize"
-                  type="number"
-                  min={1}
-                  placeholder="Enter family size"
-                  value={form.familySize}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-xl" htmlFor="supportType">
-                  Type of Support Needed
-                </Label>
-                <Select
-                  value={form.supportType}
-                  onValueChange={handleSupportTypeChange}
-                  required
-                >
-                  <SelectTrigger
-                    id="supportType"
-                    className="mt-2 w-full border text-lg border-gray-300 !h-12 cursor-pointer"
-                  >
-                    <SelectValue placeholder="Select support type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="donation">Donation</SelectItem>
-                    <SelectItem value="gift_card">Gift Card</SelectItem>
-                    <SelectItem value="scholarship">Scholarship</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label className="text-xl" htmlFor="requestedAmount">
-                  Requested Amount
-                </Label>
-                <Input
-                  id="requestedAmount"
-                  type="number"
-                  min={1}
-                  placeholder="Enter amount needed"
-                  value={form.requestedAmount}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-xl" htmlFor="situation">
-                Describe Your Situation
-              </Label>
-              <Textarea
-                id="situation"
-                placeholder="Please describe your current situation and why you need support"
-                className="border border-gray-300"
-                value={form.situation}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="bg-[#1877F20D]/10 border border-[#1877F2]/60 p-4 rounded-lg space-y-2">
-              <h4 className="font-medium text-xl font-['Inter']">
-                What Happens Next?
-              </h4>
-              <ul className="text-sm font-['Inter'] space-y-1">
-                <li>
-                  • Our Team Will Review Your Application Within 3-5 Business
-                  Days
-                </li>
-                <li>
-                  • We May Contact You For Additional Information Or
-                  Clarification
-                </li>
-                <li>
-                  • You&apos;ll Receive Notification Of Our Decision Via Email
-                </li>
-                <li>
-                  • If Approved, We&apos;ll Work With You To Provide The Needed
-                  Support
-                </li>
-              </ul>
-            </div>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div>
-                  <Button
-                    size="lg"
-                    className="w-full text-xl bg-[#EE9254] hover:bg-[#EE9254]/90"
-                    type="submit"
-                    disabled={loading || !isLoggedIn}
-                  >
-                    {loading ? (
-                      <Loader2 className="animate-spin h-5 w-5" />
-                    ) : isLoggedIn ? (
-                      "Submit Application"
-                    ) : (
-                      "Please log in to apply"
-                    )}
-                  </Button>
+    <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
+      <TooltipProvider>
+        <Card className="w-full max-w-5xl mx-auto !border-none">
+          <CardHeader className="text-center">
+            <CardTitle className="text-[62px] text-[#1F1F1F] font-normal font-['Cormorant_SC']">
+              Apply For Support
+            </CardTitle>
+            <CardDescription className="text-lg text-[#1F1F1FB2] font-['Inter']">
+              We&apos;re Here To Help During Your Family&apos;s Most Challenging
+              Times. Apply for Donations, Gift Cards, or Scholarships through
+              our Grant Program.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form
+              className="space-y-6 max-w-3xl items-center justify-center mx-auto"
+              onSubmit={handleSubmit}
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Family Name */}
+                <div className="space-y-2">
+                  <Label className="text-xl" htmlFor="familyName">
+                    Family Name
+                    <span className="text-red-500 ml-[-5px] ">*</span>
+                  </Label>
+                  <Input
+                    id="familyName"
+                    placeholder="Enter your family name"
+                    value={form.familyName}
+                    onChange={handleChange}
+                    className={inputClass("familyName")}
+                  />
+                  {errors.familyName && (
+                    <p className="text-red-500 text-sm">{errors.familyName}</p>
+                  )}
                 </div>
-              </TooltipTrigger>
-              {!isLoggedIn && (
-                <TooltipContent className="bg-black text-white">
-                  You must be logged in to submit this form.
-                </TooltipContent>
-              )}
-            </Tooltip>
-          </form>
-        </CardContent>
-      </Card>
-    </TooltipProvider>
+
+                {/* Contact Email */}
+                <div className="space-y-2">
+                  <Label className="text-xl" htmlFor="contactEmail">
+                    Contact Email
+                    <span className="text-red-500 ml-[-5px] ">*</span>
+                  </Label>
+                  <Input
+                    id="contactEmail"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={form.contactEmail || session?.user?.email || ""}
+                    onChange={handleChange}
+                    className={inputClass("contactEmail")}
+                  />
+                  {errors.contactEmail && (
+                    <p className="text-red-500 text-sm">
+                      {errors.contactEmail}
+                    </p>
+                  )}
+                </div>
+
+                {/* Contact Phone */}
+                <div className="space-y-2">
+                  <Label className="text-xl" htmlFor="contactPhone">
+                    Contact Phone
+                    <span className="text-red-500 ml-[-5px] ">*</span>
+                  </Label>
+                  <PhoneInput
+                    country={"pk"}
+                    value={form.contactPhone}
+                    onChange={(phone) =>
+                      setForm((prev) => ({ ...prev, contactPhone: phone }))
+                    }
+                    inputProps={{
+                      name: "contactPhone",
+                      id: "contactPhone",
+                    }}
+                    inputClass={inputClass("contactPhone")}
+                    containerStyle={{ width: "100%" }}
+                  />
+                  {errors.contactPhone && (
+                    <p className="text-red-500 text-sm">
+                      {errors.contactPhone}
+                    </p>
+                  )}
+                </div>
+
+                {/* Family Size */}
+                <div className="space-y-2">
+                  <Label className="text-xl" htmlFor="familySize">
+                    Family Size
+                    <span className="text-red-500 ml-[-5px] ">*</span>
+                  </Label>
+                  <Input
+                    id="familySize"
+                    type="number"
+                    min={1}
+                    placeholder="Enter family size"
+                    value={form.familySize}
+                    onChange={handleChange}
+                    className={inputClass("familySize")}
+                  />
+                  {errors.familySize && (
+                    <p className="text-red-500 text-sm">{errors.familySize}</p>
+                  )}
+                </div>
+
+                {/* Support Type */}
+                <div className="space-y-2">
+                  <Label className="text-xl" htmlFor="supportType">
+                    Type of Support Needed
+                    <span className="text-red-500 ml-[-5px] ">*</span>
+                  </Label>
+                  <Select
+                    value={form.supportType}
+                    onValueChange={handleSupportTypeChange}
+                  >
+                    <SelectTrigger
+                      id="supportType"
+                      className={`${errors.supportType ? "border-red-500" : "border-gray-300"} mt-2 w-full border text-lg !h-12 cursor-pointer`}
+                    >
+                      <SelectValue placeholder="Select support type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="donation">Donation</SelectItem>
+                      <SelectItem value="gift_card">Gift Card</SelectItem>
+                      <SelectItem value="scholarship">Scholarship</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {errors.supportType && (
+                    <p className="text-red-500 text-sm">{errors.supportType}</p>
+                  )}
+                </div>
+
+                {/* Requested Amount */}
+                <div className="space-y-2">
+                  <Label className="text-xl" htmlFor="requestedAmount">
+                    Requested Amount ($)
+                    <span className="text-red-500 ml-[-5px] ">*</span>
+                  </Label>
+                  <Input
+                    id="requestedAmount"
+                    type="number"
+                    min={1}
+                    placeholder="Enter amount needed"
+                    value={form.requestedAmount}
+                    onChange={handleChange}
+                    className={inputClass("requestedAmount")}
+                  />
+                  {errors.requestedAmount && (
+                    <p className="text-red-500 text-sm">
+                      {errors.requestedAmount}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Situation */}
+              <div className="space-y-2">
+                <Label className="text-xl" htmlFor="situation">
+                  Describe Your Situation
+                </Label>
+                <Textarea
+                  id="situation"
+                  placeholder="Please describe your current situation and why you need support"
+                  className={`resize-none overflow-y-auto h-32 ${
+                    errors.situation ? "border-red-500" : "border-gray-300"
+                  } border`}
+                  value={form.situation}
+                  onChange={handleChange}
+                />
+                {errors.situation && (
+                  <p className="text-red-500 text-sm">{errors.situation}</p>
+                )}
+              </div>
+
+              {/* Info */}
+              <div className="bg-[#1877F20D]/10 border border-[#1877F2]/60 p-4 rounded-lg space-y-2">
+                <h4 className="font-medium text-xl font-['Inter']">
+                  What Happens Next?
+                </h4>
+                <ul className="text-sm font-['Inter'] space-y-1">
+                  <li>
+                    • Our Team Will Review Your Application Within 3-5 Business
+                    Days
+                  </li>
+                  <li>
+                    • We May Contact You For Additional Information Or
+                    Clarification
+                  </li>
+                  <li>
+                    • You&apos;ll Receive Notification Of Our Decision Via Email
+                  </li>
+                  <li>
+                    • If Approved, We&apos;ll Work With You To Provide The
+                    Needed Support
+                  </li>
+                </ul>
+              </div>
+
+              {/* Submit */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div>
+                    <Button
+                      size="lg"
+                      className="w-full text-[20px] font-[Inter] text-[#FFFFFF] bg-[#EE9254] hover:bg-[#EE9254]/90"
+                      type="submit"
+                      disabled={loading || !isLoggedIn}
+                    >
+                      {loading ? (
+                        <Loader2 className="animate-spin h-5 w-5" />
+                      ) : isLoggedIn ? (
+                        "Submit Application"
+                      ) : (
+                        "Please log in to apply"
+                      )}
+                    </Button>
+                  </div>
+                </TooltipTrigger>
+                {!isLoggedIn && (
+                  <TooltipContent className="bg-black text-white">
+                    You must be logged in to submit this form.
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </form>
+          </CardContent>
+        </Card>
+      </TooltipProvider>
+    </section>
   );
 }

@@ -26,14 +26,14 @@ export default function ReviewCard({
 
       {/* Quote */}
       <blockquote className="mb-4 flex-grow">
-        <p className="text-2xl font-semibold font-['Cormorant_SC']  line-clamp-6">
+        <p className="text-2xl font-semibold font-['Cormorant_SC'] text-[#1F1F1F]  line-clamp-6">
           &quot;{quote}&quot;
         </p>
       </blockquote>
 
       {/* Author Info */}
       <div className="flex items-center gap-4">
-        <div className="w-12 h-12 relative rounded-full overflow-hidden">
+        <div className="w-[51px] h-[51px] relative rounded-full overflow-hidden">
           <Image
             src={authorImage}
             alt={authorName}
@@ -42,8 +42,12 @@ export default function ReviewCard({
           />
         </div>
         <div>
-          <h4 className="font-medium text-lg">{authorName}</h4>
-          <p className="text-[#1F1F1F] text-base font-[Inter]">{authorRole}</p>
+          <h4 className="font-medium text-[#1F1F1F] text-[20px]">
+            {authorName}
+          </h4>
+          <p className="text-[#1F1F1F] text-[16px] font-[Inter]">
+            {authorRole}
+          </p>
         </div>
       </div>
     </div>

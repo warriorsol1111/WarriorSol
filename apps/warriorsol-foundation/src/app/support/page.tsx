@@ -9,7 +9,7 @@ export const metadata = {
   title: "Support | WarriorSol Foundation",
   description:
     "At WarriorSol Foundation, we provide support to families facing unexpected challenges. Our mission is to offer financial assistance and resources to help you navigate through difficult times.",
-};  
+};
 
 export default function SupportPage() {
   return (

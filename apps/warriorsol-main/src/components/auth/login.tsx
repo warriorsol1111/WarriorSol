@@ -163,7 +163,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col md:flex-row">
+    <div className="flex min-h-screen flex-col-reverse md:flex-row">
       {/* Left Section */}
       <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-6 md:p-12 md:px-24">
         <form

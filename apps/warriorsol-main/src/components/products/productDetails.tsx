@@ -325,12 +325,13 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
       `${pathname}${params.toString() ? "?" + params.toString() : ""}`
     );
   };
-  const handleBuyProduct = async () => {
+
+  const handleGuestBuyProduct = async () => {
     if (!selectedVariant) return;
 
     setIsLoading(true);
     try {
-      const response = await fetch("/api/shopify/createCheckout", {
+      const response = await fetch("/api/shopify/createGuestCheckout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -338,7 +339,6 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
         body: JSON.stringify({
           variantId: selectedVariant.id,
           quantity: quantity,
-          userId: session?.user?.id,
         }),
       });
 
@@ -350,8 +350,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
       window.location.href = data.checkoutUrl;
     } catch (error) {
       console.error("Error creating checkout:", error);
-      toast.dismiss();
-      toast.error("Failed to create checkout. Please try again.");
+      alert("Failed to create checkout. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -564,7 +563,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 <Button
                   className="flex items-center w-full cursor-pointer justify-center gap-2 py-3 px-6 bg-[#EE9254] text-white rounded-lg text-base font-medium hover:bg-orange-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={!selectedVariant?.availableForSale || isLoading}
-                  onClick={handleBuyProduct}
+                  onClick={handleGuestBuyProduct}
                   size="lg"
                 >
                   <AiOutlineShoppingCart size={20} />

@@ -10,7 +10,7 @@ import Footer from "@/components/shared/footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Wishlist from "@/components/account/wishlist";
 import toast from "react-hot-toast";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -319,14 +319,31 @@ export default function AccountPage() {
 
               {/* Change Password Section */}
               <div className="space-y-6">
-                <h2 className="text-2xl font-bold text-gray-800">
-                  Change Password
-                </h2>
+                {/* Top Header with Back */}
+                <div className="flex items-center gap-3">
+                  {step === 2 && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => {
+                        setStep(1);
+                        setNewPassword("");
+                        setConfirmPassword("");
+                      }}
+                      className="p-0 h-auto text-gray-600 hover:text-gray-900"
+                    >
+                      <ArrowLeft className="h-5 w-5" />
+                    </Button>
+                  )}
+                  <h2 className="text-2xl font-bold text-gray-800">
+                    Change Password
+                  </h2>
+                </div>
 
                 {session?.user?.loginMethod === "google" ? (
                   <div className="bg-orange-50 border border-orange-300 text-orange-900 p-4 rounded-md text-sm sm:text-base">
                     You&apos;re signed in with Google. Password changes
-                    are&apos;nt available for accounts using Google login.
+                    aren&apos;t available for accounts using Google login.
                   </div>
                 ) : (
                   <form
@@ -335,6 +352,7 @@ export default function AccountPage() {
                     }
                     className="space-y-5"
                   >
+                    {/* Step 1: Verify Current Password */}
                     {step === 1 && (
                       <div>
                         <Label htmlFor="oldPassword" className="text-base">
@@ -370,6 +388,7 @@ export default function AccountPage() {
                       </div>
                     )}
 
+                    {/* Step 2: Enter New Password */}
                     {step === 2 && (
                       <>
                         <div>
@@ -443,20 +462,23 @@ export default function AccountPage() {
                       </>
                     )}
 
-                    <Button
-                      type="submit"
-                      disabled={loading}
-                      size={"default"}
-                      className="w-full text-xl font-[Inter] bg-[#EE9254] text-white hover:bg-[#e97e3a] transition"
-                    >
-                      {loading ? (
-                        <Loader2 className="animate-spin h-5 w-5 mr-2" />
-                      ) : step === 1 ? (
-                        "Verify Current Password"
-                      ) : (
-                        "Change Password"
-                      )}
-                    </Button>
+                    {/* Step Controls */}
+                    <div className="flex justify-end">
+                      <Button
+                        type="submit"
+                        disabled={loading}
+                        size="default"
+                        className="w-full text-xl font-[Inter] bg-[#EE9254] text-white hover:bg-[#e97e3a] transition"
+                      >
+                        {loading ? (
+                          <Loader2 className="animate-spin h-5 w-5 mr-2" />
+                        ) : step === 1 ? (
+                          "Verify Current Password"
+                        ) : (
+                          "Change Password"
+                        )}
+                      </Button>
+                    </div>
                   </form>
                 )}
               </div>

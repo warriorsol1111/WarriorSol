@@ -144,29 +144,21 @@ export async function POST(req: NextRequest) {
       subscription?: string;
     };
     const subscriptionId = invoice.subscription;
+    const receiptUrl = extractBestReceipt(invoice);
+    const amount = invoice.amount_paid;
+    const currency = invoice.currency;
+    const foundation = invoice.metadata?.foundation;
 
-    const sessions = await stripe.checkout.sessions.list({
-      subscription: subscriptionId as string,
-      limit: 1,
-    });
-
-    const session = sessions.data[0];
-    const foundation = session?.metadata?.foundation;
-
+    const customerEmail =
+      invoice.customer_email || (invoice.customer as string);
     let endpoint = "";
     if (foundation === "tasha-mellett-foundation") {
       endpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL}/tasha-foundation/donations`;
     } else if (foundation === "warriorsol-foundation") {
       endpoint = `${process.env.NEXT_PUBLIC_BACKEND_URL}/donations`;
     }
-
-    const receiptUrl = extractBestReceipt(invoice);
-    const amount = invoice.amount_paid;
-    const currency = invoice.currency;
-    const customerEmail =
-      invoice.customer_email || (invoice.customer as string);
-
-    if (endpoint) {
+    try {
+      // Create a new donation record for this recurring payment
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -177,9 +169,9 @@ export async function POST(req: NextRequest) {
           amount,
           currency,
           email: customerEmail,
-          donationType: "recurring",
-          status: "succeeded",
-          foundation,
+          name: invoice.customer_name || "Recurring Donor",
+          donationType: "monthly",
+          status: "paid",
         }),
       });
 
@@ -189,8 +181,10 @@ export async function POST(req: NextRequest) {
           await res.text()
         );
       } else {
-        console.log(`✅ Recurring donation saved to DB for ${foundation}`);
+        console.log("✅ Recurring donation saved to DB");
       }
+    } catch (err) {
+      console.error("💥 Error saving recurring donation:", err);
     }
   }
 

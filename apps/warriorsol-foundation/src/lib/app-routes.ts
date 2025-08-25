@@ -6,4 +6,5 @@ export const PUBLIC_ROUTES = [
   "/reset-password",
   "/verify-email",
   "/",
+  "/home",
 ];

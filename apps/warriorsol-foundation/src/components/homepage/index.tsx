@@ -15,8 +15,8 @@ import { useRouter } from "next/navigation";
 export default function Homepage() {
   const router = useRouter();
   return (
-    <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
-      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6 mb-8 sm:mb-12">
+    <section>
+      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6 mb-8 sm:mb-12 w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
         <div>
           <h2 className="text-4xl sm:text-5xl text-center md:text-start lg:text-[62px] leading-tight lg:leading-[62px] font-['Cormorant_SC'] font-normal text-[#1F1F1F] capitalize">
             WarriorSol Foundation

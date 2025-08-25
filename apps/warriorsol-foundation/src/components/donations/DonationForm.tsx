@@ -34,8 +34,15 @@ export default function DonationForm() {
     let valid = true;
     const newErrors = { name: "", email: "", amount: "" };
 
-    if (!name.trim()) {
+    const trimmedName = name.trim();
+    if (!trimmedName) {
       newErrors.name = "Full name is required.";
+      valid = false;
+    } else if (trimmedName.length < 3) {
+      newErrors.name = "Name must be at least 3 characters long.";
+      valid = false;
+    } else if (!/\S/.test(trimmedName)) {
+      newErrors.name = "Name cannot be just spaces.";
       valid = false;
     }
     if (!email.trim()) {
@@ -138,14 +145,16 @@ export default function DonationForm() {
                         onClick={() => setDonationType(id)}
                         className={`flex items-center gap-2 p-3 border rounded cursor-pointer transition ${
                           donationType === id
-                            ? "bg-[#EE9254] text-white border-none"
+                            ? "bg-[#EE9254] !text-white border-none"
                             : "bg-white border-gray-200"
                         }`}
                       >
                         <RadioGroupItem value={id} id={id} />
                         <Label
                           htmlFor={id}
-                          className="cursor-pointer text-base sm:text-lg"
+                          className={`cursor-pointer text-base sm:text-lg ${
+                            donationType === id ? "text-white" : ""
+                          }`}
                         >
                           {label}
                         </Label>
@@ -164,7 +173,7 @@ export default function DonationForm() {
                       <Button
                         key={val}
                         variant="outline"
-                        className={`rounded text-base sm:text-lg font-[Inter] h-10 sm:h-12 ${
+                        className={`rounded text-base hover:bg-[#EE9254] hover:text-white sm:text-lg font-[Inter] h-10 sm:h-12 ${
                           amount === val
                             ? "bg-[#EE9254] text-white border-none"
                             : "bg-white border-gray-200"
@@ -178,17 +187,24 @@ export default function DonationForm() {
                       </Button>
                     ))}
                   </div>
-                  {donationType !== "monthly" && (
-                    <div className="mt-3">
-                      <Input
-                        placeholder="Custom ($)"
-                        type="number"
-                        value={customAmount}
-                        onChange={(e) => setCustomAmount(e.target.value)}
-                        className="rounded bg-white border-gray-200 h-10 sm:h-12"
-                      />
-                    </div>
-                  )}
+                  <div className="mt-3">
+                    <Input
+                      placeholder={
+                        donationType === "monthly"
+                          ? "Custom amount not available for monthly"
+                          : "Custom ($)"
+                      }
+                      type="number"
+                      value={customAmount}
+                      onChange={(e) => {
+                        setCustomAmount(e.target.value);
+                        if (errors.amount) setErrors({ ...errors, amount: "" });
+                      }}
+                      onFocus={() => setAmount("")}
+                      className="rounded border-gray-200 h-10 sm:h-12"
+                      disabled={donationType === "monthly"}
+                    />
+                  </div>
                   {errors.amount && (
                     <div className="text-red-500 text-sm mt-1">
                       {errors.amount}
@@ -207,7 +223,10 @@ export default function DonationForm() {
                       className="rounded bg-white border-gray-200 h-10 sm:h-12"
                       type="text"
                       value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      onChange={(e) => {
+                        setName(e.target.value);
+                        if (errors.name) setErrors({ ...errors, name: "" });
+                      }}
                     />
                     {errors.name && (
                       <div className="text-red-500 text-sm mt-1">
@@ -224,7 +243,10 @@ export default function DonationForm() {
                       className="rounded bg-white border-gray-200 h-10 sm:h-12"
                       type="email"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        if (errors.email) setErrors({ ...errors, email: "" });
+                      }}
                     />
                     {errors.email && (
                       <div className="text-red-500 text-sm mt-1">

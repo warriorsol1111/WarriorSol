@@ -343,7 +343,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col md:flex-row">
+    <div className="flex min-h-screen flex-col-reverse md:flex-row">
       <div className="flex-1 md:w-1/2 bg-white flex items-center justify-center p-6 md:p-12 md:px-24">
         <form onSubmit={handleSubmit} className="w-full space-y-6">
           {renderStepContent()}

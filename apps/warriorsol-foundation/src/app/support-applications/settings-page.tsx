@@ -155,7 +155,7 @@ export default function AdminSupportApplicationsPage() {
                     <p className="text-sm font-semibold text-gray-700 mb-1">
                       Situation:
                     </p>
-                    <p className="text-sm text-gray-600 leading-relaxed">
+                    <p className="text-sm text-gray-600 leading-relaxed max-h-24 overflow-y-auto">
                       {app.situation}
                     </p>
                   </div>

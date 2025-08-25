@@ -27,7 +27,7 @@ const OurMission = () => {
   ];
 
   return (
-    <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 md:py-12">
+    <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
       <div className="text-center mb-8 md:mb-16">
         <h2 className='text-[32px] sm:text-[42px] md:text-[52px] lg:text-[62px] leading-tight md:leading-[62px] font-["Cormorant_SC"] font-normal text-[#1F1F1F] mb-3 md:mb-4'>
           Our Mission

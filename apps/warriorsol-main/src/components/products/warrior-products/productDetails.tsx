@@ -1,6 +1,10 @@
 "use client";
 import React, { useState, useMemo, useEffect } from "react";
-import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
+import {
+  AiOutlineMinus,
+  AiOutlinePlus,
+  AiOutlineShoppingCart,
+} from "react-icons/ai";
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatPrice } from "@/lib/utils";
@@ -12,6 +16,24 @@ import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import Reviews from "./../reviews";
+import RecommendedProducts from "../../community/recommendedProducts";
+
+export interface Review {
+  review: {
+    id: string;
+    userId: string;
+    productId: string;
+    score: number;
+    review: string;
+    createdAt: string;
+  };
+  user: {
+    id: string;
+    name: string;
+    profilePhoto: string;
+  };
+}
 
 interface ProductVariant {
   id: string;
@@ -56,10 +78,11 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const variantIdFromUrl = searchParams.get("variant");
-
+  const [isLoading, setIsLoading] = useState(false);
   const { addItem, openCart } = useCartStore();
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [wishListLoading, setWishlistLoading] = useState(false);
 
   const { colors, sizes } = useMemo(() => {
@@ -146,6 +169,35 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     );
   }, [selectedColor, product.variants]);
 
+  const extractIDFromShopifyID = (id: string) => {
+    const parts = id.split("/");
+    return parts[parts.length - 1];
+  };
+  useEffect(() => {
+    const fetchReviews = async () => {
+      if (!session?.user.token) return;
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/reviews/${extractIDFromShopifyID(product.id)}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `Bearer ${session?.user.token}`,
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch reviews");
+        }
+        const { data } = await response.json();
+        setReviews(data);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+    fetchReviews();
+  }, [product.id, session?.user.token]);
   const selectedVariant = useMemo(() => {
     const isHatProduct = product.variants.every((variant) => {
       const parts = variant.title.split(" / ");
@@ -274,6 +326,36 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     );
   };
 
+  const handleGuestBuyProduct = async () => {
+    if (!selectedVariant) return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/shopify/createGuestCheckout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          variantId: selectedVariant.id,
+          quantity: quantity,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create checkout");
+      }
+
+      const data = await response.json();
+      window.location.href = data.checkoutUrl;
+    } catch (error) {
+      console.error("Error creating checkout:", error);
+      alert("Failed to create checkout. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <div className="p-4 sm:p-6 md:p-8 lg:p-10">
@@ -297,7 +379,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           {/* Product Details */}
           <div className="space-y-6 lg:space-y-8">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+            <div className="flex flex-col xl:flex-row sm:justify-between sm:items-start gap-4">
               <div>
                 <h1 className="text-3xl sm:text-4xl lg:text-[62px] font-normal text-black">
                   {product.title}
@@ -423,73 +505,109 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="grid grid-cols-2 gap-4">
-              <Button
-                variant="link"
-                size="lg"
-                disabled={!selectedVariant?.availableForSale}
-                onClick={toggleWishlist}
-                className={`flex items-center justify-center gap-2 border border-black transition-all duration-200 px-4 py-2 rounded-md group
-    ${
-      isInWishlist
-        ? "bg-red-100 text-red-600 border-red-200 hover:bg-red-200 hover:text-red-800"
-        : "bg-white text-gray-800 hover:bg-gray-100 hover:text-black"
-    }`}
-              >
-                {wishListLoading ? (
-                  <Loader2 className="animate-spin h-5 w-5" />
-                ) : isInWishlist ? (
-                  <>
-                    <FaRegHeart
-                      size={20}
-                      className="text-red-600 animate-pulse"
-                    />
-                    <span className="font-medium">Remove from Wishlist</span>
-                  </>
-                ) : (
-                  <>
-                    <FaRegHeart size={20} />
-                    <span className="font-medium">Add to Wishlist</span>
-                  </>
-                )}
-              </Button>
+            {/* Action Buttons - Conditional based on authentication */}
+            {session ? (
+              // If user is logged in, show Add to Wishlist and Add to Cart buttons
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Button
+                  variant="link"
+                  size="lg"
+                  onClick={toggleWishlist}
+                  className={`flex items-center justify-center gap-2 border border-black transition-all duration-200 px-4 py-2 rounded-md group
+        ${
+          isInWishlist
+            ? "bg-red-100 text-red-600 border-red-200 hover:bg-red-200 hover:text-red-800"
+            : "bg-white text-gray-800 hover:bg-gray-100 hover:text-black"
+        }`}
+                >
+                  {wishListLoading ? (
+                    <Loader2 className="animate-spin h-5 w-5" />
+                  ) : isInWishlist ? (
+                    <>
+                      <FaRegHeart
+                        size={20}
+                        className="text-red-600 animate-pulse"
+                      />
+                      <span className="font-medium">Remove from Wishlist</span>
+                    </>
+                  ) : (
+                    <>
+                      <FaRegHeart size={20} />
+                      <span className="font-medium">Add to Wishlist</span>
+                    </>
+                  )}
+                </Button>
 
-              <Button
-                variant="outline"
-                size="lg"
-                disabled={!selectedVariant?.availableForSale}
-                onClick={() => {
-                  handleAddItemToCart();
-                }}
-                className="flex items-center justify-center gap-2 bg-[#EE9254] text-white hover:text-white hover:bg-[#EE9254] 0 transition-colors"
-              >
-                {loading ? (
-                  <Loader2 className="animate-spin h-5 w-5" />
-                ) : (
-                  <>
-                    <BsCart2 size={20} />
-                    Add to Cart
-                  </>
-                )}
-              </Button>
-            </div>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  disabled={!selectedVariant?.availableForSale}
+                  onClick={() => {
+                    handleAddItemToCart();
+                  }}
+                  className="flex items-center justify-center gap-2 bg-[#EE9254] text-white hover:text-white hover:bg-[#EE9254] transition-colors"
+                >
+                  {loading ? (
+                    <Loader2 className="animate-spin h-5 w-5" />
+                  ) : (
+                    <>
+                      <BsCart2 size={20} />
+                      Add to Cart
+                    </>
+                  )}
+                </Button>
+              </div>
+            ) : (
+              // If user is not logged in, show only Buy Now button
+              <div className="w-full">
+                <Button
+                  className="flex items-center w-full cursor-pointer justify-center gap-2 py-3 px-6 bg-[#EE9254] text-white rounded-lg text-base font-medium hover:bg-orange-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={!selectedVariant?.availableForSale || isLoading}
+                  onClick={handleGuestBuyProduct}
+                  size="lg"
+                >
+                  <AiOutlineShoppingCart size={20} />
+                  {isLoading ? (
+                    <Loader2 className="animate-spin h-5 w-5" />
+                  ) : selectedVariant?.availableForSale ? (
+                    "Buy Now"
+                  ) : (
+                    "Out of Stock"
+                  )}
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>
       <div className="w-full mb-10 p-4 sm:p-6 md:p-8 lg:p-10 mx-auto">
-        <Tabs defaultValue="description" className="w-full">
-          <TabsList className="flex h-auto p-0 bg-transparent rounded-none space-x-2 sm:space-x-4 overflow-x-auto">
+        <Tabs defaultValue="description" className="w-full min-w-0">
+          {/* TabsList: stacked on mobile, horizontal on sm+ */}
+          <TabsList
+            className="
+      flex flex-col sm:flex-row
+      gap-3 sm:gap-4
+      h-auto p-0 bg-transparent rounded-none
+      w-full
+    "
+          >
             <TabsTrigger
+              className="w-full sm:w-auto rounded-lg text-center"
               value="description"
-              className="px-4 sm:px-6 lg:px-8 py-2 text-base md:text-lg border rounded-md border-[#E5E5E5] data-[state=active]:!text-white data-[state=active]:!bg-[#EE9254] data-[state=active]:!border-primary whitespace-nowrap"
             >
               Description
             </TabsTrigger>
+            <TabsTrigger
+              className="w-full sm:w-auto rounded-lg text-center"
+              value="reviews"
+            >
+              Reviews
+            </TabsTrigger>
           </TabsList>
-          <TabsContent value="description" className="mt-6 lg:mt-8">
+
+          <TabsContent value="description" className="mt-6 lg:mt-8 min-w-0">
             <div
-              className="space-y-4 text-base md:text-lg font-inter prose prose-base md:prose-lg max-w-none"
+              className="space-y-4 text-base md:text-3xl font-inter prose prose-base md:prose-lg max-w-none"
               dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
             />
             <style jsx global>{`
@@ -518,8 +636,13 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
               }
             `}</style>
           </TabsContent>
+
+          <TabsContent value="reviews" className="mt-6 lg:mt-8 min-w-0">
+            <Reviews reviews={reviews} />
+          </TabsContent>
         </Tabs>
       </div>
+      <RecommendedProducts />
     </div>
   );
 }

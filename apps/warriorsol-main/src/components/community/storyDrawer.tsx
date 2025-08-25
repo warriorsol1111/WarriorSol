@@ -249,7 +249,12 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
 
   return (
     <Drawer open={isOpen} onOpenChange={onOpenChange}>
-      <DrawerContent className="h-full p-2">
+      <DrawerContent
+        onInteractOutside={(e) => {
+          e.preventDefault();
+        }}
+        className="h-full p-2"
+      >
         <DrawerHeader className="border-b border-gray-200">
           <div className="flex justify-between items-center">
             <DrawerTitle className="text-[42px] text-[#1F1F1F] font-light">

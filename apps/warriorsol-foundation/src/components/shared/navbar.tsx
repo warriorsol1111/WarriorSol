@@ -73,6 +73,12 @@ export default function Navbar() {
                 <Link className={isActive("/donor-wall")} href="/donor-wall">
                   Donor Wall
                 </Link>
+                <Link className={isActive("/contacts")} href="/contacts">
+                  Contact
+                </Link>
+                <Link className={isActive("/about")} href="/about">
+                  About
+                </Link>
                 {session?.user?.role === "admin" && (
                   <Link
                     className={isActive("/support-applications")}
@@ -123,6 +129,12 @@ export default function Navbar() {
           </Link>
           <Link href="/donor-wall" className={isActive("/donor-wall")}>
             Donor Wall
+          </Link>
+          <Link href="/contacts" className={isActive("/contacts")}>
+            Contact
+          </Link>
+          <Link href="/about" className={isActive("/about")}>
+            About
           </Link>
           {session?.user?.role === "admin" && (
             <Link

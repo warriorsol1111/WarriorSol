@@ -153,8 +153,9 @@ export async function POST(req: NextRequest) {
             amount,
             currency,
             email: customerEmail,
-            donationType: "recurring",
-            status: "succeeded",
+            name: invoice.customer_name || "Recurring Donor",
+            donationType: "monthly",
+            status: "paid",
           }),
         }
       );

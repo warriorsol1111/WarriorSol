@@ -77,8 +77,8 @@ export default function StoriesOfHope() {
   const prevSlide = () => setCurrentIndex((prevIndex) => prevIndex - 1);
 
   return (
-    <section className="w-full px-4 sm:px-6 lg:px-12 py-12">
-      <div className="mx-auto max-w-7xl">
+    <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
+      <div className="mx-auto">
         {/* Header + Navigation */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
           <div className="flex-1">

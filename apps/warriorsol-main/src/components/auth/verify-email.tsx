@@ -105,7 +105,7 @@ export default function VerifyEmailPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col md:flex-row">
+    <div className="flex min-h-screen flex-col-reverse md:flex-row">
       {/* Left Side */}
       <div className="flex w-full items-center justify-center bg-white p-6 md:w-1/2 md:p-12 md:px-24">
         {step === 1 ? (
