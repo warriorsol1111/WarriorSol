@@ -44,7 +44,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({
   return (
     <div
       className={cn(
-        "relative w-full text-white overflow-hidden rounded-2xl shadow-xl",
+        "relative w-full text-white overflow-hidden shadow-xl",
         className
       )}
     >

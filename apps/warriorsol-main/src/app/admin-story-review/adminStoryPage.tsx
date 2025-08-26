@@ -109,63 +109,67 @@ const AdminStoriesPage: React.FC = () => {
     <>
       <Navbar />
 
-      <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-[#EE9254] text-center sm:text-left">
+      <section className="w-full px-4 sm:px-6 md:px-10 lg:px-20 py-10 sm:py-14 lg:py-20 bg-gray-50 min-h-screen">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-10 text-[#EE9254] text-center">
           Review User Stories
         </h1>
 
         {loading ? (
           <div className="flex justify-center items-center py-20">
-            <span className="animate-spin h-10 w-10 border-4 border-[#EE9254] border-t-transparent rounded-full" />
+            <span className="animate-spin h-12 w-12 border-4 border-[#EE9254] border-t-transparent rounded-full" />
           </div>
         ) : error ? (
           <p className="text-center text-lg text-red-500">
             Failed to load stories. Please try again later.
           </p>
         ) : stories.length === 0 ? (
-          <div className="text-center text-gray-500 py-12">
-            <p className="text-xl sm:text-2xl md:text-3xl font-medium">
+          <div className="text-center text-gray-500 py-16">
+            <p className="text-2xl font-medium">
               No stories available to review yet.
             </p>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2">
             {stories.map((story) => (
               <div
                 key={story.id}
-                className="border rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white shadow"
+                className="border rounded-2xl p-6 flex flex-col justify-between bg-white shadow-md hover:shadow-lg transition-shadow"
               >
                 {/* Story Details */}
-                <div className="flex-1 w-full">
-                  <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold mb-1">
+                <div className="flex-1">
+                  <h2 className="text-xl md:text-2xl font-semibold mb-2 text-gray-800">
                     {story.title}
                   </h2>
-                  <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 mb-2">
-                    {story.description}
-                  </p>
 
-                  <div className="text-xs sm:text-sm md:text-base text-gray-500 mb-2 space-y-1 sm:space-y-0 sm:flex sm:items-center sm:gap-4">
-                    <span>
-                      User: {story.userName} ({story.userType})
-                    </span>
-                    <span>
-                      Submitted: {new Date(story.createdAt).toLocaleString()}
-                    </span>
+                  {/* Scrollable description */}
+                  <div className="max-h-28 overflow-y-auto pr-2 mb-3 text-gray-700 text-sm sm:text-base leading-relaxed custom-scrollbar">
+                    {story.description}
+                  </div>
+
+                  <div className="text-xs sm:text-sm text-gray-500 mb-3 space-y-1">
+                    <p>
+                      <span className="font-medium">User:</span>{" "}
+                      {story.userName} ({story.userType})
+                    </p>
+                    <p>
+                      <span className="font-medium">Submitted:</span>{" "}
+                      {new Date(story.createdAt).toLocaleString()}
+                    </p>
                   </div>
 
                   {story.attachment && (
-                    <div className="mt-3 max-w-full">
+                    <div className="mt-4">
                       {story.attachment.match(/\.(mp4|webm)$/) ? (
                         <video
                           src={story.attachment}
                           controls
-                          className="w-full max-w-sm rounded"
+                          className="w-full max-h-64 rounded-lg shadow-sm"
                         />
                       ) : (
                         <Image
                           src={story.attachment}
                           alt="attachment"
-                          className="w-full max-w-sm h-auto object-cover rounded"
+                          className="w-full max-h-64 object-contain rounded-lg shadow-sm"
                           width={1000}
                           height={1000}
                         />
@@ -175,16 +179,14 @@ const AdminStoriesPage: React.FC = () => {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex flex-col sm:items-end w-full sm:w-auto gap-2">
+                <div className="mt-6 flex flex-col sm:flex-row sm:justify-end gap-3">
                   <Button
-                    className="bg-[#EE9254] text-white hover:bg-[#d67e43] w-full sm:w-auto text-base sm:text-lg md:text-xl"
+                    className="bg-[#EE9254] text-white hover:bg-[#d67e43] text-base sm:text-lg md:text-xl rounded-xl px-6 py-2"
                     disabled={actionLoading === story.id + "approve"}
                     onClick={() => handleAction(story.id, "approve")}
                   >
                     {actionLoading === story.id + "approve" ? (
-                      <>
-                        <Loader2 className="animate-spin h-4 w-4 mr-2" />
-                      </>
+                      <Loader2 className="animate-spin h-4 w-4 mr-2" />
                     ) : (
                       "Approve"
                     )}
@@ -192,14 +194,12 @@ const AdminStoriesPage: React.FC = () => {
 
                   <Button
                     variant="destructive"
-                    className="w-full sm:w-full text-base sm:text-lg md:text-xl"
+                    className="text-base sm:text-lg md:text-xl rounded-xl px-6 py-2"
                     disabled={actionLoading === story.id + "reject"}
                     onClick={() => handleAction(story.id, "reject")}
                   >
                     {actionLoading === story.id + "reject" ? (
-                      <>
-                        <Loader2 className="animate-spin h-4 w-4 mr-2" />
-                      </>
+                      <Loader2 className="animate-spin h-4 w-4 mr-2" />
                     ) : (
                       "Reject"
                     )}

@@ -72,16 +72,17 @@ const Contacts = () => {
   };
 
   return (
-    <section className="w-full bg-white py-16 px-6 sm:px-12 lg:px-24">
-      <h1 className="text-4xl md:text-[62px] text-[#1F1F1F] text-center font-semibold">
-        Contact
-      </h1>
-      <p className="text-center mt-4 text-lg font-[Inter] opacity-70 sm:text-xl text-[#1F1F1F] mx-auto">
-        Whether you have questions about our products, need assistance with your
-        order, or just want to say hello, feel free to reach out. Our dedicated
-        team is here to help you with any inquiries you may have.
-      </p>
-
+    <section>
+      <div className="w-full bg-white py-4 px-6 sm:px-12 lg:px-24">
+        <h1 className="text-4xl md:text-[62px] text-[#1F1F1F] text-center font-semibold">
+          Contact
+        </h1>
+        <p className="text-center mt-4 text-lg font-[Inter] opacity-70 sm:text-xl text-[#1F1F1F] mx-auto">
+          Whether you have questions about our products, need assistance with
+          your order, or just want to say hello, feel free to reach out. Our
+          dedicated team is here to help you with any inquiries you may have.
+        </p>
+      </div>
       <div className="mt-12 flex flex-col lg:flex-row items-stretch">
         <div className="w-full lg:w-1/2">
           <Image
@@ -91,7 +92,7 @@ const Contacts = () => {
           />
         </div>
 
-        <div className="w-full lg:w-1/2 bg-[#FFEBCC] rounded-lg p-6 sm:p-10">
+        <div className="w-full lg:w-1/2 bg-[#FFEBCC] p-6 sm:p-10">
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="bg-white h-full p-6 sm:p-8 rounded-md space-y-6 shadow-md"

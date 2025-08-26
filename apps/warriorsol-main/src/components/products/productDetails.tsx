@@ -368,9 +368,9 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                   key={selectedVariant?.image.url}
                   src={selectedVariant?.image.url || product.image}
                   alt={selectedVariant?.image.altText || product.imageAlt}
-                  className="w-full h-full object-contain"
-                  width={500}
-                  height={500}
+                  className="w-[630px] h-[615px] object-contain"
+                  width={630}
+                  height={615}
                 />
               </div>
             </div>
@@ -384,7 +384,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 <h1 className="text-3xl sm:text-4xl lg:text-[62px] font-normal text-black">
                   {product.title}
                 </h1>
-                <p className="text-lg sm:text-xl font-light">
+                <p className="text-lg sm:text-xl text-[#1F1F1FB2] font-[Inter] font-light">
                   {product.vendor}
                 </p>
               </div>
@@ -487,18 +487,18 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                   variant="link"
                   size="lg"
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="p-2 text-gray-600 hover:text-gray-900"
+                  className="p-2 text-[20px] text-gray-600 hover:text-gray-900"
                 >
                   <AiOutlineMinus size={16} />
                 </Button>
-                <span className="w-12 text-center text-sm font-medium">
+                <span className="w-12 text-center text-[20px] font-medium">
                   {quantity.toString().padStart(2, "0")}
                 </span>
                 <Button
                   variant="link"
                   size="lg"
                   onClick={() => setQuantity(quantity + 1)}
-                  className="p-2 text-gray-600 hover:text-gray-900"
+                  className="p-2 text-[20px] text-gray-600 hover:text-gray-900"
                 >
                   <AiOutlinePlus size={16} />
                 </Button>

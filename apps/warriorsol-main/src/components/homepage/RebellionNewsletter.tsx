@@ -56,7 +56,7 @@ const RebellionNewsletter = () => {
       toast.success("Email added to waitlist");
       setEmail("");
       setNotifyLoading(false);
-      // Optionally refresh count
+
       setCount((prev) => prev + 1);
     } catch (error) {
       console.error("Error adding email to waitlist:", error);
@@ -70,10 +70,10 @@ const RebellionNewsletter = () => {
     <section className="w-full">
       {/* Top Quote Section */}
       <div className="bg-[#FFEBCC] py-8 md:py-12 text-center">
-        <h2 className='text-[28px] md:text-[42px] leading-tight font-["Cormorant_SC"] text-[#1F1F1F] max-w-3xl mx-auto px-4'>
+        <h2 className='text-[28px] md:text-[62px] leading-tight font-["Cormorant_SC"] text-[#842E12] max-w-6xl mx-auto px-4'>
           &ldquo;The Brand That Hugs You When You Need It Most.&rdquo;
         </h2>
-        <p className='text-[14px] md:text-[16px] font-light font-["Inter"] text-[#EE9254] mt-2'>
+        <p className='text-[14px] md:text-[20px] font-light font-["Inter"] text-[#EE9254] mt-2'>
           Featured In Leading Publications And Partnered With Top Organizations
         </p>
       </div>
@@ -93,13 +93,13 @@ const RebellionNewsletter = () => {
 
         {/* Content Section */}
         <div className="bg-[#842E12] text-white p-6 md:p-8 lg:p-12 flex flex-col justify-center items-center text-center">
-          <h3 className='text-[32px] md:text-[40px] lg:text-[48px] font-["Cormorant_SC"] mb-2'>
+          <h3 className='text-[32px] md:text-[52px]  font-["Cormorant_SC"] mb-2'>
             Every Sunrise Is A Stand
           </h3>
-          <h4 className='text-[24px] md:text-[28px] lg:text-[32px] font-["Cormorant_SC"] mb-4 md:mb-6'>
+          <h4 className='text-[24px] md:text-[32px] font-["Cormorant_SC"] mb-4 md:mb-6'>
             Join The Rebellion.
           </h4>
-          <p className='font-["Inter"] text-[14px] md:text-[16px] font-light mb-6 md:mb-8 opacity-90 max-w-md px-4 md:px-0'>
+          <p className='font-["Inter"] text-[#FFFFFF99] text-[14px] md:text-[16px] font-light mb-6 md:mb-8 opacity-90 max-w-md px-4 md:px-0'>
             Get Stories Of Strength, Exclusive Releases, And Updates From The
             Warrior Community. No Spam, Just Soul.
           </p>

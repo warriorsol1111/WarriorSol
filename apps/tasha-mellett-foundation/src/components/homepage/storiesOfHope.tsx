@@ -82,13 +82,13 @@ export default function StoriesOfHope() {
           <div className="flex gap-2 self-end sm:self-auto">
             <button
               onClick={prevSlide}
-              className="p-2 rounded-full border border-gray-300 hover:bg-gray-100 transition"
+              className="p-2 rounded-full border cursor-pointer border-gray-300 hover:bg-gray-100 transition"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button
               onClick={nextSlide}
-              className="p-2 rounded-full border border-gray-300 hover:bg-gray-100 transition"
+              className="p-2 rounded-full border cursor-pointer border-gray-300 hover:bg-gray-100 transition"
             >
               <ChevronRight className="w-5 h-5" />
             </button>

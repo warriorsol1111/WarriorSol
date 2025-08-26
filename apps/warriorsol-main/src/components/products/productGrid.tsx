@@ -222,13 +222,15 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
               )}
             </div>
             <div className="p-3 sm:p-4">
-              <h3 className="text-sm sm:text-base font-medium text-gray-900 truncate">
-                {product.title}
-              </h3>
-              <p className="mt-1 text-sm sm:text-base font-medium text-gray-700">
-                {product.price}
-              </p>
-              <p className="mt-1 text-xs sm:text-sm text-gray-500">
+              <div className="flex justify-between items-center">
+                <h3 className="text-sm sm:text-base font-medium text-gray-900 truncate">
+                  {product.title}
+                </h3>
+                <p className="text-sm sm:text-base font-medium text-gray-700 whitespace-nowrap ml-2">
+                  {product.price}
+                </p>
+              </div>
+              <p className="mt-1 text-[12px] sm:text-[12px] text-gray-500">
                 {product.category}
               </p>
             </div>

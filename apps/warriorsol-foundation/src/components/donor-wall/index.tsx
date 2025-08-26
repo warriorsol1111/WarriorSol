@@ -27,8 +27,8 @@ export default function DonorWall({
   recentDonations: Donation[];
 }) {
   return (
-    <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
-      <Card className="relative w-full h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden rounded-lg">
+    <section className="w-full ">
+      <Card className="relative w-full h-[500px] md:h-[600px] rounded-none lg:h-[700px] overflow-hidden">
         <Image
           src={DonorWallImage}
           alt="Donor Wall"
@@ -62,7 +62,7 @@ export default function DonorWall({
           </div>
         </div>
       </Card>
-      <div className="mt-8 sm:mt-12 lg:mt-16 text-center">
+      <div className="mt-8 sm:mt-12 lg:mt-16 text-center px-4 sm:px-6">
         <h2 className="text-[32px] sm:text-[42px] lg:text-[62px] text-center md:text-start leading-tight sm:leading-[1.1] lg:leading-[62px] font-['Cormorant_SC'] font-normal text-[#1F1F1F] capitalize">
           Our Amazing Donors
         </h2>

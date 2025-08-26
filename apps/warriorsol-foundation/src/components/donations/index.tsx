@@ -8,9 +8,9 @@ import SessionProviderWrapper from "../shared/sessionProvider";
 
 export default function Donations() {
   return (
-    <section className="w-full px-4 sm:px-6 lg:px-12 py-8 sm:py-12">
+    <section>
       {/* Main Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] rounded-xl overflow-hidden shadow-md">
+      <div className="grid grid-cols-1 lg:grid-cols-[40%_60%]  overflow-hidden shadow-md">
         {/* Left Column - Donation & Volunteer Info */}
         <div className="bg-[#FFEBCC] p-6 sm:p-8 lg:p-10">
           {/* Donate Now Section */}
@@ -80,7 +80,7 @@ export default function Donations() {
           </div>
 
           {/* Family Image */}
-          <div className="relative h-52 sm:h-64 lg:h-80 w-full overflow-hidden rounded-lg">
+          <div className="relative h-52 sm:h-64 lg:h-80 w-full overflow-hidden">
             <Image
               src={ChangeLife}
               alt="Family enjoying time together in a park"

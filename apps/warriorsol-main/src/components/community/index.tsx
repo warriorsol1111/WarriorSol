@@ -65,9 +65,9 @@ const Community: React.FC = () => {
 
   return (
     <>
-      <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
+      <section>
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6 mb-8 sm:mb-12">
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6 mb-8 sm:mb-12 w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
           <div>
             <h2 className="text-4xl sm:text-5xl lg:text-[62px] leading-tight lg:leading-[62px] font-['Cormorant_SC'] text-[#1F1F1F] capitalize">
               Why I Wear Mine
@@ -105,7 +105,7 @@ const Community: React.FC = () => {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-3">
+            <div className="grid grid-cols-1 gap-14">
               {stories.map(({ story, user }) => (
                 <StoryCard
                   key={story.id}

@@ -193,21 +193,33 @@ export default function AccountPage() {
           <TabsContent value="personal">
             <div className="bg-white p-6 sm:p-8 rounded-xl shadow space-y-8">
               {/* Personal Info Section */}
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <h2 className="text-2xl font-bold text-gray-800">
                   Personal Information
                 </h2>
-                <div className="space-y-2 text-gray-700 text-base sm:text-lg">
-                  <p>
-                    <span className="font-semibold text-gray-900">Name:</span>{" "}
-                    {session?.user?.firstName} {session?.user?.lastName}
-                  </p>
-                  <p>
-                    <span className="font-semibold text-gray-900">Email:</span>{" "}
-                    {session?.user?.email}
-                  </p>
+                <div className="bg-gray-50 rounded-xl border border-gray-200 shadow-sm p-6 sm:p-8">
+                  <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
+                    <div>
+                      <dt className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                        Full Name
+                      </dt>
+                      <dd className="mt-1 text-lg font-medium text-gray-900">
+                        {session?.user?.firstName} {session?.user?.lastName}
+                      </dd>
+                    </div>
+
+                    <div>
+                      <dt className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                        Email Address
+                      </dt>
+                      <dd className="mt-1 text-lg font-medium text-gray-900">
+                        {session?.user?.email}
+                      </dd>
+                    </div>
+                  </dl>
                 </div>
               </div>
+
               <div className="space-y-6 text-center">
                 <h2 className="text-2xl font-bold text-gray-800">
                   Profile Photo

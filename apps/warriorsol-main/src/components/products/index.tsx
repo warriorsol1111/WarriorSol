@@ -5,10 +5,14 @@ import Footer from "../shared/footer";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import ProductGrid from "./productGrid";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
-import Filter, { FilterState, initialFilterState } from "./filters";
+import Filter from "./filters";
 import { BsFilterLeft } from "react-icons/bs";
 import { Button } from "../ui/button";
 import { SocialLinks } from "../shared/socialLinks";
+import {
+  useSessionFilters,
+  initialFilterState,
+} from "../../lib/hooks/useFilterSession";
 
 interface Variant {
   title: string;
@@ -74,7 +78,9 @@ const Products: React.FC = () => {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [collections, setCollections] = useState<Collection[]>([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filters, setFilters] = useState<FilterState>(initialFilterState);
+
+  // Use session-based filter persistence
+  const { filters, setFilters, isLoaded: filtersLoaded } = useSessionFilters();
 
   // Helper function to get active filters count (consistent with Filter component)
   const getActiveFiltersCount = () => {
@@ -151,6 +157,7 @@ const Products: React.FC = () => {
     if (lowerTitle.includes("hoodie")) return "Hoodie";
     return "Other";
   };
+
   const fetchProducts = useCallback(async () => {
     const transformProducts = (data: ShopifyProductResponse): Product[] => {
       return data.products.edges.map((edge) => {
@@ -321,6 +328,10 @@ const Products: React.FC = () => {
   };
 
   const displayProducts = getTabProducts();
+
+  // Check if fully loaded (both products and filters)
+  const isFullyLoaded = !loading && filtersLoaded;
+
   return (
     <div>
       <Navbar />
@@ -336,10 +347,11 @@ const Products: React.FC = () => {
             onClick={() => setIsFilterOpen(true)}
             variant="link"
             size="default"
-            className="hidden md:flex items-center gap-2 border border-gray-300 py-2 px-4 text-sm hover:bg-gray-50 transition-colors rounded"
+            className="hidden md:flex items-center gap-2 border !h-13 border-black  text-sm hover:bg-gray-50 transition-color"
           >
-            <BsFilterLeft size={16} />
             <span>Sort & Filter</span>
+            <BsFilterLeft size={16} />
+
             {getActiveFiltersCount() > 0 && (
               <span className="bg-[#EE9254] text-white text-xs rounded-full ml-1 w-5 h-5 flex items-center justify-center min-w-[20px]">
                 {getActiveFiltersCount()}
@@ -348,7 +360,7 @@ const Products: React.FC = () => {
           </Button>
         </div>
 
-        <p className="text-base md:text-lg lg:text-xl text-center md:text-start font-light font-inter text-gray-600 mb-6">
+        <p className="text-base md:text-lg lg:text-xl text-center md:text-start font-light font-inter text-[#1F1F1FB2] mb-6">
           Every collection tells a story. Find the one that speaks to your
           journey.
         </p>
@@ -382,7 +394,7 @@ const Products: React.FC = () => {
 
       <div className="px-4 sm:px-6 md:px-8 lg:px-10">
         {/* Results summary */}
-        {!loading && (
+        {isFullyLoaded && (
           <div className="mb-4 text-sm text-gray-600">
             Showing {displayProducts.length} of {allProducts.length} products
           </div>
@@ -395,7 +407,7 @@ const Products: React.FC = () => {
             setActiveTab(value);
           }}
         >
-          <TabsList className="flex overflow-x-auto sm:justify-center w-full gap-2 sm:gap-4 mb-6 p-1 bg-white border border-gray-200 rounded-lg scrollbar-hide">
+          <TabsList className="flex overflow-x-auto text-[20px] font-[Inter] text-[#1F1F1FCC] sm:justify-center w-full gap-2 sm:gap-4 mb-6 p-1 bg-white border border-gray-200 rounded-lg scrollbar-hide">
             <TabsTrigger value="all" className="whitespace-nowrap">
               All ({allProducts.length})
             </TabsTrigger>
@@ -423,7 +435,7 @@ const Products: React.FC = () => {
           </TabsList>
 
           <TabsContent value="all">
-            {loading ? (
+            {!isFullyLoaded ? (
               <div className="flex justify-center items-center py-20">
                 <AiOutlineLoading3Quarters className="w-8 h-8 animate-spin" />
                 <span className="ml-2">Loading products...</span>
@@ -455,7 +467,7 @@ const Products: React.FC = () => {
           </TabsContent>
 
           <TabsContent value="bestsellers">
-            {loading ? (
+            {!isFullyLoaded ? (
               <div className="flex justify-center items-center py-20">
                 <AiOutlineLoading3Quarters className="w-8 h-8 animate-spin" />
                 <span className="ml-2">Loading bestsellers...</span>
@@ -482,7 +494,7 @@ const Products: React.FC = () => {
           </TabsContent>
 
           <TabsContent value="community">
-            {loading ? (
+            {!isFullyLoaded ? (
               <div className="flex justify-center items-center py-20">
                 <AiOutlineLoading3Quarters className="w-8 h-8 animate-spin" />
                 <span className="ml-2">Loading community picks...</span>
@@ -509,7 +521,7 @@ const Products: React.FC = () => {
           </TabsContent>
           {uniqueCategories.map((category) => (
             <TabsContent key={category} value={category}>
-              {loading ? (
+              {!isFullyLoaded ? (
                 <div className="flex justify-center items-center py-20">
                   <AiOutlineLoading3Quarters className="w-8 h-8 animate-spin" />
                   <span className="ml-2">Loading {category}...</span>
@@ -538,7 +550,7 @@ const Products: React.FC = () => {
 
           {collections.map((collection) => (
             <TabsContent key={collection.handle} value={collection.handle}>
-              {loading ? (
+              {!isFullyLoaded ? (
                 <div className="flex justify-center items-center py-20">
                   <AiOutlineLoading3Quarters className="w-8 h-8 animate-spin" />
                   <span className="ml-2">Loading {collection.title}...</span>

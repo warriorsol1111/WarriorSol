@@ -237,64 +237,76 @@ export default function SettingsPage() {
     <>
       <div className="min-h-screen flex flex-col bg-gray-50">
         <Navbar />
-        <main className="flex-1 px-4 py-12 max-w-7xl mx-auto w-full">
+        <main className="flex-1 px-2 sm:px-4 py-6 sm:py-12 max-w-7xl mx-auto w-full">
           <Tabs defaultValue="personal" className="w-full">
-            <TabsList className="mb-20 flex flex-wrap justify-center gap-3 rounded-full backdrop-blur p-1 shadow-inner">
+            <TabsList className="mb-8 sm:mb-20 flex flex-wrap justify-center gap-2 sm:gap-3 rounded-full backdrop-blur p-1 shadow-inner">
               <TabsTrigger
-                className="rounded-full px-5 py-2 text-base sm:text-lg"
+                className="rounded-full px-3 sm:px-5 py-1.5 sm:py-2 text-sm sm:text-base"
                 value="personal"
               >
                 Personal Info
               </TabsTrigger>
               <TabsTrigger
                 value="donations"
-                className="rounded-full px-5 py-2 text-base sm:text-lg"
+                className="rounded-full px-3 sm:px-5 py-1.5 sm:py-2 text-sm sm:text-base"
               >
                 My Donations
               </TabsTrigger>
               <TabsTrigger
                 value="applications"
-                className="rounded-full px-5 py-2 text-base sm:text-lg"
+                className="rounded-full px-3 sm:px-5 py-1.5 sm:py-2 text-sm sm:text-base"
               >
                 My Applications
               </TabsTrigger>
             </TabsList>
             <TabsContent value="personal">
-              <div className="bg-white p-6 sm:p-8 rounded-xl shadow space-y-8">
+              <div className="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow space-y-6 sm:space-y-8">
                 {/* Personal Info Section */}
-                <div className="space-y-4">
-                  <h2 className="text-2xl font-bold text-gray-800">
+                <div className="space-y-4 sm:space-y-6">
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
                     Personal Information
                   </h2>
-                  <div className="space-y-2 text-gray-700 text-base sm:text-lg">
-                    <p>
-                      <span className="font-semibold text-gray-900">Name:</span>{" "}
-                      {session?.user?.firstName} {session?.user?.lastName}
-                    </p>
-                    <p>
-                      <span className="font-semibold text-gray-900">
-                        Email:
-                      </span>{" "}
-                      {session?.user?.email}
-                    </p>
+                  <div className="bg-gray-50 rounded-xl border border-gray-200 shadow-sm p-4 sm:p-6 md:p-8">
+                    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
+                      <div>
+                        <dt className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                          Full Name
+                        </dt>
+                        <dd className="mt-1 text-lg font-medium text-gray-900">
+                          {session?.user?.firstName} {session?.user?.lastName}
+                        </dd>
+                      </div>
+
+                      <div>
+                        <dt className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                          Email Address
+                        </dt>
+                        <dd className="mt-1 text-lg font-medium text-gray-900">
+                          {session?.user?.email}
+                        </dd>
+                      </div>
+                    </dl>
                   </div>
                 </div>
-                <div className="space-y-6 text-center">
-                  <h2 className="text-2xl font-bold text-gray-800">
+                <div className="space-y-4 sm:space-y-6 text-center">
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
                     Profile Photo
                   </h2>
 
                   <div className="flex flex-col items-center gap-4">
                     {previewUrl || session?.user?.profilePhoto ? (
-                      <Image
-                        src={
-                          previewUrl || (session?.user?.profilePhoto as string)
-                        }
-                        width={128}
-                        height={128}
-                        alt="Profile"
-                        className="w-32 h-32 rounded-full object-contain border-2 border-gray-300 shadow-sm"
-                      />
+                      <div className="relative w-24 h-24 sm:w-32 sm:h-32">
+                        <Image
+                          src={
+                            previewUrl ||
+                            (session?.user?.profilePhoto as string)
+                          }
+                          fill
+                          alt="Profile"
+                          className="rounded-full object-cover border-2 border-gray-300 shadow-sm"
+                          sizes="(max-width: 640px) 6rem, 8rem"
+                        />
+                      </div>
                     ) : (
                       <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
                         No Photo
@@ -348,10 +360,10 @@ export default function SettingsPage() {
 
                     {/* Buttons */}
                     {selectedImage ? (
-                      <div className="flex gap-4">
+                      <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                         <Button
                           onClick={handleSave}
-                          className="bg-[#EE9254] hover:[#EE9254] text-white"
+                          className="bg-[#EE9254] hover:bg-[#e97e3a] text-white w-full sm:w-auto"
                         >
                           {imageLoading ? (
                             <Loader2 className="animate-spin h-4 w-4 mr-2" />
@@ -361,6 +373,7 @@ export default function SettingsPage() {
                         </Button>
                         <Button
                           variant="outline"
+                          className="w-full sm:w-auto"
                           onClick={() => {
                             setSelectedImage(null);
                             setPreviewUrl(null);
@@ -371,7 +384,7 @@ export default function SettingsPage() {
                       </div>
                     ) : (
                       <Button
-                        className="bg-[#EE9254] text-white hover:bg-[#e97e3a]"
+                        className="bg-[#EE9254] text-white hover:bg-[#e97e3a] w-full sm:w-auto"
                         onClick={() =>
                           document.getElementById("photoUpload")?.click()
                         }

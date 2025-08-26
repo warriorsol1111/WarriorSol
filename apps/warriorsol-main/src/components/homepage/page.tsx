@@ -8,6 +8,7 @@ import WhyIWearMine from "./WhyIWearMine";
 import PurchasePower from "./PurchasePower";
 import CircleThatNeverCloses from "./CircleThatNeverCloses";
 import RebellionNewsletter from "./RebellionNewsletter";
+import { SocialLinks } from "../shared/socialLinks";
 
 const HomePage = () => {
   return (
@@ -20,6 +21,7 @@ const HomePage = () => {
       <PurchasePower />
       <CircleThatNeverCloses />
       <RebellionNewsletter />
+      <SocialLinks />
       <Footer />
     </div>
   );

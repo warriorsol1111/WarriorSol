@@ -258,9 +258,9 @@ const ChooseYourArmor: React.FC = () => {
           variant="outline"
           size="lg"
           onClick={() => router.push("/products")}
-          className="w-full sm:w-auto border border-black px-4 sm:px-5 py-2.5 sm:py-3 text-base sm:text-lg lg:text-[20px] font-['Inter'] capitalize flex items-center justify-center sm:justify-start gap-2 hover:bg-black hover:text-white transition"
+          className="w-full sm:w-auto border border-black px-4 sm:px-5 py-2.5 sm:py-3 !rounded-none text-base sm:text-lg lg:text-[20px] font-['Inter'] capitalize flex items-center justify-center sm:justify-start gap-2 hover:bg-white hover:text-black transition"
         >
-          See All Products
+          See All Products ↗
         </Button>
       </div>
 
@@ -290,12 +290,12 @@ const ChooseYourArmor: React.FC = () => {
                   />
                 </div>
                 {/* Details */}
-                <div className="flex justify-between px-1 sm:px-2">
+                <div className="flex justify-between px-1 mt-4 sm:px-2">
                   <div>
                     <div className="text-sm sm:text-base lg:text-[16px] font-['Cormorant'] font-medium text-[#1F1F1F]">
                       {product.title}
                     </div>
-                    <div className="text-xs sm:text-[12.5px] text-[#1E1E1E99] font-light font-['Inter']">
+                    <div className="text-xs sm:text-[12.5px] text-[#1F1F1F99] font-light font-['Inter']">
                       {product.category}
                     </div>
                   </div>

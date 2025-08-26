@@ -128,7 +128,7 @@ const PurchasePower: React.FC<PurchasePowerProps> = ({
         </h2>
         <motion.p
           variants={fadeInUp}
-          className="text-[16px] sm:text-[18px] lg:text-[20px] font-light font-['Inter'] text-[#1F1F1F]/70 mt-2 sm:mt-3 px-4"
+          className="text-[16px] sm:text-[18px] lg:text-[20px] font-light font-['Inter'] text-[#1F1F1FB2] mt-2 sm:mt-3 px-4"
         >
           {subtitle}
         </motion.p>
