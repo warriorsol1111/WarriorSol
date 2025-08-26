@@ -36,13 +36,13 @@ export default function Donations() {
           {/* Cards */}
           <div className="flex flex-col justify-center space-y-6 w-full lg:col-span-1">
             <div className="p-4 sm:p-6 w-full sm:w-[280px] h-auto bg-[#F5F4A9] rounded-2xl shadow-md transform transition-transform duration-300 hover:scale-105">
-              <p className="text-lg sm:text-xl md:text-2xl font-semibold leading-snug">
+              <p className="text-lg sm:text-xl md:text-[28px] text-[#1B1E1E] font-semibold leading-snug">
                 Every dollar you donate goes directly towards our foundation.
               </p>
             </div>
 
             <div className="p-4 sm:p-6 bg-[#C5E99E] rounded-2xl shadow-md transform transition-transform duration-300 hover:scale-105">
-              <h3 className="text-4xl sm:text-5xl md:text-6xl lg:text-[80px] font-semibold">
+              <h3 className="text-4xl sm:text-5xl md:text-6xl lg:text-[80px] text-[#1B1E1E] font-semibold">
                 150K+
               </h3>
               <p className="text-sm sm:text-base md:text-[16px] text-[#484848] font-semibold mt-2">

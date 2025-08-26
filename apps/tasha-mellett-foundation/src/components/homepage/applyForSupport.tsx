@@ -67,7 +67,16 @@ export default function ApplyForSupport({
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    if (!form.familyName) newErrors.familyName = "Family name is required.";
+
+    // Family name validation
+    if (!form.familyName) {
+      newErrors.familyName = "Family name is required.";
+    } else if (!/^[A-Za-z\s]+$/.test(form.familyName)) {
+      newErrors.familyName = "Family name can only contain letters and spaces.";
+    } else if (form.familyName.trim().length < 3) {
+      newErrors.familyName = "Family name must be at least 3 characters.";
+    }
+
     if (!form.contactEmail) newErrors.contactEmail = "Email is required.";
     if (!form.contactPhone)
       newErrors.contactPhone = "Phone number is required.";
@@ -138,7 +147,7 @@ export default function ApplyForSupport({
       <TooltipProvider>
         <Card className="w-full !shadow-none mx-auto !border-none">
           <CardHeader>
-            <CardTitle className="text-[44px] text-center font-extrabold ">
+            <CardTitle className="text-[44px] text-[#1f1f1f] text-center font-extrabold ">
               {heading}
             </CardTitle>
             <CardDescription className="text-[27px] text-[#999999] font-medium text-center ">
@@ -152,6 +161,7 @@ export default function ApplyForSupport({
                 <div className="space-y-2">
                   <Label className="text-xl" htmlFor="familyName">
                     Family Name
+                    <span className="text-red-500 ml-[-6px]">*</span>
                   </Label>
                   <Input
                     id="familyName"
@@ -169,6 +179,7 @@ export default function ApplyForSupport({
                 <div className="space-y-2">
                   <Label className="text-xl" htmlFor="contactEmail">
                     Contact Email
+                    <span className="text-red-500 ml-[-6px]">*</span>
                   </Label>
                   <Input
                     id="contactEmail"
@@ -189,6 +200,7 @@ export default function ApplyForSupport({
                 <div className="space-y-2">
                   <Label className="text-xl" htmlFor="contactPhone">
                     Contact Phone
+                    <span className="text-red-500 ml-[-6px]">*</span>
                   </Label>
                   <PhoneInput
                     country={"pk"}
@@ -218,6 +230,7 @@ export default function ApplyForSupport({
                 <div className="space-y-2">
                   <Label className="text-xl" htmlFor="familySize">
                     Family Size
+                    <span className="text-red-500 ml-[-6px] ">*</span>
                   </Label>
                   <Input
                     id="familySize"
@@ -237,6 +250,7 @@ export default function ApplyForSupport({
                 <div className="space-y-2">
                   <Label className="text-xl" htmlFor="supportType">
                     Type of Support Needed
+                    <span className="text-red-500 ml-[-6px]">*</span>
                   </Label>
                   <Select
                     value={form.supportType}
@@ -267,6 +281,7 @@ export default function ApplyForSupport({
                 <div className="space-y-2">
                   <Label className="text-xl" htmlFor="requestedAmount">
                     Requested Amount
+                    <span className="text-red-500 ml-[-6px]">*</span>
                   </Label>
                   <Input
                     id="requestedAmount"
@@ -289,6 +304,7 @@ export default function ApplyForSupport({
               <div className="space-y-2">
                 <Label className="text-xl" htmlFor="situation">
                   Describe Your Situation
+                  <span className="text-red-500 ml-[-6px]">*</span>
                 </Label>
                 <Input
                   id="situation"
@@ -332,7 +348,7 @@ export default function ApplyForSupport({
                   <div>
                     <Button
                       size="lg"
-                      className="w-full text-xl bg-[#C1E965] text-[#023729] hover:bg-[#C1E965]/90"
+                      className="w-full text-lg bg-[#C1E965] text-[#023729] hover:bg-[#C1E965]/90"
                       type="submit"
                       disabled={loading || !isLoggedIn}
                     >

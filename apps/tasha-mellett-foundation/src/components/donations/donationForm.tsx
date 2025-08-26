@@ -37,6 +37,12 @@ export default function DonationForm() {
     if (!name.trim()) {
       newErrors.name = "Full name is required.";
       valid = false;
+    } else if (name.trim().length < 3) {
+      newErrors.name = "Name must be at least 3 characters long.";
+      valid = false;
+    } else if (!/^[A-Za-z\s]+$/.test(name)) {
+      newErrors.name = "Name can only contain letters and spaces.";
+      valid = false;
     }
     if (!email.trim()) {
       newErrors.email = "Email is required.";
@@ -82,7 +88,10 @@ export default function DonationForm() {
       alert("Failed to create checkout session");
     }
   }
-
+  const getButtonStyle = (val: string) =>
+    amount === val
+      ? "bg-[#C1E965B2] text-black border-none"
+      : "bg-white border-gray-200";
   return (
     <>
       <div className="text-center mb-8 mt-10 md:mb-16 px-4">
@@ -158,12 +167,14 @@ export default function DonationForm() {
                       <Button
                         key={val}
                         variant="outline"
-                        className={`rounded-xl text-lg font-[Inter] h-10 sm:h-12 ${
-                          amount === val
-                            ? "bg-[#C1E965B2] text-black border-none"
-                            : "bg-white border-gray-200"
-                        }`}
-                        onClick={() => setAmount(val)}
+                        className={`rounded-xl text-lg font-[Inter] h-10 sm:h-12 ${getButtonStyle(
+                          val
+                        )}`}
+                        onClick={() => {
+                          // Batch updates in a single setState call
+                          setAmount(val);
+                          if (customAmount) setCustomAmount("");
+                        }}
                       >
                         ${val}
                       </Button>
@@ -175,7 +186,14 @@ export default function DonationForm() {
                         placeholder="Custom ($)"
                         type="number"
                         value={customAmount}
-                        onChange={(e) => setCustomAmount(e.target.value)}
+                        onFocus={() => setAmount("")}
+                        onChange={(e) => {
+                          setCustomAmount(e.target.value);
+                          setAmount("");
+                          if (errors.amount) {
+                            setErrors({ ...errors, amount: "" });
+                          }
+                        }}
                         className="rounded-xl bg-white border-gray-200"
                       />
                     </div>
@@ -198,7 +216,17 @@ export default function DonationForm() {
                       className="rounded-xl bg-white border-gray-200"
                       type="text"
                       value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      onChange={(e) => {
+                        // Only allow letters and spaces
+                        const value = e.target.value.replace(
+                          /[^A-Za-z\s]/g,
+                          ""
+                        );
+                        setName(value);
+                        if (errors.name) {
+                          setErrors({ ...errors, name: "" });
+                        }
+                      }}
                     />
                     {errors.name && (
                       <div className="text-red-500 text-sm mt-1">
@@ -215,7 +243,12 @@ export default function DonationForm() {
                       className="rounded-xl bg-white border-gray-200"
                       type="email"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        if (errors.email) {
+                          setErrors({ ...errors, email: "" });
+                        }
+                      }}
                     />
                     {errors.email && (
                       <div className="text-red-500 text-sm mt-1">

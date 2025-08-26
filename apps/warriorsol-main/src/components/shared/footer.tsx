@@ -57,6 +57,7 @@ const Footer = () => {
               </li>
             </ul>
           </div>
+
           {/* About Column */}
           <div className="flex-1">
             <h4 className="text-white text-[16px] font-medium font-[Playfair] mb-3">
@@ -89,6 +90,7 @@ const Footer = () => {
               </li>
             </ul>
           </div>
+
           {/* Support Column */}
           <div className="flex-1">
             <h4 className="text-white text-[16px] font-medium font-[Playfair] mb-3">
@@ -109,17 +111,17 @@ const Footer = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="mt-10 pt-6 border-t border-[#353534] flex flex-col md:flex-row items-center justify-between">
-        <div className="text-sm font-[Inter] font-normal text-white mb-4 md:mb-0">
-          © 2025 Warrior Sol. Rooted in light. All rights reserved.{" "}
+      <div className="mt-10 pt-6 border-t border-[#353534] flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+        <div className="text-sm font-[Inter] font-normal text-white">
+          © 2025 Warrior Sol. Rooted in light. All rights reserved.
         </div>
-        <div className="text-sm flex space-x-6 font-[Inter] font-normal text-white mb-4 md:mb-0">
-          <a href="#" className="hover:text-white transition-colors font-light">
+        <div className="text-sm flex space-x-6 font-[Inter] font-normal text-[#FFFFFF99]">
+          <Link href="/privacy" className="hover:text-white transition-colors">
             Privacy Policy
-          </a>
-          <a href="#" className="hover:text-white transition-colors font-light">
-            Terms of services
-          </a>
+          </Link>
+          <Link href="/terms" className="hover:text-white transition-colors">
+            Terms of Service
+          </Link>
         </div>
       </div>
     </footer>

@@ -180,9 +180,9 @@ export const Filter: React.FC<FilterProps> = ({
                   variant="link"
                   key={option}
                   onClick={() => toggleFilter("sortBy", option)}
-                  className={`px-4 py-2 rounded-md text-lg font-[Inter] text-[#1F1F1F] border transition-colors opacity-60 ${
+                  className={`px-4 py-2 rounded-md text-lg font-[Inter] border transition-colors ${
                     tempFilters.sortBy === option
-                      ? "border-[4px] border-[#EE925466] "
+                      ? "bg-[#EE9254] text-white"
                       : "bg-white text-black border-gray-300 hover:border-gray-400"
                   }`}
                 >
@@ -204,9 +204,9 @@ export const Filter: React.FC<FilterProps> = ({
                   variant="link"
                   key={type}
                   onClick={() => toggleFilter("productType", type)}
-                  className={`px-4 py-2 rounded-md text-lg font-[Inter] text-[#1F1F1F] border transition-colors opacity-60 ${
+                  className={`px-4 py-2 rounded-md text-lg font-[Inter] border transition-colors ${
                     tempFilters.productType.includes(type)
-                      ? "border-[4px] border-[#EE925466] "
+                      ? "bg-[#EE9254] text-white"
                       : "bg-white text-black border-gray-300 hover:border-gray-400"
                   }`}
                 >
@@ -231,10 +231,10 @@ export const Filter: React.FC<FilterProps> = ({
                     size="lg"
                     variant="link"
                     onClick={() => toggleFilter("color", colorOption.value)}
-                    className={`w-10 h-10 rounded-md border transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                    className={`px-4 py-2 rounded-md text-lg font-[Inter] border transition-colors ${
                       tempFilters.color.includes(colorOption.value)
-                        ? "ring-2 ring-black ring-offset-2 border-black"
-                        : "border-gray-300 hover:border-gray-400"
+                        ? "bg-[#EE9254] text-white"
+                        : "bg-white text-black border-gray-300 hover:border-gray-400"
                     }`}
                     style={{
                       backgroundColor: colorOption.color,
@@ -264,9 +264,9 @@ export const Filter: React.FC<FilterProps> = ({
                   variant="link"
                   key={size}
                   onClick={() => toggleFilter("size", size)}
-                  className={`px-4 py-2 rounded-md text-lg font-[Inter] text-[#1F1F1F] border transition-colors opacity-60 ${
+                  className={`px-4 py-2 rounded-md text-lg font-[Inter] border transition-colors opacity-60 ${
                     tempFilters.size.includes(size)
-                      ? "border-[4px] border-[#EE925466] "
+                      ? "bg-[#EE9254] text-white"
                       : "bg-white text-black border-gray-300 hover:border-gray-400"
                   }`}
                 >
@@ -288,9 +288,9 @@ export const Filter: React.FC<FilterProps> = ({
                   variant="link"
                   key={range}
                   onClick={() => toggleFilter("priceRange", range)}
-                  className={`px-4 py-2 rounded-md text-lg font-[Inter] text-[#1F1F1F] border opacity-60 transition-colors ${
+                  className={`px-4 py-2 rounded-md text-lg font-[Inter] border transition-colors ${
                     tempFilters.priceRange.includes(range)
-                      ? "border-[4px] border-[#EE925466] "
+                      ? "bg-[#EE9254] text-white"
                       : "bg-white text-black border-gray-300 hover:border-gray-400"
                   }`}
                 >
@@ -312,9 +312,9 @@ export const Filter: React.FC<FilterProps> = ({
                   variant="link"
                   key={option}
                   onClick={() => toggleFilter("availability", option)}
-                  className={`px-4 py-2 rounded-md text-lg font-[Inter] text-[#1F1F1F] opacity-60 border transition-colors ${
+                  className={`px-4 py-2 rounded-md text-lg font-[Inter] border transition-colors ${
                     tempFilters.availability.includes(option)
-                      ? "border-[4px] border-[#EE925466] "
+                      ? "bg-[#EE9254] text-white"
                       : "bg-white text-black border-gray-300 hover:border-gray-400"
                   }`}
                 >
