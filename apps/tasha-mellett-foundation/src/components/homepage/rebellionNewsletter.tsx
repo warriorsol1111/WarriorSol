@@ -22,7 +22,7 @@ const RebellionNewsletter = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ email, site: "tasha-mellett" }),
+          body: JSON.stringify({ email, site = "tasha_mellett" }),
         }
       );
       const data = await response.json();

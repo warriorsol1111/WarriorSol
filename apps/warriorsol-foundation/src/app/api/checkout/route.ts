@@ -7,15 +7,16 @@ export async function POST(req: Request) {
   });
 
   const body = await req.json();
-
   const { amount, email, name, donationType, userId, foundation } = body;
 
   try {
+    const isSubscription = donationType === "monthly";
+
     const session = await stripe.checkout.sessions.create({
-      mode: donationType === "monthly" ? "subscription" : "payment",
+      mode: isSubscription ? "subscription" : "payment",
       payment_method_types: ["card"],
       line_items: [
-        donationType === "monthly"
+        isSubscription
           ? {
               price: getRecurringPriceId(amount),
               quantity: 1,
@@ -24,7 +25,7 @@ export async function POST(req: Request) {
               price_data: {
                 currency: "usd",
                 product_data: {
-                  name: "Donation to Warrior Sol Foundation",
+                  name: "Donation to Warriorsol Foundation",
                   description:
                     "Support families facing their greatest challenges",
                 },
@@ -33,15 +34,16 @@ export async function POST(req: Request) {
               quantity: 1,
             },
       ],
-      subscription_data: {
-        metadata: {
-          donor_name: name,
-          donation_type: donationType,
-          user_id: userId ?? "anonymous",
-          foundation,
+      ...(isSubscription && {
+        subscription_data: {
+          metadata: {
+            donor_name: name,
+            donation_type: donationType,
+            user_id: userId ?? "anonymous",
+            foundation,
+          },
         },
-      },
-
+      }),
       customer_email: email,
       metadata: {
         donor_name: name,
@@ -49,7 +51,6 @@ export async function POST(req: Request) {
         user_id: userId ?? "anonymous",
         foundation,
       },
-
       success_url: process.env.STRIPE_SUCCESS_URL!,
       cancel_url: process.env.STRIPE_CANCEL_URL!,
     });
