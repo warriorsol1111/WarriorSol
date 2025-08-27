@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,39 @@ export default function DonationForm() {
     email: "",
     amount: "",
   });
+
+  // Memoize button styles to avoid recalculating on every render
+  const buttonStyles = useMemo(
+    () => ({
+      selected: "bg-[#C1E965B2] text-black border-none",
+      default: "bg-white border-gray-200",
+    }),
+    []
+  );
+
+  // Memoize radio button styles
+  const radioStyles = useMemo(
+    () => ({
+      selected: "bg-[#C1E965B2] text-black border-none",
+      default: "bg-white border-gray-200",
+    }),
+    []
+  );
+
+  // Memoize donation amounts array
+  const donationAmounts = useMemo(
+    () => ["10", "25", "50", "100", "250", "500"],
+    []
+  );
+
+  // Memoize donation types array
+  const donationTypes = useMemo(
+    () => [
+      { id: "one-time", label: "One-Time Donation" },
+      { id: "monthly", label: "Monthly Recurring Donation" },
+    ],
+    []
+  );
 
   function validateEmail(email: string) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -64,6 +97,66 @@ export default function DonationForm() {
     return valid;
   }
 
+  // Optimized amount selection handler
+  const handleAmountSelect = useCallback(
+    (val: string) => {
+      setAmount(val);
+      // Only clear custom amount if it's not already empty to avoid unnecessary re-renders
+      if (customAmount) {
+        setCustomAmount("");
+      }
+    },
+    [customAmount]
+  );
+
+  // Optimized custom amount handler
+  const handleCustomAmountChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setCustomAmount(value);
+      // Only clear amount if it's not already empty
+      if (amount) {
+        setAmount("");
+      }
+      // Clear error if it exists
+      if (errors.amount) {
+        setErrors((prev) => ({ ...prev, amount: "" }));
+      }
+    },
+    [amount, errors.amount]
+  );
+
+  // Optimized custom amount focus handler
+  const handleCustomAmountFocus = useCallback(() => {
+    if (amount) {
+      setAmount("");
+    }
+  }, [amount]);
+
+  // Optimized name change handler
+  const handleNameChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      // Only allow letters and spaces
+      const value = e.target.value.replace(/[^A-Za-z\s]/g, "");
+      setName(value);
+      if (errors.name) {
+        setErrors((prev) => ({ ...prev, name: "" }));
+      }
+    },
+    [errors.name]
+  );
+
+  // Optimized email change handler
+  const handleEmailChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setEmail(e.target.value);
+      if (errors.email) {
+        setErrors((prev) => ({ ...prev, email: "" }));
+      }
+    },
+    [errors.email]
+  );
+
   async function handleDonate() {
     if (!validate()) return;
     const selectedAmount = customAmount || amount;
@@ -88,10 +181,7 @@ export default function DonationForm() {
       alert("Failed to create checkout session");
     }
   }
-  const getButtonStyle = (val: string) =>
-    amount === val
-      ? "bg-[#C1E965B2] text-black border-none"
-      : "bg-white border-gray-200";
+
   return (
     <>
       <div className="text-center mb-8 mt-10 md:mb-16 px-4">
@@ -127,17 +217,14 @@ export default function DonationForm() {
                     onValueChange={setDonationType}
                     className="flex flex-col gap-4"
                   >
-                    {[
-                      { id: "one-time", label: "One-Time Donation" },
-                      { id: "monthly", label: "Monthly Recurring Donation" },
-                    ].map(({ id, label }) => (
+                    {donationTypes.map(({ id, label }) => (
                       <div
                         key={id}
                         onClick={() => setDonationType(id)}
                         className={`flex items-center gap-2 p-3 border rounded-xl cursor-pointer ${
                           donationType === id
-                            ? "bg-[#C1E965B2] text-black border-none"
-                            : "bg-white border-gray-200"
+                            ? radioStyles.selected
+                            : radioStyles.default
                         }`}
                       >
                         <RadioGroupItem
@@ -163,18 +250,16 @@ export default function DonationForm() {
                     Donation Amount
                   </Label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    {["10", "25", "50", "100", "250", "500"].map((val) => (
+                    {donationAmounts.map((val) => (
                       <Button
                         key={val}
                         variant="outline"
-                        className={`rounded-xl text-lg font-[Inter] h-10 sm:h-12 ${getButtonStyle(
-                          val
-                        )}`}
-                        onClick={() => {
-                          // Batch updates in a single setState call
-                          setAmount(val);
-                          if (customAmount) setCustomAmount("");
-                        }}
+                        className={`rounded-xl text-lg font-[Inter] h-10 sm:h-12 ${
+                          amount === val
+                            ? buttonStyles.selected
+                            : buttonStyles.default
+                        }`}
+                        onClick={() => handleAmountSelect(val)}
                       >
                         ${val}
                       </Button>
@@ -186,14 +271,8 @@ export default function DonationForm() {
                         placeholder="Custom ($)"
                         type="number"
                         value={customAmount}
-                        onFocus={() => setAmount("")}
-                        onChange={(e) => {
-                          setCustomAmount(e.target.value);
-                          setAmount("");
-                          if (errors.amount) {
-                            setErrors({ ...errors, amount: "" });
-                          }
-                        }}
+                        onFocus={handleCustomAmountFocus}
+                        onChange={handleCustomAmountChange}
                         className="rounded-xl bg-white border-gray-200"
                       />
                     </div>
@@ -216,17 +295,7 @@ export default function DonationForm() {
                       className="rounded-xl bg-white border-gray-200"
                       type="text"
                       value={name}
-                      onChange={(e) => {
-                        // Only allow letters and spaces
-                        const value = e.target.value.replace(
-                          /[^A-Za-z\s]/g,
-                          ""
-                        );
-                        setName(value);
-                        if (errors.name) {
-                          setErrors({ ...errors, name: "" });
-                        }
-                      }}
+                      onChange={handleNameChange}
                     />
                     {errors.name && (
                       <div className="text-red-500 text-sm mt-1">
@@ -243,12 +312,7 @@ export default function DonationForm() {
                       className="rounded-xl bg-white border-gray-200"
                       type="email"
                       value={email}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                        if (errors.email) {
-                          setErrors({ ...errors, email: "" });
-                        }
-                      }}
+                      onChange={handleEmailChange}
                     />
                     {errors.email && (
                       <div className="text-red-500 text-sm mt-1">

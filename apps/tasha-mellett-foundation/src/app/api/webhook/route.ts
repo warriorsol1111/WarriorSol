@@ -148,6 +148,8 @@ export async function POST(req: NextRequest) {
     const amount = invoice.amount_paid;
     const currency = invoice.currency;
     const foundation = invoice.metadata?.foundation;
+    console.log("foundation metadata:", foundation);
+    console.log("backend URL:", process.env.NEXT_PUBLIC_BACKEND_URL);
 
     const customerEmail =
       invoice.customer_email || (invoice.customer as string);

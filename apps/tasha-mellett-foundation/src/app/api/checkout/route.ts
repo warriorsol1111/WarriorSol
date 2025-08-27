@@ -33,6 +33,14 @@ export async function POST(req: Request) {
               quantity: 1,
             },
       ],
+      subscription_data: {
+        metadata: {
+          donor_name: name,
+          donation_type: donationType,
+          user_id: userId ?? "anonymous",
+          foundation,
+        },
+      },
 
       customer_email: email,
       metadata: {
