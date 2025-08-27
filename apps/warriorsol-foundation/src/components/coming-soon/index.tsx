@@ -76,17 +76,22 @@ export default function ComingSoon() {
       const response = await fetch(`${BACKEND_URL}/launch-mails/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, site: "foundation" }),
       });
 
       const data = await response.json();
 
-      if (data.message === "Email already exists") {
+      if (data.message === "Email already subscribed for this site") {
         toast.dismiss();
         toast.error("Email already exists in the waitlist");
       } else {
-        toast.dismiss();
-        toast.success("Email added to waitlist");
+        if (data.message === "Email added successfully") {
+          toast.dismiss();
+          toast.success("Email added to waitlist");
+        } else {
+          toast.dismiss();
+          toast.error("Failed to add email to waitlist");
+        }
       }
 
       setEmail("");

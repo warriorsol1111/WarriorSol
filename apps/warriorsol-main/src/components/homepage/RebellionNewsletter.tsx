@@ -41,7 +41,7 @@ const RebellionNewsletter = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ email, site: "warrior_sol" }),
+          body: JSON.stringify({ email }),
         }
       );
       const data = await response.json();
