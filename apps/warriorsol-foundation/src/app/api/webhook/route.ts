@@ -147,8 +147,27 @@ export async function POST(req: NextRequest) {
     const receiptUrl = extractBestReceipt(invoice);
     const amount = invoice.amount_paid;
     const currency = invoice.currency;
-    const foundation = invoice.metadata?.foundation;
+    let foundation = invoice.metadata?.foundation;
 
+    // Fallback 1: check subscription metadata on the invoice
+    if (!foundation && invoice.subscription) {
+      try {
+        const subscription = await stripe.subscriptions.retrieve(
+          invoice.subscription
+        );
+        foundation = subscription.metadata?.foundation;
+      } catch (err) {
+        console.error("❌ Failed to fetch subscription metadata", err);
+      }
+    }
+
+    // Fallback 2: check the first line item metadata
+    if (!foundation && invoice.lines?.data?.[0]?.metadata?.foundation) {
+      foundation = invoice.lines.data[0].metadata.foundation;
+    }
+
+    console.log("foundation metadata:", foundation);
+    console.log("backend URL:", process.env.NEXT_PUBLIC_BACKEND_URL);
     const customerEmail =
       invoice.customer_email || (invoice.customer as string);
     let endpoint = "";
