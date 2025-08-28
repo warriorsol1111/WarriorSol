@@ -1,18 +1,10 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import {
-  AiFillHeart,
-  AiOutlineHeart,
-  AiOutlineShoppingCart,
-} from "react-icons/ai";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
-import toast from "react-hot-toast";
-import { useCartStore } from "@/store/cart-store";
 import { GoArrowUpRight } from "react-icons/go";
 interface Product {
   id: string;
@@ -57,12 +49,7 @@ interface ShopifyProductResponse {
 const RecommendedProducts: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [wishlistLoading, setWishlistLoading] = useState<string | null>(null);
-  const [cartLoading, setCartLoading] = useState<string | null>(null);
-  const [wishlist, setWishlist] = useState<{ [id: string]: boolean }>({});
   const router = useRouter();
-  const { data: session } = useSession();
-  const { addItem, openCart } = useCartStore();
 
   const extractIDFromShopifyID = (id: string): string => {
     return id.split("/").pop() || "";
@@ -108,135 +95,6 @@ const RecommendedProducts: React.FC = () => {
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
-
-  // Helper to get first variantId for a product
-  const getFirstVariantId = async (id: string): Promise<string | null> => {
-    try {
-      const res = await fetch(
-        `/api/shopify/getProductById?id=${encodeURIComponent(id)}`
-      );
-      const data = await res.json();
-      // The structure may be: data.variants.edges[0].id or similar
-      const variantId =
-        data?.variants?.[0]?.id ||
-        data?.variant?.id ||
-        data?.variants?.edges?.[0]?.node?.id;
-      return variantId || null;
-    } catch {
-      return null;
-    }
-  };
-
-  // Check wishlist status for each product
-  useEffect(() => {
-    const checkAllWishlists = async () => {
-      if (!session) return;
-      const newWishlist: { [id: string]: boolean } = {};
-      for (const product of products) {
-        const variantId = await getFirstVariantId(product.id);
-        if (!variantId) continue;
-        try {
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/wishlist/check?variantId=${variantId}`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                authorization: `Bearer ${session?.user.token}`,
-              },
-            }
-          );
-          const result = await res.json();
-          newWishlist[product.id] = !!result?.data?.isInWishlist;
-        } catch {
-          newWishlist[product.id] = false;
-        }
-      }
-      setWishlist(newWishlist);
-    };
-    if (products.length && session) checkAllWishlists();
-  }, [products, session]);
-
-  // Add these handlers inside the component
-  const handleToggleWishlist = async (product: Product) => {
-    setWishlistLoading(product.id);
-    const variantId = await getFirstVariantId(product.id);
-    if (!variantId) {
-      toast.dismiss();
-      toast.error("Could not find product variant.");
-      setWishlistLoading(null);
-      return;
-    }
-    if (!session) {
-      toast.dismiss();
-      toast.error("Please log in to use wishlist.");
-      setWishlistLoading(null);
-      return;
-    }
-    const isInWishlist = wishlist[product.id];
-    const method = isInWishlist ? "DELETE" : "POST";
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/wishlist`,
-        {
-          method,
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.user.token}`,
-          },
-          body: JSON.stringify({ variantId }),
-        }
-      );
-      const result = await res.json();
-      if (res.ok) {
-        toast.dismiss();
-        toast.success(
-          isInWishlist ? "Item removed from Wishlist" : "Item Added to Wishlist"
-        );
-        setWishlist((prev) => ({ ...prev, [product.id]: !isInWishlist }));
-      } else {
-        toast.dismiss();
-        toast.error(result?.message || "Something went wrong");
-      }
-    } catch {
-      toast.dismiss();
-      toast.error("Failed to update wishlist. Please try again.");
-    } finally {
-      setWishlistLoading(null);
-    }
-  };
-
-  const handleAddToCart = async (product: Product) => {
-    setCartLoading(product.id);
-    const variantId = await getFirstVariantId(product.id);
-    if (!variantId) {
-      toast.dismiss();
-      toast.error("Could not find product variant.");
-      setCartLoading(null);
-      return;
-    }
-    try {
-      await addItem(
-        {
-          id: variantId,
-          name: product.title,
-          price: parseFloat(product.price.replace("$", "")),
-          color: "Default",
-          size: "One Size",
-          image: product.imageUrl,
-        },
-        1
-      );
-      openCart();
-      toast.dismiss();
-      toast.success("Added to cart!");
-    } catch {
-      toast.dismiss();
-      toast.error("Failed to add item to cart. Please try again.");
-    } finally {
-      setCartLoading(null);
-    }
-  };
 
   return (
     <section className="w-full ">
@@ -302,60 +160,6 @@ const RecommendedProducts: React.FC = () => {
                   </div>
                 </div>
               </Link>
-              {/* Overlay with icons OUTSIDE the anchor */}
-              <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Button
-                  variant="link"
-                  className="w-8 h-8 sm:w-10 sm:h-10 bg-white flex items-center justify-center text-lg sm:text-xl rounded-full shadow p-0"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleToggleWishlist(product);
-                  }}
-                  disabled={wishlistLoading === product.id}
-                >
-                  {wishlistLoading === product.id ? (
-                    <Loader2 className="animate-spin h-5 w-5" />
-                  ) : wishlist[product.id] ? (
-                    <AiFillHeart className="text-red-500" />
-                  ) : (
-                    <AiOutlineHeart className="text-gray-500" />
-                  )}
-                </Button>
-                {!product.availableForSale ? (
-                  <div title="Out of stock">
-                    <Button
-                      variant="link"
-                      className="w-8 h-8 sm:w-10 sm:h-10 bg-white flex items-center justify-center text-lg sm:text-xl rounded-full shadow p-0"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleAddToCart(product);
-                      }}
-                      disabled
-                    >
-                      <AiOutlineShoppingCart />
-                    </Button>
-                  </div>
-                ) : (
-                  <Button
-                    variant="link"
-                    className="w-8 h-8 sm:w-10 sm:h-10 bg-white flex items-center justify-center text-lg sm:text-xl rounded-full shadow p-0"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleAddToCart(product);
-                    }}
-                    disabled={cartLoading === product.id}
-                  >
-                    {cartLoading === product.id ? (
-                      <Loader2 className="animate-spin h-5 w-5" />
-                    ) : (
-                      <AiOutlineShoppingCart />
-                    )}
-                  </Button>
-                )}
-              </div>
             </div>
           ))
         )}

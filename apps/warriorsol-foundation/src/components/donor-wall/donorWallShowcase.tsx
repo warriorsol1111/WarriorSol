@@ -28,7 +28,7 @@ export default function DonorWallShowcase({
       {/* Total Raised + Top Donors */}
       <section className="w-full flex flex-col lg:flex-row gap-8 bg-white py-8 px-4 sm:px-6 rounded-lg shadow-md mt-8">
         {/* Image + Stats */}
-        <div className="relative w-full lg:w-1/2 h-[500px] sm:h-[600px] lg:h-[600px] rounded-lg overflow-hidden">
+        <div className="relative w-full lg:w-1/2 h-[1000px] rounded-lg overflow-hidden">
           <Image
             src={DonorWallImage}
             alt="Donor Wall"
@@ -63,11 +63,11 @@ export default function DonorWallShowcase({
 
         {/* Top Donors */}
         <div className="w-full lg:w-1/2 flex flex-col">
-          <h2 className="text-2xl sm:text-[42px] font-['Cormorant_SC'] mb-4">
+          <h2 className="text-2xl sm:text-[42px] font-['Cormorant_SC'] text-[#1F1F1F] mb-4">
             Top Contributors
           </h2>
           {topIndividualDonations.length === 0 ? (
-            <p className="text-sm text-gray-500 font-light italic">
+            <p className="text-sm text-[#1F1F1F99] font-light italic">
               No top donations yet. Be the first to support!
             </p>
           ) : (
@@ -83,7 +83,7 @@ export default function DonorWallShowcase({
                   return (
                     <div
                       key={donation.id}
-                      className="flex items-center justify-between bg-[#FAFAFA] rounded-lg p-4 sm:p-6 shadow-sm border-l-4 border-[#EE9254]"
+                      className="flex items-center justify-between bg-[#FAFAFA]  p-4 sm:p-6 shadow-sm border-l-4 border-[#EE9254]"
                     >
                       <div className="flex items-center gap-4">
                         <Avatar>
@@ -94,16 +94,16 @@ export default function DonorWallShowcase({
                           <AvatarFallback>{initials}</AvatarFallback>
                         </Avatar>
                         <div>
-                          <div className="font-medium text-lg sm:text-[26px] font-[Geist]">
+                          <div className="font-medium text-lg sm:text-[26px] text-[#1F1F1F] font-[Geist]">
                             {donation.name}
                           </div>
-                          <div className="text-xs sm:text-lg font-[Geist] text-gray-500">
+                          <div className="text-xs sm:text-lg font-[Geist] text-[#1F1F1F99]">
                             Donated on{" "}
                             {new Date(donation.createdAt).toLocaleDateString()}
                           </div>
                         </div>
                       </div>
-                      <div className="text-lg sm:text-[26px] font-[Geist] font-medium">
+                      <div className="text-lg sm:text-[26px] font-[Geist] text-[#1F1F1F] font-medium">
                         ${(donation.amount / 100).toLocaleString()}
                       </div>
                     </div>
@@ -117,11 +117,11 @@ export default function DonorWallShowcase({
 
       {/* Recent Donations */}
       <section className="w-full mt-8 bg-[#FFF8F0] rounded-xl shadow-lg p-4 sm:p-6 md:p-8">
-        <h2 className="text-2xl sm:text-[42px] font-['Cormorant_SC'] mb-4">
+        <h2 className="text-2xl sm:text-[42px] text-[#1F1F1F] font-['Cormorant_SC'] mb-4">
           Recent Donations
         </h2>
         {recentDonations.length === 0 ? (
-          <p className="text-sm text-gray-500 font-light italic">
+          <p className="text-sm text-[#1F1F1F99] font-light italic">
             No recent donations available at the moment.
           </p>
         ) : (
@@ -144,16 +144,16 @@ export default function DonorWallShowcase({
                       <AvatarFallback>{initials}</AvatarFallback>
                     </Avatar>
                     <div>
-                      <div className="font-medium text-lg sm:text-[26px] font-[Geist]">
+                      <div className="font-medium text-lg sm:text-[26px] text-[#1F1F1F] font-[Geist]">
                         {donation.name}
                       </div>
-                      <div className="text-xs sm:text-lg font-[Geist] text-gray-500">
+                      <div className="text-xs sm:text-lg font-[Geist] text-[#1F1F1F99]">
                         Donated on{" "}
                         {new Date(donation.createdAt).toLocaleDateString()}
                       </div>
                     </div>
                   </div>
-                  <div className="text-lg sm:text-[26px] font-[Geist] font-medium">
+                  <div className="text-lg sm:text-[26px] font-[Geist] text-[#1F1F1F] font-medium">
                     ${(donation.amount / 100).toLocaleString()}
                   </div>
                 </div>

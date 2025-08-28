@@ -2,7 +2,6 @@ import React from "react";
 import { FaRegHeart } from "react-icons/fa6";
 import { HiOutlineUsers } from "react-icons/hi2";
 import { BiDonateHeart } from "react-icons/bi";
-import { BsArrowUpRightCircleFill } from "react-icons/bs";
 
 const OurMission = () => {
   const cards = [
@@ -51,9 +50,6 @@ const OurMission = () => {
             <p className='text-[15px] md:text-[16px] font-light font-["Inter"] text-[#1F1F1F]/70 max-w-[280px]'>
               {card.description}
             </p>
-            <div className="mt-6 flex items-center justify-center">
-              <BsArrowUpRightCircleFill className="w-[42px] h-[42px] text-[#EE9254]" />
-            </div>
           </div>
         ))}
       </div>

@@ -145,15 +145,24 @@ export default function DonationForm() {
                         onClick={() => setDonationType(id)}
                         className={`flex items-center gap-2 p-3 border rounded cursor-pointer transition ${
                           donationType === id
-                            ? "bg-[#EE9254] !text-white border-none"
+                            ? "bg-[#EE9254] text-white border-none"
                             : "bg-white border-gray-200"
                         }`}
                       >
-                        <RadioGroupItem value={id} id={id} />
+                        <RadioGroupItem
+                          value={id}
+                          id={id}
+                          className="
+          h-5 w-5 rounded-full border-2
+          border-black bg-transparent
+          data-[state=checked]:border-white
+          data-[state=checked]:bg-white
+        "
+                        />
                         <Label
                           htmlFor={id}
                           className={`cursor-pointer text-base sm:text-lg ${
-                            donationType === id ? "text-white" : ""
+                            donationType === id ? "text-white" : "text-black"
                           }`}
                         >
                           {label}
@@ -173,7 +182,7 @@ export default function DonationForm() {
                       <Button
                         key={val}
                         variant="outline"
-                        className={`rounded text-base hover:bg-[#EE9254] hover:text-white sm:text-lg font-[Inter] h-10 sm:h-12 ${
+                        className={`rounded text-base hover:bg-[#EE9254] hover:text-white sm:text-lg font-[Inter] h-10 sm:h-13 ${
                           amount === val
                             ? "bg-[#EE9254] text-white border-none"
                             : "bg-white border-gray-200"

@@ -80,7 +80,7 @@ export default function Donations() {
           </div>
 
           {/* Family Image */}
-          <div className="relative h-52 sm:h-64 lg:h-80 w-full overflow-hidden">
+          <div className="relative h-52 sm:h-64 lg:h-[400px] w-full overflow-hidden">
             <Image
               src={ChangeLife}
               alt="Family enjoying time together in a park"

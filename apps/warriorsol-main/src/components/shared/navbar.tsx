@@ -24,49 +24,30 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import NavbarSearchDrawer from "./navbarDrawer";
 import { useRouter } from "next/navigation";
+import { useWishlistStore } from "@/store/wishlist-store";
 
 export default function Navbar() {
   const router = useRouter();
   const hydrateCart = useCartStore((state) => state.hydrateCart);
   const itemCount = useCartStore((state) => state.itemCount);
   const toggleCart = useCartStore((state) => state.toggleCart);
-  const [count, setCount] = useState(0);
   const { data: session } = useSession();
   const pathname = usePathname();
 
   const foundationURL = process.env.NEXT_PUBLIC_WARRIOR_SOL_FOUNDATION_APP_URL;
+  const { count, hydrateWishlist } = useWishlistStore();
 
   useEffect(() => {
     hydrateCart();
   }, [hydrateCart]);
-
   useEffect(() => {
-    if (!session?.user?.token) return;
-
-    const fetchWishlist = async () => {
-      try {
-        const countRes = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/wishlist/count`,
-          {
-            headers: { Authorization: `Bearer ${session?.user?.token}` },
-          }
-        );
-
-        const countData = await countRes.json();
-
-        if (countData?.data) {
-          setCount(Number(countData.data));
-        }
-      } catch (error) {
-        console.error("Error fetching wishlist:", error);
-      }
-    };
-
-    fetchWishlist();
-  }, [session?.user?.token]);
+    if (session?.user?.token) {
+      hydrateWishlist(session.user.token);
+    }
+  }, [session?.user?.token, hydrateWishlist]);
 
   const userName =
     session?.user?.firstName || session?.user?.lastName

@@ -346,6 +346,7 @@ export default function AccountPage() {
                                 await update({
                                   profilePhoto: null,
                                 });
+
                                 setPreviewUrl(null);
                                 setSelectedImage(null);
                               } else {

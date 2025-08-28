@@ -8,6 +8,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Loader2 } from "lucide-react";
 import { IoTrashBin } from "react-icons/io5";
+import { useWishlistStore } from "@/store/wishlist-store";
 
 interface VariantDetail {
   title: string;
@@ -29,8 +30,8 @@ export default function Wishlist() {
   const { data: session } = useSession();
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [count, setCount] = useState(0);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const { count, removeItem, clearWishlist } = useWishlistStore();
 
   const [removingItems, setRemovingItems] = useState<Set<string>>(new Set());
 
@@ -58,7 +59,7 @@ export default function Wishlist() {
         setWishlistItems((prev) =>
           prev.filter((item) => item.variantId !== variantId)
         );
-        setCount((prev) => prev - 1);
+        removeItem(variantId);
       } else {
         toast.dismiss();
         toast.error(result.message || "Failed to remove item");
@@ -112,17 +113,13 @@ export default function Wishlist() {
 
     const fetchWishlist = async () => {
       try {
-        const [itemsRes, countRes] = await Promise.all([
+        const [itemsRes] = await Promise.all([
           fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/wishlist`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/wishlist/count`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
 
         const itemsData = await itemsRes.json();
-        const countData = await countRes.json();
 
         if (itemsData?.data) {
           const itemsWithDetails = await Promise.all(
@@ -133,8 +130,6 @@ export default function Wishlist() {
           );
           setWishlistItems(itemsWithDetails);
         }
-
-        if (countData?.data) setCount(Number(countData.data));
       } catch (error) {
         console.error("Error fetching wishlist:", error);
       } finally {
@@ -162,7 +157,7 @@ export default function Wishlist() {
         toast.dismiss();
         toast.success("Wishlist cleared successfully");
         setWishlistItems([]);
-        setCount(0);
+        clearWishlist();
       } else {
         toast.dismiss();
         toast.error(result.message || "Failed to clear wishlist");

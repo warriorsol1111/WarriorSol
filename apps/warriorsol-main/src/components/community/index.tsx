@@ -80,12 +80,9 @@ const Community: React.FC = () => {
             variant="outline"
             size="lg"
             onClick={() => setIsOpen(true)}
-            className="w-full sm:w-auto border h-13 !rounded-none border-black text-[#1F1F1F] px-4 sm:px-5 py-2.5 sm:py-3 text-base sm:text-lg lg:text-[20px] font-['Inter'] capitalize flex items-center gap-2 transition"
+            className="w-full sm:w-auto border h-13 border-black text-[#1F1F1F] px-4 sm:px-5 py-2.5 sm:py-3 text-base sm:text-lg lg:text-[20px] font-['Inter'] capitalize flex items-center gap-2 transition"
           >
-            <span className="flex items-center gap-2">
-              Share Your Story
-              <MdArrowOutward className="w-6 h-6" />
-            </span>
+            Share Your Story <MdArrowOutward className="w-6 h-6" />
           </Button>
         </div>
 

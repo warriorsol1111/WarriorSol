@@ -226,7 +226,6 @@ const Products: React.FC = () => {
         throw new Error(`Failed to fetch products: ${response.status}`);
       }
       const data: ShopifyProductResponse = await response.json();
-      console.log(data);
       setCollections(data.collections);
       const transformedProducts = transformProducts(data);
 
@@ -266,9 +265,6 @@ const Products: React.FC = () => {
   };
 
   const filteredProducts = useMemo(() => {
-    console.log("🔍 Filter state:", filters);
-    console.log("📝 All products count:", allProducts.length);
-
     let filtered = [...allProducts];
 
     if (filters.productType.length > 0) {
@@ -288,8 +284,7 @@ const Products: React.FC = () => {
         return categoryMatch || collectionMatch;
       });
     }
-    console.log("📊 Before sorting - products count:", filtered.length);
-    console.log("🎯 Sort method:", filters.sortBy);
+
     if (filters.color.length > 0) {
       filtered = filtered.filter((product) =>
         product.colors.some((color) => filters.color.includes(color))

@@ -148,7 +148,7 @@ const authConfig: AuthOptions = {
     },
 
     jwt: async ({ token, user, account, trigger, session }) => {
-      if (trigger === "update" && session?.profilePhoto) {
+      if (trigger === "update" && session && "profilePhoto" in session) {
         token.profilePhoto = session.profilePhoto;
       }
 
