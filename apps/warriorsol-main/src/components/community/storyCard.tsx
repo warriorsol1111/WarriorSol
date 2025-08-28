@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { MdArrowOutward } from "react-icons/md";
+import { GoArrowUpRight } from "react-icons/go";
 
 interface StoryCardProps {
   id: string;
@@ -102,9 +104,11 @@ export const StoryCard: React.FC<StoryCardProps> = ({
           {/* Read Story Button - Mobile Full Width */}
           <Link
             href={link}
-            className="block w-full px-4 py-2.5 text-center text-sm font-medium text-white border border-white rounded-lg hover:bg-white hover:text-black transition-all duration-300"
+            className="block w-full px-4 py-2.5 text-center text-[20px] font-medium text-white border border-white hover:bg-white hover:text-black transition-all duration-300"
           >
-            Read Story →
+            <span className="flex items-center gap-2">
+              Read Story <MdArrowOutward className="w-6 h-6" />
+            </span>
           </Link>
         </div>
       </div>
@@ -132,9 +136,11 @@ export const StoryCard: React.FC<StoryCardProps> = ({
         {/* Read Story Button - Bottom Right */}
         <Link
           href={link}
-          className="absolute bottom-4 sm:bottom-6 right-4 sm:right-6 px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 text-sm sm:text-base md:text-lg lg:text-[20px] font-medium text-white border border-white rounded-lg hover:bg-white hover:text-black transition-all duration-300 whitespace-nowrap"
+          className="absolute bottom-4 sm:bottom-6 right-4 sm:right-6 px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 text-sm sm:text-base md:text-lg lg:text-[20px] font-medium text-white border border-white transition-all duration-300 whitespace-nowrap"
         >
-          Read Story →
+          <span className="flex items-center gap-2">
+            Read Story <GoArrowUpRight className="inline text-xl" />
+          </span>
         </Link>
       </div>
     </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Label } from "@/components/ui/label";
+import { Label } from "../../../../../label";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import VerifyEmailImage1 from "@/assets/auth/verifyEmail1.svg";
@@ -87,8 +87,13 @@ export default function VerifyEmailPage() {
         toast.dismiss();
         toast.success("Verification code resent successfully");
       } else {
-        toast.dismiss();
-        toast.error("Failed to resend verification code");
+        if (data.message === "Email already verified") {
+          toast.dismiss();
+          toast.error("Email already verified");
+        } else {
+          toast.dismiss();
+          toast.error("Failed to resend verification code");
+        }
       }
     } catch (err) {
       console.error("Error during resend code:", err);
@@ -116,8 +121,10 @@ export default function VerifyEmailPage() {
                 {email}
               </p>
             </div>
-            <div className="space-y-4">
-              <Label htmlFor="verificationCode">Please Enter Code</Label>
+            <div className="space-y-6">
+              <Label className="text-[#1F1F1F]" htmlFor="verificationCode">
+                Please Enter Code
+              </Label>
               <OtpInput
                 value={verificationCode}
                 onChange={(val) => {

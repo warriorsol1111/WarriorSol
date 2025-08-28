@@ -7,6 +7,7 @@ export interface FilterState {
   color: string[];
   size: string[];
   priceRange: string[];
+  gender: string[];
   availability: string[];
 }
 
@@ -16,6 +17,7 @@ export const initialFilterState: FilterState = {
   color: [],
   size: [],
   priceRange: [],
+  gender: [],
   availability: [],
 };
 
@@ -48,6 +50,9 @@ export const useSessionFilters = () => {
               priceRange: Array.isArray(parsedFilters.priceRange)
                 ? parsedFilters.priceRange
                 : [],
+              gender: Array.isArray(parsedFilters.gender)
+                ? parsedFilters.gender
+                : [],
               availability: Array.isArray(parsedFilters.availability)
                 ? parsedFilters.availability
                 : [],
@@ -79,6 +84,7 @@ export const useSessionFilters = () => {
         newFilters.color.length > 0 ||
         newFilters.size.length > 0 ||
         newFilters.priceRange.length > 0 ||
+        newFilters.gender.length > 0 ||
         newFilters.availability.length > 0;
 
       if (hasActiveFilters) {

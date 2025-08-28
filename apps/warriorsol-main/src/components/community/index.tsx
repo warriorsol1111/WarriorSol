@@ -67,12 +67,12 @@ const Community: React.FC = () => {
     <>
       <section>
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6 mb-8 sm:mb-12 w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6 mb-4 w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8">
           <div>
             <h2 className="text-4xl sm:text-5xl lg:text-[62px] leading-tight lg:leading-[62px] font-['Cormorant_SC'] text-[#1F1F1F] capitalize">
               Why I Wear Mine
             </h2>
-            <p className="text-base sm:text-lg lg:text-[20px] font-light font-['Inter'] text-[#1F1F1FB2] capitalize mt-2 sm:mt-0">
+            <p className="text-base sm:text-lg lg:text-[20px] font-light font-['Inter'] text-[#1F1F1FB2] capitalize mt-2 sm:mt-2">
               Real stories from real warriors in our community
             </p>
           </div>
@@ -80,9 +80,12 @@ const Community: React.FC = () => {
             variant="outline"
             size="lg"
             onClick={() => setIsOpen(true)}
-            className="w-full sm:w-auto border h-13 border-black text-[#1F1F1F] px-4 sm:px-5 py-2.5 sm:py-3 text-base sm:text-lg lg:text-[20px] font-['Inter'] capitalize flex items-center gap-2 transition"
+            className="w-full sm:w-auto border h-13 !rounded-none border-black text-[#1F1F1F] px-4 sm:px-5 py-2.5 sm:py-3 text-base sm:text-lg lg:text-[20px] font-['Inter'] capitalize flex items-center gap-2 transition"
           >
-            Share Your Story <MdArrowOutward className="w-6 h-6" />
+            <span className="flex items-center gap-2">
+              Share Your Story
+              <MdArrowOutward className="w-6 h-6" />
+            </span>
           </Button>
         </div>
 

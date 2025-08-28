@@ -3,7 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Label } from "../../../../../label";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/shared/navbar";
 import Footer from "@/components/shared/footer";
@@ -22,6 +22,7 @@ export default function AccountPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [photoError, setPhotoError] = useState<string | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const initialTab =
     searchParams.get("tab") === "wishlist" ? "wishlist" : "personal";
@@ -169,7 +170,7 @@ export default function AccountPage() {
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Navbar />
       <main className="flex-1 px-4 py-12 max-w-5xl mx-auto w-full">
-        <h1 className="text-3xl md:text-[62px] font-extrabold mb-8 text-center text-gray-800">
+        <h1 className="text-3xl md:text-[62px] font-extrabold mb-8 text-center text-[#1F1F1F]">
           My Account
         </h1>
 
@@ -220,6 +221,7 @@ export default function AccountPage() {
                 </div>
               </div>
 
+              {/* Profile Photo Section */}
               <div className="space-y-6 text-center">
                 <h2 className="text-2xl font-bold text-gray-800">
                   Profile Photo
@@ -253,7 +255,6 @@ export default function AccountPage() {
                       const file = e.target.files?.[0];
                       if (!file) return;
 
-                      // Must be an image
                       if (!file.type.startsWith("image/")) {
                         setPhotoError(
                           "Only image files are allowed (jpg, png, etc)."
@@ -267,7 +268,6 @@ export default function AccountPage() {
                         return;
                       }
 
-                      // Block SVGs
                       if (
                         file.type === "image/svg+xml" ||
                         file.name.endsWith(".svg")
@@ -282,7 +282,7 @@ export default function AccountPage() {
                         return;
                       }
 
-                      setPhotoError(null); // clear error
+                      setPhotoError(null);
                       setSelectedImage(file);
                       setPreviewUrl(URL.createObjectURL(file));
                     }}
@@ -312,15 +312,66 @@ export default function AccountPage() {
                       </Button>
                     </div>
                   ) : (
-                    <Button
-                      className="bg-[#EE9254] text-white hover:bg-[#e97e3a]"
-                      onClick={() =>
-                        document.getElementById("photoUpload")?.click()
-                      }
-                    >
-                      Upload
-                    </Button>
+                    <div className="flex gap-4">
+                      <Button
+                        className="bg-[#EE9254] text-white hover:bg-[#e97e3a]"
+                        onClick={() =>
+                          document.getElementById("photoUpload")?.click()
+                        }
+                      >
+                        Upload
+                      </Button>
+
+                      {/* 🔥 New Remove Button */}
+                      {(session?.user?.profilePhoto || previewUrl) && (
+                        <Button
+                          variant="destructive"
+                          onClick={async () => {
+                            try {
+                              setDeleteLoading(true);
+                              const res = await fetch(
+                                `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/delete-photo`,
+                                {
+                                  method: "DELETE",
+                                  headers: {
+                                    Authorization: `Bearer ${session?.user.token}`,
+                                  },
+                                }
+                              );
+                              const data = await res.json();
+                              toast.dismiss();
+
+                              if (res.ok && data.status === "success") {
+                                toast.success("Profile photo removed!");
+                                await update({
+                                  profilePhoto: null,
+                                });
+                                setPreviewUrl(null);
+                                setSelectedImage(null);
+                              } else {
+                                toast.error(
+                                  data.message || "Failed to remove photo"
+                                );
+                              }
+                            } catch (err) {
+                              toast.dismiss();
+                              toast.error("Something went wrong");
+                              console.error("Remove photo error:", err);
+                            } finally {
+                              setDeleteLoading(false);
+                            }
+                          }}
+                        >
+                          {deleteLoading ? (
+                            <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                          ) : (
+                            "Remove"
+                          )}
+                        </Button>
+                      )}
+                    </div>
                   )}
+
                   {photoError && (
                     <div className="text-sm text-red-600 font-medium mt-2">
                       {photoError}

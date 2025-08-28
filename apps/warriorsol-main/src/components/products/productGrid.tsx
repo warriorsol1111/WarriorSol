@@ -32,47 +32,33 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
   const [cartLoading, setCartLoading] = useState<string | null>(null);
   const { data: session } = useSession();
   const { addItem, openCart } = useCartStore();
-  const [availabilityMap, setAvailabilityMap] = useState<{
-    [id: string]: boolean;
-  }>({});
 
   // Helper to get first variantId for a product
-  const getFirstVariantIdAndAvailability = async (
-    id: string
-  ): Promise<{ variantId: string | null; available: boolean }> => {
+  const getFirstVariantId = async (id: string): Promise<string | null> => {
     try {
       const res = await fetch(
         `/api/shopify/getProductById?id=${encodeURIComponent(id)}`
       );
       const data = await res.json();
-
-      const variant =
-        data?.variants?.[0] ||
-        data?.variant ||
-        data?.variants?.edges?.[0]?.node;
-      const variantId = variant?.id || null;
-      const available = variant?.availableForSale ?? true;
-
-      return { variantId, available };
+      const variantId =
+        data?.variants?.[0]?.id ||
+        data?.variant?.id ||
+        data?.variants?.edges?.[0]?.node?.id;
+      return variantId || null;
     } catch {
-      return { variantId: null, available: true };
+      return null;
     }
   };
 
   useEffect(() => {
-    const checkAllProductData = async () => {
-      if (!session) return;
+    const checkWishlistStatus = async () => {
+      if (!session || !products.length) return;
 
       const newWishlist: { [id: string]: boolean } = {};
-      const newAvailability: { [id: string]: boolean } = {};
 
       for (const product of products) {
-        const { variantId, available } = await getFirstVariantIdAndAvailability(
-          product.id
-        );
+        const variantId = await getFirstVariantId(product.id);
         if (!variantId) continue;
-
-        newAvailability[product.id] = available;
 
         try {
           const res = await fetch(
@@ -93,26 +79,10 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
       }
 
       setWishlist(newWishlist);
-      setAvailabilityMap(newAvailability);
     };
 
-    if (products.length && session) checkAllProductData();
+    if (products.length && session) checkWishlistStatus();
   }, [products, session]);
-  const getFirstVariantId = async (id: string): Promise<string | null> => {
-    try {
-      const res = await fetch(
-        `/api/shopify/getProductById?id=${encodeURIComponent(id)}`
-      );
-      const data = await res.json();
-      const variantId =
-        data?.variants?.[0]?.id ||
-        data?.variant?.id ||
-        data?.variants?.edges?.[0]?.node?.id;
-      return variantId || null;
-    } catch {
-      return null;
-    }
-  };
 
   const handleToggleWishlist = async (product: Product) => {
     setWishlistLoading(product.id);
@@ -215,22 +185,22 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
                 height={500}
                 className="h-full w-full object-cover object-center transform transition-transform duration-300 group-hover:scale-105"
               />
-              {availabilityMap[product.id] === false && (
-                <div className="absolute top-2 left-2 bg-gradient-to-r from-red-600 to-red-500 text-white text-[11px] font-semibold uppercase px-2.5 py-1 rounded-full shadow-lg tracking-wider backdrop-blur-sm ring-1 ring-white/10">
+              {!product.availableForSale && (
+                <div className="absolute top-2 left-2 bg-red-600 text-white text-[11px] font-semibold uppercase px-2.5 py-1 rounded-full shadow-lg">
                   Out of Stock
                 </div>
               )}
             </div>
             <div className="p-3 sm:p-4">
               <div className="flex justify-between items-center">
-                <h3 className="text-sm sm:text-base font-medium text-gray-900 truncate">
+                <h3 className="text-sm sm:text-base font-medium text-[#1F1F1F] truncate">
                   {product.title}
                 </h3>
-                <p className="text-sm sm:text-base font-medium text-gray-700 whitespace-nowrap ml-2">
+                <p className="text-sm sm:text-base font-medium text-[#1F1F1F] whitespace-nowrap ml-2">
                   {product.price}
                 </p>
               </div>
-              <p className="mt-1 text-[12px] sm:text-[12px] text-gray-500">
+              <p className="mt-1 text-[12px] sm:text-[12px] text-[#1F1F1F99]">
                 {product.category}
               </p>
             </div>

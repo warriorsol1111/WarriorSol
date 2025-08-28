@@ -26,8 +26,10 @@ import {
 } from "@/components/ui/sheet";
 import { useEffect, useState } from "react";
 import NavbarSearchDrawer from "./navbarDrawer";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
+  const router = useRouter();
   const hydrateCart = useCartStore((state) => state.hydrateCart);
   const itemCount = useCartStore((state) => state.itemCount);
   const toggleCart = useCartStore((state) => state.toggleCart);
@@ -254,9 +256,10 @@ export default function Navbar() {
           </DropdownMenu>
 
           {/* Wishlist Button */}
-          <Link
-            href="/account?tab=wishlist"
+          <Button
+            variant="link"
             className="relative p-2 sm:p-2 transition-colors"
+            onClick={() => router.push("/account?tab=wishlist")}
           >
             <AiOutlineHeart className="h-5 w-5 sm:h-6 sm:w-6" />
             {count > 0 && (
@@ -264,7 +267,7 @@ export default function Navbar() {
                 {count}
               </span>
             )}
-          </Link>
+          </Button>
 
           {/* Cart Button */}
           <Button

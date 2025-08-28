@@ -9,7 +9,7 @@ import {
   DrawerClose,
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Label } from "../../../../../label";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -98,9 +98,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
       );
       setFormData((prev) => ({ ...prev, image: null }));
       toast.dismiss();
-      toast.error(
-        "Only PNG, JPG, JPEG, GIF images and MP4, WEBM, MOV, AVI videos are allowed."
-      );
+
       return;
     }
 
@@ -111,7 +109,6 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
       setFileError("SVG files are not allowed");
       setFormData((prev) => ({ ...prev, image: null }));
       toast.dismiss();
-      toast.error("SVG files are not allowed");
       return;
     }
 
@@ -119,7 +116,6 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
       setFileError("File size must be under 10MB");
       setFormData((prev) => ({ ...prev, image: null }));
       toast.dismiss();
-      toast.error("File size must be under 10MB");
       return;
     }
 
@@ -132,7 +128,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
           setFileError("Video must be 1 minute or less");
           setFormData((prev) => ({ ...prev, image: null }));
           toast.dismiss();
-          toast.error("Video must be 1 minute or less");
+          return;
         } else {
           setFileError("");
           setFormData((prev) => ({ ...prev, image: file }));
@@ -142,7 +138,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
         setFileError("Could not load video file");
         setFormData((prev) => ({ ...prev, image: null }));
         toast.dismiss();
-        toast.error("Could not load video file");
+        return;
       };
       video.src = URL.createObjectURL(file);
     } else {
@@ -426,11 +422,13 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                         onChange={handleFileChange}
                       />
                     </label>
-                    <p className="mt-2 text-sm text-[#1F1F1FCC] !font-[Inter]">
-                      PNG, JPG, GIF, or MP4 only. Max size:{" "}
-                      <strong>10MB</strong>.<br />
-                      Max video duration: <strong>1 minute</strong>.
-                    </p>
+                    {!fileError && (
+                      <p className="mt-2 text-sm text-[#1F1F1FCC] !font-[Inter]">
+                        PNG, JPG, GIF, or MP4 only. Max size:{" "}
+                        <strong>10MB</strong>.<br />
+                        Max video duration: <strong>1 minute</strong>.
+                      </p>
+                    )}
                   </>
                 )}
                 {(fileError || errors.image) && (
@@ -463,7 +461,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
             <Button
               type="submit"
               size="default"
-              className="w-full bg-[#EE9254] !text-lg !h-13 !font-[Inter] hover:bg-[#EE9254]/90 text-white flex items-center justify-center !rounded-sm"
+              className="w-full bg-[#EE9254] !text-[20px] !h-13 !font-[Inter] hover:bg-[#EE9254]/90 text-white flex items-center justify-center"
               disabled={isLoading}
             >
               {isLoading ? (

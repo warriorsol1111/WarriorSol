@@ -12,6 +12,8 @@ import { useCartStore } from "@/store/cart-store";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { GoArrowUpRight } from "react-icons/go";
+
 import Link from "next/link";
 interface Product {
   id: string;
@@ -258,9 +260,10 @@ const ChooseYourArmor: React.FC = () => {
           variant="outline"
           size="lg"
           onClick={() => router.push("/products")}
-          className="w-full sm:w-auto border border-black px-4 sm:px-5 py-2.5 sm:py-3 !rounded-none text-base sm:text-lg lg:text-[20px] font-['Inter'] capitalize flex items-center justify-center sm:justify-start gap-2 hover:bg-white hover:text-black transition"
+          className="w-full sm:w-auto border border-black text-[#1F1F1F] px-4 sm:px-5 py-2.5 sm:py-3 !rounded-none text-base sm:text-lg lg:text-[20px] font-['Inter'] capitalize flex items-center justify-center sm:justify-start gap-2 hover:bg-white hover:text-black transition"
         >
-          See All Products ↗
+          See All Products
+          <GoArrowUpRight className="w-6 h-6" />
         </Button>
       </div>
 

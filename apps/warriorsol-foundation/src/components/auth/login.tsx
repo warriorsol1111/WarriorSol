@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Label } from "../../../../../label";
 import { Button } from "@/components/ui/button";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
@@ -154,10 +154,7 @@ function LoginPage() {
     } else {
       toast.dismiss();
       toast.success("Login successful");
-      const targetUrl = decodeURIComponent(
-        searchParams.get("callbackUrl") || "/home"
-      );
-      router.replace(targetUrl);
+      router.replace(response?.url || "/home");
     }
     setLoading(false);
   };
@@ -166,12 +163,15 @@ function LoginPage() {
     <div className="flex min-h-screen flex-col-reverse md:flex-row">
       {/* Left Section */}
       <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-6 md:p-12 md:px-24">
-        <form onSubmit={handleSubmit} className="w-full space-y-4 md:space-y-6">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full space-y-4 md:space-y-10"
+        >
           <div>
             <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] !font-[Cormorant SC] font-normal">
               Welcome Back!
             </h1>
-            <p className="font-light font-[Inter] text-[#1F1F1F] opacity-60 text-base md:text-lg">
+            <p className="font-light font-[Inter] text-[#1F1F1F99] opacity-60 text-base md:text-lg">
               Enter Your Credentials To Access Your Account
             </p>
           </div>

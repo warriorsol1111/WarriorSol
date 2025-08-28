@@ -18,6 +18,7 @@ export interface FilterState {
   color: string[];
   size: string[];
   priceRange: string[];
+  gender: string[];
   availability: string[];
 }
 
@@ -27,6 +28,7 @@ export const initialFilterState: FilterState = {
   color: [],
   size: [],
   priceRange: [],
+  gender: [],
   availability: [],
 };
 
@@ -61,13 +63,7 @@ interface FilterProps {
   allProducts: Product[];
 }
 
-const sortOptions = [
-  "New In",
-  "Price Low To High",
-  "Price High To Low",
-  "A-Z",
-  "Z-A",
-];
+const sortOptions = ["Price Low To High", "Price High To Low", "A-Z", "Z-A"];
 
 const colors = [
   { name: "Black", value: "black", color: "#000000" },
@@ -96,6 +92,7 @@ const sizes = [
 
 const priceRanges = ["Under $25", "$25 - $50", "$50 - $75", "Over $75"];
 const availabilityOptions = ["In Stock", "Out of Stock"];
+const genderOptions = ["Men", "Women", "Unisex"];
 
 export const Filter: React.FC<FilterProps> = ({
   isOpen,
@@ -104,7 +101,6 @@ export const Filter: React.FC<FilterProps> = ({
   onFiltersChange,
   onApplyFilters,
   collections,
-  allProducts,
 }) => {
   const [tempFilters, setTempFilters] = useState<FilterState>(filters);
 
@@ -143,11 +139,6 @@ export const Filter: React.FC<FilterProps> = ({
     );
   };
 
-  const productTypes = [
-    ...Array.from(new Set(allProducts.map((p) => p.category))),
-    ...collections.map((c) => c.title),
-  ].filter((type) => type !== "Other");
-
   return (
     <Drawer open={isOpen} onOpenChange={onOpenChange}>
       <DrawerContent className="h-full">
@@ -156,7 +147,7 @@ export const Filter: React.FC<FilterProps> = ({
             <DrawerTitle className="flex items-center text-[21px] md:text-[42px] text-[#1F1F1F] gap-2">
               Sort & Filter
               {getActiveFiltersCount() > 0 && (
-                <span className="bg-[#EE9254] text-white text-lg rounded-full w-6 h-6 flex items-center justify-center">
+                <span className="bg-[#EE9254] text-white text-xl pb-1 rounded-full leading-none w-6 h-6 flex items-center justify-center">
                   {getActiveFiltersCount()}
                 </span>
               )}
@@ -180,10 +171,10 @@ export const Filter: React.FC<FilterProps> = ({
                   variant="link"
                   key={option}
                   onClick={() => toggleFilter("sortBy", option)}
-                  className={`px-4 py-2 rounded-md text-lg font-[Inter] border transition-colors ${
+                  className={`px-4 py-2 text-[#1F1F1FCC] rounded-md text-lg  font-[Inter] border transition-colors ${
                     tempFilters.sortBy === option
                       ? "bg-[#EE9254] text-white"
-                      : "bg-white text-black border-gray-300 hover:border-gray-400"
+                      : "bg-white text-[#1F1F1FCC] "
                   }`}
                 >
                   {option}
@@ -198,19 +189,19 @@ export const Filter: React.FC<FilterProps> = ({
               Product Type
             </h3>
             <div className="flex flex-wrap gap-2">
-              {productTypes.map((type) => (
+              {collections.map((collection) => (
                 <Button
                   size="lg"
                   variant="link"
-                  key={type}
-                  onClick={() => toggleFilter("productType", type)}
+                  key={collection.id}
+                  onClick={() => toggleFilter("productType", collection.title)}
                   className={`px-4 py-2 rounded-md text-lg font-[Inter] border transition-colors ${
-                    tempFilters.productType.includes(type)
+                    tempFilters.productType.includes(collection.title)
                       ? "bg-[#EE9254] text-white"
-                      : "bg-white text-black border-gray-300 hover:border-gray-400"
+                      : "bg-white text-[#1F1F1FCC]"
                   }`}
                 >
-                  {type}
+                  {collection.title}
                 </Button>
               ))}
             </div>
@@ -231,10 +222,10 @@ export const Filter: React.FC<FilterProps> = ({
                     size="lg"
                     variant="link"
                     onClick={() => toggleFilter("color", colorOption.value)}
-                    className={`px-4 py-2 rounded-md text-lg font-[Inter] border transition-colors ${
+                    className={`px-4 py-2 rounded-md text-lg font-[Inter] border transition-colors w-[62px] h-[62px] ${
                       tempFilters.color.includes(colorOption.value)
                         ? "bg-[#EE9254] text-white"
-                        : "bg-white text-black border-gray-300 hover:border-gray-400"
+                        : "bg-white text-[#1F1F1FCC]"
                     }`}
                     style={{
                       backgroundColor: colorOption.color,
@@ -264,13 +255,37 @@ export const Filter: React.FC<FilterProps> = ({
                   variant="link"
                   key={size}
                   onClick={() => toggleFilter("size", size)}
-                  className={`px-4 py-2 rounded-md text-lg font-[Inter] border transition-colors opacity-60 ${
+                  className={`px-4 py-2 rounded-md text-lg font-[Inter] border transition-colors  ${
                     tempFilters.size.includes(size)
                       ? "bg-[#EE9254] text-white"
-                      : "bg-white text-black border-gray-300 hover:border-gray-400"
+                      : "bg-white text-[#1F1F1FCC]"
                   }`}
                 >
                   {size}
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          {/* Gender */}
+          <div>
+            <h3 className="font-medium mb-3 font-[Inter] text-xl text-[#1F1F1F]">
+              Gender
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {genderOptions.map((gender) => (
+                <Button
+                  size="lg"
+                  variant="link"
+                  key={gender}
+                  onClick={() => toggleFilter("gender", gender)}
+                  className={`px-4 py-2 rounded-md text-lg font-[Inter] border transition-colors  ${
+                    tempFilters.gender.includes(gender)
+                      ? "bg-[#EE9254] text-white"
+                      : "bg-white text-[#1F1F1FCC]"
+                  }`}
+                >
+                  {gender}
                 </Button>
               ))}
             </div>
@@ -291,7 +306,7 @@ export const Filter: React.FC<FilterProps> = ({
                   className={`px-4 py-2 rounded-md text-lg font-[Inter] border transition-colors ${
                     tempFilters.priceRange.includes(range)
                       ? "bg-[#EE9254] text-white"
-                      : "bg-white text-black border-gray-300 hover:border-gray-400"
+                      : "bg-white text-[#1F1F1FCC]"
                   }`}
                 >
                   {range}
@@ -315,7 +330,7 @@ export const Filter: React.FC<FilterProps> = ({
                   className={`px-4 py-2 rounded-md text-lg font-[Inter] border transition-colors ${
                     tempFilters.availability.includes(option)
                       ? "bg-[#EE9254] text-white"
-                      : "bg-white text-black border-gray-300 hover:border-gray-400"
+                      : "bg-white text-[#1F1F1FCC]"
                   }`}
                 >
                   {option}
@@ -334,7 +349,7 @@ export const Filter: React.FC<FilterProps> = ({
                 onApplyFilters();
               }}
               variant="link"
-              className="flex-1 py-3 px-4 bg-[#EE9254] !text-lg text-white rounded-sm hover:bg-[#E97451]/90 transition-colors"
+              className="flex-1 py-3 px-4 bg-[#EE9254] !text-[20px] text-white rounded-sm hover:bg-[#E97451]/90 transition-colors"
             >
               Apply Filters
             </Button>
@@ -342,7 +357,7 @@ export const Filter: React.FC<FilterProps> = ({
               size="lg"
               onClick={handleClearFilters}
               variant="link"
-              className="flex-1 py-3 px-4 !text-lg rounded-sm border border-black hover:bg-gray-50 transition-colors"
+              className="flex-1 py-3 px-4 !text-[20px] rounded-sm border border-black hover:bg-gray-50 transition-colors"
               disabled={getActiveFiltersCount() === 0}
             >
               Clear All ({getActiveFiltersCount()})

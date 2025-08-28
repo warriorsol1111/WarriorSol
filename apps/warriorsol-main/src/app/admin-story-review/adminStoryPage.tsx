@@ -110,7 +110,7 @@ const AdminStoriesPage: React.FC = () => {
       <Navbar />
 
       <section className="w-full px-4 sm:px-6 md:px-10 lg:px-20 py-10 sm:py-14 lg:py-20 bg-gray-50 min-h-screen">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-10 text-[#EE9254] text-center">
+        <h1 className="text-3xl sm:text-4xl md:text-[62px] font-extrabold mb-10 text-[#EE9254] text-center">
           Review User Stories
         </h1>
 

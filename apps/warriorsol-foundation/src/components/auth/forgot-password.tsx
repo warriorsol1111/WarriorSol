@@ -2,24 +2,26 @@
 
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Label } from "../../../../../label";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ForgotPasswordImage1 from "@/assets/auth/forgotPassword1.svg";
 import ForgotPasswordImage2 from "@/assets/auth/forgotPassword2.svg";
 import ForgotPasswordImage3 from "@/assets/auth/forgotPassword3.svg";
 import ForgotPasswordImage4 from "@/assets/auth/forgotPassword4.svg";
 import Logo from "@/assets/auth/logo.svg";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaArrowLeft } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 
 import LoginImage from "@/assets/auth/login.svg";
+import { OtpInput } from "reactjs-otp-input";
 
 type ForgotPasswordStep = "email" | "verify" | "newPassword" | "success";
 
 export default function ForgotPasswordPage() {
   const [step, setStep] = useState<ForgotPasswordStep>("email");
+
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -27,16 +29,49 @@ export default function ForgotPasswordPage() {
     newPassword: "",
     confirmPassword: "",
   });
+  const [errors, setErrors] = useState({
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  const [otpValues, setOtpValues] = useState(["", "", "", "", "", ""]);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [resending, setResending] = useState(false);
+  // Handle browser back button and history
+  useEffect(() => {
+    // Push initial state when component mounts
+    window.history.pushState({ step: "email" }, "", window.location.pathname);
+
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state && event.state.step) {
+        setStep(event.state.step);
+      } else {
+        // If no state, go back to login
+        window.location.href = "/login";
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
+  // Update history when step changes
+  useEffect(() => {
+    if (step !== "email") {
+      window.history.pushState({ step }, "", window.location.pathname);
+    }
+  }, [step]);
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
   const toggleConfirmPasswordVisibility = () =>
     setShowConfirmPassword(!showConfirmPassword);
 
   const isValidPassword = (password: string) => {
-    const passwordRegex =
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?-]).{8,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
     return passwordRegex.test(password);
   };
 
@@ -53,6 +88,65 @@ export default function ForgotPasswordPage() {
       default:
         return LoginImage;
     }
+  };
+  const handleResendCode = async () => {
+    try {
+      setResending(true);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/resend-otp`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: formData.email,
+            type: "forget_password",
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.status === "success") {
+        toast.dismiss();
+        toast.success("Verification code resent successfully");
+      } else {
+        if (data.message === "Email already verified") {
+          toast.dismiss();
+          toast.error("Email already verified");
+        } else {
+          toast.dismiss();
+          toast.error("Failed to resend verification code");
+        }
+      }
+    } catch (err) {
+      console.error("Error during resend code:", err);
+      toast.dismiss();
+      toast.error("Something went wrong. Try again.");
+    } finally {
+      setResending(false);
+    }
+  };
+
+  const handleBack = () => {
+    switch (step) {
+      case "verify":
+        setStep("email");
+        break;
+      case "newPassword":
+        setStep("verify");
+        break;
+      case "success":
+        // Don't allow going back from success step
+        break;
+      default:
+        // For email step, go to login page
+        window.location.href = "/login";
+        break;
+    }
+  };
+
+  const canGoBack = () => {
+    return step !== "success"; // Can go back from all steps except success
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,16 +208,47 @@ export default function ForgotPasswordPage() {
             toast.success("Verification code verified successfully");
             setStep("newPassword");
           } else {
-            toast.dismiss();
-            toast.error("Failed to verify verification code");
+            if (verifyData.message === "Invalid verification code") {
+              toast.dismiss();
+              toast.error("Invalid verification code");
+            } else {
+              toast.dismiss();
+              toast.error("Failed to verify verification code");
+            }
           }
           break;
 
         case "newPassword":
           if (!isValidPassword(formData.newPassword)) {
+            setErrors({
+              ...errors,
+              newPassword:
+                "Password must be at least 8 characters and include a capital letter, number, and special character",
+              confirmPassword: "",
+            });
+            toast.dismiss();
+            toast.error("Invalid password");
+            return;
+          }
+
+          if (formData.newPassword !== formData.confirmPassword) {
+            setErrors({
+              ...errors,
+              newPassword: "",
+              confirmPassword: "Passwords don't match",
+            });
+            toast.dismiss();
+            toast.error("Passwords don't match");
+            return;
+          }
+
+          // If everything is good, reset errors
+          setErrors({ newPassword: "", confirmPassword: "" });
+
+          if (!isValidPassword(formData.newPassword)) {
             toast.dismiss();
             toast.error(
-              "Password must be at least 8 characters and include a letter, number, and special character"
+              "Password must be at least 8 characters and include a capital letter, number, and special character"
             );
             return;
           }
@@ -186,11 +311,11 @@ export default function ForgotPasswordPage() {
               <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] font-[Cormorant SC] font-normal">
                 Forgot Password
               </h1>
-              <p className="font-light text-[#1F1F1F] font-[Inter] opacity-60 text-base md:text-lg">
+              <p className="font-light text-[#1F1F1F99] font-[Inter] text-base md:text-lg">
                 Enter Your email, we&apos;ll send a verification code
               </p>
             </div>
-            <div className="space-y-2 w-full">
+            <div className="space-y-6 w-full">
               <Label htmlFor="email">Email Address</Label>
               <Input
                 id="email"
@@ -219,29 +344,79 @@ export default function ForgotPasswordPage() {
               <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] font-[Cormorant SC] font-normal">
                 Email Verification
               </h1>
-              <p className="font-light text-[#1F1F1F] font-[Inter] opacity-60 text-base md:text-lg">
+              <p className="font-light text-[#1F1F1F99] font-[Inter] text-base md:text-lg">
                 We have sent a verification code to your email address
               </p>
+              <p className="text-base  text-[#EE9254] font-[Inter] md:text-lg">
+                {formData.email}
+              </p>
             </div>
-            <div className="space-y-2 w-full">
-              <Label htmlFor="verificationCode">Verification Code</Label>
-              <Input
-                id="verificationCode"
-                name="verificationCode"
-                type="text"
-                value={formData.verificationCode}
-                onChange={handleChange}
-                required
-                className="w-full"
-              />
+
+            <div className="space-y-6 w-full">
+              <Label>Please Enter Code</Label>
+              <div className="flex gap-2 justify-center">
+                <OtpInput
+                  value={otpValues.join("")}
+                  onChange={(val) => {
+                    setOtpValues(val.split(""));
+                    setFormData({ ...formData, verificationCode: val });
+                  }}
+                  numInputs={6}
+                  isInputNum
+                  shouldAutoFocus
+                  inputStyle={{
+                    width: "100%",
+                    height: "3rem",
+                    fontSize: "1.25rem",
+                    borderRadius: "0.375rem",
+                    border: `1px solid #d1d5db`,
+                    outline: "none",
+                    textAlign: "center",
+                  }}
+                  containerStyle={{
+                    display: "flex",
+                    gap: "0.5rem",
+                    width: "100%",
+                    justifyContent: "space-between",
+                  }}
+                />
+              </div>
             </div>
+
             <Button
               type="submit"
-              disabled={loading}
-              className="w-full bg-[#EE9254] cursor-pointer !font-[Inter] !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white"
+              disabled={loading || otpValues.some((val) => val === "")}
+              className="w-full bg-[#EE9254] cursor-pointer !font-[Inter] !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white disabled:opacity-50"
             >
               {loading ? Spinner : "Verify Code"}
             </Button>
+
+            <div className="flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-y-0 mt-4">
+              <p className="text-center text-base font-light md:text-lg">
+                Didn&apos;t receive the code?{" "}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={handleResendCode}
+                  disabled={resending}
+                  className="px-1 text-base font-bold text-black underline"
+                >
+                  {resending && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin text-black" />
+                  )}
+                  Resend Code
+                </Button>
+              </p>
+            </div>
+
+            <div className="flex justify-center mt-2">
+              <p className="text-base font-light">
+                Back to{" "}
+                <a href="/login" className="font-bold underline text-black">
+                  Login
+                </a>
+              </p>
+            </div>
           </>
         );
 
@@ -252,11 +427,11 @@ export default function ForgotPasswordPage() {
               <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] font-[Cormorant SC] font-normal">
                 Create New Password
               </h1>
-              <p className="font-light text-[#1F1F1F] font-[Inter] opacity-60 text-base md:text-lg">
+              <p className="font-light text-[#1F1F1F99] font-[Inter]  text-base md:text-lg">
                 Enter your new password{" "}
               </p>
             </div>
-            <div className="space-y-2 w-full">
+            <div className="space-y-6 w-full">
               <Label htmlFor="newPassword">New Password</Label>
               <div className="relative w-full">
                 <Input
@@ -265,8 +440,9 @@ export default function ForgotPasswordPage() {
                   type={showPassword ? "text" : "password"}
                   value={formData.newPassword}
                   onChange={handleChange}
-                  required
-                  className="w-full pr-10"
+                  className={`w-full pr-10 ${
+                    errors.newPassword ? "border-red-500" : ""
+                  }`}
                 />
                 <Button
                   variant="ghost"
@@ -282,8 +458,14 @@ export default function ForgotPasswordPage() {
                   )}
                 </Button>
               </div>
+              {errors.newPassword && (
+                <p className="text-sm text-red-500 mt-1">
+                  {errors.newPassword}
+                </p>
+              )}
             </div>
-            <div className="space-y-2 w-full">
+
+            <div className="space-y-6 w-full">
               <Label htmlFor="confirmPassword">Confirm Password</Label>
               <div className="relative w-full">
                 <Input
@@ -292,8 +474,9 @@ export default function ForgotPasswordPage() {
                   type={showConfirmPassword ? "text" : "password"}
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  required
-                  className="w-full pr-10"
+                  className={`w-full pr-10 ${
+                    errors.confirmPassword ? "border-red-500" : ""
+                  }`}
                 />
                 <Button
                   variant="ghost"
@@ -309,7 +492,13 @@ export default function ForgotPasswordPage() {
                   )}
                 </Button>
               </div>
+              {errors.confirmPassword && (
+                <p className="text-sm text-red-500 mt-1">
+                  {errors.confirmPassword}
+                </p>
+              )}
             </div>
+
             <Button
               type="submit"
               disabled={loading}
@@ -345,9 +534,27 @@ export default function ForgotPasswordPage() {
   return (
     <div className="flex min-h-screen flex-col-reverse md:flex-row">
       <div className="flex-1 md:w-1/2 bg-white flex items-center justify-center p-6 md:p-12 md:px-24">
-        <form onSubmit={handleSubmit} className="w-full space-y-6">
-          {renderStepContent()}
-        </form>
+        <div className="w-full space-y-6">
+          {/* Back Button */}
+          {canGoBack() && (
+            <div className="flex items-center">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={handleBack}
+                className="flex items-center gap-2 text-[#1F1F1F] hover:bg-gray-100 p-2"
+              >
+                <FaArrowLeft className="w-4 h-4" />
+                <span className="font-[Inter] text-sm">Back</span>
+              </Button>
+            </div>
+          )}
+
+          {/* Form Content */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {renderStepContent()}
+          </form>
+        </div>
       </div>
 
       <div className="w-full md:w-1/2 h-[300px] md:h-auto relative">

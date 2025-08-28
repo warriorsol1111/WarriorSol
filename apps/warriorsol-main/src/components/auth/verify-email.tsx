@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Label } from "@/components/ui/label";
+import { Label } from "../../../../../label";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import VerifyEmailImage1 from "@/assets/auth/verifyEmail1.svg";

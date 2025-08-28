@@ -96,7 +96,7 @@ const RebellionNewsletter = () => {
           <h3 className='text-[32px] md:text-[52px]  font-["Cormorant_SC"] mb-2'>
             Every Sunrise Is A Stand
           </h3>
-          <h4 className='text-[24px] md:text-[32px] font-["Cormorant_SC"] mb-4 md:mb-6'>
+          <h4 className='text-[24px] md:text-[32px] text-[#FFEBCC] font-["Cormorant_SC"] mb-4 md:mb-6'>
             Join The Rebellion.
           </h4>
           <p className='font-["Inter"] text-[#FFFFFF99] text-[14px] md:text-[16px] font-light mb-6 md:mb-8 opacity-90 max-w-md px-4 md:px-0'>
@@ -108,20 +108,20 @@ const RebellionNewsletter = () => {
             onSubmit={addEmailToNewsLetter}
             className="w-full max-w-md px-4 md:px-0"
           >
-            <div className="relative flex flex-col sm:flex-row gap-2 sm:gap-0 md:gap-x-4 lg:gap-x-6">
+            <div className="relative flex flex-col sm:flex-row gap-2 sm:gap-4 md:gap-x-4 lg:gap-x-4">
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your Email"
-                className='w-full bg-[rgba(255,255,255,0.1)] border-none px-4 py-3 font-["Inter"] placeholder:text-white/50 focus:outline-none'
+                className='w-full bg-[#FFFFFF33] border-none px-4 py-3 font-["Inter"] placeholder:text-white/50 focus:outline-none'
                 required
                 disabled={notifyLoading}
               />
               <Button
                 type="submit"
                 size="lg"
-                className='sm:absolute sm:right-0 sm:top-0 bg-[#EE9254] text-white px-8 font-["Inter"] hover:bg-[#d89b89] transition h-12'
+                className='text-[20px] bg-[#EE9254] text-white px-8 font-["Inter"] hover:bg-[#d89b89] transition h-12'
                 disabled={notifyLoading}
               >
                 {notifyLoading ? (
@@ -131,6 +131,7 @@ const RebellionNewsletter = () => {
                 )}
               </Button>
             </div>
+
             <div className="mt-4 text-sm text-white/80">
               {count > 0
                 ? `${count} people have already joined our newsletter!`

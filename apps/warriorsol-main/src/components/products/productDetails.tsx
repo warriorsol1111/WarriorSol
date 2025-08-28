@@ -381,7 +381,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             {/* Header */}
             <div className="flex flex-col xl:flex-row sm:justify-between sm:items-start gap-4">
               <div>
-                <h1 className="text-3xl sm:text-4xl lg:text-[62px] font-normal text-black">
+                <h1 className="text-3xl sm:text-4xl lg:text-[62px] font-normal text-[#1F1F1F]">
                   {product.title}
                 </h1>
                 <p className="text-lg sm:text-xl text-[#1F1F1FB2] font-[Inter] font-light">
@@ -491,7 +491,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 >
                   <AiOutlineMinus size={16} />
                 </Button>
-                <span className="w-12 text-center text-[20px] font-medium">
+                <span className="w-12 text-center text-[20px] font-medium font-[Inter] text-[#1F1F1F]">
                   {quantity.toString().padStart(2, "0")}
                 </span>
                 <Button
@@ -587,18 +587,18 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             className="
       flex flex-col sm:flex-row
       gap-3 sm:gap-4
-      h-auto p-0 bg-transparent rounded-none
-      w-full
+      h-auto p-0 bg-transparent !rounded-none
+      w-full text-[20px] text-[#1F1F1FCC]
     "
           >
             <TabsTrigger
-              className="w-full sm:w-auto rounded-lg text-center"
+              className="w-full sm:w-auto text-[20px] text-[#1F1F1FCC] text-center"
               value="description"
             >
               Description
             </TabsTrigger>
             <TabsTrigger
-              className="w-full sm:w-auto rounded-lg text-center"
+              className="w-full sm:w-auto text-[20px] text-[#1F1F1FCC] text-center"
               value="reviews"
             >
               Reviews

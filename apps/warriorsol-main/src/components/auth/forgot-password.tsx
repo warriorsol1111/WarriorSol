@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Label } from "../../../../../label";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import ForgotPasswordImage1 from "@/assets/auth/forgotPassword1.svg";
@@ -311,7 +311,7 @@ export default function ForgotPasswordPage() {
               <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] font-[Cormorant SC] font-normal">
                 Forgot Password
               </h1>
-              <p className="font-light text-[#1F1F1F] font-[Inter] opacity-60 text-base md:text-lg">
+              <p className="font-light text-[#1F1F1F99] font-[Inter] text-base md:text-lg">
                 Enter Your email, we&apos;ll send a verification code
               </p>
             </div>
@@ -344,13 +344,16 @@ export default function ForgotPasswordPage() {
               <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] font-[Cormorant SC] font-normal">
                 Email Verification
               </h1>
-              <p className="font-light text-[#1F1F1F] font-[Inter] opacity-60 text-base md:text-lg">
+              <p className="font-light text-[#1F1F1F99] font-[Inter] text-base md:text-lg">
                 We have sent a verification code to your email address
+              </p>
+              <p className="text-base  text-[#EE9254] font-[Inter] md:text-lg">
+                {formData.email}
               </p>
             </div>
 
             <div className="space-y-6 w-full">
-              <Label>Verification Code</Label>
+              <Label>Please Enter Code</Label>
               <div className="flex gap-2 justify-center">
                 <OtpInput
                   value={otpValues.join("")}
@@ -424,7 +427,7 @@ export default function ForgotPasswordPage() {
               <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] font-[Cormorant SC] font-normal">
                 Create New Password
               </h1>
-              <p className="font-light text-[#1F1F1F] opacity-60 font-[Inter]  text-base md:text-lg">
+              <p className="font-light text-[#1F1F1F99] font-[Inter]  text-base md:text-lg">
                 Enter your new password{" "}
               </p>
             </div>

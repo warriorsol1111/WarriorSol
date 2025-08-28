@@ -61,7 +61,7 @@ export const CommunityDetails = ({
 
   return (
     <>
-      <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
+      <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 ">
         {/* Header section with title and status */}
         <div className="text-center mb-8">
           <div className="flex justify-center items-center gap-4">

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Label } from "../../../../../label";
 import { Button } from "@/components/ui/button";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
@@ -11,9 +11,8 @@ import { useEffect, useState } from "react";
 import SignupImage from "@/assets/auth/signup.svg";
 import Logo from "@/assets/auth/logo.svg";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 
@@ -27,18 +26,17 @@ function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [formErrors, setFormErrors] = useState({
-    name: false,
-    password: false,
-    confirmPassword: false,
-  });
-  const router = useRouter();
+  const [formErrors, setFormErrors] = useState<{
+    name?: string;
+    email?: string;
+    password?: string;
+    confirmPassword?: string;
+  }>({});
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  const router = useRouter();
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
+
   useEffect(() => {
     if (error) {
       if (error === "GOOGLE_LOGIN_BLOCKED") {
@@ -57,61 +55,78 @@ function SignupPage() {
     }
   }, [searchParams, error]);
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   const toggleConfirmPasswordVisibility = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // clear error as user types
+    setFormErrors((prev) => ({ ...prev, [e.target.name]: "" }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setFormErrors({ name: false, password: false, confirmPassword: false });
+    setFormErrors({});
 
     const trimmedName = formData.name.trim();
 
     // Validate name
     if (trimmedName.length < 4) {
-      setFormErrors((prev) => ({ ...prev, name: true }));
-      toast.dismiss();
-      toast.error("Name must be at least 4 characters long.");
+      setFormErrors((prev) => ({
+        ...prev,
+        name: "Name must be at least 4 characters long.",
+      }));
       setLoading(false);
       return;
     }
 
     if (formData.email.trim() === "") {
-      setFormErrors((prev) => ({ ...prev, name: true }));
-      toast.dismiss();
-      toast.error("Email is required.");
+      setFormErrors((prev) => ({ ...prev, email: "Email is required." }));
       setLoading(false);
       return;
     }
 
     const nameRegex = /^[A-Za-z]+(?: [A-Za-z]+)*$/;
     if (!nameRegex.test(trimmedName)) {
-      setFormErrors((prev) => ({ ...prev, name: true }));
-      toast.dismiss();
-      toast.error("Please enter a valid full name (letters and spaces only).");
+      setFormErrors((prev) => ({
+        ...prev,
+        name: "Please enter a valid full name (letters and spaces only).",
+      }));
       setLoading(false);
       return;
     }
 
     // Validate password
     if (formData.password.length < 8) {
-      setFormErrors((prev) => ({ ...prev, password: true }));
-      toast.dismiss();
-      toast.error("Password must be at least 8 characters.");
+      setFormErrors((prev) => ({
+        ...prev,
+        password: "Password must be at least 8 characters.",
+      }));
       setLoading(false);
       return;
     }
 
     const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
     if (!specialCharRegex.test(formData.password)) {
-      setFormErrors((prev) => ({ ...prev, password: true }));
-      toast.dismiss();
-      toast.error("Password must contain at least one special character.");
+      setFormErrors((prev) => ({
+        ...prev,
+        password: "Password must contain at least one special character.",
+      }));
+      setLoading(false);
+      return;
+    }
+
+    if (formData.password === "" || formData.confirmPassword === "") {
+      setFormErrors((prev) => ({
+        ...prev,
+        confirmPassword: "Please fill both password fields.",
+      }));
       setLoading(false);
       return;
     }
@@ -119,11 +134,9 @@ function SignupPage() {
     if (formData.password !== formData.confirmPassword) {
       setFormErrors((prev) => ({
         ...prev,
-        password: true,
-        confirmPassword: true,
+        password: "Passwords do not match.",
+        confirmPassword: "Passwords do not match.",
       }));
-      toast.dismiss();
-      toast.error("Passwords do not match.");
       setLoading(false);
       return;
     }
@@ -150,32 +163,31 @@ function SignupPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        toast.dismiss();
-
         if (response.status === 400 && data.message?.includes("not verified")) {
-          toast.error(
-            "Email is already registered but not verified. Please check your inbox."
-          );
+          setFormErrors((prev) => ({
+            ...prev,
+            email: "Email is already registered but not verified.",
+          }));
           router.push(
             `/verify-email?email=${encodeURIComponent(formData.email)}`
           );
         } else if (response.status === 400 || response.status === 409) {
-          toast.error("Email is already registered. Try logging in instead.");
+          setFormErrors((prev) => ({
+            ...prev,
+            email: "Email is already registered. Try logging in instead.",
+          }));
         } else {
           toast.error(data.message || "Signup failed. Please try again.");
         }
-
         return;
       }
 
-      toast.dismiss();
       toast.success(
         "Signup successful! Please check your email to verify your account."
       );
       router.push(`/verify-email?email=${encodeURIComponent(formData.email)}`);
     } catch (err) {
       console.error("Signup error:", err);
-      toast.dismiss();
       toast.error("Something went wrong. Please try again later.");
     } finally {
       setLoading(false);
@@ -194,12 +206,13 @@ function SignupPage() {
             <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] font-serif font-normal">
               Hello There!
             </h1>
-            <p className="font-light text-base md:text-lg text-[#1F1F1F] opacity-[60%]">
+            <p className="font-light text-base md:text-lg text-[#1F1F1F99] opacity-[60%]">
               Welcome to warriorsol, Enter details to create your account{" "}
             </p>
           </div>
 
-          <div className="space-y-2 md:space-y-4">
+          {/* Name */}
+          <div className="space-y-2 md:space-y-2">
             <Label htmlFor="name">Your Name</Label>
             <Input
               id="name"
@@ -209,21 +222,29 @@ function SignupPage() {
               className={formErrors.name ? "border-red-500" : ""}
               onChange={handleChange}
             />
+            {formErrors.name && (
+              <p className="text-red-500 text-sm">{formErrors.name}</p>
+            )}
           </div>
 
-          <div className="space-y-2 md:space-y-4">
+          {/* Email */}
+          <div className="space-y-2 md:space-y-2">
             <Label htmlFor="email">Email Address</Label>
             <Input
               id="email"
               name="email"
               type="email"
               value={formData.email}
-              className={formErrors.name ? "border-red-500" : ""}
+              className={formErrors.email ? "border-red-500" : ""}
               onChange={handleChange}
             />
+            {formErrors.email && (
+              <p className="text-red-500 text-sm">{formErrors.email}</p>
+            )}
           </div>
 
-          <div className="space-y-2 md:space-y-4">
+          {/* Password */}
+          <div className="space-y-2 md:space-y-2">
             <Label htmlFor="password">Password</Label>
             <div className="relative">
               <Input
@@ -239,7 +260,7 @@ function SignupPage() {
                 variant="ghost"
                 size="icon"
                 onClick={togglePasswordVisibility}
-                className="absolute right-3 top-1/2 cursor-pointer -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
               >
                 {showPassword ? (
                   <FaEyeSlash className="w-4 h-4 md:w-5 md:h-5" />
@@ -248,38 +269,51 @@ function SignupPage() {
                 )}
               </Button>
             </div>
-            <div className="space-y-2 md:space-y-4 mt-4">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <div className="relative">
-                <Input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type={showConfirmPassword ? "text" : "password"}
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className={`pr-10 ${formErrors.confirmPassword ? "border-red-500 border-2" : ""}`}
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={toggleConfirmPasswordVisibility}
-                  className="absolute right-3 top-1/2 cursor-pointer -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                >
-                  {showConfirmPassword ? (
-                    <FaEyeSlash className="w-4 h-4 md:w-5 md:h-5" />
-                  ) : (
-                    <FaEye className="w-4 h-4 md:w-5 md:h-5" />
-                  )}
-                </Button>
-              </div>
-            </div>
+            {formErrors.password && (
+              <p className="text-red-500 text-sm">{formErrors.password}</p>
+            )}
           </div>
 
+          {/* Confirm Password */}
+          <div className="space-y-2 md:space-y-2">
+            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <div className="relative">
+              <Input
+                id="confirmPassword"
+                name="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className={`pr-10 ${
+                  formErrors.confirmPassword ? "border-red-500" : ""
+                }`}
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={toggleConfirmPasswordVisibility}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              >
+                {showConfirmPassword ? (
+                  <FaEyeSlash className="w-4 h-4 md:w-5 md:h-5" />
+                ) : (
+                  <FaEye className="w-4 h-4 md:w-5 md:h-5" />
+                )}
+              </Button>
+            </div>
+            {formErrors.confirmPassword && (
+              <p className="text-red-500 text-sm">
+                {formErrors.confirmPassword}
+              </p>
+            )}
+          </div>
+
+          {/* Submit */}
           <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#EE9254] !font-[Inter] !text-xl cursor-pointer hover:bg-[#EE9254] h-10 md:h-12 text-white mt-4"
+            className="w-full bg-[#EE9254] !font-[Inter] !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white mt-4"
           >
             {loading ? (
               <Loader2 className="animate-spin w-5 h-5" />
@@ -288,6 +322,7 @@ function SignupPage() {
             )}
           </Button>
 
+          {/* OR Divider */}
           <div className="flex items-center gap-4 my-2">
             <div className="flex-grow h-px bg-gray-300" />
             <span className="text-gray-500 text-sm md:text-base font-light">
@@ -296,6 +331,7 @@ function SignupPage() {
             <div className="flex-grow h-px bg-gray-300" />
           </div>
 
+          {/* Google */}
           <Button
             type="button"
             size="lg"
@@ -306,6 +342,7 @@ function SignupPage() {
             Continue with Google
           </Button>
 
+          {/* Login Link */}
           <div className="flex justify-center gap-x-2 md:gap-x-4">
             <p className="text-base md:text-lg !font-[Inter] !text-[#1F1F1F] opacity-60 text-center font-light">
               Already Have An Account?{" "}
@@ -326,8 +363,6 @@ function SignupPage() {
           className="object-cover"
           priority
         />
-
-        {/* Overlay Content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-white text-center px-4">
           <Image
             src={Logo}

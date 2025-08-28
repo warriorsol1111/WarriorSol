@@ -158,6 +158,30 @@ const Products: React.FC = () => {
     return "Other";
   };
 
+  // Helper to get first variantId and availability for a product
+  const getProductAvailability = async (
+    id: string
+  ): Promise<{ variantId: string | null; available: boolean }> => {
+    try {
+      const res = await fetch(
+        `/api/shopify/getProductById?id=${encodeURIComponent(id)}`
+      );
+      const data = await res.json();
+
+      const variant =
+        data?.variants?.[0] ||
+        data?.variant ||
+        data?.variants?.edges?.[0]?.node;
+      const variantId = variant?.id || null;
+      const available = variant?.availableForSale ?? true;
+
+      return { variantId, available };
+    } catch (error) {
+      console.error(`Error fetching availability for product ${id}:`, error);
+      return { variantId: null, available: true };
+    }
+  };
+
   const fetchProducts = useCallback(async () => {
     const transformProducts = (data: ShopifyProductResponse): Product[] => {
       return data.products.edges.map((edge) => {
@@ -194,6 +218,7 @@ const Products: React.FC = () => {
     const PUBLIC_URL = process.env.NEXT_PUBLIC_APP_URL;
     setLoading(true);
     setError(null);
+
     try {
       const endpoint = `${PUBLIC_URL}/api/shopify/getAllProducts`;
       const response = await fetch(endpoint);
@@ -201,9 +226,22 @@ const Products: React.FC = () => {
         throw new Error(`Failed to fetch products: ${response.status}`);
       }
       const data: ShopifyProductResponse = await response.json();
+      console.log(data);
       setCollections(data.collections);
       const transformedProducts = transformProducts(data);
-      setAllProducts(transformedProducts);
+
+      // Fetch availability for all products concurrently
+      const availabilityPromises = transformedProducts.map(async (product) => {
+        const { available } = await getProductAvailability(product.id);
+        return {
+          ...product,
+          availableForSale: available,
+        };
+      });
+
+      // Wait for all availability checks to complete
+      const productsWithAvailability = await Promise.all(availabilityPromises);
+      setAllProducts(productsWithAvailability);
     } catch (error) {
       console.error("Error fetching products:", error);
       setError(
@@ -219,7 +257,18 @@ const Products: React.FC = () => {
     fetchProducts();
   }, [fetchProducts]);
 
+  const normalizeTitle = (title: string) => {
+    return title
+      .replace(/["']/g, "")
+      .replace(/[^a-zA-Z0-9\s]/g, "")
+      .toLowerCase()
+      .trim();
+  };
+
   const filteredProducts = useMemo(() => {
+    console.log("🔍 Filter state:", filters);
+    console.log("📝 All products count:", allProducts.length);
+
     let filtered = [...allProducts];
 
     if (filters.productType.length > 0) {
@@ -239,7 +288,8 @@ const Products: React.FC = () => {
         return categoryMatch || collectionMatch;
       });
     }
-
+    console.log("📊 Before sorting - products count:", filtered.length);
+    console.log("🎯 Sort method:", filters.sortBy);
     if (filters.color.length > 0) {
       filtered = filtered.filter((product) =>
         product.colors.some((color) => filters.color.includes(color))
@@ -292,10 +342,19 @@ const Products: React.FC = () => {
         filtered.sort((a, b) => b.priceValue - a.priceValue);
         break;
       case "A-Z":
-        filtered.sort((a, b) => a.title.localeCompare(b.title));
+        filtered.sort((a, b) => {
+          const titleA = normalizeTitle(a.title);
+          const titleB = normalizeTitle(b.title);
+          return titleA.localeCompare(titleB);
+        });
+
         break;
       case "Z-A":
-        filtered.sort((a, b) => b.title.localeCompare(a.title));
+        filtered.sort((a, b) => {
+          const titleA = normalizeTitle(a.title);
+          const titleB = normalizeTitle(b.title);
+          return titleB.localeCompare(titleA);
+        });
         break;
       default:
         break;
@@ -306,30 +365,21 @@ const Products: React.FC = () => {
 
   const handleApplyFilters = () => setIsFilterOpen(false);
 
-  const uniqueCategories = useMemo(() => {
-    return Array.from(new Set(allProducts.map((p) => p.category)));
-  }, [allProducts]);
-
   const getTabProducts = (): Product[] => {
     if (activeTab === "all") return filteredProducts;
-    if (activeTab === "bestsellers") {
-      return filteredProducts.filter((product) => product.availableForSale);
-    }
-    if (activeTab === "community") {
-      return filteredProducts.filter((product) => product.priceValue > 25);
-    }
+
     const matchedCollection = collections.find((c) => c.handle === activeTab);
     if (matchedCollection) {
       return filteredProducts.filter((p) =>
         matchedCollection.productHandles.includes(p.handle)
       );
     }
-    return filteredProducts.filter((p) => p.category === activeTab);
+
+    return [];
   };
 
   const displayProducts = getTabProducts();
 
-  // Check if fully loaded (both products and filters)
   const isFullyLoaded = !loading && filtersLoaded;
 
   return (
@@ -338,7 +388,7 @@ const Products: React.FC = () => {
       <div className="px-4 sm:px-6 md:px-8 lg:px-10 pt-6 pb-4 relative">
         {/* Header with title and filter button */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
-          <h1 className="text-[32px] md:text-[48px] text-center md:text-start lg:text-[62px] font-normal">
+          <h1 className="text-[32px] md:text-[48px] text-center md:text-start lg:text-[62px] text-[#1F1F1F] font-normal">
             View Our Collection
           </h1>
 
@@ -407,7 +457,7 @@ const Products: React.FC = () => {
             setActiveTab(value);
           }}
         >
-          <TabsList className="flex overflow-x-auto text-[20px] font-[Inter] text-[#1F1F1FCC] sm:justify-center w-full gap-2 sm:gap-4 mb-6 p-1 bg-white border border-gray-200 rounded-lg scrollbar-hide">
+          <TabsList className="flex overflow-x-auto text-[20px] font-[Inter] text-[#1F1F1FCC] sm:justify-center w-full gap-2 sm:gap-4 mb-6 p-1 bg-white rounded-lg scrollbar-hide">
             <TabsTrigger value="all" className="whitespace-nowrap">
               All ({allProducts.length})
             </TabsTrigger>
@@ -416,29 +466,15 @@ const Products: React.FC = () => {
                 {collection.title}
               </TabsTrigger>
             ))}
-            {uniqueCategories.map((category) => (
-              <TabsTrigger
-                key={category}
-                value={category}
-                className="whitespace-nowrap"
-              >
-                {category}
-              </TabsTrigger>
-            ))}
-
-            <TabsTrigger value="bestsellers" className="whitespace-nowrap">
-              Bestsellers
-            </TabsTrigger>
-            <TabsTrigger value="community" className="whitespace-nowrap">
-              Community Picks
-            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="all">
             {!isFullyLoaded ? (
               <div className="flex justify-center items-center py-20">
                 <AiOutlineLoading3Quarters className="w-8 h-8 animate-spin" />
-                <span className="ml-2">Loading products...</span>
+                <span className="ml-2">
+                  Loading products and availability...
+                </span>
               </div>
             ) : error ? (
               <div className="text-center py-20 text-red-600">
@@ -466,94 +502,14 @@ const Products: React.FC = () => {
             )}
           </TabsContent>
 
-          <TabsContent value="bestsellers">
-            {!isFullyLoaded ? (
-              <div className="flex justify-center items-center py-20">
-                <AiOutlineLoading3Quarters className="w-8 h-8 animate-spin" />
-                <span className="ml-2">Loading bestsellers...</span>
-              </div>
-            ) : error ? (
-              <div className="text-center py-20 text-red-600">
-                <p>Error: {error}</p>
-                <p className="text-sm text-gray-600 mt-2">
-                  Please try again later
-                </p>
-              </div>
-            ) : displayProducts.length === 0 ? (
-              <div className="text-center py-20">
-                <p className="text-lg text-gray-600 mb-2">
-                  No bestsellers found
-                </p>
-                <p className="text-sm text-gray-500">
-                  Try adjusting your filters
-                </p>
-              </div>
-            ) : (
-              <ProductGrid products={displayProducts} />
-            )}
-          </TabsContent>
-
-          <TabsContent value="community">
-            {!isFullyLoaded ? (
-              <div className="flex justify-center items-center py-20">
-                <AiOutlineLoading3Quarters className="w-8 h-8 animate-spin" />
-                <span className="ml-2">Loading community picks...</span>
-              </div>
-            ) : error ? (
-              <div className="text-center py-20 text-red-600">
-                <p>Error: {error}</p>
-                <p className="text-sm text-gray-600 mt-2">
-                  Please try again later
-                </p>
-              </div>
-            ) : displayProducts.length === 0 ? (
-              <div className="text-center py-20">
-                <p className="text-lg text-gray-600 mb-2">
-                  No community picks found
-                </p>
-                <p className="text-sm text-gray-500">
-                  Try adjusting your filters
-                </p>
-              </div>
-            ) : (
-              <ProductGrid products={displayProducts} />
-            )}
-          </TabsContent>
-          {uniqueCategories.map((category) => (
-            <TabsContent key={category} value={category}>
-              {!isFullyLoaded ? (
-                <div className="flex justify-center items-center py-20">
-                  <AiOutlineLoading3Quarters className="w-8 h-8 animate-spin" />
-                  <span className="ml-2">Loading {category}...</span>
-                </div>
-              ) : error ? (
-                <div className="text-center py-20 text-red-600">
-                  <p>Error: {error}</p>
-                  <p className="text-sm text-gray-600 mt-2">
-                    Please try again later
-                  </p>
-                </div>
-              ) : displayProducts.length === 0 ? (
-                <div className="text-center py-20">
-                  <p className="text-lg text-gray-600 mb-2">
-                    No products found
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Try adjusting your filters
-                  </p>
-                </div>
-              ) : (
-                <ProductGrid products={displayProducts} />
-              )}
-            </TabsContent>
-          ))}
-
           {collections.map((collection) => (
             <TabsContent key={collection.handle} value={collection.handle}>
               {!isFullyLoaded ? (
                 <div className="flex justify-center items-center py-20">
                   <AiOutlineLoading3Quarters className="w-8 h-8 animate-spin" />
-                  <span className="ml-2">Loading {collection.title}...</span>
+                  <span className="ml-2">
+                    Loading {collection.title} and availability...
+                  </span>
                 </div>
               ) : error ? (
                 <div className="text-center py-20 text-red-600">

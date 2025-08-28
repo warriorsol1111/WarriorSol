@@ -8,12 +8,12 @@ import {
 } from "react-icons/ai";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { MdArrowOutward } from "react-icons/md";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { useCartStore } from "@/store/cart-store";
+import { GoArrowUpRight } from "react-icons/go";
 interface Product {
   id: string;
   title: string;
@@ -64,6 +64,9 @@ const RecommendedProducts: React.FC = () => {
   const { data: session } = useSession();
   const { addItem, openCart } = useCartStore();
 
+  const extractIDFromShopifyID = (id: string): string => {
+    return id.split("/").pop() || "";
+  };
   const transformProducts = (data: ShopifyProductResponse): Product[] => {
     if (!data.products?.edges) return [];
     return data.products.edges.map((edge: ShopifyProductEdge) => {
@@ -236,9 +239,9 @@ const RecommendedProducts: React.FC = () => {
   };
 
   return (
-    <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
+    <section className="w-full ">
       {/* Heading */}
-      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6 mb-8 sm:mb-12">
+      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6">
         <div>
           <h2 className="text-4xl sm:text-5xl lg:text-[62px] leading-tight lg:leading-[62px] font-['Cormorant_SC'] font-normal text-[#1F1F1F] capitalize">
             You might also like
@@ -248,9 +251,10 @@ const RecommendedProducts: React.FC = () => {
           variant="outline"
           size="lg"
           onClick={() => router.push("/products")}
-          className="w-full sm:w-auto border !rounded-sm border-black px-4 sm:px-5 py-2.5 sm:py-3 text-base sm:text-lg lg:text-[20px] font-['Inter'] capitalize flex items-center justify-center sm:justify-start gap-2 hover:bg-black hover:text-white transition"
+          className="w-full sm:w-auto border border-black text-[#1F1F1F] px-4 sm:px-5 py-2.5 sm:py-3 !rounded-none text-base sm:text-lg lg:text-[20px] font-['Inter'] capitalize flex items-center justify-center sm:justify-start gap-2 hover:bg-white hover:text-black transition"
         >
-          See All Products <MdArrowOutward className="w-6 h-6" />
+          See All Products
+          <GoArrowUpRight className="w-6 h-6" />
         </Button>
       </div>
 
@@ -266,9 +270,13 @@ const RecommendedProducts: React.FC = () => {
               key={product.id}
               className="group flex flex-col gap-3 relative"
             >
-              <Link href={`/products/${product.handle}`} className="block">
+              <Link
+                href={`/products/${extractIDFromShopifyID(product.id)}`}
+                className="block"
+              >
                 {/* Image Card */}
-                <div className="relative w-full h-[350px] sm:h-[450px] lg:h-[534px]">
+                {/* Image Card */}
+                <div className="relative w-full aspect-[4/5]">
                   <Image
                     src={product.imageUrl}
                     alt={product.title}
