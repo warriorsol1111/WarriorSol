@@ -1,180 +1,185 @@
 "use client";
-import React, { useEffect, useState, useCallback } from "react";
+// import React, { useEffect, useState, useCallback } from "react";
 import Navbar from "../../shared/navbar";
 import Footer from "../../shared/footer";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import ProductGrid from ".././productGrid";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "../..//ui/tabs";
-import Filter, { FilterState, initialFilterState } from "./filters";
-import { BsFilterLeft } from "react-icons/bs";
-import { Button } from "../../ui/button";
+// import { AiOutlineLoading3Quarters } from "react-icons/ai";
+// import ProductGrid from ".././productGrid";
+// import { Tabs, TabsList, TabsTrigger, TabsContent } from "../..//ui/tabs";
+// import Filter, { FilterState, initialFilterState } from "./filters";
+// import { BsFilterLeft } from "react-icons/bs";
+// import { Button } from "../../ui/button";
 import { SocialLinks } from "../../shared/socialLinks";
 
-interface Product {
-  id: string;
-  title: string;
-  category: string;
-  price: string;
-  imageUrl: string;
-  handle: string;
-  availableForSale: boolean;
-}
+// interface Product {
+//   id: string;
+//   title: string;
+//   category: string;
+//   price: string;
+//   imageUrl: string;
+//   handle: string;
+//   availableForSale: boolean;
+// }
 
-interface ShopifyProductEdge {
-  node: {
-    id: string;
-    title: string;
-    productType: string;
-    handle: string;
-    availableForSale: boolean;
-    variants: {
-      edges: Array<{
-        node: {
-          price: string;
-          availableForSale: boolean;
-        };
-      }>;
-    };
-    images: {
-      edges: Array<{
-        node: {
-          originalSrc: string;
-        };
-      }>;
-    };
-  };
-}
+// interface ShopifyProductEdge {
+//   node: {
+//     id: string;
+//     title: string;
+//     productType: string;
+//     handle: string;
+//     availableForSale: boolean;
+//     variants: {
+//       edges: Array<{
+//         node: {
+//           price: string;
+//           availableForSale: boolean;
+//         };
+//       }>;
+//     };
+//     images: {
+//       edges: Array<{
+//         node: {
+//           originalSrc: string;
+//         };
+//       }>;
+//     };
+//   };
+// }
 
-interface ShopifyProductResponse {
-  products: {
-    edges: ShopifyProductEdge[];
-  };
-}
+// interface ShopifyProductResponse {
+//   products: {
+//     edges: ShopifyProductEdge[];
+//   };
+// }
 
 const WarriorProducts = () => {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState("all");
-  const [products, setProducts] = useState<Product[]>([]);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filters, setFilters] = useState<FilterState>(initialFilterState);
+  //TODO: Add products for Warrior
 
-  const transformProducts = (data: ShopifyProductResponse): Product[] => {
-    if (!data.products?.edges) return [];
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState<string | null>(null);
+  // const [activeTab, setActiveTab] = useState("all");
+  // const [products, setProducts] = useState<Product[]>([]);
+  // const [isFilterOpen, setIsFilterOpen] = useState(false);
+  // const [filters, setFilters] = useState<FilterState>(initialFilterState);
 
-    return data.products.edges.map((edge: ShopifyProductEdge) => {
-      const product = edge.node;
-      const firstVariant = product.variants?.edges?.[0]?.node;
-      const firstImage = product.images?.edges?.[0]?.node;
+  // const transformProducts = (data: ShopifyProductResponse): Product[] => {
+  //   if (!data.products?.edges) return [];
 
-      // Check if ANY variant is available for sale
-      const hasAvailableVariant =
-        product.variants?.edges?.some(
-          (variantEdge) => variantEdge.node.availableForSale
-        ) ?? false;
+  //   return data.products.edges.map((edge: ShopifyProductEdge) => {
+  //     const product = edge.node;
+  //     const firstVariant = product.variants?.edges?.[0]?.node;
+  //     const firstImage = product.images?.edges?.[0]?.node;
 
-      return {
-        id: product.id,
-        title: product.title,
-        category: product.productType || "General",
-        price: firstVariant?.price ? `$${firstVariant.price}` : "$0.00",
-        imageUrl: firstImage?.originalSrc || "/placeholder-image.jpg",
-        handle: product.handle,
-        availableForSale: hasAvailableVariant, // Now checks all variants
-      };
-    });
-  };
+  //     // Check if ANY variant is available for sale
+  //     const hasAvailableVariant =
+  //       product.variants?.edges?.some(
+  //         (variantEdge) => variantEdge.node.availableForSale
+  //       ) ?? false;
 
-  const fetchProducts = useCallback(
-    async (tabValue: string, currentFilters: FilterState) => {
-      const PUBLIC_URL = process.env.NEXT_PUBLIC_APP_URL;
-      setLoading(true);
-      setError(null);
+  //     return {
+  //       id: product.id,
+  //       title: product.title,
+  //       category: product.productType || "General",
+  //       price: firstVariant?.price ? `$${firstVariant.price}` : "$0.00",
+  //       imageUrl: firstImage?.originalSrc || "/placeholder-image.jpg",
+  //       handle: product.handle,
+  //       availableForSale: hasAvailableVariant, // Now checks all variants
+  //     };
+  //   });
+  // };
 
-      try {
-        const endpoint = `${PUBLIC_URL}/api/shopify/getAllProducts`;
-        const queryParams = new URLSearchParams();
+  // const fetchProducts = useCallback(
+  //   async (tabValue: string, currentFilters: FilterState) => {
+  //     const PUBLIC_URL = process.env.NEXT_PUBLIC_APP_URL;
+  //     setLoading(true);
+  //     setError(null);
 
-        // Add tab value to query
-        switch (tabValue) {
-          case "bestsellers":
-            queryParams.append("type", "bestsellers");
-            break;
-          case "community":
-            queryParams.append("type", "community");
-            break;
-        }
+  //     try {
+  //       const endpoint = `${PUBLIC_URL}/api/shopify/getAllProducts`;
+  //       const queryParams = new URLSearchParams();
 
-        // Add filters to query
-        if (currentFilters.productType.length > 0) {
-          queryParams.append(
-            "productType",
-            currentFilters.productType.join(",")
-          );
-        }
-        if (currentFilters.color.length > 0) {
-          queryParams.append("color", currentFilters.color.join(","));
-        }
-        if (currentFilters.size.length > 0) {
-          queryParams.append("size", currentFilters.size.join(","));
-        }
-        if (currentFilters.gender.length > 0) {
-          queryParams.append("gender", currentFilters.gender.join(","));
-        }
-        if (currentFilters.collection.length > 0) {
-          queryParams.append("collection", currentFilters.collection.join(","));
-        }
-        if (currentFilters.sortBy !== "New In") {
-          queryParams.append("sortBy", currentFilters.sortBy.toLowerCase());
-        }
+  //       // Add tab value to query
+  //       switch (tabValue) {
+  //         case "bestsellers":
+  //           queryParams.append("type", "bestsellers");
+  //           break;
+  //         case "community":
+  //           queryParams.append("type", "community");
+  //           break;
+  //       }
 
-        const queryString = queryParams.toString();
-        const finalEndpoint = queryString
-          ? `${endpoint}?${queryString}`
-          : endpoint;
+  //       // Add filters to query
+  //       if (currentFilters.productType.length > 0) {
+  //         queryParams.append(
+  //           "productType",
+  //           currentFilters.productType.join(",")
+  //         );
+  //       }
+  //       if (currentFilters.color.length > 0) {
+  //         queryParams.append("color", currentFilters.color.join(","));
+  //       }
+  //       if (currentFilters.size.length > 0) {
+  //         queryParams.append("size", currentFilters.size.join(","));
+  //       }
+  //       if (currentFilters.gender.length > 0) {
+  //         queryParams.append("gender", currentFilters.gender.join(","));
+  //       }
+  //       if (currentFilters.collection.length > 0) {
+  //         queryParams.append("collection", currentFilters.collection.join(","));
+  //       }
+  //       if (currentFilters.sortBy !== "New In") {
+  //         queryParams.append("sortBy", currentFilters.sortBy.toLowerCase());
+  //       }
 
-        const response = await fetch(finalEndpoint);
+  //       const queryString = queryParams.toString();
+  //       const finalEndpoint = queryString
+  //         ? `${endpoint}?${queryString}`
+  //         : endpoint;
 
-        if (!response.ok) {
-          throw new Error(`Failed to fetch products: ${response.status}`);
-        }
+  //       const response = await fetch(finalEndpoint);
 
-        const data = await response.json();
-        const transformedProducts = transformProducts(data);
-        setProducts(transformedProducts);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-        setError(
-          error instanceof Error ? error.message : "Failed to fetch products"
-        );
-        setProducts([]);
-      } finally {
-        setLoading(false);
-      }
-    },
-    []
-  );
+  //       if (!response.ok) {
+  //         throw new Error(`Failed to fetch products: ${response.status}`);
+  //       }
 
-  useEffect(() => {
-    fetchProducts(activeTab, filters);
-  }, [activeTab, filters, fetchProducts]);
+  //       const data = await response.json();
+  //       const transformedProducts = transformProducts(data);
+  //       setProducts(transformedProducts);
+  //     } catch (error) {
+  //       console.error("Error fetching products:", error);
+  //       setError(
+  //         error instanceof Error ? error.message : "Failed to fetch products"
+  //       );
+  //       setProducts([]);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   },
+  //   []
+  // );
 
-  const handleApplyFilters = () => {
-    setIsFilterOpen(false);
-    fetchProducts(activeTab, filters);
-  };
+  // useEffect(() => {
+  //   fetchProducts(activeTab, filters);
+  // }, [activeTab, filters, fetchProducts]);
+
+  // const handleApplyFilters = () => {
+  //   setIsFilterOpen(false);
+  //   fetchProducts(activeTab, filters);
+  // };
 
   return (
     <div>
       <Navbar />
-      <div className="px-4 sm:px-6 md:px-8 lg:px-10 pt-6 pb-4 relative">
-        {/* Header with title and filter button */}
+      <div className="flex items-center justify-center min-h-screen ">
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-[#1F1F1F] font-[Inter]">
+          Coming Soon
+        </h1>
+      </div>
+      {/* <div className="px-4 sm:px-6 md:px-8 lg:px-10 pt-6 pb-4 relative">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
           <h1 className="text-[32px] md:text-[48px] text-center md:text-start lg:text-[62px] font-normal">
             View Our Warriors Collection
           </h1>
 
-          {/* Filter button - hidden on mobile, shown as small button on tablet+ */}
           <Button
             onClick={() => setIsFilterOpen(true)}
             variant="link"
@@ -191,7 +196,6 @@ const WarriorProducts = () => {
           journey.
         </p>
 
-        {/* Mobile filter button - full width */}
         <Button
           variant="link"
           onClick={() => setIsFilterOpen(true)}
@@ -290,9 +294,8 @@ const WarriorProducts = () => {
             )}
           </TabsContent>
         </Tabs>
-      </div>
+      </div> */}
 
-      {/* Social Links Grid */}
       <SocialLinks />
       <Footer />
     </div>
