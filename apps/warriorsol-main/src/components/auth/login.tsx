@@ -91,7 +91,6 @@ function LoginPage() {
 
     // Custom validation first
     if (!validateForm()) {
-      // Show toast for the first error found
       if (fieldErrors.email) {
         toast.dismiss();
         toast.error(fieldErrors.email);
@@ -114,14 +113,15 @@ function LoginPage() {
     }
 
     const { email, password } = validation.data;
+    const callbackUrl = searchParams.get("callbackUrl") || "/home";
+    const isCommunity = callbackUrl === "/community";
 
     const response = await signIn("credentials", {
       email,
       password,
-      redirect: true,
-      callbackUrl: searchParams.get("callbackUrl") || "/home",
+      redirect: isCommunity,
+      callbackUrl,
     });
-    console.log(response);
 
     const error = response?.error?.toLowerCase().trim();
 
@@ -155,8 +155,12 @@ function LoginPage() {
     } else {
       toast.dismiss();
       toast.success("Login successful");
-      router.replace(response?.url || "/home");
+
+      if (!isCommunity) {
+        router.replace(response?.url || "/home");
+      }
     }
+
     setLoading(false);
   };
 
