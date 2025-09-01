@@ -5,6 +5,10 @@ import Link from "next/link";
 import LogoWhite from "../../assets/logo-white.svg";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
+import { CiTwitter } from "react-icons/ci";
+import { CiInstagram } from "react-icons/ci";
+import { FaBehance } from "react-icons/fa6";
+import { FaPinterestP } from "react-icons/fa";
 
 export default function Footer() {
   const { data: session } = useSession();
@@ -93,13 +97,6 @@ export default function Footer() {
                     </Link>
                   </li>
                 )}
-              </ul>
-            </div>
-
-            {/* Legal */}
-            <div>
-              <h4 className="text-white text-lg font-semibold mb-3">Legal</h4>
-              <ul className="space-y-2">
                 <li>
                   <Link href="/privacy" className="hover:underline text-white">
                     Privacy Policy
@@ -112,19 +109,84 @@ export default function Footer() {
                 </li>
               </ul>
             </div>
+
+            {/* Company/About */}
+            <div>
+              <h4 className="text-white text-lg font-semibold mb-3">Company</h4>
+              <ul className="space-y-2">
+                <li>
+                  <Link href="/about" className="hover:underline text-white">
+                    About
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/contact" className="hover:underline text-white">
+                    Contact
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/community"
+                    className="hover:underline text-white"
+                  >
+                    Community
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
         )}
       </div>
 
       {/* Bottom Bar */}
-      <div className="mt-10 pt-6 border-t border-[#353534] text-sm text-white flex flex-col sm:flex-row justify-between items-center gap-4">
-        <div>© 2025 Warrior Sol Foundation. All rights reserved.</div>
-        <div className="flex gap-4">
-          <a href="/privacy" className="hover:underline">
-            Privacy
+      <div className="mt-10 pt-6 border-t border-[#353534] text-[18px] text-white flex flex-col sm:flex-row justify-between items-center gap-6">
+        <div>© 2025 Tasha Mellett Foundation. All rights reserved.</div>
+
+        {/* Social Media Links */}
+        <div className="flex gap-3 items-center">
+          <a
+            href="https://twitter.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-white text-black px-4 py-2 h-14 rounded-full hover:bg-gray-200 transition-colors flex items-center justify-between min-w-[100px]"
+          >
+            <span className="text-[15px] text-[#1F1F1F] font-medium">
+              Twitter
+            </span>
+            <CiTwitter size={18} className="ml-10" />
           </a>
-          <a href="/terms" className="hover:underline">
-            Terms
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-white text-black px-4 py-2 h-14 rounded-full hover:bg-gray-200 transition-colors flex items-center justify-between min-w-[110px]"
+          >
+            <span className="text-[15px] text-[#1F1F1F] font-medium">
+              Instagram
+            </span>
+            <CiInstagram size={18} className="ml-10" />
+          </a>
+          <a
+            href="https://pinterest.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-white text-black px-4 py-2 h-14   rounded-full hover:bg-gray-200 transition-colors flex items-center justify-between min-w-[105px]"
+          >
+            <span className="text-[15px] text-[#1F1F1F] font-medium">
+              Pinterest
+            </span>
+            <FaPinterestP size={18} className="ml-10" />
+          </a>
+          <a
+            href="https://behance.net"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-white text-black px-4 py-2  h-14 rounded-full hover:bg-gray-200 transition-colors flex items-center justify-between min-w-[100px]"
+          >
+            <span className="text-[15px] text-[#1F1F1F] font-medium">
+              Behance
+            </span>
+            <FaBehance size={18} className="ml-10" />
           </a>
         </div>
       </div>

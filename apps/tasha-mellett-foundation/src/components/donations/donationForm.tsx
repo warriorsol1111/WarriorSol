@@ -201,7 +201,7 @@ export default function DonationForm() {
         <div className="w-full md:w-1/2 bg-white flex p-6 sm:p-8 md:p-12">
           <Card className="w-full shadow-none border-none bg-white">
             <CardContent className="flex flex-col justify-between h-full space-y-8 p-6 sm:p-8">
-              <h2 className="text-3xl sm:text-[44px] font-extrabold text-center flex gap-2 justify-start items-center">
+              <h2 className="text-3xl sm:text-[44px] text-[#1F1F1F] font-extrabold text-center flex gap-2 justify-start items-center">
                 <FaHeart className="w-10 h-10 mt-1 text-[#C1E965]" />
                 Donation Form
               </h2>
@@ -221,7 +221,7 @@ export default function DonationForm() {
                       <div
                         key={id}
                         onClick={() => setDonationType(id)}
-                        className={`flex items-center gap-2 p-3 border rounded-xl cursor-pointer ${
+                        className={`flex items-center gap-2 p-3 border !text-[#1F1F1FCC] rounded-xl cursor-pointer ${
                           donationType === id
                             ? radioStyles.selected
                             : radioStyles.default
@@ -232,7 +232,7 @@ export default function DonationForm() {
                           id={id}
                           className={
                             donationType === id
-                              ? "text-black"
+                              ? "text-[#1F1F1FCC]"
                               : "text-[#C1E965B2]"
                           }
                         />
@@ -254,7 +254,7 @@ export default function DonationForm() {
                       <Button
                         key={val}
                         variant="outline"
-                        className={`rounded-xl text-lg font-[Inter] h-10 sm:h-12 ${
+                        className={`rounded-xl text-lg font-[Inter] h-10 sm:h-12 text-[#1F1F1FCC] ${
                           amount === val
                             ? buttonStyles.selected
                             : buttonStyles.default
@@ -265,18 +265,25 @@ export default function DonationForm() {
                       </Button>
                     ))}
                   </div>
-                  {donationType !== "monthly" && (
-                    <div className="mt-2">
-                      <Input
-                        placeholder="Custom ($)"
-                        type="number"
-                        value={customAmount}
-                        onFocus={handleCustomAmountFocus}
-                        onChange={handleCustomAmountChange}
-                        className="rounded-xl bg-white border-gray-200"
-                      />
-                    </div>
-                  )}
+                  <div className="mt-2">
+                    <Input
+                      placeholder={
+                        donationType === "monthly"
+                          ? "Custom amount not available"
+                          : "Custom ($)"
+                      }
+                      type="number"
+                      value={customAmount}
+                      onFocus={handleCustomAmountFocus}
+                      onChange={handleCustomAmountChange}
+                      disabled={donationType === "monthly"}
+                      className={`rounded-xl border-gray-200 ${
+                        donationType === "monthly"
+                          ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                          : "bg-white"
+                      }`}
+                    />
+                  </div>
                   {errors.amount && (
                     <div className="text-red-500 text-sm mt-1">
                       {errors.amount}

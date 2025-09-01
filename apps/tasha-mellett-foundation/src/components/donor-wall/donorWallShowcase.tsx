@@ -28,7 +28,7 @@ export default function DonorWallShowcase({
       {/* Total Raised + Top Donors */}
       <section className="w-full flex flex-col lg:flex-row gap-8 bg-white py-8 px-4 sm:px-6 rounded-lg shadow-md mt-8">
         {/* Image + Stats */}
-        <div className="relative w-full lg:w-1/2 h-[500px] sm:h-[600px] lg:h-[600px] rounded-lg overflow-hidden">
+        <div className="relative w-full lg:w-1/2 rounded-4xl overflow-hidden">
           <Image
             src={DonorWallImage}
             alt="Donor Wall"

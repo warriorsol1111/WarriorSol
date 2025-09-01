@@ -217,7 +217,7 @@ export default function AdminSupportApplicationsPage() {
                 {/* Buttons */}
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Button
-                    className="bg-[#C1E965] hover:bg-[#D67E43] text-black font-semibold py-2.5 px-6 rounded-lg transition-colors duration-200 flex-1"
+                    className="bg-[#C1E965] hover:bg-[#C1E965] text-black font-semibold py-2.5 px-6 rounded-lg transition-colors duration-200 flex-1"
                     onClick={() => handleAction(app.id, "accept")}
                     disabled={
                       actionLoading.id === app.id &&

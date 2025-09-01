@@ -4,8 +4,10 @@ import { Button } from "../ui/button";
 import SupportImage1 from "../../assets/support1.svg";
 import SupportImage2 from "../../assets/support2.svg";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function ApplyForSupportPage() {
+  const router = useRouter();
   return (
     <section className="w-full px-4 sm:px-6 md:px-8 lg:px-14 py-8 sm:py-12 lg:py-16">
       {/* Heading + description */}
@@ -24,6 +26,9 @@ export default function ApplyForSupportPage() {
         <Button
           className="bg-[#C1E965] rounded-full w-[130px] sm:w-[160px] h-[48px] sm:h-[60px] hover:bg-[#b3e06d] text-[#023729] text-base sm:text-lg md:text-[18px] font-medium"
           size="lg"
+          onClick={() => {
+            router.push("/donations");
+          }}
         >
           Donate Now
         </Button>
