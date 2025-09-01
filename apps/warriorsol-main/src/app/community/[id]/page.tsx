@@ -6,7 +6,7 @@ import { authConfig } from "../../../../auth";
 
 type Params = Promise<{ id: string }>;
 
-export default async function ProductPage(props: { params: Params }) {
+export default async function CommunityPage(props: { params: Params }) {
   const { id } = await props.params;
   const session = await getServerSession(authConfig);
   if (!session?.user?.token) return null;

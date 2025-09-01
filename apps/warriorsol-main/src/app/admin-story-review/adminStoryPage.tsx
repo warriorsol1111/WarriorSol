@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -8,6 +8,17 @@ import Navbar from "@/components/shared/navbar";
 import Footer from "@/components/shared/footer";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 
 interface Story {
   id: string;
@@ -25,85 +36,138 @@ interface Story {
 const AdminStoriesPage: React.FC = () => {
   const { data: session } = useSession();
   const [stories, setStories] = useState<Story[]>([]);
+  const [archivedStories, setArchivedStories] = useState<Story[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [view, setView] = useState<"pending" | "archived">("pending");
 
-  useEffect(() => {
-    if (!session?.user?.token) return;
-
-    const fetchStories = async () => {
-      setLoading(true);
-      setError(false);
-
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/user-stories`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${session.user.token}`,
-            },
-          }
-        );
-
-        const data = await res.json();
-
-        if (data.status === "success") {
-          setStories(
-            data.data.filter((story: Story) => story.status === "pending")
-          );
-        } else {
-          setError(true);
-        }
-      } catch {
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStories();
-  }, [session]);
-
-  const handleAction = async (id: string, action: "approve" | "reject") => {
-    setActionLoading(id + action);
-
+  const fetchStories = useCallback(async () => {
+    setLoading(true);
+    setError(false);
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user-stories/${id}/${action}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user-stories`,
         {
-          method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${session?.user?.token}`,
           },
         }
       );
+      const data = await res.json();
+      if (data.status === "success") {
+        setStories(data.data.filter((s: Story) => s.status === "pending"));
+      } else setError(true);
+    } catch {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  }, [session]);
+
+  const fetchArchivedStories = useCallback(async () => {
+    setLoading(true);
+    setError(false);
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user-stories/archived`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.user?.token}`,
+          },
+        }
+      );
+      const data = await res.json();
+      if (data.status === "success") {
+        setArchivedStories(data.data);
+      } else setError(true);
+    } catch {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  }, [session]);
+
+  useEffect(() => {
+    if (!session?.user?.token) return;
+    fetchArchivedStories();
+  }, [session, fetchArchivedStories]);
+
+  const handleAction = async (
+    id: string,
+    action: "approve" | "reject" | "unarchive" | "delete"
+  ) => {
+    setActionLoading(id + action);
+    let url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/user-stories/${id}`;
+    let method = "PUT";
+
+    if (action === "approve" || action === "reject") {
+      url += `/${action}`;
+    } else if (action === "unarchive") {
+      url += `/unarchive`;
+    } else if (action === "delete") {
+      method = "DELETE";
+    }
+
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.user?.token}`,
+        },
+      });
 
       if (res.ok) {
-        setStories((prev) => prev.filter((story) => story.id !== id));
-        toast.dismiss();
+        if (action === "approve" || action === "reject") {
+          setStories((prev) => prev.filter((s) => s.id !== id));
+        } else {
+          setArchivedStories((prev) => prev.filter((s) => s.id !== id));
+        }
+
         toast.success(
-          action === "approve"
-            ? "Story approved successfully!"
-            : "Story rejected successfully!"
+          {
+            approve: "Story approved successfully!",
+            reject: "Story rejected successfully!",
+            unarchive: "Story unarchived successfully!",
+            delete: "Story deleted successfully!",
+          }[action]
         );
       } else {
-        toast.dismiss();
         toast.error(
-          action === "approve"
-            ? "Failed to approve story"
-            : "Failed to reject story"
+          {
+            approve: "Failed to approve story",
+            reject: "Failed to reject story",
+            unarchive: "Failed to unarchive story",
+            delete: "Failed to delete story",
+          }[action]
         );
       }
     } catch {
-      toast.dismiss();
       toast.error("Action failed. Try again later.");
     } finally {
       setActionLoading(null);
     }
   };
+
+  const storiesToShow = view === "pending" ? stories : archivedStories;
+
+  useEffect(() => {
+    if (view === "archived" && archivedStories.length === 0) {
+      fetchArchivedStories();
+    }
+    if (view === "pending" && stories.length === 0) {
+      fetchStories();
+    }
+  }, [
+    view,
+    archivedStories.length,
+    fetchArchivedStories,
+    stories.length,
+    fetchStories,
+  ]);
 
   return (
     <>
@@ -114,6 +178,24 @@ const AdminStoriesPage: React.FC = () => {
           Review User Stories
         </h1>
 
+        {/* Toggle Tabs */}
+        <div className="flex justify-center gap-6 mb-10">
+          <Button
+            variant={view === "pending" ? "default" : "outline"}
+            onClick={() => setView("pending")}
+            className={`px-6 cursor-pointer py-2 h-13 text-[20px] font-[Inter] ${view === "pending" ? "bg-[#EE9254] hover:bg-[#EE9254]" : ""}`}
+          >
+            Pending
+          </Button>
+          <Button
+            variant={view === "archived" ? "default" : "outline"}
+            onClick={() => setView("archived")}
+            className={`px-6 cursor-pointer py-2 h-13 text-[20px] font-[Inter] ${view === "archived" ? "bg-[#EE9254] hover:bg-[#EE9254]" : ""}`}
+          >
+            Archived
+          </Button>
+        </div>
+
         {loading ? (
           <div className="flex justify-center items-center py-20">
             <span className="animate-spin h-12 w-12 border-4 border-[#EE9254] border-t-transparent rounded-full" />
@@ -122,15 +204,17 @@ const AdminStoriesPage: React.FC = () => {
           <p className="text-center text-lg text-red-500">
             Failed to load stories. Please try again later.
           </p>
-        ) : stories.length === 0 ? (
+        ) : storiesToShow.length === 0 ? (
           <div className="text-center text-gray-500 py-16">
             <p className="text-2xl font-medium">
-              No stories available to review yet.
+              {view === "pending"
+                ? "No stories available to review yet."
+                : "No archived stories available."}
             </p>
           </div>
         ) : (
           <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2">
-            {stories.map((story) => (
+            {storiesToShow.map((story) => (
               <div
                 key={story.id}
                 className="border rounded-2xl p-6 flex flex-col justify-between bg-white shadow-md hover:shadow-lg transition-shadow"
@@ -141,7 +225,6 @@ const AdminStoriesPage: React.FC = () => {
                     {story.title}
                   </h2>
 
-                  {/* Scrollable description */}
                   <div className="max-h-28 overflow-y-auto pr-2 mb-3 text-gray-700 text-sm sm:text-base leading-relaxed custom-scrollbar">
                     {story.description}
                   </div>
@@ -178,32 +261,176 @@ const AdminStoriesPage: React.FC = () => {
                   )}
                 </div>
 
-                {/* Action Buttons */}
+                {/* Action Buttons with Confirmation */}
                 <div className="mt-6 flex flex-col sm:flex-row sm:justify-end gap-3">
-                  <Button
-                    className="bg-[#EE9254] text-white hover:bg-[#d67e43] text-base sm:text-lg md:text-xl rounded-xl px-6 py-2"
-                    disabled={actionLoading === story.id + "approve"}
-                    onClick={() => handleAction(story.id, "approve")}
-                  >
-                    {actionLoading === story.id + "approve" ? (
-                      <Loader2 className="animate-spin h-4 w-4 mr-2" />
-                    ) : (
-                      "Approve"
-                    )}
-                  </Button>
+                  {view === "pending" ? (
+                    <>
+                      {/* Approve */}
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            className="bg-[#EE9254] cursor-pointer text-white hover:bg-[#d67e43] text-base sm:text-lg md:text-xl px-6 rounded-none py-2 h-13 font-[Inter]"
+                            disabled={actionLoading === story.id + "approve"}
+                          >
+                            Approve
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="text-[20px] font-[Inter]">
+                              Approve this story?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription className="text-[20px] font-[Inter]">
+                              This will mark the story as approved and make it
+                              visible. You can’t undo this easily.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel className="text-[20px] font-[Inter] cursor-pointer">
+                              Cancel
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleAction(story.id, "approve")}
+                              disabled={actionLoading === story.id + "approve"}
+                              className="text-[20px] cursor-pointer bg-[#EE9254] hover:bg-[#d67e43] text-white px-6 rounded-none py-2 font-[Inter]"
+                            >
+                              {actionLoading === story.id + "approve" ? (
+                                <Loader2 className="animate-spin" />
+                              ) : (
+                                "Confirm"
+                              )}
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
 
-                  <Button
-                    variant="destructive"
-                    className="text-base sm:text-lg md:text-xl rounded-xl px-6 py-2"
-                    disabled={actionLoading === story.id + "reject"}
-                    onClick={() => handleAction(story.id, "reject")}
-                  >
-                    {actionLoading === story.id + "reject" ? (
-                      <Loader2 className="animate-spin h-4 w-4 mr-2" />
-                    ) : (
-                      "Reject"
-                    )}
-                  </Button>
+                      {/* Reject */}
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="destructive"
+                            className="cursor-pointer text-base sm:text-lg md:text-xl px-6 rounded-none py-2 h-13 font-[Inter]"
+                            disabled={actionLoading === story.id + "reject"}
+                          >
+                            Reject
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="text-[20px] font-[Inter]">
+                              Reject this story?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription className="text-[20px] font-[Inter]">
+                              This will remove the story from pending. The user
+                              will know their story wasn’t approved.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel className="text-[20px] font-[Inter] cursor-pointer">
+                              Cancel
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleAction(story.id, "reject")}
+                              disabled={actionLoading === story.id + "reject"}
+                              className="bg-red-500 hover:bg-red-600 cursor-pointer text-[20px] font-[Inter]  "
+                            >
+                              {actionLoading === story.id + "reject" ? (
+                                <Loader2 className="animate-spin" />
+                              ) : (
+                                "Confirm Reject"
+                              )}
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </>
+                  ) : (
+                    <>
+                      {/* Unarchive */}
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            className="cursor-pointer bg-[#4CAF50] text-white hover:bg-[#43a047] text-base sm:text-lg md:text-xl px-6 rounded-none py-2 h-13 font-[Inter]"
+                            disabled={actionLoading === story.id + "unarchive"}
+                          >
+                            Unarchive
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="text-[20px] font-[Inter]">
+                              Unarchive this story?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription className="text-[20px] font-[Inter]">
+                              This will move the story back into pending review.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel className="text-[20px] font-[Inter] cursor-pointer">
+                              Cancel
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() =>
+                                handleAction(story.id, "unarchive")
+                              }
+                              className="text-[20px] cursor-pointer bg-[#EE9254] hover:bg-[#d67e43] text-white px-6 rounded-none py-2  font-[Inter]"
+                              disabled={
+                                actionLoading === story.id + "unarchive"
+                              }
+                            >
+                              {actionLoading === story.id + "unarchive" ? (
+                                <Loader2 className="animate-spin" />
+                              ) : (
+                                "Confirm"
+                              )}
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+
+                      {/* Delete */}
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="destructive"
+                            className="cursor-pointer text-base sm:text-lg md:text-xl px-6 rounded-none py-2 h-13 font-[Inter]"
+                            disabled={actionLoading === story.id + "delete"}
+                          >
+                            Delete
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Are you absolutely sure?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action{" "}
+                              <span className="font-bold">cannot</span> be
+                              undone. The story will be permanently deleted from
+                              our servers.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel className="text-[20px] font-[Inter] cursor-pointer">
+                              Cancel
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleAction(story.id, "delete")}
+                              disabled={actionLoading === story.id + "delete"}
+                              className="bg-red-500 hover:bg-red-600 cursor-pointer text-[20px] font-[Inter]"
+                            >
+                              {actionLoading === story.id + "delete" ? (
+                                <Loader2 className="animate-spin" />
+                              ) : (
+                                "Yes, Delete"
+                              )}
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </>
+                  )}
                 </div>
               </div>
             ))}

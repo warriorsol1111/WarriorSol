@@ -60,7 +60,7 @@ const NavbarSearchDrawer = () => {
       <DrawerTrigger asChild>
         <Button
           variant="link"
-          className="p-1 sm:p-2 hover:bg-gray-100 transition-colors"
+          className="p-1 sm:p-2 cursor-pointer transition-colors"
         >
           <Search className="h-4 w-4 sm:h-5 sm:w-5" />
         </Button>

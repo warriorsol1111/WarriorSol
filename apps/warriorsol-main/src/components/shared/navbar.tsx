@@ -182,13 +182,13 @@ export default function Navbar() {
         {/* Right: Search (Desktop only) / User / Cart */}
         <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
           {/* Search - Only visible on desktop */}
-          <div className="hidden lg:block">
+          <div className="hidden lg:block cursor-pointer">
             <NavbarSearchDrawer />
           </div>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="link" className="p-2 sm:p-2">
+              <Button variant="link" className="p-2 sm:p-2 cursor-pointer">
                 <User className="h-5 w-5 sm:h-6 sm:w-6" />
               </Button>
             </DropdownMenuTrigger>
@@ -239,7 +239,7 @@ export default function Navbar() {
           {/* Wishlist Button */}
           <Button
             variant="link"
-            className="relative p-2 sm:p-2 transition-colors"
+            className="relative p-2 sm:p-2 transition-colors cursor-pointer"
             onClick={() => router.push("/account?tab=wishlist")}
           >
             <AiOutlineHeart className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -253,7 +253,7 @@ export default function Navbar() {
           {/* Cart Button */}
           <Button
             variant="link"
-            className="relative p-2 sm:p-2"
+            className="relative p-2 sm:p-2 cursor-pointer"
             onClick={toggleCart}
           >
             <MdOutlineShoppingBag className="h-5 w-5 sm:h-6 sm:w-6" />
