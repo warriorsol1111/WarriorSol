@@ -121,6 +121,7 @@ function LoginPage() {
       redirect: false,
       callbackUrl: searchParams.get("callbackUrl") || "/home",
     });
+    console.log(response);
 
     const error = response?.error?.toLowerCase().trim();
 
