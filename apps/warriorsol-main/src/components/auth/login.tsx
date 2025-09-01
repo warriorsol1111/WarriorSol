@@ -118,7 +118,7 @@ function LoginPage() {
     const response = await signIn("credentials", {
       email,
       password,
-      redirect: false,
+      redirect: true,
       callbackUrl: searchParams.get("callbackUrl") || "/home",
     });
     console.log(response);
