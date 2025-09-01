@@ -123,6 +123,8 @@ function LoginPage() {
       callbackUrl,
     });
 
+    console.log("signIn response →", response);
+
     const error = response?.error?.toLowerCase().trim();
 
     if (error) {
@@ -156,8 +158,9 @@ function LoginPage() {
       toast.dismiss();
       toast.success("Login successful");
 
+      // 🚀 If not community → manually redirect using response.url
       if (!isCommunity) {
-        router.replace(response?.url || "/home");
+        router.replace(response?.url || callbackUrl);
       }
     }
 
