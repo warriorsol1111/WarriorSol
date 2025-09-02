@@ -186,18 +186,14 @@ function SignupPage() {
 
       if (!response.ok) {
         if (response.status === 400 && data.message?.includes("not verified")) {
-          setFormErrors((prev) => ({
-            ...prev,
-            email: "Email is already registered but not verified.",
-          }));
+          toast.dismiss();
+          toast.error("Email is not verified. OTP has been sent again.");
           router.push(
             `/verify-email?email=${encodeURIComponent(formData.email)}`
           );
         } else if (response.status === 400 || response.status === 409) {
-          setFormErrors((prev) => ({
-            ...prev,
-            email: "Email is already registered. Try logging in instead.",
-          }));
+          toast.dismiss();
+          toast.error("Email is already registered. Try logging in instead.");
         } else {
           toast.error(data.message || "Signup failed. Please try again.");
         }

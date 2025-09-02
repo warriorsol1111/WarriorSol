@@ -50,28 +50,27 @@ export const StoryCard: React.FC<StoryCardProps> = ({
         className
       )}
     >
-      {/* Background */}
-      {isVideo ? (
-        <video
-          className="w-full h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-[90vh] xl:h-[100vh] object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-        >
-          <source src={background} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      ) : (
-        <Image
-          src={background}
-          alt="Background"
-          width={1000}
-          height={1000}
-          className="object-cover brightness-[0.1] shadow-2xl w-full h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-[90vh] xl:h-[100vh]"
-          priority
-        />
-      )}
+      <div className="relative w-full h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-[90vh] xl:h-[100vh] overflow-hidden">
+        {isVideo ? (
+          <video
+            className="absolute inset-0 w-full h-full object-contain bg-white"
+            autoPlay
+            muted
+            loop
+            playsInline
+          >
+            <source src={background} type="video/mp4" />
+          </video>
+        ) : (
+          <Image
+            src={background}
+            alt="Background"
+            fill
+            className="object-contain bg-white"
+            priority
+          />
+        )}
+      </div>
 
       {/* Quote - Responsive Text and Positioning */}
       <div className="absolute inset-0 flex items-center justify-center px-4 sm:px-6 md:px-8 text-center">
