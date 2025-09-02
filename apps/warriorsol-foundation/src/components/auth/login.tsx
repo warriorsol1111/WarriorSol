@@ -22,6 +22,7 @@ function LoginPage() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({ email: "", password: "" });
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -130,7 +131,7 @@ function LoginPage() {
     if (error) {
       if (error.includes("user is not verified")) {
         toast.dismiss();
-        toast.error("User not verified");
+        toast.error("Email is not verified. OTP has been sent again.");
         router.push(`/verify-email?email=${email}`);
       } else if (error.includes("invalid credentials")) {
         toast.dismiss();
@@ -261,15 +262,22 @@ function LoginPage() {
           <Button
             type="button"
             size="lg"
-            onClick={() =>
+            onClick={() => {
+              setGoogleLoading(true);
               signIn("google", {
                 callbackUrl: searchParams.get("callbackUrl") || "/home",
-              })
-            }
+              });
+            }}
             className="w-full flex items-center justify-center gap-3 bg-white text-black border hover:bg-white border-gray-300 rounded-lg shadow-sm hover:shadow-md transition text-sm md:text-base py-2 md:py-3"
           >
-            <FcGoogle className="w-5 h-5 md:w-6 md:h-6" />
-            Continue with Google
+            {googleLoading ? (
+              <Loader2 className="animate-spin w-5 h-5 mr-2" />
+            ) : (
+              <>
+                <FcGoogle className="w-5 h-5 md:w-6 md:h-6" />
+                Continue with Google
+              </>
+            )}
           </Button>
 
           <div className="flex justify-center gap-x-2 md:gap-x-4 pt-2">

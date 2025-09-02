@@ -241,7 +241,7 @@ export default function Wishlist() {
                   )}
                   <div className="flex-1 flex flex-col sm:flex-row sm:items-center gap-4 justify-between w-full">
                     <div className="flex-1 min-w-0 text-center sm:text-left">
-                      <h2 className="font-bold text-lg sm:text-xl text-gray-900 truncate">
+                      <h2 className="font-bold text-lg sm:text-xl text-gray-900 ">
                         {d.productTitle}
                       </h2>
                       <p className="text-sm text-gray-600 mt-1">

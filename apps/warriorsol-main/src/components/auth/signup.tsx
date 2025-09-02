@@ -26,6 +26,7 @@ function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [formErrors, setFormErrors] = useState<{
     name?: string;
     email?: string;
@@ -356,11 +357,20 @@ function SignupPage() {
           <Button
             type="button"
             size="lg"
-            onClick={() => signIn("google", { callbackUrl: "/home" })}
+            onClick={() => {
+              setGoogleLoading(true);
+              signIn("google", { callbackUrl: "/home" });
+            }}
             className="w-full flex items-center justify-center gap-3 bg-white text-black border hover:bg-white border-gray-300 rounded-lg shadow-sm hover:shadow-md transition text-sm md:text-base py-2 md:py-3"
           >
-            <FcGoogle className="w-5 h-5 md:w-6 md:h-6" />
-            Continue with Google
+            {googleLoading ? (
+              <Loader2 className="animate-spin w-5 h-5 mr-2" />
+            ) : (
+              <>
+                <FcGoogle className="w-5 h-5 md:w-6 md:h-6" />
+                Continue with Google
+              </>
+            )}
           </Button>
 
           {/* Login Link */}
