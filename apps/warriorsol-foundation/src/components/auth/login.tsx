@@ -261,7 +261,11 @@ function LoginPage() {
           <Button
             type="button"
             size="lg"
-            onClick={() => signIn("google")}
+            onClick={() =>
+              signIn("google", {
+                callbackUrl: searchParams.get("callbackUrl") || "/home",
+              })
+            }
             className="w-full flex items-center justify-center gap-3 bg-white text-black border hover:bg-white border-gray-300 rounded-lg shadow-sm hover:shadow-md transition text-sm md:text-base py-2 md:py-3"
           >
             <FcGoogle className="w-5 h-5 md:w-6 md:h-6" />
