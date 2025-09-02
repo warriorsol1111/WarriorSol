@@ -326,6 +326,7 @@ export default function ApplyForSupport() {
               <div className="space-y-2">
                 <Label className="text-xl" htmlFor="situation">
                   Describe Your Situation
+                  <span className="text-red-500 ml-[-5px] ">*</span>
                 </Label>
                 <Textarea
                   id="situation"
