@@ -217,7 +217,7 @@ function SignupPage() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen">
+    <div className="flex flex-col-reverse md:flex-row min-h-screen">
       {/* Left Section */}
       <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-4 md:p-12 md:px-24">
         <form onSubmit={handleSubmit} className="w-full space-y-6 mt-12">

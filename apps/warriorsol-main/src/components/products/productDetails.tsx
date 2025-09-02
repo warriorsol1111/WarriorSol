@@ -363,15 +363,17 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           <div className="flex justify-center items-center p-4 sm:p-6">
             {/* Product Image */}
             <div className="relative w-full max-w-md">
-              <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-md">
-                <Image
-                  key={selectedVariant?.image.url}
-                  src={selectedVariant?.image.url || product.image}
-                  alt={selectedVariant?.image.altText || product.imageAlt}
-                  className="w-[630px] h-[615px] object-contain"
-                  width={630}
-                  height={615}
-                />
+              <div className="relative w-full max-w-md">
+                <div className="relative w-full pt-[100%] bg-gray-100 rounded-2xl overflow-hidden shadow-md">
+                  <Image
+                    key={selectedVariant?.image.url}
+                    src={selectedVariant?.image.url || product.image}
+                    alt={selectedVariant?.image.altText || product.imageAlt}
+                    fill
+                    className="absolute top-0 left-0 w-full h-full object-contain"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                </div>
               </div>
             </div>
           </div>

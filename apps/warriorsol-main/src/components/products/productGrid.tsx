@@ -194,13 +194,13 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
               className="block overflow-hidden rounded-xl shadow-sm hover:shadow-lg transition-all duration-300"
             >
               {/* Only the image and info go here */}
-              <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden relative">
+              <div className="relative w-full pt-[100%] overflow-hidden">
                 <Image
                   src={product.imageUrl}
                   alt={product.title}
-                  width={500}
-                  height={500}
-                  className="h-full w-full object-cover object-center transform transition-transform duration-300 group-hover:scale-105"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 25vw"
+                  className="absolute top-0 left-0 w-full h-full object-cover object-center transform transition-transform duration-300 group-hover:scale-105"
                 />
                 {!product.availableForSale && (
                   <div className="absolute top-2 left-2 bg-red-600 text-white text-[11px] font-semibold uppercase px-2.5 py-1 rounded-full shadow-lg">
@@ -208,6 +208,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
                   </div>
                 )}
               </div>
+
               <div className="p-3 sm:p-4">
                 <div className="flex justify-between items-center">
                   <h3 className="text-sm sm:text-base font-medium text-[#1F1F1F] truncate">
