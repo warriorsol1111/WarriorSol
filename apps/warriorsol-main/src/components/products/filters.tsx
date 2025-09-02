@@ -11,6 +11,7 @@ import {
   DrawerClose,
 } from "../ui/drawer";
 import { Button } from "../ui/button";
+import { Check } from "lucide-react";
 
 export interface FilterState {
   sortBy: string;
@@ -212,34 +213,46 @@ export const Filter: React.FC<FilterProps> = ({
             <h3 className="font-medium mb-3 font-[Inter] text-xl text-[#1F1F1F]">
               Color
             </h3>
+
             <div className="flex flex-wrap gap-3">
-              {colors.map((colorOption) => (
-                <div
-                  key={colorOption.value}
-                  className="flex flex-col items-center gap-1"
-                >
-                  <Button
-                    size="lg"
-                    variant="link"
-                    onClick={() => toggleFilter("color", colorOption.value)}
-                    className={`px-4 py-2 rounded-md text-lg font-[Inter] border transition-colors w-[62px] h-[62px] ${
-                      tempFilters.color.includes(colorOption.value)
-                        ? "bg-[#EE9254] text-white"
-                        : "bg-white text-[#1F1F1FCC]"
-                    }`}
-                    style={{
-                      backgroundColor: colorOption.color,
-                      border:
-                        colorOption.value === "white"
-                          ? "2px solid #d1d5db"
-                          : `2px solid ${colorOption.color}`,
-                    }}
-                  />
-                  <span className="text-xs text-gray-600">
-                    {colorOption.name}
-                  </span>
-                </div>
-              ))}
+              {colors.map((colorOption) => {
+                const isSelected = tempFilters.color.includes(
+                  colorOption.value
+                );
+
+                return (
+                  <div
+                    key={colorOption.value}
+                    className="flex flex-col items-center gap-1 relative"
+                  >
+                    <Button
+                      size="lg"
+                      variant="link"
+                      onClick={() => toggleFilter("color", colorOption.value)}
+                      className={`w-[62px] h-[62px] rounded-full border-2 relative transition-all`}
+                      style={{
+                        backgroundColor: colorOption.color,
+                        borderColor: isSelected ? "#EE9254" : "#d1d5db",
+                      }}
+                    >
+                      {isSelected && (
+                        <div className="absolute top-1 right-1 bg-green-500 rounded-full p-[2px] shadow-md">
+                          <Check className="w-2 h-2 text-white font-bold stroke-[3]" />
+                        </div>
+                      )}
+                    </Button>
+                    <span
+                      className={`text-xs ${
+                        isSelected
+                          ? "font-semibold text-[#EE9254]"
+                          : "text-gray-600"
+                      }`}
+                    >
+                      {colorOption.name}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
