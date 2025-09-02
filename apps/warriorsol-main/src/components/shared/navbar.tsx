@@ -254,7 +254,13 @@ export default function Navbar() {
           <Button
             variant="link"
             className="relative p-2 sm:p-2 cursor-pointer"
-            onClick={toggleCart}
+            onClick={() => {
+              if (session?.user) {
+                toggleCart();
+              } else {
+                router.push("/login");
+              }
+            }}
           >
             <MdOutlineShoppingBag className="h-5 w-5 sm:h-6 sm:w-6" />
             {itemCount > 0 && (

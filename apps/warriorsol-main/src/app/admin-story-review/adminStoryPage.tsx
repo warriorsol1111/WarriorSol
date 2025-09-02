@@ -401,10 +401,10 @@ const AdminStoriesPage: React.FC = () => {
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle>
+                            <AlertDialogTitle className="text-[20px] font-[Inter]">
                               Are you absolutely sure?
                             </AlertDialogTitle>
-                            <AlertDialogDescription>
+                            <AlertDialogDescription className="text-[20px] font-[Inter]">
                               This action{" "}
                               <span className="font-bold">cannot</span> be
                               undone. The story will be permanently deleted from

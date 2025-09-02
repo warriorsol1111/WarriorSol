@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "../../../../../label";
@@ -44,14 +44,89 @@ export default function AccountPage() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [imageLoading, setImageLoading] = useState(false);
+
+  // Password validation errors
+  const [passwordErrors, setPasswordErrors] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  // Validation functions
+  const validatePassword = (password: string) => {
+    if (!password) return "Password is required";
+    if (password.length < 8)
+      return "Password must be at least 8 characters long";
+    if (!/(?=.*[a-z])/.test(password))
+      return "Password must contain at least one lowercase letter";
+    if (!/(?=.*[A-Z])/.test(password))
+      return "Password must contain at least one uppercase letter";
+    if (!/(?=.*\d)/.test(password))
+      return "Password must contain at least one number";
+    if (!/(?=.*[!@#$%^&*(),.?":{}|<>])/.test(password))
+      return "Password must contain at least one special character";
+    return "";
+  };
+
+  const validateOldPassword = (password: string) => {
+    if (!password.trim()) return "Current password is required";
+    return "";
+  };
+
+  const validateConfirmPassword = (
+    password: string,
+    confirmPassword: string
+  ) => {
+    if (!confirmPassword) return "Please confirm your new password";
+    if (password !== confirmPassword) return "Passwords don't match";
+    return "";
+  };
+
+  // Handle password field changes with real-time error clearing
+  const handlePasswordChange = (field: string, value: string) => {
+    switch (field) {
+      case "oldPassword":
+        setOldPassword(value);
+        if (passwordErrors.oldPassword) {
+          setPasswordErrors((prev) => ({ ...prev, oldPassword: "" }));
+        }
+        break;
+      case "newPassword":
+        setNewPassword(value);
+        if (passwordErrors.newPassword) {
+          setPasswordErrors((prev) => ({ ...prev, newPassword: "" }));
+        }
+        // Also clear confirm password error when typing in new password
+        if (passwordErrors.confirmPassword) {
+          setPasswordErrors((prev) => ({ ...prev, confirmPassword: "" }));
+        }
+        break;
+      case "confirmPassword":
+        setConfirmPassword(value);
+        if (passwordErrors.confirmPassword) {
+          setPasswordErrors((prev) => ({ ...prev, confirmPassword: "" }));
+        }
+        break;
+    }
+  };
+
   const handleVerifyPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMessage("");
     setLoading(true);
+
+    // Validate old password
+    const oldPasswordError = validateOldPassword(oldPassword);
+    if (oldPasswordError) {
+      setPasswordErrors((prev) => ({ ...prev, oldPassword: oldPasswordError }));
+      toast.dismiss();
+      toast.error(oldPasswordError);
+      setLoading(false);
+      return;
+    }
+
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/verify-password`,
@@ -68,15 +143,23 @@ export default function AccountPage() {
       if (data.status === "success") {
         toast.dismiss();
         toast.success("Current password verified.");
-
+        setPasswordErrors({
+          oldPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
         setStep(2);
       } else {
+        const errorMsg = data.message || "Invalid current password.";
+        setPasswordErrors((prev) => ({ ...prev, oldPassword: errorMsg }));
         toast.dismiss();
-        setMessage(data.message || "Invalid current password.");
-        toast.error(data.message || "Invalid current password.");
+        toast.error(errorMsg);
       }
     } catch {
-      setMessage("Something went wrong. Try again.");
+      const errorMsg = "Something went wrong. Try again.";
+      setPasswordErrors((prev) => ({ ...prev, oldPassword: errorMsg }));
+      toast.dismiss();
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -123,17 +206,37 @@ export default function AccountPage() {
       setImageLoading(false);
     }
   };
+
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMessage("");
-    if (newPassword !== confirmPassword) {
-      setMessage("New passwords do not match.");
+    setLoading(true);
+
+    // Validate new password and confirm password
+    const newPasswordError = validatePassword(newPassword);
+    const confirmPasswordError = validateConfirmPassword(
+      newPassword,
+      confirmPassword
+    );
+
+    if (newPasswordError || confirmPasswordError) {
+      setPasswordErrors((prev) => ({
+        ...prev,
+        newPassword: newPasswordError,
+        confirmPassword: confirmPasswordError,
+      }));
       toast.dismiss();
-      toast.error("New passwords do not match.");
+      toast.error(newPasswordError || confirmPasswordError);
+      setLoading(false);
       return;
     }
 
-    setLoading(true);
+    // Clear errors if validation passes
+    setPasswordErrors({
+      oldPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    });
+
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/change-password`,
@@ -154,13 +257,19 @@ export default function AccountPage() {
         toast.dismiss();
         toast.success("Password changed successfully!");
         setStep(1); // Reset to initial step
+        //logout user
+        signOut();
       } else {
-        setMessage(data.message || "Failed to change password.");
+        const errorMsg = data.message || "Failed to change password.";
+        setPasswordErrors((prev) => ({ ...prev, newPassword: errorMsg }));
         toast.dismiss();
-        toast.error(data.message || "Failed to change password.");
+        toast.error(errorMsg);
       }
     } catch {
-      setMessage("Something went wrong.");
+      const errorMsg = "Something went wrong.";
+      setPasswordErrors((prev) => ({ ...prev, newPassword: errorMsg }));
+      toast.dismiss();
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -322,7 +431,7 @@ export default function AccountPage() {
                         Upload
                       </Button>
 
-                      {/* 🔥 New Remove Button */}
+                      {/* Remove Button */}
                       {(session?.user?.profilePhoto || previewUrl) && (
                         <Button
                           variant="destructive"
@@ -393,6 +502,11 @@ export default function AccountPage() {
                         setStep(1);
                         setNewPassword("");
                         setConfirmPassword("");
+                        setPasswordErrors({
+                          oldPassword: "",
+                          newPassword: "",
+                          confirmPassword: "",
+                        });
                       }}
                       className="p-0 h-auto text-gray-600 hover:text-gray-900"
                     >
@@ -414,22 +528,27 @@ export default function AccountPage() {
                     onSubmit={
                       step === 1 ? handleVerifyPassword : handleChangePassword
                     }
-                    className="space-y-5"
+                    className="space-y-4"
                   >
                     {/* Step 1: Verify Current Password */}
                     {step === 1 && (
-                      <div>
+                      <div className="space-y-4">
                         <Label htmlFor="oldPassword" className="text-base">
                           Current Password
                         </Label>
-                        <div className="relative mt-2">
+                        <div className="relative">
                           <Input
                             id="oldPassword"
                             type={showOldPassword ? "text" : "password"}
                             value={oldPassword}
-                            onChange={(e) => setOldPassword(e.target.value)}
+                            onChange={(e) =>
+                              handlePasswordChange(
+                                "oldPassword",
+                                e.target.value
+                              )
+                            }
                             required
-                            className="pr-10"
+                            className={`pr-10 ${passwordErrors.oldPassword ? "border-red-500" : ""}`}
                           />
                           <Button
                             type="button"
@@ -444,10 +563,10 @@ export default function AccountPage() {
                             )}
                           </Button>
                         </div>
-                        {message && (
-                          <div className="text-sm text-red-600 font-medium mt-1">
-                            {message}
-                          </div>
+                        {passwordErrors.oldPassword && (
+                          <p className="text-sm text-red-500 mt-[-10px]">
+                            {passwordErrors.oldPassword}
+                          </p>
                         )}
                       </div>
                     )}
@@ -455,18 +574,23 @@ export default function AccountPage() {
                     {/* Step 2: Enter New Password */}
                     {step === 2 && (
                       <>
-                        <div>
+                        <div className="space-y-4">
                           <Label htmlFor="newPassword" className="text-base">
                             New Password
                           </Label>
-                          <div className="relative mt-2">
+                          <div className="relative">
                             <Input
                               id="newPassword"
                               type={showNewPassword ? "text" : "password"}
                               value={newPassword}
-                              onChange={(e) => setNewPassword(e.target.value)}
+                              onChange={(e) =>
+                                handlePasswordChange(
+                                  "newPassword",
+                                  e.target.value
+                                )
+                              }
                               required
-                              className="pr-10"
+                              className={`pr-10 ${passwordErrors.newPassword ? "border-red-500" : ""}`}
                             />
                             <Button
                               type="button"
@@ -483,24 +607,33 @@ export default function AccountPage() {
                               )}
                             </Button>
                           </div>
+                          {passwordErrors.newPassword && (
+                            <p className="text-sm text-red-500 mt-[-10px]">
+                              {passwordErrors.newPassword}
+                            </p>
+                          )}
                         </div>
-                        <div>
+
+                        <div className="space-y-4">
                           <Label
                             htmlFor="confirmPassword"
                             className="text-base"
                           >
                             Confirm New Password
                           </Label>
-                          <div className="relative mt-2">
+                          <div className="relative">
                             <Input
                               id="confirmPassword"
                               type={showConfirmPassword ? "text" : "password"}
                               value={confirmPassword}
                               onChange={(e) =>
-                                setConfirmPassword(e.target.value)
+                                handlePasswordChange(
+                                  "confirmPassword",
+                                  e.target.value
+                                )
                               }
                               required
-                              className="pr-10"
+                              className={`pr-10 ${passwordErrors.confirmPassword ? "border-red-500" : ""}`}
                             />
                             <Button
                               type="button"
@@ -517,10 +650,10 @@ export default function AccountPage() {
                               )}
                             </Button>
                           </div>
-                          {message && (
-                            <div className="text-sm text-red-600 font-medium mt-1">
-                              {message}
-                            </div>
+                          {passwordErrors.confirmPassword && (
+                            <p className="text-sm text-red-500 mt-[-10px]">
+                              {passwordErrors.confirmPassword}
+                            </p>
                           )}
                         </div>
                       </>

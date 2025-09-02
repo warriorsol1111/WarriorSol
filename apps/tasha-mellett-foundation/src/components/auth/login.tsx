@@ -184,7 +184,7 @@ function LoginPage() {
             </p>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-4">
             <Label htmlFor="email">Email Address</Label>
             <Input
               id="email"
@@ -203,7 +203,7 @@ function LoginPage() {
             )}
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-4">
             <Label htmlFor="password">Password</Label>
             <div className="relative">
               <Input

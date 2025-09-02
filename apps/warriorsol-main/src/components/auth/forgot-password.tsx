@@ -30,6 +30,7 @@ export default function ForgotPasswordPage() {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState({
+    email: "",
     newPassword: "",
     confirmPassword: "",
   });
@@ -38,6 +39,7 @@ export default function ForgotPasswordPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [resending, setResending] = useState(false);
+
   // Handle browser back button and history
   useEffect(() => {
     // Push initial state when component mounts
@@ -70,9 +72,37 @@ export default function ForgotPasswordPage() {
   const toggleConfirmPasswordVisibility = () =>
     setShowConfirmPassword(!showConfirmPassword);
 
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const isValidPassword = (password: string) => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
     return passwordRegex.test(password);
+  };
+
+  const validatePassword = (password: string) => {
+    if (!password) return "Password is required";
+    if (!isValidPassword(password)) {
+      return "Password must be at least 8 characters and include a capital letter, number, and special character";
+    }
+    return "";
+  };
+
+  const validateConfirmPassword = (
+    password: string,
+    confirmPassword: string
+  ) => {
+    if (!confirmPassword) return "Please confirm your password";
+    if (password !== confirmPassword) return "Passwords don't match";
+    return "";
+  };
+
+  const validateEmail = (email: string) => {
+    if (!email) return "Email is required";
+    if (!isValidEmail(email)) return "Please enter a valid email address";
+    return "";
   };
 
   const getBackgroundImage = () => {
@@ -89,6 +119,7 @@ export default function ForgotPasswordPage() {
         return LoginImage;
     }
   };
+
   const handleResendCode = async () => {
     try {
       setResending(true);
@@ -150,15 +181,37 @@ export default function ForgotPasswordPage() {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    // Clear errors when user starts typing
+    if (errors[name as keyof typeof errors]) {
+      setErrors({ ...errors, [name]: "" });
+    }
+
+    // Also clear confirm password error when typing in new password
+    if (name === "newPassword" && errors.confirmPassword) {
+      setErrors({ ...errors, confirmPassword: "" });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+
     try {
       switch (step) {
         case "email":
+          // Validate email
+          const emailError = validateEmail(formData.email);
+          if (emailError) {
+            setErrors({ ...errors, email: emailError });
+            toast.dismiss();
+            toast.error(emailError);
+            setLoading(false);
+            return;
+          }
+
           const response = await fetch(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/forgot-password`,
             {
@@ -219,45 +272,27 @@ export default function ForgotPasswordPage() {
           break;
 
         case "newPassword":
-          if (!isValidPassword(formData.newPassword)) {
+          // Validate both passwords
+          const newPasswordError = validatePassword(formData.newPassword);
+          const confirmPasswordError = validateConfirmPassword(
+            formData.newPassword,
+            formData.confirmPassword
+          );
+
+          if (newPasswordError || confirmPasswordError) {
             setErrors({
               ...errors,
-              newPassword:
-                "Password must be at least 8 characters and include a capital letter, number, and special character",
-              confirmPassword: "",
+              newPassword: newPasswordError,
+              confirmPassword: confirmPasswordError,
             });
             toast.dismiss();
-            toast.error("Invalid password");
+            toast.error(newPasswordError || confirmPasswordError);
+            setLoading(false);
             return;
           }
 
-          if (formData.newPassword !== formData.confirmPassword) {
-            setErrors({
-              ...errors,
-              newPassword: "",
-              confirmPassword: "Passwords don't match",
-            });
-            toast.dismiss();
-            toast.error("Passwords don't match");
-            return;
-          }
-
-          // If everything is good, reset errors
-          setErrors({ newPassword: "", confirmPassword: "" });
-
-          if (!isValidPassword(formData.newPassword)) {
-            toast.dismiss();
-            toast.error(
-              "Password must be at least 8 characters and include a capital letter, number, and special character"
-            );
-            return;
-          }
-
-          if (formData.newPassword !== formData.confirmPassword) {
-            toast.dismiss();
-            toast.error("Passwords don't match");
-            return;
-          }
+          // Reset errors if validation passes
+          setErrors({ email: "", newPassword: "", confirmPassword: "" });
 
           const updateResponse = await fetch(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/reset-password`,
@@ -315,7 +350,7 @@ export default function ForgotPasswordPage() {
                 Enter Your email, we&apos;ll send a verification code
               </p>
             </div>
-            <div className="space-y-6 w-full">
+            <div className="space-y-4 w-full">
               <Label htmlFor="email">Email Address</Label>
               <Input
                 id="email"
@@ -324,8 +359,11 @@ export default function ForgotPasswordPage() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full"
+                className={`w-full ${errors.email ? "border-red-500" : ""}`}
               />
+              {errors.email && (
+                <p className="text-sm text-red-500">{errors.email}</p>
+              )}
             </div>
             <Button
               type="submit"
@@ -352,7 +390,7 @@ export default function ForgotPasswordPage() {
               </p>
             </div>
 
-            <div className="space-y-6 w-full">
+            <div className="space-y-4 w-full">
               <Label>Please Enter Code</Label>
               <div className="flex gap-2 justify-center">
                 <OtpInput
@@ -431,7 +469,7 @@ export default function ForgotPasswordPage() {
                 Enter your new password{" "}
               </p>
             </div>
-            <div className="space-y-6 w-full">
+            <div className="space-y-4 w-full">
               <Label htmlFor="newPassword">New Password</Label>
               <div className="relative w-full">
                 <Input
@@ -459,13 +497,13 @@ export default function ForgotPasswordPage() {
                 </Button>
               </div>
               {errors.newPassword && (
-                <p className="text-sm text-red-500 mt-1">
+                <p className="text-sm text-red-500 mt-[-10px]">
                   {errors.newPassword}
                 </p>
               )}
             </div>
 
-            <div className="space-y-6 w-full">
+            <div className="space-y-4 w-full">
               <Label htmlFor="confirmPassword">Confirm Password</Label>
               <div className="relative w-full">
                 <Input
@@ -493,7 +531,7 @@ export default function ForgotPasswordPage() {
                 </Button>
               </div>
               {errors.confirmPassword && (
-                <p className="text-sm text-red-500 mt-1">
+                <p className="text-sm text-red-500 mt-[-10px]">
                   {errors.confirmPassword}
                 </p>
               )}

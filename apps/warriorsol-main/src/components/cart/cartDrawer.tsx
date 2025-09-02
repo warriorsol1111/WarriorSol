@@ -71,124 +71,125 @@ export default function CartDrawer() {
                 {items.map((item) => (
                   <div
                     key={`${item.id}-${item.color}-${item.size}`}
-                    className="flex flex-col sm:flex-row items-start gap-4 pb-6 border-b border-gray-100 last:border-b-0"
+                    className="flex flex-col gap-3 pb-6 border-b border-gray-100 last:border-b-0"
                   >
-                    {/* Product Image */}
-                    <div className="w-full sm:w-[118px] max-w-[100px] aspect-square rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        width={118}
-                        height={118}
-                        className="w-full h-full object-cover sm:w-[118px] sm:h-[118px]"
-                        style={{ aspectRatio: "1 / 1" }}
-                      />
-                    </div>
+                    {/* Top row: image + details */}
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      {/* Product Image */}
+                      <div className="w-full sm:w-[118px] max-w-[100px] sm:max-w-none aspect-square rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                        <Image
+                          src={item.image}
+                          alt={item.name}
+                          width={118}
+                          height={118}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
 
-                    {/* Product Details */}
-                    <div className="flex-1 min-w-0 w-full">
-                      <div className="grid grid-cols-[1.5fr_1.2fr_auto] gap-4 sm:gap-6 mb-4 items-start">
-                        {/* Item & Size */}
-                        <div>
-                          <div className="mb-3">
-                            <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">
-                              Item
-                            </p>
-                            <p className="text-sm text-gray-900 font-medium">
-                              {item.name}
-                            </p>
-                          </div>
-                          {item.size && (
-                            <div>
-                              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">
-                                Size
+                      {/* Product Details */}
+                      <div className="flex-1 min-w-0">
+                        <div className="grid grid-cols-[1.5fr_1.2fr_auto] gap-4 sm:gap-6 items-start">
+                          {/* Item & Size */}
+                          <div>
+                            <div className="mb-3">
+                              <p className="text-xs text-[#1F1F1FB2] uppercase tracking-wide mb-1">
+                                Item
                               </p>
-                              <p className="text-sm text-gray-900">
-                                {item.size}
+                              <p className="text-sm text-[#1F1F1F] font-medium truncate max-w-[200px]">
+                                {item.name}
                               </p>
                             </div>
-                          )}
-                        </div>
 
-                        {/* Color & Price */}
-                        <div>
-                          <div className="mb-3">
-                            <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">
-                              Color
-                            </p>
-                            <p className="text-sm text-gray-900">
-                              {item.color}
-                            </p>
+                            <div>
+                              <p className="text-xs text-[#1F1F1FB2] uppercase tracking-wide mb-1">
+                                Size
+                              </p>
+                              <p className="text-sm text-[#1F1F1F]">
+                                {item.size || "—"}
+                              </p>
+                            </div>
                           </div>
 
-                          <div className="mb-3">
-                            <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">
-                              Price
-                            </p>
-                            <p className="text-sm text-gray-900">
-                              ${item.price.toFixed(2)}
-                            </p>
+                          {/* Color & Price */}
+                          <div>
+                            <div className="mb-3">
+                              <p className="text-xs text-[#1F1F1FB2] uppercase tracking-wide mb-1">
+                                Color
+                              </p>
+                              <p className="text-sm text-[#1F1F1F]">
+                                {item.color || "—"}
+                              </p>
+                            </div>
+
+                            <div className="mb-3">
+                              <p className="text-xs text-[#1F1F1FB2] uppercase tracking-wide mb-1">
+                                Price
+                              </p>
+                              <p className="text-sm text-[#1F1F1F]">
+                                ${item.price.toFixed(2)}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Remove Button */}
+                          <div className="flex justify-end">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() =>
+                                item.lineId && removeItem(item.lineId)
+                              }
+                              className="p-1 w-8 h-8 bg-red-100 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-sm"
+                              disabled={
+                                cartLoading ||
+                                (!!item.lineId && itemLoading[item.lineId])
+                              }
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
                           </div>
                         </div>
-
-                        {/* Remove Button */}
-                        <div className="flex justify-end">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() =>
-                              item.lineId && removeItem(item.lineId)
-                            }
-                            className="p-1 w-8 h-8 bg-red-100 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-sm"
-                            disabled={
-                              cartLoading ||
-                              (!!item.lineId && itemLoading[item.lineId])
-                            }
-                          >
-                            <Trash2 className="h-3 w-3" />
-                          </Button>
-                        </div>
                       </div>
+                    </div>
 
-                      {/* Quantity Controls */}
-                      <div className="flex items-center justify-between w-full">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() =>
-                            item.lineId &&
-                            updateQuantity(item.lineId, item.quantity - 1)
-                          }
-                          className="w-5 h-5 rounded-full border !disabled:cursor-not-allowed border-black text-gray-600 hover:text-black hover:border-black"
-                          disabled={
-                            cartLoading ||
-                            (!!item.lineId && itemLoading[item.lineId]) ||
-                            item.quantity === 1
-                          }
-                        >
-                          <Minus className="w-3 h-3" />
-                        </Button>
+                    {/* Bottom row: Quantity controls */}
+                    <div className="flex items-center justify-center sm:justify-between w-[90%] ml-8 border-t border-gray-100 pt-3">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() =>
+                          item.lineId &&
+                          updateQuantity(item.lineId, item.quantity - 1)
+                        }
+                        className="w-7 h-7 !rounded-full border !disabled:cursor-not-allowed border-[#141B34] text-[#141B34] hover:text-black hover:border-black"
+                        disabled={
+                          cartLoading ||
+                          (!!item.lineId && itemLoading[item.lineId]) ||
+                          item.quantity === 1
+                        }
+                      >
+                        <Minus className="w-3 h-3" />
+                      </Button>
 
-                        <span className="text-lg font-medium flex-1 text-center">
-                          {item.quantity.toString().padStart(2, "0")}
-                        </span>
+                      <span className="text-lg font-medium flex-1 text-center">
+                        {item.quantity.toString().padStart(2, "0")}
+                      </span>
 
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() =>
-                            item.lineId &&
-                            updateQuantity(item.lineId, item.quantity + 1)
-                          }
-                          className="w-5 h-5 rounded-full border !disabled:cursor-not-allowed border-black text-gray-600 hover:text-black hover:border-black"
-                          disabled={
-                            cartLoading ||
-                            (!!item.lineId && itemLoading[item.lineId])
-                          }
-                        >
-                          <Plus className="w-3 h-3" />
-                        </Button>
-                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() =>
+                          item.lineId &&
+                          updateQuantity(item.lineId, item.quantity + 1)
+                        }
+                        className="w-7 h-7 !rounded-full border !disabled:cursor-not-allowed border-[#141B34] text-[#141B34] hover:text-black hover:border-black"
+                        disabled={
+                          cartLoading ||
+                          (!!item.lineId && itemLoading[item.lineId])
+                        }
+                      >
+                        <Plus className="w-3 h-3" />
+                      </Button>
                     </div>
                   </div>
                 ))}
@@ -233,7 +234,7 @@ export default function CartDrawer() {
                       setLoading(false);
                     }
                   }}
-                  className="w-full py-4 sm:py-5 text-lg sm:text-xl bg-[#EE9254] hover:bg-[#e8823d] text-white rounded-md"
+                  className="w-full py-4 sm:py-5 h-13 text-[20px] font-[Inter] sm:text-xl bg-[#EE9254] hover:bg-[#e8823d] text-white rounded-md"
                   disabled={loading}
                 >
                   {loading ? (
@@ -249,9 +250,9 @@ export default function CartDrawer() {
                     closeCart();
                   }}
                   variant="outline"
-                  className="w-full py-4 sm:py-5 text-lg sm:text-xl border-gray-300 hover:bg-gray-50 rounded-md"
+                  className="w-full py-4 sm:py-5 text-lg sm:text-xl text-[#1F1F1FCC] border-[#1F1F1F] border h-13 hover:bg-gray-50 rounded-md"
                 >
-                  <MdOutlineShoppingBag className="inline-block mr-2 w-4 h-4" />
+                  <MdOutlineShoppingBag className="inline-block mr-2 !w-6 !h-6" />
                   Goto Cart
                 </Button>
               </div>

@@ -63,88 +63,110 @@ function SignupPage() {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
+  // Validation functions
+  const validateName = (name: string) => {
+    const trimmedName = name.trim();
+    if (!trimmedName) return "Name is required";
+    if (trimmedName.length < 3)
+      return "Name must be at least 3 characters long";
+    if (name.startsWith(" ")) return "Name cannot start with a space";
+    if (name.includes("  ")) return "Name cannot contain consecutive spaces";
+    const nameRegex = /^[A-Za-z]+(?: [A-Za-z]+)*$/;
+    if (!nameRegex.test(trimmedName)) {
+      return "Name can only contain letters and single spaces between words";
+    }
+    return "";
+  };
+
+  const validateEmail = (email: string) => {
+    if (!email.trim()) return "Email is required";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim()))
+      return "Please enter a valid email address";
+    return "";
+  };
+
+  const validatePassword = (password: string) => {
+    if (!password) return "Password is required";
+    if (password.length < 8)
+      return "Password must be at least 8 characters long";
+    if (!/(?=.*[a-z])/.test(password))
+      return "Password must contain at least one lowercase letter";
+    if (!/(?=.*[A-Z])/.test(password))
+      return "Password must contain at least one uppercase letter";
+    if (!/(?=.*\d)/.test(password))
+      return "Password must contain at least one number";
+    if (!/(?=.*[!@#$%^&*(),.?":{}|<>])/.test(password))
+      return "Password must contain at least one special character";
+    return "";
+  };
+
+  const validateConfirmPassword = (
+    password: string,
+    confirmPassword: string
+  ) => {
+    if (!confirmPassword) return "Please confirm your password";
+    if (password !== confirmPassword) return "Passwords don't match";
+    return "";
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    // clear error as user types
-    setFormErrors((prev) => ({ ...prev, [e.target.name]: "" }));
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    // Clear errors when user starts typing
+    if (formErrors[name as keyof typeof formErrors]) {
+      setFormErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+
+    // Also clear confirm password error when typing in password field
+    if (name === "password" && formErrors.confirmPassword) {
+      setFormErrors((prev) => ({ ...prev, confirmPassword: "" }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+
+    // Validate all fields
+    const nameError = validateName(formData.name);
+    const emailError = validateEmail(formData.email);
+    const passwordError = validatePassword(formData.password);
+    const confirmPasswordError = validateConfirmPassword(
+      formData.password,
+      formData.confirmPassword
+    );
+
+    const newErrors = {
+      name: nameError,
+      email: emailError,
+      password: passwordError,
+      confirmPassword: confirmPasswordError,
+    };
+
+    // Check if there are any errors
+    const hasErrors = Object.values(newErrors).some((error) => error !== "");
+
+    if (hasErrors) {
+      setFormErrors(newErrors);
+      // Show the first error in toast
+      const firstError = Object.values(newErrors).find((error) => error !== "");
+      if (firstError) {
+        toast.dismiss();
+        toast.error(firstError);
+      }
+      setLoading(false);
+      return;
+    }
+
+    // Clear all errors if validation passes
     setFormErrors({});
-
-    const trimmedName = formData.name.trim();
-
-    // Validate name
-    if (trimmedName.length < 4) {
-      setFormErrors((prev) => ({
-        ...prev,
-        name: "Name must be at least 4 characters long.",
-      }));
-      setLoading(false);
-      return;
-    }
-
-    if (formData.email.trim() === "") {
-      setFormErrors((prev) => ({ ...prev, email: "Email is required." }));
-      setLoading(false);
-      return;
-    }
-
-    const nameRegex = /^[A-Za-z]+(?: [A-Za-z]+)*$/;
-    if (!nameRegex.test(trimmedName)) {
-      setFormErrors((prev) => ({
-        ...prev,
-        name: "Please enter a valid full name (letters and spaces only).",
-      }));
-      setLoading(false);
-      return;
-    }
-
-    // Validate password
-    if (formData.password.length < 8) {
-      setFormErrors((prev) => ({
-        ...prev,
-        password: "Password must be at least 8 characters.",
-      }));
-      setLoading(false);
-      return;
-    }
-
-    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
-    if (!specialCharRegex.test(formData.password)) {
-      setFormErrors((prev) => ({
-        ...prev,
-        password: "Password must contain at least one special character.",
-      }));
-      setLoading(false);
-      return;
-    }
-
-    if (formData.password === "" || formData.confirmPassword === "") {
-      setFormErrors((prev) => ({
-        ...prev,
-        confirmPassword: "Please fill both password fields.",
-      }));
-      setLoading(false);
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      setFormErrors((prev) => ({
-        ...prev,
-        password: "Passwords do not match.",
-        confirmPassword: "Passwords do not match.",
-      }));
-      setLoading(false);
-      return;
-    }
 
     // Send to backend
     const body = {
-      name: formData.name,
-      email: formData.email,
+      name: formData.name.trim(),
+      email: formData.email.trim(),
       password: formData.password,
     };
 
@@ -198,10 +220,7 @@ function SignupPage() {
     <div className="flex flex-col md:flex-row min-h-screen">
       {/* Left Section */}
       <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-4 md:p-12 md:px-24">
-        <form
-          onSubmit={handleSubmit}
-          className="w-full space-y-4 md:space-y-10 mt-12"
-        >
+        <form onSubmit={handleSubmit} className="w-full space-y-6 mt-12">
           <div>
             <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] font-serif font-normal">
               Hello There!
@@ -212,39 +231,43 @@ function SignupPage() {
           </div>
 
           {/* Name */}
-          <div className="space-y-2 md:space-y-2">
+          <div className="space-y-4 w-full">
             <Label htmlFor="name">Your Name</Label>
             <Input
               id="name"
               name="name"
               type="text"
               value={formData.name}
-              className={formErrors.name ? "border-red-500" : ""}
+              className={`w-full ${formErrors.name ? "border-red-500" : ""}`}
               onChange={handleChange}
             />
             {formErrors.name && (
-              <p className="text-red-500 text-sm">{formErrors.name}</p>
+              <p className="text-red-500 text-sm mt-[-10px]">
+                {formErrors.name}
+              </p>
             )}
           </div>
 
           {/* Email */}
-          <div className="space-y-2 md:space-y-2">
+          <div className="space-y-4 w-full">
             <Label htmlFor="email">Email Address</Label>
             <Input
               id="email"
               name="email"
               type="email"
               value={formData.email}
-              className={formErrors.email ? "border-red-500" : ""}
+              className={`w-full ${formErrors.email ? "border-red-500" : ""}`}
               onChange={handleChange}
             />
             {formErrors.email && (
-              <p className="text-red-500 text-sm">{formErrors.email}</p>
+              <p className="text-red-500 text-sm mt-[-10px]">
+                {formErrors.email}
+              </p>
             )}
           </div>
 
           {/* Password */}
-          <div className="space-y-2 md:space-y-2">
+          <div className="space-y-4 w-full">
             <Label htmlFor="password">Password</Label>
             <div className="relative">
               <Input
@@ -253,7 +276,7 @@ function SignupPage() {
                 type={showPassword ? "text" : "password"}
                 value={formData.password}
                 onChange={handleChange}
-                className={`pr-10 ${formErrors.password ? "border-red-500" : ""}`}
+                className={`w-full pr-10 ${formErrors.password ? "border-red-500" : ""}`}
               />
               <Button
                 type="button"
@@ -270,12 +293,14 @@ function SignupPage() {
               </Button>
             </div>
             {formErrors.password && (
-              <p className="text-red-500 text-sm">{formErrors.password}</p>
+              <p className="text-red-500 text-sm mt-[-10px]">
+                {formErrors.password}
+              </p>
             )}
           </div>
 
           {/* Confirm Password */}
-          <div className="space-y-2 md:space-y-2">
+          <div className="space-y-4 w-full">
             <Label htmlFor="confirmPassword">Confirm Password</Label>
             <div className="relative">
               <Input
@@ -284,7 +309,7 @@ function SignupPage() {
                 type={showConfirmPassword ? "text" : "password"}
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className={`pr-10 ${
+                className={`w-full pr-10 ${
                   formErrors.confirmPassword ? "border-red-500" : ""
                 }`}
               />
@@ -303,7 +328,7 @@ function SignupPage() {
               </Button>
             </div>
             {formErrors.confirmPassword && (
-              <p className="text-red-500 text-sm">
+              <p className="text-red-500 text-sm mt-[-10px]">
                 {formErrors.confirmPassword}
               </p>
             )}
@@ -323,7 +348,7 @@ function SignupPage() {
           </Button>
 
           {/* OR Divider */}
-          <div className="flex items-center gap-4 my-2">
+          <div className="flex items-center gap-4 my-4">
             <div className="flex-grow h-px bg-gray-300" />
             <span className="text-gray-500 text-sm md:text-base font-light">
               OR

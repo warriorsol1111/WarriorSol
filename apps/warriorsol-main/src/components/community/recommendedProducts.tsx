@@ -97,7 +97,7 @@ const RecommendedProducts: React.FC = () => {
   }, [fetchProducts]);
 
   return (
-    <section className="w-full ">
+    <section className="w-full p-8 mb-10">
       {/* Heading */}
       <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6">
         <div>
