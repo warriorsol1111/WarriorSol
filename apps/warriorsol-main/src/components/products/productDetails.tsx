@@ -291,7 +291,8 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           size: selectedSize || "One Size",
           image: selectedVariant.image?.url || product.image,
         },
-        quantity
+        quantity,
+        session?.user.id || ""
       );
       openCart();
     } catch (error) {

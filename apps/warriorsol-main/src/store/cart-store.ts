@@ -28,7 +28,8 @@ interface CartState {
   hydrateCart: () => Promise<void>;
   addItem: (
     item: Omit<CartItem, "quantity" | "lineId">,
-    quantity: number
+    quantity: number,
+    userId: string
   ) => Promise<void>;
   removeItem: (lineId: string) => Promise<void>;
   updateQuantity: (lineId: string, quantity: number) => Promise<void>;
@@ -79,7 +80,7 @@ export const useCartStore = create<CartState>((set, get) => ({
     }
   },
 
-  addItem: async (item, quantity = 1) => {
+  addItem: async (item, quantity = 1, userId) => {
     set({ cartLoading: true });
     toast.dismiss();
     toast.loading("Adding item to cart...");
@@ -92,6 +93,7 @@ export const useCartStore = create<CartState>((set, get) => ({
         body: JSON.stringify({
           merchandiseId: item.id,
           quantity,
+          userId,
         }),
       });
 

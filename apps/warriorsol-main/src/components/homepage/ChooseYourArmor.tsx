@@ -226,7 +226,8 @@ const ChooseYourArmor: React.FC = () => {
           size: "One Size",
           image: product.imageUrl,
         },
-        1
+        1,
+        session?.user.id || ""
       );
       openCart();
       toast.dismiss();

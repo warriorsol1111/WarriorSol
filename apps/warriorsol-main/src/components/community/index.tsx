@@ -106,24 +106,20 @@ const Community: React.FC = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-14">
-              {stories.map(
-                ({ story, user }) => (
-                  (
-                    <StoryCard
-                      key={story.id}
-                      id={story.id}
-                      title={story.title}
-                      background={story.attachment || "/default-story-bg.jpg"}
-                      link={`/community/${story.id}`}
-                      author={{
-                        name: story.isAnonymous ? "Anonymous" : user.name,
-                        role: story.userType,
-                        avatar: story.isAnonymous ? null : user.profilePhoto,
-                      }}
-                    />
-                  )
-                )
-              )}
+              {stories.map(({ story, user }) => (
+                <StoryCard
+                  key={story.id}
+                  id={story.id}
+                  title={story.title}
+                  background={story.attachment || "/default-story-bg.jpg"}
+                  link={`/community/${story.id}`}
+                  author={{
+                    name: story.isAnonymous ? "Anonymous" : user.name,
+                    role: story.userType,
+                    avatar: story.isAnonymous ? null : user.profilePhoto,
+                  }}
+                />
+              ))}
             </div>
           )}
         </div>

@@ -165,7 +165,8 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
           size: "One Size",
           image: product.imageUrl,
         },
-        1
+        1,
+        session?.user.id || ""
       );
       openCart();
       toast.success("Added to cart!");

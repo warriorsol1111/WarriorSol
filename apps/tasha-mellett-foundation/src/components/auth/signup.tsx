@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { Label } from "../../../../../label";
+import { Label } from "../../../../warriorsol-main/src/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";

@@ -11,6 +11,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const lineItems = body.lineItems || [];
+    const userId = body.userId;
 
     const CREATE_CART_MUTATION = `
         mutation CartCreate($lines: [CartLineInput!]!) {
@@ -51,8 +52,15 @@ export async function POST(request: NextRequest) {
         }
       `;
 
+    const cartAttributes = [
+      {
+        key: "user_id",
+        value: userId,
+      },
+    ];
     const data = await fetchShopify(CREATE_CART_MUTATION, {
       lines: lineItems,
+      attributes: cartAttributes,
     });
 
     if (data.cartCreate.userErrors.length > 0) {

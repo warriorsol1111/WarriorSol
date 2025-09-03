@@ -9,7 +9,7 @@ import {
   DrawerClose,
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
-import { Label } from "../../../../../label";
+import { Label } from "../ui/label";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -253,7 +253,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
       >
         <DrawerHeader className="border-b border-gray-200">
           <div className="flex justify-between items-center">
-            <DrawerTitle className="text-[42px] text-[#1F1F1F] font-light">
+            <DrawerTitle className="text-xl md:text-[42px] text-[#1F1F1F] font-light">
               Share Your Story
             </DrawerTitle>
             <DrawerClose className="p-2 cursor-pointer">

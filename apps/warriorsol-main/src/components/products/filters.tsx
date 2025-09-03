@@ -354,7 +354,7 @@ export const Filter: React.FC<FilterProps> = ({
         </div>
 
         <DrawerFooter className="border-t border-gray-200">
-          <div className="flex gap-4">
+          <div className="flex gap-4 flex-col sm:flex-row">
             <Button
               size="lg"
               onClick={() => {
