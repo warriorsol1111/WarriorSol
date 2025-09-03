@@ -63,10 +63,10 @@ export default function DonorWall({
         </div>
       </Card>
       <div className="mt-8 sm:mt-12 lg:mt-16 text-center px-4 sm:px-6">
-        <h2 className="text-[32px] sm:text-[42px] lg:text-[62px] text-center md:text-start leading-tight sm:leading-[1.1] lg:leading-[62px] font-['Cormorant_SC'] font-normal text-[#1F1F1F] capitalize">
+        <h2 className="text-[32px] sm:text-[42px] lg:text-[62px] text-center md:text-start leading-tight sm:leading-[1.1] lg:leading-[62px]  font-normal text-[#1F1F1F] capitalize">
           Our Amazing Donors
         </h2>
-        <p className="text-[16px] sm:text-[18px] lg:text-[20px] text-center md:text-start font-light font-['Inter'] text-[#1F1F1F]/70 capitalize mt-2 sm:mt-3">
+        <p className="text-[16px] sm:text-[18px] lg:text-[20px] text-center md:text-start font-light  text-[#1F1F1F]/70 capitalize mt-2 sm:mt-3">
           Thank you to all the warriors who make our mission possible
         </p>
       </div>

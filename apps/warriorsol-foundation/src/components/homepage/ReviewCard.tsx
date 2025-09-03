@@ -26,7 +26,7 @@ export default function ReviewCard({
 
       {/* Quote */}
       <blockquote className="mb-4 flex-grow">
-        <p className="text-2xl font-semibold font-['Cormorant_SC'] text-[#1F1F1F]  line-clamp-6">
+        <p className="text-2xl font-semibold  text-[#1F1F1F]  line-clamp-6">
           &quot;{quote}&quot;
         </p>
       </blockquote>

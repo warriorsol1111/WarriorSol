@@ -111,9 +111,7 @@ export default function VerifyEmailPage() {
         {step === 1 ? (
           <form onSubmit={handleSubmit} className="mt-12 w-full space-y-6">
             <div className="text-center md:text-left">
-              <h1 className="font-[Cormorant SC] text-3xl md:text-[42px]">
-                Email Verification
-              </h1>
+              <h1 className=" text-3xl md:text-[42px]">Email Verification</h1>
               <p className="mt-2 text-base font-light text-[#1F1F1F99] font-[Inter] md:text-lg">
                 We have sent a verification code on your Email
               </p>
@@ -191,7 +189,7 @@ export default function VerifyEmailPage() {
           </form>
         ) : (
           <div className="mt-12 w-full text-center space-y-6">
-            <h1 className="text-[#1F1F1F] text-3xl md:text-[42px] font-[Cormorant SC]">
+            <h1 className="text-[#1F1F1F] text-3xl md:text-[42px] ">
               Account Created <br />
               Successfully
             </h1>

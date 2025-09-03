@@ -23,10 +23,10 @@ const GiveMeaning = () => {
   return (
     <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 md:py-12">
       <div className="text-center mb-8 md:mb-16">
-        <h2 className='text-[32px] sm:text-[42px] md:text-[52px] lg:text-[62px] leading-tight md:leading-[62px] font-["Cormorant_SC"] font-normal text-[#1F1F1F] mb-3 md:mb-4'>
+        <h2 className="text-[32px] sm:text-[42px] md:text-[52px] lg:text-[62px] leading-tight md:leading-[62px]  font-normal text-[#1F1F1F] mb-3 md:mb-4">
           Give Meaning, Not Just Merchandise
         </h2>
-        <p className='text-[16px] sm:text-[18px] md:text-[20px] font-light font-["Inter"] text-[#1F1F1F]/70 max-w-3xl mx-auto'>
+        <p className="text-[16px] sm:text-[18px] md:text-[20px] font-light  text-[#1F1F1F]/70 max-w-3xl mx-auto">
           Send More Than A Gift. Send Strength, Hope, And The Reminder That
           They&apos;re Not Alone.
         </p>
@@ -39,11 +39,11 @@ const GiveMeaning = () => {
             className="bg-[#F9F9F9] p-6 sm:p-8 md:p-10 lg:p-12 rounded-lg text-center"
           >
             <div className="relative mb-4 md:mb-6 lg:mb-8">
-              <span className='absolute inset-0 text-[80px] sm:text-[100px] md:text-[120px] font-light font-["Inter"] text-[#E4B0A0] opacity-10'>
+              <span className="absolute inset-0 text-[80px] sm:text-[100px] md:text-[120px] font-light  text-[#E4B0A0] opacity-10">
                 {step.number}
               </span>
               <span
-                className='relative text-[80px] sm:text-[100px] md:text-[120px] font-light font-["Inter"] text-transparent'
+                className="relative text-[80px] sm:text-[100px] md:text-[120px] font-light  text-transparent"
                 style={{
                   WebkitTextStroke: "1px #E4B0A0",
                 }}
@@ -51,10 +51,10 @@ const GiveMeaning = () => {
                 {step.number}
               </span>
             </div>
-            <h3 className='text-[24px] sm:text-[28px] md:text-[32px] font-["Cormorant_SC"] text-[#1F1F1F] mb-2 md:mb-3'>
+            <h3 className="text-[24px] sm:text-[28px] md:text-[32px]  text-[#1F1F1F] mb-2 md:mb-3">
               {step.title}
             </h3>
-            <p className='text-[14px] sm:text-[15px] md:text-[16px] font-light font-["Inter"] text-[#1F1F1F]/70'>
+            <p className="text-[14px] sm:text-[15px] md:text-[16px] font-light  text-[#1F1F1F]/70">
               {step.description}
             </p>
           </div>
@@ -65,7 +65,7 @@ const GiveMeaning = () => {
         <Button
           variant="outline"
           size="lg"
-          className="border border-black px-6 sm:px-8 py-2 h-14 sm:py-3 text-[16px] sm:text-[18px] md:text-[20px] font-['Inter'] capitalize hover:bg-black hover:text-white transition"
+          className="border border-black px-6 sm:px-8 py-2 h-14 sm:py-3 text-[16px] sm:text-[18px] md:text-[20px]  capitalize hover:bg-black hover:text-white transition"
         >
           Get A Gift ↗
         </Button>

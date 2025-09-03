@@ -177,7 +177,7 @@ function LoginPage() {
           className="w-full space-y-4 md:space-y-10"
         >
           <div>
-            <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] !font-[Cormorant SC] font-normal">
+            <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] ! font-normal">
               Welcome Back!
             </h1>
             <p className="font-light font-[Inter] text-[#1F1F1F99] opacity-60 text-base md:text-lg">

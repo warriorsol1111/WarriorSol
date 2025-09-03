@@ -21,7 +21,7 @@ export default function Donations() {
                 Donate Now
               </h2>
             </div>
-            <p className="text-base sm:text-lg font-['Inter'] max-w-md font-light leading-relaxed">
+            <p className="text-base sm:text-lg  max-w-md font-light leading-relaxed">
               Your financial contributions can make a real difference. Every
               dollar you donate goes directly towards our foundation.
             </p>
@@ -35,7 +35,7 @@ export default function Donations() {
                 Become A Volunteer
               </h2>
             </div>
-            <p className="text-base sm:text-lg font-['Inter'] max-w-md font-light leading-relaxed">
+            <p className="text-base sm:text-lg  max-w-md font-light leading-relaxed">
               Join our team of dedicated volunteers and actively participate in
               our events.
             </p>
@@ -73,7 +73,7 @@ export default function Donations() {
             <h1 className="mb-4 text-3xl sm:text-4xl lg:text-[52px] font-normal leading-tight">
               Changing Life For The Better...!
             </h1>
-            <p className="text-base sm:text-lg lg:text-xl font-['Inter'] leading-relaxed">
+            <p className="text-base sm:text-lg lg:text-xl  leading-relaxed">
               Supporting families through life&apos;s most challenging moments
               with compassion, resources, and hope.
             </p>

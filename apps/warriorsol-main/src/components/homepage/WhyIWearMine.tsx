@@ -111,17 +111,17 @@ const WhyIWearMine: React.FC = () => {
       <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 md:py-12 lg:py-16">
         <div className="flex flex-col sm:flex-row justify-between items-start gap-6 sm:gap-0 mb-8 md:mb-12">
           <div>
-            <h2 className="text-[28px] sm:text-[36px] md:text-[46px] lg:text-[62px] leading-tight lg:leading-[62px] font-['Cormorant_SC'] font-normal text-[#1F1F1F] capitalize">
+            <h2 className="text-[28px] sm:text-[36px] md:text-[46px] lg:text-[62px] leading-tight lg:leading-[62px]  font-normal text-[#1F1F1F] capitalize">
               WHY I WEAR MINE
             </h2>
-            <p className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] text-center md:text-start font-light font-['Inter'] text-[#1F1F1F]/70 capitalize mt-2">
+            <p className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] text-center md:text-start font-light  text-[#1F1F1F]/70 capitalize mt-2">
               Real Stories From Real Warriors In Our Community
             </p>
           </div>
           <Button
             variant="outline"
             size="lg"
-            className="w-full sm:w-auto border border-black px-4 sm:px-5 py-2.5 sm:py-3 text-sm sm:text-base lg:text-[18px] font-['Inter'] capitalize flex items-center justify-center sm:justify-start gap-2 hover:bg-black hover:text-white transition"
+            className="w-full sm:w-auto border border-black px-4 sm:px-5 py-2.5 sm:py-3 text-sm sm:text-base lg:text-[18px]  capitalize flex items-center justify-center sm:justify-start gap-2 hover:bg-black hover:text-white transition"
             onClick={() => (window.location.href = "/community")}
           >
             Read All Stories ↗
@@ -197,7 +197,7 @@ const WhyIWearMine: React.FC = () => {
                         <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-serif mb-1 sm:mb-2 md:mb-4">
                           &ldquo;
                         </div>
-                        <p className="text-[18px] sm:text-[24px] md:text-[28px] lg:text-[32px] xl:text-[36px] font-['Cormorant'] leading-tight mb-4 sm:mb-6 md:mb-8">
+                        <p className="text-[18px] sm:text-[24px] md:text-[28px] lg:text-[32px] xl:text-[36px]  leading-tight mb-4 sm:mb-6 md:mb-8">
                           {currentStory.story.title}
                         </p>
                         <Button

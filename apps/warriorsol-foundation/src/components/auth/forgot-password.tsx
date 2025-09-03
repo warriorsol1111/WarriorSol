@@ -343,7 +343,7 @@ export default function ForgotPasswordPage() {
         return (
           <>
             <div>
-              <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] font-[Cormorant SC] font-normal">
+              <h1 className="text-3xl md:text-[42px] text-[#1F1F1F]  font-normal">
                 Forgot Password
               </h1>
               <p className="font-light text-[#1F1F1F99] font-[Inter] text-base md:text-lg">
@@ -379,7 +379,7 @@ export default function ForgotPasswordPage() {
         return (
           <>
             <div>
-              <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] font-[Cormorant SC] font-normal">
+              <h1 className="text-3xl md:text-[42px] text-[#1F1F1F]  font-normal">
                 Email Verification
               </h1>
               <p className="font-light text-[#1F1F1F99] font-[Inter] text-base md:text-lg">
@@ -462,7 +462,7 @@ export default function ForgotPasswordPage() {
         return (
           <>
             <div>
-              <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] font-[Cormorant SC] font-normal">
+              <h1 className="text-3xl md:text-[42px] text-[#1F1F1F]  font-normal">
                 Create New Password
               </h1>
               <p className="font-light text-[#1F1F1F99] font-[Inter]  text-base md:text-lg">
@@ -551,7 +551,7 @@ export default function ForgotPasswordPage() {
         return (
           <>
             <div>
-              <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] font-[Cormorant SC] font-normal">
+              <h1 className="text-3xl md:text-[42px] text-[#1F1F1F]  font-normal">
                 Password Changed Successfully
               </h1>
               <p className="font-light text-[#1F1F1F] font-[Inter] opacity-60 text-base md:text-lg">

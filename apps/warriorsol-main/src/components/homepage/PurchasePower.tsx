@@ -98,15 +98,15 @@ const PurchasePower: React.FC<PurchasePowerProps> = ({
   return (
     <section
       ref={sectionRef}
-      className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16 md:py-20 lg:py-24 bg-white overflow-hidden scroll-mt-16"
+      className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16 md:py-20 lg:py-24  overflow-hidden scroll-mt-16 bg-[#FFF7DF]"
     >
       <motion.div
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
         variants={fadeInUp}
-        className="text-center mb-8 sm:mb-12 lg:mb-16"
+        className="text-center mb-8 sm:mb-12 lg:mb-16 py-20 bg-[#FFF7DF]"
       >
-        <h2 className="text-[32px] sm:text-[42px] md:text-[52px] lg:text-[62px] leading-tight sm:leading-[1.1] font-['Cormorant_SC'] font-normal text-[#1F1F1F] capitalize">
+        <h2 className="text-[32px] sm:text-[42px] md:text-[52px] lg:text-[62px] leading-tight sm:leading-[1.1]  font-semibold  text-[#1F1F1F] capitalize">
           {title.main}{" "}
           <motion.span
             initial={{ scale: 0.5, opacity: 0 }}
@@ -128,7 +128,7 @@ const PurchasePower: React.FC<PurchasePowerProps> = ({
         </h2>
         <motion.p
           variants={fadeInUp}
-          className="text-[16px] sm:text-[18px] lg:text-[20px] font-light font-['Inter'] text-[#1F1F1FB2] mt-2 sm:mt-3 px-4"
+          className="text-[16px] sm:text-[18px] lg:text-[20px] font-medium  text-[#1F1F1FB2] mt-2 sm:mt-3 px-4"
         >
           {subtitle}
         </motion.p>
@@ -138,19 +138,20 @@ const PurchasePower: React.FC<PurchasePowerProps> = ({
         variants={staggerContainer}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-6xl mx-auto"
+        className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 w-full "
       >
         {statistics.map((stat, index) => (
           <motion.div
             key={index}
             custom={index}
             variants={cardVariants}
-            className="bg-[#F9F9F9] p-6 sm:p-8 lg:p-12 flex flex-col items-center text-center transform-gpu"
+            className="bg-[#F9F9F9] p-6 sm:p-8 lg:p-12 flex flex-col items-center text-center transform-gpu w-full h-full"
             whileHover={{
               scale: 1.05,
               transition: { duration: 0.2 },
             }}
           >
+            {/* icon + value + label */}
             <motion.div
               initial={{ scale: 0, rotate: -180 }}
               animate={
@@ -163,19 +164,19 @@ const PurchasePower: React.FC<PurchasePowerProps> = ({
                 stiffness: 200,
                 bounce: 0.5,
               }}
-              className="mb-4 sm:mb-6"
+              className="mb-4 sm:mb-6 w-10 h-10"
             >
               {stat.icon}
             </motion.div>
             <motion.div
               variants={fadeInUp}
-              className="text-[32px] sm:text-[36px] lg:text-[42px] font-['Cormorant'] font-medium text-[#1F1F1F] mb-1 sm:mb-2"
+              className="text-[24px] font-medium text-[#1F1F1F] mb-1 sm:mb-2"
             >
               {stat.value}
             </motion.div>
             <motion.div
               variants={fadeInUp}
-              className="text-[14px] sm:text-[15px] lg:text-[16px] font-['Inter'] text-[#1F1F1F]/70"
+              className="text-[14px] sm:text-[15px] lg:text-[16px] text-[#1F1F1F]"
             >
               {stat.label}
             </motion.div>

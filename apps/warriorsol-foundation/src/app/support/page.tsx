@@ -21,10 +21,10 @@ export default function SupportPage() {
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div className="space-y-6">
-                <h1 className="text-5xl md:text-6xl text-center md:text-start font-['Cormorant_SC'] leading-tight">
+                <h1 className="text-5xl md:text-6xl text-center md:text-start  leading-tight">
                   We&apos;re Here to Support Your Journey
                 </h1>
-                <p className="text-lg text-center md:text-start text-gray-600 font-['Inter']">
+                <p className="text-lg text-center md:text-start text-gray-600 ">
                   At WarriorSol Foundation, we understand that life can present
                   unexpected challenges. Our mission is to provide meaningful
                   support to families facing difficult times, offering both

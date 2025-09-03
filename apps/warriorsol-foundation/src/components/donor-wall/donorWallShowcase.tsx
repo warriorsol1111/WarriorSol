@@ -63,7 +63,7 @@ export default function DonorWallShowcase({
 
         {/* Top Donors */}
         <div className="w-full lg:w-1/2 flex flex-col">
-          <h2 className="text-2xl sm:text-[42px] font-['Cormorant_SC'] text-[#1F1F1F] mb-4">
+          <h2 className="text-2xl sm:text-[42px]  text-[#1F1F1F] mb-4">
             Top Contributors
           </h2>
           {topIndividualDonations.length === 0 ? (
@@ -117,7 +117,7 @@ export default function DonorWallShowcase({
 
       {/* Recent Donations */}
       <section className="w-full mt-8 bg-[#FFF8F0] rounded-xl shadow-lg p-4 sm:p-6 md:p-8">
-        <h2 className="text-2xl sm:text-[42px] text-[#1F1F1F] font-['Cormorant_SC'] mb-4">
+        <h2 className="text-2xl sm:text-[42px] text-[#1F1F1F]  mb-4">
           Recent Donations
         </h2>
         {recentDonations.length === 0 ? (

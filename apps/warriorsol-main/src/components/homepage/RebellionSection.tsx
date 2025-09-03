@@ -9,7 +9,7 @@ const RebellionSection: React.FC = () => {
     <div className="w-full text-[#1F1F1F]">
       {/* Text Section */}
       <section className="w-full bg-white px-4 sm:px-8 md:px-12 lg:px-16 py-10 sm:py-12 md:py-16 lg:py-20">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[62px] leading-tight lg:leading-[62px] font-['Cormorant_SC'] font-normal text-left capitalize max-w-full  mx-auto">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[62px] leading-tight lg:leading-[62px]  font-normal text-left capitalize max-w-full  mx-auto">
           Not Just Apparel.
           <br className="hidden sm:block" />A Rebellion Wrapped In Thread.
         </h2>

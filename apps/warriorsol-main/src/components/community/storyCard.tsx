@@ -76,7 +76,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({
 
       {/* Quote - Responsive Text and Positioning */}
       <div className="absolute inset-0 flex items-center justify-center px-4 sm:px-6 md:px-8 text-center">
-        <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-[42px] font-[Cormorant SC] max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-7xl leading-relaxed font-semibold">
+        <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-[42px]  max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-7xl leading-relaxed font-semibold">
           &ldquo;{title}&rdquo;
         </p>
       </div>
@@ -93,7 +93,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({
               </AvatarFallback>
             </Avatar>
             <div className="text-white min-w-0 flex-1">
-              <p className="font-[Cormorant SC] text-base font-semibold leading-tight truncate">
+              <p className=" text-base font-semibold leading-tight truncate">
                 {author.name}
               </p>
               <p className="opacity-80 font-[Inter] font-medium text-sm truncate">
@@ -125,7 +125,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({
             </AvatarFallback>
           </Avatar>
           <div className="text-white min-w-0">
-            <p className="font-[Cormorant SC] text-lg sm:text-xl md:text-2xl font-semibold leading-none truncate max-w-[200px] sm:max-w-[250px] md:max-w-[300px]">
+            <p className=" text-lg sm:text-xl md:text-2xl font-semibold leading-none truncate max-w-[200px] sm:max-w-[250px] md:max-w-[300px]">
               {author.name}
             </p>
             <p className="opacity-80 font-[Inter] font-medium text-sm sm:text-base md:text-lg truncate">

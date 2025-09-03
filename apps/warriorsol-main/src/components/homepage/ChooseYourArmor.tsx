@@ -13,8 +13,9 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { GoArrowUpRight } from "react-icons/go";
-
 import Link from "next/link";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+
 interface Product {
   id: string;
   title: string;
@@ -56,11 +57,15 @@ interface ShopifyProductResponse {
 }
 
 const ChooseYourArmor: React.FC = () => {
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [wishlistLoading, setWishlistLoading] = useState<string | null>(null);
   const [cartLoading, setCartLoading] = useState<string | null>(null);
   const [wishlist, setWishlist] = useState<{ [id: string]: boolean }>({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+
   const router = useRouter();
   const { data: session } = useSession();
   const { addItem, openCart } = useCartStore();
@@ -99,10 +104,10 @@ const ChooseYourArmor: React.FC = () => {
 
       const data = await response.json();
       const transformed = transformProducts(data);
-      setProducts(transformed.slice(0, 6)); // Limit to 6 items
+      setAllProducts(transformed);
     } catch (err) {
       console.error("Error fetching products:", err);
-      setProducts([]);
+      setAllProducts([]);
     } finally {
       setLoading(false);
     }
@@ -112,7 +117,14 @@ const ChooseYourArmor: React.FC = () => {
     fetchProducts();
   }, [fetchProducts]);
 
-  // Helper to get first variantId for a product
+  useEffect(() => {
+    // paginate whenever currentPage changes
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    setProducts(allProducts.slice(startIndex, endIndex));
+  }, [allProducts, currentPage]);
+
+  // --- Wishlist + Cart helpers remain same ---
   const getFirstVariantId = async (id: string): Promise<string | null> => {
     try {
       const res = await fetch(
@@ -129,7 +141,6 @@ const ChooseYourArmor: React.FC = () => {
     }
   };
 
-  // Check wishlist status for each product
   useEffect(() => {
     const checkAllWishlists = async () => {
       if (!session) return;
@@ -244,15 +255,19 @@ const ChooseYourArmor: React.FC = () => {
     const match = gid.match(/\/Product\/(\d+)/);
     return match ? match[1] : gid;
   };
+
+  // --- Pagination helpers ---
+  const totalPages = Math.ceil(allProducts.length / itemsPerPage);
+
   return (
     <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
       {/* Heading */}
       <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6 mb-8 sm:mb-12">
         <div>
-          <h2 className="text-4xl sm:text-5xl lg:text-[62px] text-center md:text-start leading-tight lg:leading-[62px] font-['Cormorant_SC'] font-normal text-[#1F1F1F] capitalize">
+          <h2 className="text-4xl sm:text-5xl lg:text-[62px] text-center md:text-start leading-tight lg:leading-[62px] font-semibold text-[#1F1F1F] capitalize">
             Choose Your Armor
           </h2>
-          <p className="text-base sm:text-lg lg:text-[20px] font-light  text-center md:text-start font-['Inter'] text-[#1F1F1F]/70 capitalize mt-2 sm:mt-0">
+          <p className="text-base sm:text-lg lg:text-[20px] font-medium text-center md:text-start text-[#1F1F1FB2] capitalize mt-4 sm:mt-4">
             Every Collection Tells A Story. Find The One That Speaks To Your
             Journey.
           </p>
@@ -261,7 +276,7 @@ const ChooseYourArmor: React.FC = () => {
           variant="outline"
           size="lg"
           onClick={() => router.push("/products")}
-          className="w-full sm:w-auto border border-black text-[#1F1F1F] px-4 sm:px-5 py-2.5 sm:py-3 !rounded-none text-base sm:text-lg lg:text-[20px] font-['Inter'] capitalize flex items-center justify-center sm:justify-start gap-2 hover:bg-white hover:text-black transition"
+          className="mt-8 flex items-center !rounded-xl gap-2 px-12 py-3 border border-[#1F1F1F] bg-white text-[16px] md:text-[20px] text-[#1F1F1F] hover:bg-gray-200 hover:text-[#1F1F1F] transition"
         >
           See All Products
           <GoArrowUpRight className="w-6 h-6" />
@@ -296,21 +311,21 @@ const ChooseYourArmor: React.FC = () => {
                 {/* Details */}
                 <div className="flex justify-between px-1 mt-4 sm:px-2">
                   <div>
-                    <div className="text-sm sm:text-base lg:text-[16px] font-['Cormorant'] font-medium text-[#1F1F1F]">
+                    <div className="text-sm sm:text-base lg:text-[16px] font-medium text-[#1F1F1F]">
                       {product.title}
                     </div>
-                    <div className="text-xs sm:text-[12.5px] text-[#1F1F1F99] font-light font-['Inter']">
+                    <div className="text-xs sm:text-[12.5px] text-[#1F1F1F99]">
                       {product.category}
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm sm:text-base lg:text-[14px] font-['Cormorant'] font-medium text-[#1F1F1F]">
+                    <div className="text-sm sm:text-base lg:text-[14px] font-medium text-[#1F1F1F]">
                       {product.price}
                     </div>
                   </div>
                 </div>
               </Link>
-              {/* Overlay with icons OUTSIDE the anchor */}
+              {/* Overlay */}
               <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <Button
                   variant="link"
@@ -335,11 +350,6 @@ const ChooseYourArmor: React.FC = () => {
                     <Button
                       variant="link"
                       className="w-8 h-8 sm:w-10 sm:h-10 bg-white flex items-center justify-center text-lg sm:text-xl rounded-full shadow p-0"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleAddToCart(product);
-                      }}
                       disabled
                     >
                       <AiOutlineShoppingCart />
@@ -368,6 +378,28 @@ const ChooseYourArmor: React.FC = () => {
           ))
         )}
       </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex justify-center gap-4 mt-8">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="p-3 bg-gray-100 disabled:opacity-40 cursor-pointer hover:bg-gray-200 transition border border-[#1F1F1F4D]"
+          >
+            <FaChevronLeft />
+          </button>
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className="p-3 bg-gray-100 disabled:opacity-40 cursor-pointer hover:bg-gray-200 transition border border-[#1F1F1F4D]"
+          >
+            <FaChevronRight />
+          </button>
+        </div>
+      )}
     </section>
   );
 };

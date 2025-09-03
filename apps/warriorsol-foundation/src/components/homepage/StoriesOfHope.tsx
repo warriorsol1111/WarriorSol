@@ -82,7 +82,7 @@ export default function StoriesOfHope() {
         {/* Header + Navigation */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
           <div className="flex-1">
-            <h2 className="text-3xl sm:text-4xl lg:text-[62px] font-['Cormorant_SC'] leading-tight">
+            <h2 className="text-3xl sm:text-4xl lg:text-[62px]  leading-tight">
               Stories Of Hope
             </h2>
             <p className="text-base sm:text-lg lg:text-xl font-[Inter] text-[#1F1F1FB2] mt-2 max-w-lg">

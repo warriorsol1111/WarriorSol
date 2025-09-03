@@ -133,7 +133,7 @@ export const CommunityDetails = ({
       <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 relative">
         {/* Header section */}
         <div className="text-center mb-8 pt-10">
-          <h1 className="text-[42px] sm:text-[62px] text-[#1F1F1F] font-[Cormorant SC] font-semibold">
+          <h1 className="text-[42px] sm:text-[62px] text-[#1F1F1F]  font-semibold">
             {story.title}
           </h1>
           <p className="text-[20px] font-light text-[#1F1F1F99] font-[Inter] mt-2">

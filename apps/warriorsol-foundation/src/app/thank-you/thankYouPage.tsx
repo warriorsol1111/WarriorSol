@@ -32,11 +32,11 @@ export default function ThankYouPage() {
               className="mx-auto"
             />
           </div>
-          <h1 className="text-4xl font-['Cormorant_SC'] text-[#1F1F1F] mb-4">
+          <h1 className="text-4xl  text-[#1F1F1F] mb-4">
             Thank You for Your Generosity!
           </h1>
 
-          <p className="text-lg text-[#1F1F1F]/70 font-light mb-8 font-['Inter']">
+          <p className="text-lg text-[#1F1F1F]/70 font-light mb-8 ">
             Your donation brings hope and support to families when they need it
             most.
             <br />

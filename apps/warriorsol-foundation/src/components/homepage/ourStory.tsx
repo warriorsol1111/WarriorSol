@@ -21,7 +21,7 @@ export default function OurStory() {
         <div className="relative z-10 w-full h-full flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16">
           <div className="w-full max-w-5xl mx-auto bg-white/90 p-6 sm:p-10 md:p-12 rounded-lg shadow-md">
             {/* Title */}
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal font-['Cormorant_SC'] text-center mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal  text-center mb-4">
               Jimmy&apos;s Story
             </h2>
             <h3 className="text-base sm:text-lg md:text-xl text-center font-light font-[Inter] text-gray-600 mb-8 sm:mb-12">
