@@ -40,6 +40,7 @@ type LineItem = {
 
 type Order = {
   id: string;
+  shopifyOrderId: string;
   date: string;
   total: number;
   lineItems: LineItem[];
@@ -252,7 +253,7 @@ export default function OrdersPage() {
               <AccordionTrigger className="cursor-pointer px-4 py-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                 <div className="text-left">
                   <p className="text-xl sm:text-2xl font-semibold text-[#1F1F1F]">
-                    Order #{order.id.slice(0, 8)}
+                    Order #{order.shopifyOrderId.slice(0, 8)}
                   </p>
                   <p className="text-base sm:text-lg text-gray-500">
                     {format(new Date(order.date), "PPP")}
@@ -282,50 +283,57 @@ export default function OrdersPage() {
               </AccordionTrigger>
 
               <AccordionContent className="px-4 pb-4 space-y-3">
-                {order.lineItems.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex flex-col sm:flex-row gap-4 items-center sm:items-start border rounded p-3 hover:shadow-md transition"
-                  >
-                    <div className="w-24 h-24 flex-shrink-0 bg-gray-100 rounded overflow-hidden">
-                      <Link
-                        href={`/products/${extractNumericId(item.productId)}`}
+                {order.lineItems.map(
+                  (item) => (
+                    (
+                      <div
+                        key={item.id}
+                        className="flex flex-col sm:flex-row gap-4 items-center sm:items-start border rounded p-3 hover:shadow-md transition"
                       >
-                        <Image
-                          src={item.image}
-                          alt={item.title}
-                          width={96}
-                          height={96}
-                          className="w-full h-full object-cover"
-                        />
-                      </Link>
-                    </div>
-                    <div className="text-center sm:text-left flex-1">
-                      <p className="font-medium text-gray-800">{item.title}</p>
-                      <p className="text-sm text-gray-500">
-                        Qty: {item.quantity} × ${item.price.toFixed(2)}
-                      </p>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="mt-2"
-                        onClick={() =>
-                          openReviewModal(item.productId, item.review ?? null)
-                        }
-                      >
-                        {item.review ? "Edit Review" : "Leave a Review"}
-                      </Button>
-                      {item.review && (
-                        <div className="mt-1 text-sm text-gray-700">
-                          <span className="text-yellow-500 mr-1">
-                            {"★".repeat(item.review.score)}
-                          </span>
-                          <span>{item.review.text}</span>
+                        <div className="w-24 h-24 flex-shrink-0 bg-gray-100 rounded overflow-hidden">
+                          <Link href={`/products/${extractNumericId(item.id)}`}>
+                            <Image
+                              src={item.image}
+                              alt={item.title}
+                              width={96}
+                              height={96}
+                              className="w-full h-full object-cover"
+                            />
+                          </Link>
                         </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                        <div className="text-center sm:text-left flex-1">
+                          <p className="font-medium text-gray-800">
+                            {item.title}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            Qty: {item.quantity} × ${item.price.toFixed(2)}
+                          </p>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="mt-2"
+                            onClick={() =>
+                              openReviewModal(
+                                item.productId,
+                                item.review ?? null
+                              )
+                            }
+                          >
+                            {item.review ? "Edit Review" : "Leave a Review"}
+                          </Button>
+                          {item.review && (
+                            <div className="mt-1 text-sm text-gray-700">
+                              <span className="text-yellow-500 mr-1">
+                                {"★".repeat(item.review.score)}
+                              </span>
+                              <span>{item.review.text}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  )
+                )}
               </AccordionContent>
             </AccordionItem>
           ))}

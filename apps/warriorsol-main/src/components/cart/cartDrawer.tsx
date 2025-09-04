@@ -161,7 +161,7 @@ export default function CartDrawer() {
                           item.lineId &&
                           updateQuantity(item.lineId, item.quantity - 1)
                         }
-                        className="w-7 h-7 !rounded-full border !disabled:cursor-not-allowed border-[#141B34] text-[#141B34] hover:text-black hover:border-black"
+                        className="!w-7 !h-7  !rounded-full border !disabled:cursor-not-allowed border-[#141B34] text-[#141B34] hover:text-black hover:border-black"
                         disabled={
                           cartLoading ||
                           (!!item.lineId && itemLoading[item.lineId]) ||
@@ -182,7 +182,7 @@ export default function CartDrawer() {
                           item.lineId &&
                           updateQuantity(item.lineId, item.quantity + 1)
                         }
-                        className="w-7 h-7 !rounded-full border !disabled:cursor-not-allowed border-[#141B34] text-[#141B34] hover:text-black hover:border-black"
+                        className="!w-7 !h-7 !rounded-full border !disabled:cursor-not-allowed border-[#141B34] text-[#141B34] hover:text-black hover:border-black"
                         disabled={
                           cartLoading ||
                           (!!item.lineId && itemLoading[item.lineId])
