@@ -53,10 +53,6 @@ function LoginPage() {
         toast.dismiss();
         toast.error("Something went wrong.");
       }
-
-      const url = new URL(window.location.href);
-      url.searchParams.delete("error");
-      window.history.replaceState({}, "", url.toString());
     }
   }, [searchParams, error]);
 

@@ -168,6 +168,7 @@ export default function OrdersPage() {
 
   const submitReview = async () => {
     if (!selectedProductId || rating < 1 || !comment.trim()) {
+      toast.dismiss();
       toast.error("Please provide both rating and comment.");
       return;
     }
@@ -283,57 +284,48 @@ export default function OrdersPage() {
               </AccordionTrigger>
 
               <AccordionContent className="px-4 pb-4 space-y-3">
-                {order.lineItems.map(
-                  (item) => (
-                    (
-                      <div
-                        key={item.id}
-                        className="flex flex-col sm:flex-row gap-4 items-center sm:items-start border rounded p-3 hover:shadow-md transition"
+                {order.lineItems.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex flex-col sm:flex-row gap-4 items-center sm:items-start border rounded p-3 hover:shadow-md transition"
+                  >
+                    <div className="w-24 h-24 flex-shrink-0 bg-gray-100 rounded overflow-hidden">
+                      <Link href={`/products/${extractNumericId(item.id)}`}>
+                        <Image
+                          src={item.image}
+                          alt={item.title}
+                          width={96}
+                          height={96}
+                          className="w-full h-full object-cover"
+                        />
+                      </Link>
+                    </div>
+                    <div className="text-center sm:text-left flex-1">
+                      <p className="font-medium text-gray-800">{item.title}</p>
+                      <p className="text-sm text-gray-500">
+                        Qty: {item.quantity} × ${item.price.toFixed(2)}
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="mt-2"
+                        onClick={() =>
+                          openReviewModal(item.productId, item.review ?? null)
+                        }
                       >
-                        <div className="w-24 h-24 flex-shrink-0 bg-gray-100 rounded overflow-hidden">
-                          <Link href={`/products/${extractNumericId(item.id)}`}>
-                            <Image
-                              src={item.image}
-                              alt={item.title}
-                              width={96}
-                              height={96}
-                              className="w-full h-full object-cover"
-                            />
-                          </Link>
+                        {item.review ? "Edit Review" : "Leave a Review"}
+                      </Button>
+                      {item.review && (
+                        <div className="mt-1 text-sm text-gray-700">
+                          <span className="text-yellow-500 mr-1">
+                            {"★".repeat(item.review.score)}
+                          </span>
+                          <span>{item.review.text}</span>
                         </div>
-                        <div className="text-center sm:text-left flex-1">
-                          <p className="font-medium text-gray-800">
-                            {item.title}
-                          </p>
-                          <p className="text-sm text-gray-500">
-                            Qty: {item.quantity} × ${item.price.toFixed(2)}
-                          </p>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="mt-2"
-                            onClick={() =>
-                              openReviewModal(
-                                item.productId,
-                                item.review ?? null
-                              )
-                            }
-                          >
-                            {item.review ? "Edit Review" : "Leave a Review"}
-                          </Button>
-                          {item.review && (
-                            <div className="mt-1 text-sm text-gray-700">
-                              <span className="text-yellow-500 mr-1">
-                                {"★".repeat(item.review.score)}
-                              </span>
-                              <span>{item.review.text}</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )
-                  )
-                )}
+                      )}
+                    </div>
+                  </div>
+                ))}
               </AccordionContent>
             </AccordionItem>
           ))}

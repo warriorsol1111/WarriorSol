@@ -406,6 +406,7 @@ export default function AccountPage() {
                     <div className="flex gap-4">
                       <Button
                         onClick={handleSave}
+                        disabled={imageLoading}
                         className="bg-[#EE9254] hover:[#EE9254] text-white"
                       >
                         {imageLoading ? (
@@ -431,6 +432,7 @@ export default function AccountPage() {
                         onClick={() =>
                           document.getElementById("photoUpload")?.click()
                         }
+                        size="default"
                       >
                         Upload
                       </Button>
@@ -475,6 +477,7 @@ export default function AccountPage() {
                               setDeleteLoading(false);
                             }
                           }}
+                          disabled={deleteLoading}
                         >
                           {deleteLoading ? (
                             <Loader2 className="animate-spin h-4 w-4 mr-2" />
