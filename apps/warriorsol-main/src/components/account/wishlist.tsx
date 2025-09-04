@@ -260,7 +260,7 @@ export default function Wishlist() {
                     <div className="flex flex-col items-end gap-2 min-w-0 sm:min-w-[140px] w-full sm:w-auto">
                       <Link
                         href={`/products/${d.productId}?variant=${item.variantId}`}
-                        className="text-lg font-[Inter] text-white hover:underline bg-[#EE9254] px-4 py-2 border border-[#EE9254] rounded-lg font-bold transition w-full sm:w-auto text-center"
+                        className="text-lg  text-white hover:underline bg-[#EE9254] px-4 py-2 border border-[#EE9254] rounded-lg font-bold transition w-full sm:w-auto text-center"
                       >
                         View Product
                       </Link>

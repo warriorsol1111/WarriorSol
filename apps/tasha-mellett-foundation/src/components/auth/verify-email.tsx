@@ -112,12 +112,10 @@ export default function VerifyEmailPage() {
           <form onSubmit={handleSubmit} className="mt-12 w-full space-y-6">
             <div className="text-center md:text-left">
               <h1 className=" text-3xl md:text-[42px]">Email Verification</h1>
-              <p className="mt-2 text-base  text-[#1F1F1F99] font-[Inter] md:text-lg">
+              <p className="mt-2 text-base  text-[#1F1F1F99]  md:text-lg">
                 We have sent a verification code on your Email
               </p>
-              <p className="text-base  text-[#EE9254] font-[Inter] md:text-lg">
-                {email}
-              </p>
+              <p className="text-base  text-[#EE9254]  md:text-lg">{email}</p>
             </div>
             <div className="space-y-6">
               <Label className="text-[#1F1F1F]" htmlFor="verificationCode">
@@ -154,7 +152,7 @@ export default function VerifyEmailPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="h-12 w-full bg-[#EE9254] text-white hover:bg-[#EE9254] text-lg font-[Inter] flex items-center justify-center gap-2"
+              className="h-12 w-full bg-[#EE9254] text-white hover:bg-[#EE9254] text-lg  flex items-center justify-center gap-2"
             >
               {loading && <Loader2 className="h-5 w-5 animate-spin" />}
               Verify Email
@@ -196,7 +194,7 @@ export default function VerifyEmailPage() {
 
             <Button
               onClick={() => router.push("/login")}
-              className="h-12 w-full hover:bg-[#EE9254] bg-[#EE9254] text-white font-[Inter] text-xl"
+              className="h-12 w-full hover:bg-[#EE9254] bg-[#EE9254] text-white  text-xl"
             >
               Back to Login
             </Button>

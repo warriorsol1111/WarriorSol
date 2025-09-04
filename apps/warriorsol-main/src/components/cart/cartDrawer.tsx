@@ -234,7 +234,7 @@ export default function CartDrawer() {
                       setLoading(false);
                     }
                   }}
-                  className="w-full py-4 sm:py-5 h-13 text-[20px] font-[Inter] sm:text-xl bg-[#EE9254] hover:bg-[#e8823d] text-white rounded-md"
+                  className="w-full py-4 sm:py-5 h-13 text-[20px]  sm:text-xl bg-[#EE9254] hover:bg-[#e8823d] text-white rounded-md"
                   disabled={loading}
                 >
                   {loading ? (

@@ -85,7 +85,7 @@ export default function StoriesOfHope() {
             <h2 className="text-3xl sm:text-4xl lg:text-[62px]  leading-tight">
               Stories Of Hope
             </h2>
-            <p className="text-base sm:text-lg lg:text-xl font-[Inter] text-[#1F1F1FB2] mt-2 max-w-lg">
+            <p className="text-base sm:text-lg lg:text-xl  text-[#1F1F1FB2] mt-2 max-w-lg">
               Hear From Families Whose Lives Have Been Touched By Our Community
               Of Warriors
             </p>

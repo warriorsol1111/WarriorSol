@@ -180,7 +180,7 @@ function LoginPage() {
             <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] ! font-normal">
               Welcome Back!
             </h1>
-            <p className=" font-[Inter] text-[#1F1F1F99] opacity-60 text-base md:text-lg">
+            <p className="  text-[#1F1F1F99] opacity-60 text-base md:text-lg">
               Enter Your Credentials To Access Your Account
             </p>
           </div>
@@ -234,7 +234,7 @@ function LoginPage() {
                 {fieldErrors.password}
               </p>
             )}
-            <div className="text-right text-sm md:text-lg text-[#1F1F1F] opacity-60 font-[Inter]  mt-2">
+            <div className="text-right text-sm md:text-lg text-[#1F1F1F] opacity-60   mt-2">
               <Link href="/forgot-password">Forgot Password?</Link>
             </div>
           </div>
@@ -242,7 +242,7 @@ function LoginPage() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#EE9254] cursor-pointer hover:bg-[#e97e3a] h-10 md:h-12 text-white text-base md:text-xl font-[Inter]"
+            className="w-full bg-[#EE9254] cursor-pointer hover:bg-[#e97e3a] h-10 md:h-12 text-white text-base md:text-xl "
           >
             {loading ? (
               <Loader2 className="animate-spin w-5 h-5 mr-2" />
@@ -279,7 +279,7 @@ function LoginPage() {
           </Button>
 
           <div className="flex justify-center gap-x-2 md:gap-x-4 pt-2">
-            <p className="text-base md:text-lg font-[Inter] opacity-60 text-[#1F1F1F] text-center ">
+            <p className="text-base md:text-lg  opacity-60 text-[#1F1F1F] text-center ">
               Don&apos;t have an account?{" "}
               <Link
                 href="/signup"

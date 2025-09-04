@@ -20,7 +20,7 @@ const Footer = () => {
               height={100}
             />
           </div>
-          <p className="text-[16px] font-[Inter] font-normal leading-relaxed max-w-xs text-[#FFFFFF99]">
+          <p className="text-[16px]  font-normal leading-relaxed max-w-xs text-[#FFFFFF99]">
             Born from experience.
             <br />
             Established 11:11. Apparel
@@ -42,7 +42,7 @@ const Footer = () => {
               <li>
                 <Link
                   href="/products"
-                  className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+                  className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
                 >
                   All Products
                 </Link>
@@ -50,7 +50,7 @@ const Footer = () => {
               <li>
                 <Link
                   href="/warrior-products"
-                  className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+                  className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
                 >
                   Warrior Products
                 </Link>
@@ -67,7 +67,7 @@ const Footer = () => {
               <li>
                 <Link
                   href="/home"
-                  className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+                  className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
                 >
                   Home
                 </Link>
@@ -75,7 +75,7 @@ const Footer = () => {
               <li>
                 <Link
                   href="/community"
-                  className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+                  className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
                 >
                   Community
                 </Link>
@@ -83,7 +83,7 @@ const Footer = () => {
               <li>
                 <Link
                   href="/about"
-                  className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+                  className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
                 >
                   About
                 </Link>
@@ -100,7 +100,7 @@ const Footer = () => {
               <li>
                 <Link
                   href="/contacts"
-                  className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+                  className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
                 >
                   Contacts
                 </Link>
@@ -112,10 +112,10 @@ const Footer = () => {
 
       {/* Bottom Bar */}
       <div className="mt-10 pt-6 border-t border-[#353534] flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
-        <div className="text-sm font-[Inter] font-normal text-white">
+        <div className="text-sm  font-normal text-white">
           © 2025 Warrior Sol. Rooted in light. All rights reserved.
         </div>
-        <div className="text-sm flex space-x-6 font-[Inter] font-normal text-[#FFFFFF99]">
+        <div className="text-sm flex space-x-6  font-normal text-[#FFFFFF99]">
           <Link href="/privacy" className="hover:text-white transition-colors">
             Privacy Policy
           </Link>

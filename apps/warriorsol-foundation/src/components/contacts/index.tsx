@@ -76,7 +76,7 @@ const Contacts = () => {
       <h1 className="text-4xl md:text-[62px] text-[#1F1F1F] text-center font-semibold">
         Contact
       </h1>
-      <p className="text-center mt-4 text-lg font-[Inter] opacity-70 sm:text-xl text-[#1F1F1F] mx-auto">
+      <p className="text-center mt-4 text-lg  opacity-70 sm:text-xl text-[#1F1F1F] mx-auto">
         Whether you have questions about our products, need assistance with your
         order, or just want to say hello, feel free to reach out. Our dedicated
         team is here to help you with any inquiries you may have.
@@ -196,7 +196,7 @@ const Contacts = () => {
               size="lg"
               variant="default"
               disabled={loading}
-              className="w-full py-3 rounded-md text-xl font-[Inter] text-white bg-[#EE9254] hover:bg-[#e9823b] font-medium flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-md text-xl  text-white bg-[#EE9254] hover:bg-[#e9823b] font-medium flex items-center justify-center gap-2"
             >
               {loading ? (
                 <Loader2 className="animate-spin h-5 w-5 text-white" />

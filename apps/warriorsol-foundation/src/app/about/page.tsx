@@ -16,7 +16,7 @@ const CommunityPage = () => {
         <h1 className="text-[40px] md:text-[62px] font-cormorantSC font-normal leading-tight">
           Our Story – Born Of Fire, Built To Shine
         </h1>
-        <p className="mt-6 text-[16px] md:text-[20px] font-[Inter]  leading-relaxed text-black/70 max-w-5xl mx-auto">
+        <p className="mt-6 text-[16px] md:text-[20px]   leading-relaxed text-black/70 max-w-5xl mx-auto">
           Warrior Sol began not as a brand, but as a battle cry. We are rooted
           in the lived experience of love, loss, and resilience. This journey
           started with Tasha—our first warrior, our North Star. When cancer
@@ -61,14 +61,14 @@ const CommunityPage = () => {
           <h2 className="text-[42px] md:text-[62px] font-cormorantSC capitalize leading-tight mb-6 text-[#1F1F1F]">
             Our Mission – Apparel With A Pulse
           </h2>
-          <p className="text-[16px] md:text-[20px] font-[Inter]  text-black/70 leading-relaxed">
+          <p className="text-[16px] md:text-[20px]   text-black/70 leading-relaxed">
             At Warrior Sol, our mission is to create emotionally powerful
             apparel that offers more than comfort—it offers connection.
           </p>
-          <p className="text-[16px] md:text-[20px] font-[Inter]  text-black/70 leading-relaxed mt-4">
+          <p className="text-[16px] md:text-[20px]   text-black/70 leading-relaxed mt-4">
             We&apos;re here to:
           </p>
-          <ul className="list-disc list-inside mt-3 text-[16px] md:text-[20px] font-[Inter]  text-black/70 leading-relaxed">
+          <ul className="list-disc list-inside mt-3 text-[16px] md:text-[20px]   text-black/70 leading-relaxed">
             <li>
               Empower those impacted by cancer—fighters, survivors, caregivers,
               and allies.
@@ -85,7 +85,7 @@ const CommunityPage = () => {
               sunrise at a time.
             </li>
           </ul>
-          <p className="text-[16px] md:text-[20px] font-[Inter]  text-black/70 leading-relaxed mt-4">
+          <p className="text-[16px] md:text-[20px]   text-black/70 leading-relaxed mt-4">
             We are a tribe. A rebellion of care. And we&apos;re not here to
             follow trends—we&apos;re here to fight for truth, tenderness, and
             tangible impact.
@@ -98,7 +98,7 @@ const CommunityPage = () => {
         <h2 className="text-[42px] md:text-[62px] text-[#1F1F1F] font-cormorantSC capitalize">
           Our Team
         </h2>
-        <p className="mt-4 text-[16px] md:text-[20px] font-[Inter]  text-black/70 opacity-70">
+        <p className="mt-4 text-[16px] md:text-[20px]   text-black/70 opacity-70">
           We&apos;ve walked these halls. We&apos;ve held the hands. We&apos;ve
           heard the silence—and we chose to speak.
         </p>
@@ -113,10 +113,10 @@ const CommunityPage = () => {
               placeholder="blur"
             />
             <h3 className="mt-4 text-2xl font-normal font-cormorant">Cole</h3>
-            <p className="text-[16px] text-[#1F1F1F99] font-[Inter]">
+            <p className="text-[16px] text-[#1F1F1F99] ">
               Creative Lead & Storykeeper
             </p>
-            <p className="mt-2 text-[16px]  text-[#1F1F1FB2] font-[Inter] ">
+            <p className="mt-2 text-[16px]  text-[#1F1F1FB2]  ">
               Cole brings vision, voice, and vulnerability to the heart of the
               brand. A designer with a mission, and a son who carries strength
               in his blood.
@@ -132,10 +132,8 @@ const CommunityPage = () => {
               placeholder="blur"
             />
             <h3 className="mt-4 text-2xl font-normal font-cormorant">Jimmy</h3>
-            <p className="text-[16px] text-[#1F1F1F99] font-[Inter]">
-              Founder, Warrior #2
-            </p>
-            <p className="mt-2 text-[16px]  text-[#1F1F1FB2] font-[Inter] ">
+            <p className="text-[16px] text-[#1F1F1F99] ">Founder, Warrior #2</p>
+            <p className="mt-2 text-[16px]  text-[#1F1F1FB2]  ">
               A father, a husband, and now, a messenger of light. After losing
               his wife Tasha, Jimmy turned grief into fuel. Warrior Sol is his
               way of saying: &quot;We&apos;re still here. We&apos;re still
@@ -153,10 +151,10 @@ const CommunityPage = () => {
               placeholder="blur"
             />
             <h3 className="mt-4 text-2xl font-normal font-cormorant">Cole</h3>
-            <p className="text-[16px] text-[#1F1F1F99] font-[Inter]">
+            <p className="text-[16px] text-[#1F1F1F99] ">
               Creative Lead & Storykeeper
             </p>
-            <p className="mt-2 text-[16px]  text-[#1F1F1FB2] font-[Inter] ">
+            <p className="mt-2 text-[16px]  text-[#1F1F1FB2]  ">
               Cole brings vision, voice, and vulnerability to the heart of the
               brand. A designer with a mission, and a son who carries strength
               in his blood.
@@ -172,10 +170,8 @@ const CommunityPage = () => {
               placeholder="blur"
             />
             <h3 className="mt-4 text-2xl font-normal font-cormorant">Jimmy</h3>
-            <p className="text-[16px] text-[#1F1F1F99] font-[Inter]">
-              Founder, Warrior #2
-            </p>
-            <p className="mt-2 text-[16px]  text-[#1F1F1FB2] font-[Inter] ">
+            <p className="text-[16px] text-[#1F1F1F99] ">Founder, Warrior #2</p>
+            <p className="mt-2 text-[16px]  text-[#1F1F1FB2]  ">
               A father, a husband, and now, a messenger of light. After losing
               his wife Tasha, Jimmy turned grief into fuel. Warrior Sol is his
               way of saying: &quot;We&apos;re still here. We&apos;re still

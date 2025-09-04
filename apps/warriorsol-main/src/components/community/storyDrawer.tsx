@@ -301,7 +301,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                 }}
               >
                 <SelectTrigger
-                  className={`mt-2 w-full border !text-lg !text-[#1F1F1FCC] !font-[Inter] !h-12 !cursor-pointer ${errors.role ? "border-red-500 focus:border-red-500 focus:ring-red-300" : "border-gray-300"}`}
+                  className={`mt-2 w-full border !text-lg !text-[#1F1F1FCC] ! !h-12 !cursor-pointer ${errors.role ? "border-red-500 focus:border-red-500 focus:ring-red-300" : "border-gray-300"}`}
                 >
                   <SelectValue placeholder="Select your role" />
                 </SelectTrigger>
@@ -324,7 +324,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                     <SelectItem
                       key={value}
                       value={value}
-                      className="cursor-pointer !text-lg !text-[#1F1F1FCC] !font-[Inter]"
+                      className="cursor-pointer !text-lg !text-[#1F1F1FCC] !"
                     >
                       {label}
                     </SelectItem>
@@ -394,13 +394,13 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
               <div className="mt-2 flex justify-center items-center flex-col border border-dashed border-gray-400 rounded-lg px-6 py-10 text-center">
                 {formData.image && !fileError ? (
                   <div className="flex items-center gap-2 justify-center">
-                    <p className="text-lg !font-[Inter] text-green-600 font-medium text-ellipsis overflow-hidden truncate max-w-[350px]">
+                    <p className="text-lg ! text-green-600 font-medium text-ellipsis overflow-hidden truncate max-w-[350px]">
                       {formData.image.name}
                     </p>
                     <button
                       type="button"
                       onClick={handleRemoveFile}
-                      className="ml-2 px-3 py-1 mb-1 bg-red-50 text-red-600 cursor-pointer rounded transition-all duration-150 !text-base !font-[Inter] font-semibold"
+                      className="ml-2 px-3 py-1 mb-1 bg-red-50 text-red-600 cursor-pointer rounded transition-all duration-150 !text-base ! font-semibold"
                       aria-label="Remove file"
                     >
                       <IoTrashBin className="inline text-red-600 text-xl  items-center justify-center" />
@@ -410,7 +410,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                   <>
                     <label
                       htmlFor="image"
-                      className="cursor-pointer inline-flex items-center justify-center px-4 py-2 underline text-[#1F1F1FCC] !text-lg !font-[Inter] font-semibold rounded-md  transition-all"
+                      className="cursor-pointer inline-flex items-center justify-center px-4 py-2 underline text-[#1F1F1FCC] !text-lg ! font-semibold rounded-md  transition-all"
                     >
                       Upload a file
                       <input
@@ -423,7 +423,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                       />
                     </label>
                     {!fileError && (
-                      <p className="mt-2 text-sm text-[#1F1F1FCC] !font-[Inter]">
+                      <p className="mt-2 text-sm text-[#1F1F1FCC] !">
                         PNG, JPG, GIF, or MP4 only. Max size:{" "}
                         <strong>10MB</strong>.<br />
                         Max video duration: <strong>1 minute</strong>.
@@ -432,7 +432,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                   </>
                 )}
                 {(fileError || errors.image) && (
-                  <p className="text-sm text-red-500 !font-[Inter]">
+                  <p className="text-sm text-red-500 !">
                     {fileError || errors.image}
                   </p>
                 )}
@@ -461,7 +461,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
             <Button
               type="submit"
               size="default"
-              className="w-full bg-[#EE9254] !text-[20px] !h-13 !font-[Inter] hover:bg-[#EE9254]/90 text-white flex items-center justify-center"
+              className="w-full bg-[#EE9254] !text-[20px] !h-13 ! hover:bg-[#EE9254]/90 text-white flex items-center justify-center"
               disabled={isLoading}
             >
               {isLoading ? (

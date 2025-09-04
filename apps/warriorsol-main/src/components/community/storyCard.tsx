@@ -96,7 +96,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({
               <p className=" text-base font-semibold leading-tight truncate">
                 {author.name}
               </p>
-              <p className="opacity-80 font-[Inter] font-medium text-sm truncate">
+              <p className="opacity-80  font-medium text-sm truncate">
                 {capitalize(author.role)}
               </p>
             </div>
@@ -128,7 +128,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({
             <p className=" text-lg sm:text-xl md:text-2xl font-semibold leading-none truncate max-w-[200px] sm:max-w-[250px] md:max-w-[300px]">
               {author.name}
             </p>
-            <p className="opacity-80 font-[Inter] font-medium text-sm sm:text-base md:text-lg truncate">
+            <p className="opacity-80  font-medium text-sm sm:text-base md:text-lg truncate">
               {capitalize(author.role)}
             </p>
           </div>

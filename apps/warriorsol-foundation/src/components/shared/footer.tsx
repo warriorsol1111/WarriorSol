@@ -24,7 +24,7 @@ export default function Footer() {
               height={100}
             />
           </div>
-          <p className="text-[16px] font-[Inter] font-normal leading-relaxed max-w-xs text-[#FFFFFF99]">
+          <p className="text-[16px]  font-normal leading-relaxed max-w-xs text-[#FFFFFF99]">
             Born from experience.
             <br />
             Established 11:11. Apparel
@@ -47,7 +47,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/home"
-                    className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+                    className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
                   >
                     Home
                   </Link>
@@ -55,7 +55,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/support"
-                    className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+                    className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
                   >
                     Apply For Support
                   </Link>
@@ -63,7 +63,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/donations"
-                    className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+                    className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
                   >
                     Donations
                   </Link>
@@ -71,7 +71,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/donor-wall"
-                    className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+                    className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
                   >
                     Donor Wall
                   </Link>
@@ -88,7 +88,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/account"
-                    className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+                    className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
                   >
                     My Account
                   </Link>
@@ -97,7 +97,7 @@ export default function Footer() {
                   <li>
                     <Link
                       href="/support-applications"
-                      className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+                      className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
                     >
                       View Support Applications
                     </Link>
@@ -115,7 +115,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/privacy"
-                    className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+                    className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
                   >
                     Privacy Policy
                   </Link>
@@ -123,7 +123,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/terms"
-                    className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+                    className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
                   >
                     Terms of Service
                   </Link>
@@ -136,7 +136,7 @@ export default function Footer() {
 
       {/* Bottom Bar */}
       <div className="mt-10 pt-6 border-t border-[#353534] text-sm text-white flex flex-col sm:flex-row justify-between items-center gap-4">
-        <div className="text-sm font-[Inter] font-normal text-white mb-4 md:mb-0">
+        <div className="text-sm  font-normal text-white mb-4 md:mb-0">
           © 2025 Warrior Sol Foundation. Rooted in light. All rights reserved.
         </div>
 
@@ -145,13 +145,13 @@ export default function Footer() {
           <div className="flex gap-4">
             <a
               href="/privacy"
-              className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+              className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
             >
               Privacy
             </a>
             <a
               href="/terms"
-              className="hover:underline text-[#FFFFFF99] transition-colors font-[Inter] font-normal text-sm"
+              className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
             >
               Terms
             </a>

@@ -531,7 +531,7 @@ export default function SettingsPage() {
                         type="submit"
                         disabled={passwordLoading}
                         size={"default"}
-                        className="w-full text-xl font-[Inter] bg-[#EE9254] text-white hover:bg-[#e97e3a] transition"
+                        className="w-full text-xl  bg-[#EE9254] text-white hover:bg-[#e97e3a] transition"
                       >
                         {passwordLoading ? (
                           <Loader2 className="animate-spin h-5 w-5 mr-2" />

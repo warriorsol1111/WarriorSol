@@ -14,7 +14,7 @@ const Hero: React.FC = () => {
       <div className="px-4 sm:px-6 md:px-8 mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
         {/* LEFT SECTION */}
         <div className=" text-left">
-          <h1 className="text-[40px] mb-10 md:text-[82px] leading-tight font-[Inter] font-normal text-[#1F1F1F]">
+          <h1 className="text-[40px] mb-10 md:text-[82px] leading-tight  font-normal text-[#1F1F1F]">
             Born Of <span className="text-[#EE9254]">Fire</span>.Built
             <br /> To Shine.
           </h1>

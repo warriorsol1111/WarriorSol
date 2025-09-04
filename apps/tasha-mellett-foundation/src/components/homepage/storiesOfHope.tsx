@@ -1,185 +1,149 @@
 "use client";
+import React, { useState, useEffect } from "react";
+import ReviewCard from "./ReviewCard";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import userImage from "@/assets/user.svg";
+import { Button } from "../ui/button";
 
-import { useState } from "react";
-import Image from "next/image";
-import { ChevronLeft, ChevronRight, Quote, Star } from "lucide-react";
-import Story1 from "../../assets/story1.svg";
-import Story2 from "../../assets/story2.svg";
-
-interface Story {
-  name: string;
-  role: string;
-  image: string;
-  quote: string;
-}
-
-const stories: Story[] = [
+const reviews = [
   {
-    name: "Sarah M.",
-    role: "Mother of three",
-    image: Story1,
     quote:
-      "The Warrior Sol Foundation came into our lives when we needed it most. Their support helped us focus on what truly mattered - being together as a family.",
+      "The Warrior Sol Foundation Came Into Our Lives When We Needed It Most. Their Support Helped Us Focus On What Truly Mattered - Being Together As A Family.",
+    authorName: "Sarah M.",
+    authorRole: "Mother of three",
+    authorImage: userImage,
   },
   {
-    name: "David L.",
-    role: "Father and caregiver",
-    image: Story2,
     quote:
-      "The Warrior Sol Foundation came into our lives when we needed it most. Their support helped us focus on what truly mattered - being together as a family.",
+      "I Never Imagined We'd Need Help, But When We Did, The Foundation Was There With Open Arms. Their Compassion And Resources Made All The Difference.",
+    authorName: "David L.",
+    authorRole: "Father and caregiver",
+    authorImage: userImage,
   },
   {
-    name: "Emily R.",
-    role: "Sister & supporter",
-    image: Story1,
     quote:
-      "The Warrior Sol Foundation came into our lives when we needed it most. Their support helped us focus on what truly mattered - being together as a family.",
+      "The Foundation Did More Than Provide Financial Support - They Showed Us We Weren't Alone In Our Journey.",
+    authorName: "Maria R.",
+    authorRole: "Grandmother",
+    authorImage: userImage,
   },
   {
-    name: "James K.",
-    role: "Uncle & mentor",
-    image: Story2,
     quote:
-      "The Warrior Sol Foundation came into our lives when we needed it most. Their support helped us focus on what truly mattered - being together as a family.",
+      "We felt seen, heard, and supported. I'll never forget the warmth they brought into our lives.",
+    authorName: "Liam J.",
+    authorRole: "Single father",
+    authorImage: userImage,
   },
 ];
 
-// helper: split stories into chunks
-const chunkStories = (arr: Story[], size: number) =>
-  Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
-    arr.slice(i * size, i * size + size)
+export default function StoriesOfHope() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [cardsPerView, setCardsPerView] = useState(1);
+
+  // 🖥 Handle responsive card count
+  useEffect(() => {
+    const updateCardsPerView = () => {
+      const width = window.innerWidth;
+      if (width >= 1280) {
+        setCardsPerView(3); // desktop xl
+      } else if (width >= 768) {
+        setCardsPerView(2); // tablet
+      } else {
+        setCardsPerView(1); // mobile
+      }
+    };
+
+    updateCardsPerView();
+    window.addEventListener("resize", updateCardsPerView);
+    return () => window.removeEventListener("resize", updateCardsPerView);
+  }, []);
+
+  // create long list for infinite effect
+  const infiniteReviews = Array.from(
+    { length: reviews.length * 50 },
+    (_, index) => ({
+      ...reviews[index % reviews.length],
+      id: index,
+    })
   );
 
-export default function StoriesOfHope() {
-  // 📱 On small screens show 1 story at a time, on md+ show 2
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-  const chunks = chunkStories(stories, isMobile ? 1 : 2);
+  const initialIndex = reviews.length * 25;
 
-  const [index, setIndex] = useState(0);
+  useEffect(() => {
+    setCurrentIndex(initialIndex);
+  }, [initialIndex]);
 
-  const nextSlide = () => {
-    setIndex((prev) => (prev + 1) % chunks.length);
-  };
-
-  const prevSlide = () => {
-    setIndex((prev) => (prev - 1 + chunks.length) % chunks.length);
-  };
+  const nextSlide = () => setCurrentIndex((prevIndex) => prevIndex + 1);
+  const prevSlide = () => setCurrentIndex((prevIndex) => prevIndex - 1);
 
   return (
-    <section className="w-full px-4 sm:px-6 md:px-8 lg:px-14 py-8 sm:py-12 lg:py-16">
+    <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
       <div className="mx-auto">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-          <div>
-            <h2 className="text-2xl sm:text-3xl md:text-[44px] font-extrabold">
+        {/* Header + Navigation */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
+          <div className="flex-1">
+            <h2 className="text-3xl sm:text-4xl lg:text-[62px]  leading-tight">
               Stories Of Hope
             </h2>
-            <p className="mt-2 text-[#999999] font-medium text-lg sm:text-xl md:text-[27px]">
-              Hear from families whose lives have been touched by our community
-              of warriors
+            <p className="text-base sm:text-lg lg:text-xl  text-[#1F1F1FB2] mt-2 max-w-lg">
+              Hear From Families Whose Lives Have Been Touched By Our Community
+              Of Warriors
             </p>
           </div>
-          <div className="flex gap-2 self-end sm:self-auto">
-            <button
+
+          {/* Navigation Buttons */}
+          <div className="flex gap-3 shrink-0">
+            <Button
               onClick={prevSlide}
-              className="p-2 rounded-full border cursor-pointer border-gray-300 hover:bg-gray-100 transition"
+              variant="outline"
+              className="bg-white p-2 rounded-full shadow hover:bg-gray-50 transition border border-black"
+              aria-label="Previous review"
             >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button
+              <IoIosArrowBack className="w-6 h-6 text-gray-600" />
+            </Button>
+            <Button
               onClick={nextSlide}
-              className="p-2 rounded-full border cursor-pointer border-gray-300 hover:bg-gray-100 transition"
+              variant="outline"
+              className="bg-white p-2 rounded-full shadow hover:bg-gray-50 transition border border-black"
+              aria-label="Next review"
             >
-              <ChevronRight className="w-5 h-5" />
-            </button>
+              <IoIosArrowForward className="w-6 h-6 text-gray-600" />
+            </Button>
           </div>
         </div>
 
-        {/* Carousel */}
-        <div className="relative overflow-hidden">
+        {/* Slider */}
+        <div className="overflow-hidden">
           <div
-            className="flex transition-transform duration-700 ease-in-out"
-            style={{ transform: `translateX(-${index * 100}%)` }}
+            className="flex transition-transform duration-700 ease-in-out gap-6"
+            style={{
+              transform: `translateX(-${(100 / cardsPerView) * currentIndex}%)`,
+            }}
           >
-            {chunks.map((pair, pairIndex) => (
+            {infiniteReviews.map((review) => (
               <div
-                key={pairIndex}
-                className="min-w-full grid grid-cols-1 md:grid-cols-2"
+                key={review.id}
+                className="flex-shrink-0"
+                style={{ width: `${100 / cardsPerView}%` }}
               >
-                {pair.map((story, i) => (
-                  <div
-                    key={i}
-                    className="grid grid-cols-1 sm:grid-cols-2 border border-gray-100"
-                  >
-                    {/* Left: Image */}
-                    <div className="relative">
-                      <Image
-                        src={story.image}
-                        alt={story.name}
-                        width={600}
-                        height={400}
-                        className="h-full w-full object-cover"
-                      />
-                      <Quote className="absolute bottom-4 right-4 w-8 h-8 sm:w-10 sm:h-10 text-white opacity-90" />
-                    </div>
-
-                    {/* Right: Card */}
-                    <div
-                      className={`flex flex-col h-full p-6 sm:p-8 ${
-                        (i + pairIndex * 2) % 2 === 0
-                          ? "bg-[#002329] text-white"
-                          : "bg-[#EDF1D3]"
-                      }`}
-                    >
-                      {/* Stars at top */}
-                      <div className="flex mb-4 sm:mb-6 gap-x-2 sm:gap-x-4">
-                        {Array(5)
-                          .fill(0)
-                          .map((_, starIndex) => (
-                            <Star
-                              key={starIndex}
-                              className={`w-5 h-5 sm:w-8 sm:h-8 ${
-                                (i + pairIndex * 2) % 2 === 0
-                                  ? "text-white"
-                                  : "text-black"
-                              }`}
-                              fill="currentColor"
-                            />
-                          ))}
-                      </div>
-
-                      {/* Quote in true center */}
-                      <div className="flex flex-1 items-center justify-center">
-                        <p
-                          className={`text-center text-sm sm:text-base md:text-[15px] font-medium leading-relaxed ${
-                            (i + pairIndex * 2) % 2 === 0
-                              ? "text-[#EDF1D3]"
-                              : "text-black"
-                          }`}
-                        >
-                          &quot;{story.quote}&quot;
-                        </p>
-                      </div>
-
-                      {/* Name + Role at bottom */}
-                      <div className="mt-4">
-                        <p
-                          className={`font-medium text-base sm:text-lg ${
-                            (i + pairIndex * 2) % 2 === 0
-                              ? "text-white"
-                              : "text-black"
-                          }`}
-                        >
-                          {story.name}
-                        </p>
-                        <p className="text-sm sm:text-[16px] opacity-80">
-                          {story.role}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                <ReviewCard {...review} />
               </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Progress Dots */}
+        <div className="flex justify-center mt-6">
+          <div className="flex gap-2">
+            {reviews.map((_, index) => (
+              <div
+                key={index}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  currentIndex % reviews.length === index
+                    ? "bg-gray-800 scale-125"
+                    : "bg-gray-300"
+                }`}
+              />
             ))}
           </div>
         </div>

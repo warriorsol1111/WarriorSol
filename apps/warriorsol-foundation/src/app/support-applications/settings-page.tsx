@@ -221,7 +221,7 @@ export default function AdminSupportApplicationsPage() {
                   {/* Action Buttons */}
                   <div className="flex gap-3">
                     <Button
-                      className="bg-[#EE9254] hover:bg-[#D67E43] text-white font-semibold text-[18px] font-[Inter] py-2.5 px-6 rounded-lg transition-colors duration-200 flex-1"
+                      className="bg-[#EE9254] hover:bg-[#D67E43] text-white font-semibold text-[18px]  py-2.5 px-6 rounded-lg transition-colors duration-200 flex-1"
                       onClick={() => handleAction(app.id, "accept")}
                       disabled={
                         actionLoading.id === app.id &&
@@ -239,7 +239,7 @@ export default function AdminSupportApplicationsPage() {
                       )}
                     </Button>
                     <Button
-                      className="bg-red-500 hover:bg-red-600 text-white font-semibold text-[18px] font-[Inter] py-2.5 px-6 rounded-lg transition-colors duration-200 flex-1"
+                      className="bg-red-500 hover:bg-red-600 text-white font-semibold text-[18px]  py-2.5 px-6 rounded-lg transition-colors duration-200 flex-1"
                       onClick={() => handleAction(app.id, "reject")}
                       disabled={
                         actionLoading.id === app.id &&

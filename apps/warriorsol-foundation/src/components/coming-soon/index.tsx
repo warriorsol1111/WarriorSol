@@ -211,7 +211,7 @@ export default function ComingSoon() {
                         .toString()
                         .padStart(2, "0")}
                     </div>
-                    <div className="text-white text-[10px] sm:text-xs md:text-sm lg:text-[8px] uppercase font-medium font-[Inter] tracking-widest ">
+                    <div className="text-white text-[10px] sm:text-xs md:text-sm lg:text-[8px] uppercase font-medium  tracking-widest ">
                       {unit}
                     </div>
                   </div>
@@ -255,7 +255,7 @@ export default function ComingSoon() {
             className="rounded-full border border-white/30"
           />
           <div className="flex flex-col leading-tight">
-            <span className="uppercase font-[Inter] text-xs tracking-wide">
+            <span className="uppercase  text-xs tracking-wide">
               By a Legend
             </span>
             <span className="font-bold font-[Cormorant-SC] text-lg">

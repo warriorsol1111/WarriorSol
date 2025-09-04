@@ -1,5 +1,5 @@
 "use client";
-import ApplyForSupport from "../homepage/applyForSupport";
+import ApplyForSupport from "../homepage/ApplyForSupport";
 import { Button } from "../ui/button";
 import SupportImage1 from "../../assets/support1.svg";
 import SupportImage2 from "../../assets/support2.svg";
@@ -82,10 +82,7 @@ export default function ApplyForSupportPage() {
       </div>
 
       {/* ApplyForSupport Component */}
-      <ApplyForSupport
-        heading="Make a Difference Today"
-        subHeading="Every donation helps families facing their greatest challenges. Your support provides hope, resources, and healing."
-      />
+      <ApplyForSupport />
     </section>
   );
 }

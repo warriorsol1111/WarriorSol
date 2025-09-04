@@ -380,7 +380,7 @@ export default function ApplyForSupport() {
                     <div>
                       <Button
                         size="lg"
-                        className="w-full text-[20px] font-[Inter] text-[#FFFFFF] bg-[#EE9254] hover:bg-[#EE9254]/90"
+                        className="w-full text-[20px]  text-[#FFFFFF] bg-[#EE9254] hover:bg-[#EE9254]/90"
                         type="submit"
                         disabled={loading || !isLoggedIn}
                       >

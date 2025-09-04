@@ -182,7 +182,7 @@ export default function DonationForm() {
                       <Button
                         key={val}
                         variant="outline"
-                        className={`rounded text-base hover:bg-[#EE9254] hover:text-white sm:text-lg font-[Inter] h-10 sm:h-13 ${
+                        className={`rounded text-base hover:bg-[#EE9254] hover:text-white sm:text-lg  h-10 sm:h-13 ${
                           amount === val
                             ? "bg-[#EE9254] text-white border-none"
                             : "bg-white border-gray-200"
@@ -268,7 +268,7 @@ export default function DonationForm() {
 
               {/* Submit Button */}
               <Button
-                className="w-full bg-[#EE9254] hover:bg-[#e76b1f] text-lg sm:text-xl font-[Inter] font-normal rounded text-white h-12 sm:h-14"
+                className="w-full bg-[#EE9254] hover:bg-[#e76b1f] text-lg sm:text-xl  font-normal rounded text-white h-12 sm:h-14"
                 onClick={handleDonate}
               >
                 Donate Now

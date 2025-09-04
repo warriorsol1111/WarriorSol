@@ -335,7 +335,7 @@ function SignupPage() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#EE9254] !font-[Inter] !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white mt-4"
+            className="w-full bg-[#EE9254] ! !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white mt-4"
           >
             {loading ? (
               <Loader2 className="animate-spin w-5 h-5" />
@@ -371,7 +371,7 @@ function SignupPage() {
 
           {/* Login Link */}
           <div className="flex justify-center gap-x-2 md:gap-x-4">
-            <p className="text-base md:text-lg !font-[Inter] !text-[#1F1F1F] opacity-60 text-center ">
+            <p className="text-base md:text-lg ! !text-[#1F1F1F] opacity-60 text-center ">
               Already Have An Account?{" "}
               <a href="/login" className="text-black font-bold underline">
                 SignIn

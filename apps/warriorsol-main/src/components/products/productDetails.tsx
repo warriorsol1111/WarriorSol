@@ -387,7 +387,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 <h1 className="text-3xl sm:text-4xl lg:text-[62px] font-normal text-[#1F1F1F]">
                   {product.title}
                 </h1>
-                <p className="text-lg sm:text-xl text-[#1F1F1FB2] font-[Inter] ">
+                <p className="text-lg sm:text-xl text-[#1F1F1FB2]  ">
                   {product.vendor}
                 </p>
               </div>
@@ -494,7 +494,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 >
                   <AiOutlineMinus size={16} />
                 </Button>
-                <span className="w-12 text-center text-[20px] font-medium font-[Inter] text-[#1F1F1F]">
+                <span className="w-12 text-center text-[20px] font-medium  text-[#1F1F1F]">
                   {quantity.toString().padStart(2, "0")}
                 </span>
                 <Button

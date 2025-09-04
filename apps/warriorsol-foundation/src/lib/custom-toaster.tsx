@@ -8,8 +8,8 @@ export default function CustomToaster() {
   return (
     <Toaster
       toastOptions={{
-            className: "!font-[Inter]",
-          }}
+        className: "!",
+      }}
     >
       {(t) => (
         <ToastBar toast={t}>

@@ -47,16 +47,6 @@ const RebellionNewsletter = () => {
 
   return (
     <section className="w-full">
-      {/* Top Quote Section */}
-      <div className="bg-[#EFF7DC] py-8 md:py-12 h-auto text-center">
-        <h2 className="text-2xl md:text-[52px] font-normal max-w-5xl mx-auto px-4">
-          &ldquo;The Brand That Hugs You When You Need It Most.&rdquo;
-        </h2>
-        <p className="text-sm md:text-xl  mt-2 px-2">
-          Featured In Leading Publications And Partnered With Top Organizations
-        </p>
-      </div>
-
       {/* Content Section */}
       <section className="w-full px-4 sm:px-6 md:px-8 lg:px-14 py-8 sm:py-12 lg:py-16">
         <div className="flex flex-col gap-10">
@@ -99,7 +89,7 @@ const RebellionNewsletter = () => {
           {/* Arrow + Image */}
           <div className="flex flex-col sm:flex-row justify-between items-center sm:items-end gap-6">
             {/* Arrow */}
-            <GoArrowDownRight className="w-8 h-8 text-[#002329] sm:self-start self-center" />
+            <GoArrowDownRight className="w-8 h-8 text-[#002329] sm:self-end self-center" />
 
             {/* Image */}
             <Image

@@ -45,9 +45,7 @@ export default function ReviewCard({
           <h4 className="font-medium text-[#1F1F1F] text-[20px]">
             {authorName}
           </h4>
-          <p className="text-[#1F1F1F] text-[16px] font-[Inter]">
-            {authorRole}
-          </p>
+          <p className="text-[#1F1F1F] text-[16px] ">{authorRole}</p>
         </div>
       </div>
     </div>

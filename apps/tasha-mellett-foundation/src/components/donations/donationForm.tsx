@@ -254,7 +254,7 @@ export default function DonationForm() {
                       <Button
                         key={val}
                         variant="outline"
-                        className={`rounded-xl text-lg font-[Inter] h-10 sm:h-12 text-[#1F1F1FCC] ${
+                        className={`rounded-xl text-lg  h-10 sm:h-12 text-[#1F1F1FCC] ${
                           amount === val
                             ? buttonStyles.selected
                             : buttonStyles.default
@@ -331,7 +331,7 @@ export default function DonationForm() {
               </div>
 
               <Button
-                className="w-full bg-[#C1E965] hover:bg-[#C1E965]/90 text-xl font-[Inter] font-normal rounded-xl text-black h-12"
+                className="w-full bg-[#C1E965] hover:bg-[#C1E965]/90 text-xl  font-normal rounded-xl text-black h-12"
                 onClick={handleDonate}
               >
                 Donate Now

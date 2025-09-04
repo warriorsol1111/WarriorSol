@@ -24,7 +24,7 @@ export default function OurStory() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal  text-center mb-4">
               Jimmy&apos;s Story
             </h2>
-            <h3 className="text-base sm:text-lg md:text-xl text-center  font-[Inter] text-gray-600 mb-8 sm:mb-12">
+            <h3 className="text-base sm:text-lg md:text-xl text-center   text-gray-600 mb-8 sm:mb-12">
               The Inspiration Behind Our Foundation
             </h3>
 
@@ -64,7 +64,7 @@ export default function OurStory() {
                 fighting alone — it&apos;s about having the courage to accept
                 help and the strength to keep going, knowing that your community
                 believes in you.&quot;
-                <footer className="mt-3 text-gray-600 text-sm sm:text-base font-[Inter]">
+                <footer className="mt-3 text-gray-600 text-sm sm:text-base ">
                   — Jimmy, Founder
                 </footer>
               </blockquote>

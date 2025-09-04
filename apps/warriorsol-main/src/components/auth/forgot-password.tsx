@@ -346,7 +346,7 @@ export default function ForgotPasswordPage() {
               <h1 className="text-3xl md:text-[42px] text-[#1F1F1F]  font-normal">
                 Forgot Password
               </h1>
-              <p className=" text-[#1F1F1F99] font-[Inter] text-base md:text-lg">
+              <p className=" text-[#1F1F1F99]  text-base md:text-lg">
                 Enter Your email, we&apos;ll send a verification code
               </p>
             </div>
@@ -368,7 +368,7 @@ export default function ForgotPasswordPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#EE9254] !font-[Inter] !text-xl  cursor-pointer hover:bg-[#EE9254] h-10 md:h-12 text-white"
+              className="w-full bg-[#EE9254] ! !text-xl  cursor-pointer hover:bg-[#EE9254] h-10 md:h-12 text-white"
             >
               {loading ? Spinner : "Send Code"}
             </Button>
@@ -382,10 +382,10 @@ export default function ForgotPasswordPage() {
               <h1 className="text-3xl md:text-[42px] text-[#1F1F1F]  font-normal">
                 Email Verification
               </h1>
-              <p className=" text-[#1F1F1F99] font-[Inter] text-base md:text-lg">
+              <p className=" text-[#1F1F1F99]  text-base md:text-lg">
                 We have sent a verification code to your email address
               </p>
-              <p className="text-base  text-[#EE9254] font-[Inter] md:text-lg">
+              <p className="text-base  text-[#EE9254]  md:text-lg">
                 {formData.email}
               </p>
             </div>
@@ -424,7 +424,7 @@ export default function ForgotPasswordPage() {
             <Button
               type="submit"
               disabled={loading || otpValues.some((val) => val === "")}
-              className="w-full bg-[#EE9254] cursor-pointer !font-[Inter] !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white disabled:opacity-50"
+              className="w-full bg-[#EE9254] cursor-pointer ! !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white disabled:opacity-50"
             >
               {loading ? Spinner : "Verify Code"}
             </Button>
@@ -465,7 +465,7 @@ export default function ForgotPasswordPage() {
               <h1 className="text-3xl md:text-[42px] text-[#1F1F1F]  font-normal">
                 Create New Password
               </h1>
-              <p className=" text-[#1F1F1F99] font-[Inter]  text-base md:text-lg">
+              <p className=" text-[#1F1F1F99]   text-base md:text-lg">
                 Enter your new password{" "}
               </p>
             </div>
@@ -540,7 +540,7 @@ export default function ForgotPasswordPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#EE9254] cursor-pointer !font-[Inter] !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white"
+              className="w-full bg-[#EE9254] cursor-pointer ! !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white"
             >
               {loading ? Spinner : "Continue"}
             </Button>
@@ -554,13 +554,13 @@ export default function ForgotPasswordPage() {
               <h1 className="text-3xl md:text-[42px] text-[#1F1F1F]  font-normal">
                 Password Changed Successfully
               </h1>
-              <p className=" text-[#1F1F1F] font-[Inter] opacity-60 text-base md:text-lg">
+              <p className=" text-[#1F1F1F]  opacity-60 text-base md:text-lg">
                 Your password has been updated successfully
               </p>
             </div>
             <Button
               onClick={() => (window.location.href = "/login")}
-              className="w-full bg-[#EE9254] cursor-pointer !font-[Inter] !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white"
+              className="w-full bg-[#EE9254] cursor-pointer ! !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white"
             >
               Back to Login
             </Button>
@@ -583,7 +583,7 @@ export default function ForgotPasswordPage() {
                 className="flex items-center gap-2 text-[#1F1F1F] hover:bg-gray-100 p-2"
               >
                 <FaArrowLeft className="w-4 h-4" />
-                <span className="font-[Inter] text-sm">Back</span>
+                <span className=" text-sm">Back</span>
               </Button>
             </div>
           )}

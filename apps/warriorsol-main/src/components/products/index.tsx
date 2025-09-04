@@ -452,7 +452,7 @@ const Products: React.FC = () => {
             setActiveTab(value);
           }}
         >
-          <TabsList className="flex overflow-x-auto text-[20px] font-[Inter] text-[#1F1F1FCC] sm:justify-center w-full gap-2 sm:gap-4 mb-6 p-1 bg-white rounded-lg scrollbar-hide">
+          <TabsList className="flex overflow-x-auto text-[20px]  text-[#1F1F1FCC] sm:justify-center w-full gap-2 sm:gap-4 mb-6 p-1 bg-white rounded-lg scrollbar-hide">
             <TabsTrigger value="all" className="whitespace-nowrap">
               All ({allProducts.length})
             </TabsTrigger>

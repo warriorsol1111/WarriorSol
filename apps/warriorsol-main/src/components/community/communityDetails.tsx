@@ -136,7 +136,7 @@ export const CommunityDetails = ({
           <h1 className="text-[42px] sm:text-[62px] text-[#1F1F1F]  font-semibold">
             {story.title}
           </h1>
-          <p className="text-[20px]  text-[#1F1F1F99] font-[Inter] mt-2">
+          <p className="text-[20px]  text-[#1F1F1F99]  mt-2">
             Published on {new Date(story.createdAt).toDateString()}
           </p>
         </div>
@@ -149,27 +149,27 @@ export const CommunityDetails = ({
                 <Button
                   variant="outline"
                   size="lg"
-                  className="px-8 py-4 text-[20px] font-[Inter] h-13 cursor-pointer border border-black font-semibold hover:scale-105 transition"
+                  className="px-8 py-4 text-[20px]  h-13 cursor-pointer border border-black font-semibold hover:scale-105 transition"
                 >
                   Archive
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle className="text-[20px] font-[Inter]">
+                  <AlertDialogTitle className="text-[20px] ">
                     Archive this story?
                   </AlertDialogTitle>
-                  <AlertDialogDescription className="text-[18px] font-[Inter]">
+                  <AlertDialogDescription className="text-[18px] ">
                     This will move the story into the archive. You can unarchive
                     it later if needed.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel className="cursor-pointer text-[20px] font-[Inter] h-13">
+                  <AlertDialogCancel className="cursor-pointer text-[20px]  h-13">
                     Cancel
                   </AlertDialogCancel>
                   <AlertDialogAction
-                    className="cursor-pointer text-[20px] font-[Inter] h-13 bg-[#EE9254] hover:bg-[#EE9254]"
+                    className="cursor-pointer text-[20px]  h-13 bg-[#EE9254] hover:bg-[#EE9254]"
                     onClick={() => handleArchive(story.id)}
                     disabled={loadingAction}
                   >
@@ -188,28 +188,28 @@ export const CommunityDetails = ({
               <AlertDialogTrigger asChild>
                 <Button
                   size="lg"
-                  className="px-8 py-4 text-[20px] font-[Inter] h-13 cursor-pointer bg-red-500 hover:bg-red-600 text-white font-semibold hover:scale-105 transition"
+                  className="px-8 py-4 text-[20px]  h-13 cursor-pointer bg-red-500 hover:bg-red-600 text-white font-semibold hover:scale-105 transition"
                 >
                   Delete
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle className="text-[20px] font-[Inter]">
+                  <AlertDialogTitle className="text-[20px] ">
                     Are you absolutely sure?
                   </AlertDialogTitle>
-                  <AlertDialogDescription className="text-[18px] font-[Inter]">
+                  <AlertDialogDescription className="text-[18px] ">
                     This action <span className="font-bold">cannot</span> be
                     undone. The story will be permanently deleted from our
                     servers. Take a deep breath before you proceed!
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel className="cursor-pointer text-[20px] font-[Inter] h-13">
+                  <AlertDialogCancel className="cursor-pointer text-[20px]  h-13">
                     Cancel
                   </AlertDialogCancel>
                   <AlertDialogAction
-                    className="cursor-pointer text-[20px] font-[Inter] h-13 bg-red-500 hover:bg-red-600 text-white font-semibold hover:scale-105 transition"
+                    className="cursor-pointer text-[20px]  h-13 bg-red-500 hover:bg-red-600 text-white font-semibold hover:scale-105 transition"
                     onClick={() => handleDelete(story.id)}
                     disabled={loadingAction}
                   >
@@ -254,7 +254,7 @@ export const CommunityDetails = ({
 
         {/* Description */}
         <div className="flex justify-center items-center mt-10">
-          <p className="text-[24px] text-[#1F1F1F] font-[Inter]  text-center mx-auto whitespace-pre-line max-w-4xl">
+          <p className="text-[24px] text-[#1F1F1F]   text-center mx-auto whitespace-pre-line max-w-4xl">
             {story.description}
           </p>
         </div>
@@ -281,7 +281,7 @@ export const CommunityDetails = ({
                 {story.isAnonymous ? "Anonymous" : story.userName}
               </p>
               <div className="flex items-center justify-center gap-2 mt-1">
-                <p className="text-[18px] text-[#1F1F1F] font-[Inter]  capitalize">
+                <p className="text-[18px] text-[#1F1F1F]   capitalize">
                   {story.userType}
                 </p>
                 {story.isAnonymous && (

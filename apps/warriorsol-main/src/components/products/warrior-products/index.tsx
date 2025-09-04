@@ -170,7 +170,7 @@ const WarriorProducts = () => {
     <div>
       <Navbar />
       <div className="flex items-center justify-center min-h-screen ">
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-[#1F1F1F] font-[Inter]">
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-[#1F1F1F] ">
           Coming Soon
         </h1>
       </div>

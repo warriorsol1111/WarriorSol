@@ -20,9 +20,6 @@ const WearYourSupportSection = () => {
         sizes="100vw"
       />
 
-      {/* Dark overlay for text contrast */}
-      <div className="absolute inset-0 bg-black/40 z-0" />
-
       {/* Overlay content */}
       <div className="relative z-10 w-full h-full px-4">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start min-h-full py-10 sm:py-16">

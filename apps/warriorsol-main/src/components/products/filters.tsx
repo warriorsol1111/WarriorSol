@@ -162,7 +162,7 @@ export const Filter: React.FC<FilterProps> = ({
         <div className="px-6 py-4 space-y-6 overflow-y-auto flex-1">
           {/* Sort By */}
           <div>
-            <h3 className="font-medium mb-3 font-[Inter] text-xl text-[#1F1F1F]">
+            <h3 className="font-medium mb-3  text-xl text-[#1F1F1F]">
               Sort By
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -172,7 +172,7 @@ export const Filter: React.FC<FilterProps> = ({
                   variant="link"
                   key={option}
                   onClick={() => toggleFilter("sortBy", option)}
-                  className={`px-4 py-2 text-[#1F1F1FCC] rounded-md text-lg  font-[Inter] border transition-colors ${
+                  className={`px-4 py-2 text-[#1F1F1FCC] rounded-md text-lg   border transition-colors ${
                     tempFilters.sortBy === option
                       ? "bg-[#EE9254] text-white"
                       : "bg-white text-[#1F1F1FCC] "
@@ -186,7 +186,7 @@ export const Filter: React.FC<FilterProps> = ({
 
           {/* Product Type */}
           <div>
-            <h3 className="font-medium mb-3 font-[Inter] text-xl text-[#1F1F1F]">
+            <h3 className="font-medium mb-3  text-xl text-[#1F1F1F]">
               Product Type
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -196,7 +196,7 @@ export const Filter: React.FC<FilterProps> = ({
                   variant="link"
                   key={collection.id}
                   onClick={() => toggleFilter("productType", collection.title)}
-                  className={`px-4 py-2 rounded-md text-lg font-[Inter] border transition-colors ${
+                  className={`px-4 py-2 rounded-md text-lg  border transition-colors ${
                     tempFilters.productType.includes(collection.title)
                       ? "bg-[#EE9254] text-white"
                       : "bg-white text-[#1F1F1FCC]"
@@ -210,9 +210,7 @@ export const Filter: React.FC<FilterProps> = ({
 
           {/* Color */}
           <div>
-            <h3 className="font-medium mb-3 font-[Inter] text-xl text-[#1F1F1F]">
-              Color
-            </h3>
+            <h3 className="font-medium mb-3  text-xl text-[#1F1F1F]">Color</h3>
 
             <div className="flex flex-wrap gap-3">
               {colors.map((colorOption) => {
@@ -258,9 +256,7 @@ export const Filter: React.FC<FilterProps> = ({
 
           {/* Size */}
           <div>
-            <h3 className="font-medium mb-3 font-[Inter] text-xl text-[#1F1F1F]">
-              Size
-            </h3>
+            <h3 className="font-medium mb-3  text-xl text-[#1F1F1F]">Size</h3>
             <div className="flex flex-wrap gap-2">
               {sizes.map((size) => (
                 <Button
@@ -268,7 +264,7 @@ export const Filter: React.FC<FilterProps> = ({
                   variant="link"
                   key={size}
                   onClick={() => toggleFilter("size", size)}
-                  className={`px-4 py-2 rounded-md text-lg font-[Inter] border transition-colors  ${
+                  className={`px-4 py-2 rounded-md text-lg  border transition-colors  ${
                     tempFilters.size.includes(size)
                       ? "bg-[#EE9254] text-white"
                       : "bg-white text-[#1F1F1FCC]"
@@ -282,9 +278,7 @@ export const Filter: React.FC<FilterProps> = ({
 
           {/* Gender */}
           <div>
-            <h3 className="font-medium mb-3 font-[Inter] text-xl text-[#1F1F1F]">
-              Gender
-            </h3>
+            <h3 className="font-medium mb-3  text-xl text-[#1F1F1F]">Gender</h3>
             <div className="flex flex-wrap gap-2">
               {genderOptions.map((gender) => (
                 <Button
@@ -292,7 +286,7 @@ export const Filter: React.FC<FilterProps> = ({
                   variant="link"
                   key={gender}
                   onClick={() => toggleFilter("gender", gender)}
-                  className={`px-4 py-2 rounded-md text-lg font-[Inter] border transition-colors  ${
+                  className={`px-4 py-2 rounded-md text-lg  border transition-colors  ${
                     tempFilters.gender.includes(gender)
                       ? "bg-[#EE9254] text-white"
                       : "bg-white text-[#1F1F1FCC]"
@@ -306,7 +300,7 @@ export const Filter: React.FC<FilterProps> = ({
 
           {/* Price Range */}
           <div>
-            <h3 className="font-medium mb-3 font-[Inter] text-xl text-[#1F1F1F]">
+            <h3 className="font-medium mb-3  text-xl text-[#1F1F1F]">
               Price Range
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -316,7 +310,7 @@ export const Filter: React.FC<FilterProps> = ({
                   variant="link"
                   key={range}
                   onClick={() => toggleFilter("priceRange", range)}
-                  className={`px-4 py-2 rounded-md text-lg font-[Inter] border transition-colors ${
+                  className={`px-4 py-2 rounded-md text-lg  border transition-colors ${
                     tempFilters.priceRange.includes(range)
                       ? "bg-[#EE9254] text-white"
                       : "bg-white text-[#1F1F1FCC]"
@@ -330,7 +324,7 @@ export const Filter: React.FC<FilterProps> = ({
 
           {/* Availability */}
           <div>
-            <h3 className="font-medium mb-3 font-[Inter] text-xl text-[#1F1F1F]">
+            <h3 className="font-medium mb-3  text-xl text-[#1F1F1F]">
               Availability
             </h3>
             <div className="flex gap-2">
@@ -340,7 +334,7 @@ export const Filter: React.FC<FilterProps> = ({
                   variant="link"
                   key={option}
                   onClick={() => toggleFilter("availability", option)}
-                  className={`px-4 py-2 rounded-md text-lg font-[Inter] border transition-colors ${
+                  className={`px-4 py-2 rounded-md text-lg  border transition-colors ${
                     tempFilters.availability.includes(option)
                       ? "bg-[#EE9254] text-white"
                       : "bg-white text-[#1F1F1FCC]"
