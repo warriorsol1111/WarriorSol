@@ -45,6 +45,15 @@ export default function ApplyForSupport() {
     situation: "",
   });
 
+  // Only set email from session once when session is ready
+  React.useEffect(() => {
+    if (session?.user?.email) {
+      setForm((prev) => ({
+        ...prev,
+        contactEmail: prev.contactEmail || session.user.email,
+      }));
+    }
+  }, [session?.user?.email]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(false);
 
@@ -216,7 +225,7 @@ export default function ApplyForSupport() {
                       id="contactEmail"
                       type="email"
                       placeholder="Enter your email"
-                      value={form.contactEmail || session?.user?.email || ""}
+                      value={form.contactEmail}
                       onChange={handleChange}
                       className={inputClass("contactEmail")}
                     />
