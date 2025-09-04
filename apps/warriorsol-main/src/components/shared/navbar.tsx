@@ -255,11 +255,7 @@ export default function Navbar() {
             variant="link"
             className="relative p-2 sm:p-2 cursor-pointer"
             onClick={() => {
-              if (session?.user) {
-                toggleCart();
-              } else {
-                router.push("/login");
-              }
+              toggleCart();
             }}
           >
             <MdOutlineShoppingBag className="h-5 w-5 sm:h-6 sm:w-6" />

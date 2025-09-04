@@ -1,16 +1,18 @@
+// api/shopify/createGuestCheckout/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { fetchShopify } from "@/lib/shopify";
+import { fetchShopify } from "../../../../lib/shopify";
 
-const CREATE_CHECKOUT_MUTATION = `
-  mutation createCheckout($lineItems: [CartLineInput!]!) {
+const CREATE_GUEST_CHECKOUT_MUTATION = `
+  mutation createCart($lineItems: [CartLineInput!]!, $attributes: [AttributeInput!]) {
     cartCreate(
       input: {
         lines: $lineItems
+        attributes: $attributes
       }
     ) {
       cart {
-        checkoutUrl
         id
+        checkoutUrl
       }
       userErrors {
         field
@@ -23,25 +25,35 @@ const CREATE_CHECKOUT_MUTATION = `
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { variantId, quantity } = body;
+    const { items, userId } = body;
 
-    if (!variantId) {
+    if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
-        { error: "Variant ID is required" },
+        { error: "Cart items are required" },
         { status: 400 }
       );
     }
 
-    const variables = {
-      lineItems: [
-        {
-          merchandiseId: variantId,
-          quantity: quantity || 1,
-        },
-      ],
-    };
+    const lineItems = items.map(
+      (item: { variantId: string; quantity: number }) => ({
+        merchandiseId: item.variantId,
+        quantity: item.quantity || 1,
+      })
+    );
 
-    const data = await fetchShopify(CREATE_CHECKOUT_MUTATION, variables);
+    const attributes = userId
+      ? [
+          {
+            key: "user_id",
+            value: userId,
+          },
+        ]
+      : [];
+
+    const data = await fetchShopify(CREATE_GUEST_CHECKOUT_MUTATION, {
+      lineItems,
+      attributes,
+    });
 
     if (data.cartCreate.userErrors.length > 0) {
       return NextResponse.json(
@@ -55,9 +67,9 @@ export async function POST(request: NextRequest) {
       cartId: data.cartCreate.cart.id,
     });
   } catch (error) {
-    console.error("Error creating checkout:", error);
+    console.error("Error creating guest checkout:", error);
     return NextResponse.json(
-      { error: "Failed to create checkout" },
+      { error: "Failed to create guest checkout" },
       { status: 500 }
     );
   }

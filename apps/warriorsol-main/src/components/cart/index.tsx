@@ -6,6 +6,15 @@ import { Loader2, Minus, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/cart-store";
 import RecommendedProducts from "../community/recommendedProducts";
+import { CartItem } from "@/store/cart-store";
+
+const generateItemKey = (item: {
+  id: string;
+  color: string;
+  size: string;
+}): string => {
+  return `${item.id}-${item.color}-${item.size}`;
+};
 
 export default function CartPage() {
   const {
@@ -13,24 +22,71 @@ export default function CartPage() {
     subtotal,
     updateQuantity,
     removeItem,
+    updateQuantityGuest,
+    removeItemGuest,
     itemLoading,
     cartLoading,
+    isGuest,
   } = useCartStore();
   const isEmpty = items.length === 0;
   const [loading, setLoading] = React.useState(false);
 
+  const handleUpdateQuantity = (item: CartItem, quantity: number) => {
+    if (isGuest) {
+      const itemKey = generateItemKey(item);
+      updateQuantityGuest(itemKey, quantity);
+    } else {
+      updateQuantity(item.lineId!, quantity);
+    }
+  };
+
+  const handleRemoveItem = (item: CartItem) => {
+    if (isGuest) {
+      const itemKey = generateItemKey(item);
+      removeItemGuest(itemKey);
+    } else {
+      removeItem(item.lineId!);
+    }
+  };
+
   const handleCheckout = async () => {
     setLoading(true);
+
     try {
-      const res = await fetch("/api/shopify/getCheckout");
-      const data = await res.json();
-      if (res.ok && data.checkoutUrl) {
+      if (isGuest) {
+        // For guest users, create a guest checkout with all items
+        const response = await fetch("/api/shopify/createGuestCheckout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            items: items.map((item) => ({
+              variantId: item.id,
+              quantity: item.quantity,
+            })),
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to create checkout");
+        }
+
+        const data = await response.json();
         window.location.href = data.checkoutUrl;
       } else {
-        console.error(data.error || "Failed to get checkout URL");
+        // Authenticated user checkout
+        const res = await fetch("/api/shopify/getCheckout");
+        const data = await res.json();
+        if (res.ok && data.checkoutUrl) {
+          window.location.href = data.checkoutUrl;
+        } else {
+          console.error(data.error || "Failed to get checkout URL");
+        }
       }
     } catch (error) {
       console.error("Failed to get checkout URL", error);
+      alert("Failed to create checkout. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -44,9 +100,14 @@ export default function CartPage() {
           <h1 className="text-[36px] sm:text-[48px] lg:text-[62px] font-normal text-center mb-2">
             Your Cart
           </h1>
-          <p className="text-center  text-lg sm:text-xl text-gray-500 mb-8">
+          <p className="text-center text-lg sm:text-xl text-gray-500 mb-2">
             Review your items before proceeding to checkout
           </p>
+          {isGuest && (
+            <p className="text-center text-sm text-orange-600 mb-8">
+              Sign in to save your cart items permanently
+            </p>
+          )}
 
           {/* Fallback: Empty Cart */}
           {isEmpty ? (
@@ -85,98 +146,96 @@ export default function CartPage() {
 
               {/* Cart Items */}
               <div className="space-y-6">
-                {items.map((item) => (
-                  <div
-                    key={`${item.id}-${item.color}-${item.size}`}
-                    className="grid grid-cols-1 md:grid-cols-5 items-center gap-4 bg-white rounded-lg shadow-sm border border-gray-100 py-4 px-4"
-                  >
-                    {/* Item Info */}
-                    <div className="flex flex-col sm:flex-row col-span-2 gap-4 items-start sm:items-center">
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        width={90}
-                        height={90}
-                        className="rounded-md object-cover w-[90px] h-[90px]"
-                      />
-                      <div className="space-y-1 text-sm">
-                        <div className="text-xs text-[#1F1F1FB2] font-medium">
-                          Item
+                {items.map((item) => {
+                  const itemKey = generateItemKey(item);
+                  const isItemLoading = isGuest
+                    ? false
+                    : !!item.lineId && itemLoading[item.lineId];
+
+                  return (
+                    <div
+                      key={itemKey}
+                      className="grid grid-cols-1 md:grid-cols-5 items-center gap-4 bg-white rounded-lg shadow-sm border border-gray-100 py-4 px-4"
+                    >
+                      {/* Item Info */}
+                      <div className="flex flex-col sm:flex-row col-span-2 gap-4 items-start sm:items-center">
+                        <Image
+                          src={item.image}
+                          alt={item.name}
+                          width={90}
+                          height={90}
+                          className="rounded-md object-cover w-[90px] h-[90px]"
+                        />
+                        <div className="space-y-1 text-sm">
+                          <div className="text-xs text-[#1F1F1FB2] font-medium">
+                            Item
+                          </div>
+                          <p className="font-medium text-gray-900 leading-tight">
+                            {item.name}
+                          </p>
+                          <div className="text-xs text-[#1F1F1FB2] font-medium mt-2">
+                            Size
+                          </div>
+                          <p className="text-xs text-gray-700">{item.size}</p>
+                          <div className="text-xs text-[#1F1F1FB2] font-medium mt-2">
+                            Color
+                          </div>
+                          <p className="text-xs text-gray-700">{item.color}</p>
                         </div>
-                        <p className="font-medium text-gray-900 leading-tight">
-                          {item.name}
-                        </p>
-                        <div className="text-xs text-[#1F1F1FB2] font-medium mt-2">
-                          Size
-                        </div>
-                        <p className="text-xs text-gray-700">{item.size}</p>
-                        <div className="text-xs text-[#1F1F1FB2] font-medium mt-2">
-                          Color
-                        </div>
-                        <p className="text-xs text-gray-700">{item.color}</p>
+                      </div>
+
+                      {/* Price */}
+                      <div className="text-center text-sm md:text-base">
+                        ${item.price.toFixed(2)}
+                      </div>
+
+                      {/* Quantity Controls */}
+                      <div className="flex justify-center items-center flex-wrap gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            handleUpdateQuantity(item, item.quantity - 1)
+                          }
+                          className="h-8 w-8 p-0 border-gray-300"
+                          disabled={
+                            cartLoading || isItemLoading || item.quantity === 1
+                          }
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                        <span className="w-8 text-center font-medium text-base">
+                          {String(item.quantity).padStart(2, "0")}
+                        </span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            handleUpdateQuantity(item, item.quantity + 1)
+                          }
+                          className="h-8 w-8 p-0 border-gray-300"
+                          disabled={cartLoading || isItemLoading}
+                        >
+                          <Plus className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRemoveItem(item)}
+                          className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50"
+                          disabled={cartLoading || isItemLoading}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+
+                      {/* Total */}
+                      <div className="text-right text-sm md:text-base font-medium text-gray-900">
+                        ${(item.price * item.quantity).toFixed(2)}
                       </div>
                     </div>
-
-                    {/* Price */}
-                    <div className="text-center text-sm md:text-base">
-                      ${item.price.toFixed(2)}
-                    </div>
-
-                    {/* Quantity Controls */}
-                    <div className="flex justify-center items-center flex-wrap gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() =>
-                          item.lineId &&
-                          updateQuantity(item.lineId, item.quantity - 1)
-                        }
-                        className="h-8 w-8 p-0 border-gray-300"
-                        disabled={
-                          cartLoading ||
-                          (!!item.lineId && itemLoading[item.lineId])
-                        }
-                      >
-                        <Minus className="h-3 w-3" />
-                      </Button>
-                      <span className="w-8 text-center font-medium text-base">
-                        {String(item.quantity).padStart(2, "0")}
-                      </span>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() =>
-                          item.lineId &&
-                          updateQuantity(item.lineId, item.quantity + 1)
-                        }
-                        className="h-8 w-8 p-0 border-gray-300"
-                        disabled={
-                          cartLoading ||
-                          (!!item.lineId && itemLoading[item.lineId])
-                        }
-                      >
-                        <Plus className="h-3 w-3" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => item.lineId && removeItem(item.lineId)}
-                        className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50"
-                        disabled={
-                          cartLoading ||
-                          (!!item.lineId && itemLoading[item.lineId])
-                        }
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-
-                    {/* Total */}
-                    <div className="text-right text-sm md:text-base font-medium text-gray-900">
-                      ${(item.price * item.quantity).toFixed(2)}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {/* Checkout Heading */}

@@ -1,10 +1,6 @@
 "use client";
 import React, { useState, useMemo, useEffect } from "react";
-import {
-  AiOutlineMinus,
-  AiOutlinePlus,
-  AiOutlineShoppingCart,
-} from "react-icons/ai";
+import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatPrice } from "@/lib/utils";
@@ -78,7 +74,6 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const variantIdFromUrl = searchParams.get("variant");
-  const [isLoading, setIsLoading] = useState(false);
   const { addItem, openCart } = useCartStore();
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -292,8 +287,9 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           image: selectedVariant.image?.url || product.image,
         },
         quantity,
-        session?.user.id || ""
+        session?.user.id // This will be undefined for guest users, which is fine
       );
+
       openCart();
     } catch (error) {
       console.error("Error adding item to cart:", error);
@@ -325,36 +321,6 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     router.replace(
       `${pathname}${params.toString() ? "?" + params.toString() : ""}`
     );
-  };
-
-  const handleGuestBuyProduct = async () => {
-    if (!selectedVariant) return;
-
-    setIsLoading(true);
-    try {
-      const response = await fetch("/api/shopify/createGuestCheckout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          variantId: selectedVariant.id,
-          quantity: quantity,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to create checkout");
-      }
-
-      const data = await response.json();
-      window.location.href = data.checkoutUrl;
-    } catch (error) {
-      console.error("Error creating checkout:", error);
-      alert("Failed to create checkout. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   return (
@@ -561,19 +527,18 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 </Button>
               </div>
             ) : (
-              // If user is not logged in, show only Buy Now button
-              <div className="w-full">
+              <div className="">
                 <Button
                   className="flex items-center w-full cursor-pointer justify-center gap-2 py-3 px-6 bg-[#EE9254] text-white rounded-lg text-base font-medium hover:bg-orange-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={!selectedVariant?.availableForSale || isLoading}
-                  onClick={handleGuestBuyProduct}
+                  disabled={!selectedVariant?.availableForSale || loading}
+                  onClick={handleAddItemToCart}
                   size="lg"
                 >
-                  <AiOutlineShoppingCart size={20} />
-                  {isLoading ? (
+                  <BsCart2 size={20} />
+                  {loading ? (
                     <Loader2 className="animate-spin h-5 w-5" />
                   ) : selectedVariant?.availableForSale ? (
-                    "Buy Now"
+                    "Add to Cart"
                   ) : (
                     "Out of Stock"
                   )}
