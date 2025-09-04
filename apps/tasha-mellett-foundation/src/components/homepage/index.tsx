@@ -7,7 +7,7 @@ import { GoArrowUpRight } from "react-icons/go";
 import { BiDonateHeart } from "react-icons/bi";
 import OurMission from "./ourMission";
 import RebellionNewsletter from "./RebellionNewsletter";
-import ApplyForSupport from "./ApplyForSupport";
+import ApplyForSupport from "./Apply";
 import { useRouter } from "next/navigation";
 import WearYourSupportSection from "./WearSupport";
 import WhoIsTasha from "./WhoIsTasha";

@@ -1,5 +1,5 @@
 "use client";
-import ApplyForSupport from "../homepage/ApplyForSupport";
+import ApplyForSupport from "../homepage/Apply";
 import { Button } from "../ui/button";
 import SupportImage1 from "../../assets/support1.svg";
 import SupportImage2 from "../../assets/support2.svg";
