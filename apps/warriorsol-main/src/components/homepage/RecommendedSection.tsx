@@ -39,7 +39,7 @@ export default function RecommendedSection() {
       {/* CTA Button (bottom-center) */}
       <div className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 z-10">
         <Link
-          href="/shop"
+          href="/products"
           className="inline-flex items-center space-x-2 border text-white text-[clamp(1rem,2.2vw,1.375rem)] font-medium px-8 sm:px-12 whitespace-nowrap lg:px-14 py-2.5 sm:py-3 rounded-xl bg-white/10 hover:bg-white/20 transition-all duration-300 group"
         >
           <span>SHOP NOW</span>

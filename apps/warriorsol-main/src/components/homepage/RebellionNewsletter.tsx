@@ -113,7 +113,7 @@ const RebellionNewsletter = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your Email"
-                className="w-full bg-[#FFFFFF] border-none px-4 py-3  placeholder:text-gray-400 focus:outline-none"
+                className="w-full bg-[#FFFFFF] border-none px-4 py-3 text-black focus:outline-none"
                 required
                 disabled={notifyLoading}
               />

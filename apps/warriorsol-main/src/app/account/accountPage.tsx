@@ -25,13 +25,17 @@ export default function AccountPage() {
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   const initialTab =
-    searchParams.get("tab") === "wishlist" ? "wishlist" : "personal";
-  const [activeTab, setActiveTab] = useState<"personal" | "wishlist">(
-    initialTab as "personal" | "wishlist"
-  );
+    searchParams.get("tab") === "wishlist"
+      ? "wishlist"
+      : searchParams.get("tab") === "orders"
+        ? "orders"
+        : "personal";
+  const [activeTab, setActiveTab] = useState<
+    "personal" | "wishlist" | "orders"
+  >(initialTab as "personal" | "wishlist" | "orders");
 
   const handleTabChange = (val: string) => {
-    setActiveTab(val as "personal" | "wishlist");
+    setActiveTab(val as "personal" | "wishlist" | "orders");
     const params = new URLSearchParams(searchParams);
     params.set("tab", val);
     router.push(`/account?${params.toString()}`);
