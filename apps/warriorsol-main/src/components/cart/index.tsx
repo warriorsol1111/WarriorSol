@@ -8,12 +8,14 @@ import { useCartStore } from "@/store/cart-store";
 import RecommendedProducts from "../community/recommendedProducts";
 
 export default function CartPage() {
-  const { items,
+  const {
+    items,
     subtotal,
     updateQuantity,
     removeItem,
     itemLoading,
-    cartLoading, } = useCartStore();
+    cartLoading,
+  } = useCartStore();
   const isEmpty = items.length === 0;
   const [loading, setLoading] = React.useState(false);
 
@@ -42,7 +44,7 @@ export default function CartPage() {
           <h1 className="text-[36px] sm:text-[48px] lg:text-[62px] font-normal text-center mb-2">
             Your Cart
           </h1>
-          <p className="text-center font-light text-lg sm:text-xl text-gray-500 mb-8">
+          <p className="text-center  text-lg sm:text-xl text-gray-500 mb-8">
             Review your items before proceeding to checkout
           </p>
 

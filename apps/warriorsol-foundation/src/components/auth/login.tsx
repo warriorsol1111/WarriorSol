@@ -180,7 +180,7 @@ function LoginPage() {
             <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] ! font-normal">
               Welcome Back!
             </h1>
-            <p className="font-light font-[Inter] text-[#1F1F1F99] opacity-60 text-base md:text-lg">
+            <p className=" font-[Inter] text-[#1F1F1F99] opacity-60 text-base md:text-lg">
               Enter Your Credentials To Access Your Account
             </p>
           </div>
@@ -234,7 +234,7 @@ function LoginPage() {
                 {fieldErrors.password}
               </p>
             )}
-            <div className="text-right text-sm md:text-lg text-[#1F1F1F] opacity-60 font-[Inter] font-light mt-2">
+            <div className="text-right text-sm md:text-lg text-[#1F1F1F] opacity-60 font-[Inter]  mt-2">
               <Link href="/forgot-password">Forgot Password?</Link>
             </div>
           </div>
@@ -253,9 +253,7 @@ function LoginPage() {
 
           <div className="flex items-center gap-4 my-2">
             <div className="flex-grow h-px bg-gray-300" />
-            <span className="text-gray-500 text-sm md:text-base font-light">
-              OR
-            </span>
+            <span className="text-gray-500 text-sm md:text-base ">OR</span>
             <div className="flex-grow h-px bg-gray-300" />
           </div>
 
@@ -281,7 +279,7 @@ function LoginPage() {
           </Button>
 
           <div className="flex justify-center gap-x-2 md:gap-x-4 pt-2">
-            <p className="text-base md:text-lg font-[Inter] opacity-60 text-[#1F1F1F] text-center font-light">
+            <p className="text-base md:text-lg font-[Inter] opacity-60 text-[#1F1F1F] text-center ">
               Don&apos;t have an account?{" "}
               <Link
                 href="/signup"

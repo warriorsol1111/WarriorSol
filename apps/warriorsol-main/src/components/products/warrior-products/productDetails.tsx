@@ -385,9 +385,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 <h1 className="text-3xl sm:text-4xl lg:text-[62px] font-normal text-black">
                   {product.title}
                 </h1>
-                <p className="text-lg sm:text-xl font-light">
-                  {product.vendor}
-                </p>
+                <p className="text-lg sm:text-xl ">{product.vendor}</p>
               </div>
               {/* Price */}
               <div className="flex items-center text-2xl sm:text-3xl lg:text-[62px] gap-2 sm:gap-3">

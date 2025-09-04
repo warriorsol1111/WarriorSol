@@ -67,7 +67,7 @@ export default function DonorWallShowcase({
             Top Contributors
           </h2>
           {topIndividualDonations.length === 0 ? (
-            <p className="text-sm text-[#1F1F1F99] font-light italic">
+            <p className="text-sm text-[#1F1F1F99]  italic">
               No top donations yet. Be the first to support!
             </p>
           ) : (
@@ -121,7 +121,7 @@ export default function DonorWallShowcase({
           Recent Donations
         </h2>
         {recentDonations.length === 0 ? (
-          <p className="text-sm text-[#1F1F1F99] font-light italic">
+          <p className="text-sm text-[#1F1F1F99]  italic">
             No recent donations available at the moment.
           </p>
         ) : (

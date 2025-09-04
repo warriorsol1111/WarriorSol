@@ -36,7 +36,7 @@ export default function ThankYouPage() {
             Thank You for Your Generosity!
           </h1>
 
-          <p className="text-lg text-[#1F1F1F]/70 font-light mb-8 ">
+          <p className="text-lg text-[#1F1F1F]/70  mb-8 ">
             Your donation brings hope and support to families when they need it
             most.
             <br />

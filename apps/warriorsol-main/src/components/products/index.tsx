@@ -405,7 +405,7 @@ const Products: React.FC = () => {
           </Button>
         </div>
 
-        <p className="text-base md:text-lg lg:text-xl text-center md:text-start font-light font-inter text-[#1F1F1FB2] mb-6">
+        <p className="text-base md:text-lg lg:text-xl text-center md:text-start  font-inter text-[#1F1F1FB2] mb-6">
           Every collection tells a story. Find the one that speaks to your
           journey.
         </p>

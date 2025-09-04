@@ -54,7 +54,7 @@ const CommunityPage = () => {
         <h1 className="text-[40px] md:text-[62px] font-cormorantSC font-normal text-[#1F1F1F] leading-tight">
           Our Story – Born Of Fire, Built To Shine
         </h1>
-        <p className="mt-6 text-[16px] md:text-[20px] font-[Inter] font-light leading-relaxed text-[#1F1F1FB2] text-left max-w-7xl mx-auto">
+        <p className="mt-6 text-[16px] md:text-[20px] font-[Inter]  leading-relaxed text-[#1F1F1FB2] text-left max-w-7xl mx-auto">
           Warrior Sol began not as a brand, but as a battle cry. We are rooted
           in the lived experience of love, loss, and resilience. This journey
           started with Tasha—our first warrior, our North Star. When cancer
@@ -99,7 +99,7 @@ const CommunityPage = () => {
           <h2 className="text-[42px] md:text-[62px] font-cormorantSC capitalize leading-tight mb-6 text-[#1F1F1F]">
             Our Mission – Apparel With A Pulse
           </h2>
-          <p className="text-[16px] md:text-[20px] font-[Inter] font-light text-black/70 leading-relaxed">
+          <p className="text-[16px] md:text-[20px] font-[Inter]  text-black/70 leading-relaxed">
             At Warrior Sol, our mission is to create emotionally powerful
             apparel...
           </p>
@@ -111,7 +111,7 @@ const CommunityPage = () => {
         <h2 className="text-[42px] md:text-[62px] text-[#1F1F1F] font-cormorantSC capitalize">
           Our Team
         </h2>
-        <p className="text-[16px] md:text-[20px] font-[Inter] font-light text-[#1F1F1FB2] opacity-70">
+        <p className="text-[16px] md:text-[20px] font-[Inter]  text-[#1F1F1FB2] opacity-70">
           We&apos;ve walked these halls. We&apos;ve held the hands. We&apos;ve
           heard the silence—and we chose to speak.
         </p>
@@ -139,7 +139,7 @@ const CommunityPage = () => {
                     <p className="text-[16px] text-[#1F1F1F99] font-[Inter]">
                       {member.role}
                     </p>
-                    <p className="mt-2 text-[16px] font-light text-[#1F1F1FB2] font-[Inter] ">
+                    <p className="mt-2 text-[16px]  text-[#1F1F1FB2] font-[Inter] ">
                       {member.description}
                     </p>
                   </div>

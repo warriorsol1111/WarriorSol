@@ -387,7 +387,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 <h1 className="text-3xl sm:text-4xl lg:text-[62px] font-normal text-[#1F1F1F]">
                   {product.title}
                 </h1>
-                <p className="text-lg sm:text-xl text-[#1F1F1FB2] font-[Inter] font-light">
+                <p className="text-lg sm:text-xl text-[#1F1F1FB2] font-[Inter] ">
                   {product.vendor}
                 </p>
               </div>

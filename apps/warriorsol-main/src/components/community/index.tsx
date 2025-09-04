@@ -72,7 +72,7 @@ const Community: React.FC = () => {
             <h2 className="text-4xl sm:text-5xl lg:text-[62px] leading-tight lg:leading-[62px]  text-[#1F1F1F] capitalize">
               Why I Wear Mine
             </h2>
-            <p className="text-base sm:text-lg lg:text-[20px] font-light  text-[#1F1F1FB2] capitalize mt-2 sm:mt-2">
+            <p className="text-base sm:text-lg lg:text-[20px]   text-[#1F1F1FB2] capitalize mt-2 sm:mt-2">
               Real stories from real warriors in our community
             </p>
           </div>

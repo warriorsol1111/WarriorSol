@@ -346,7 +346,7 @@ export default function ForgotPasswordPage() {
               <h1 className="text-3xl md:text-[42px] text-[#1F1F1F]  font-normal">
                 Forgot Password
               </h1>
-              <p className="font-light text-[#1F1F1F99] font-[Inter] text-base md:text-lg">
+              <p className=" text-[#1F1F1F99] font-[Inter] text-base md:text-lg">
                 Enter Your email, we&apos;ll send a verification code
               </p>
             </div>
@@ -382,7 +382,7 @@ export default function ForgotPasswordPage() {
               <h1 className="text-3xl md:text-[42px] text-[#1F1F1F]  font-normal">
                 Email Verification
               </h1>
-              <p className="font-light text-[#1F1F1F99] font-[Inter] text-base md:text-lg">
+              <p className=" text-[#1F1F1F99] font-[Inter] text-base md:text-lg">
                 We have sent a verification code to your email address
               </p>
               <p className="text-base  text-[#EE9254] font-[Inter] md:text-lg">
@@ -430,7 +430,7 @@ export default function ForgotPasswordPage() {
             </Button>
 
             <div className="flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-y-0 mt-4">
-              <p className="text-center text-base font-light md:text-lg">
+              <p className="text-center text-base  md:text-lg">
                 Didn&apos;t receive the code?{" "}
                 <Button
                   type="button"
@@ -448,7 +448,7 @@ export default function ForgotPasswordPage() {
             </div>
 
             <div className="flex justify-center mt-2">
-              <p className="text-base font-light">
+              <p className="text-base ">
                 Back to{" "}
                 <a href="/login" className="font-bold underline text-black">
                   Login
@@ -465,7 +465,7 @@ export default function ForgotPasswordPage() {
               <h1 className="text-3xl md:text-[42px] text-[#1F1F1F]  font-normal">
                 Create New Password
               </h1>
-              <p className="font-light text-[#1F1F1F99] font-[Inter]  text-base md:text-lg">
+              <p className=" text-[#1F1F1F99] font-[Inter]  text-base md:text-lg">
                 Enter your new password{" "}
               </p>
             </div>
@@ -554,7 +554,7 @@ export default function ForgotPasswordPage() {
               <h1 className="text-3xl md:text-[42px] text-[#1F1F1F]  font-normal">
                 Password Changed Successfully
               </h1>
-              <p className="font-light text-[#1F1F1F] font-[Inter] opacity-60 text-base md:text-lg">
+              <p className=" text-[#1F1F1F] font-[Inter] opacity-60 text-base md:text-lg">
                 Your password has been updated successfully
               </p>
             </div>

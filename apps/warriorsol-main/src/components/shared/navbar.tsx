@@ -138,7 +138,7 @@ export default function Navbar() {
 
         {/* Desktop Nav */}
         <nav className="hidden lg:flex flex-1 justify-center items-center px-4 max-w-2xl xl:max-w-none mx-auto">
-          <div className="flex flex-wrap xl:flex-nowrap justify-center items-center gap-x-4 lg:gap-x-6 gap-y-2 text-sm text-black font-light">
+          <div className="flex flex-wrap xl:flex-nowrap justify-center items-center gap-x-4 lg:gap-x-6 gap-y-2 text-sm text-black ">
             <Link className={isActive("/home")} href="/home">
               Home
             </Link>

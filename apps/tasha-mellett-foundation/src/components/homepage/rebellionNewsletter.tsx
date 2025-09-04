@@ -52,7 +52,7 @@ const RebellionNewsletter = () => {
         <h2 className="text-2xl md:text-[52px] font-normal max-w-5xl mx-auto px-4">
           &ldquo;The Brand That Hugs You When You Need It Most.&rdquo;
         </h2>
-        <p className="text-sm md:text-xl font-light mt-2 px-2">
+        <p className="text-sm md:text-xl  mt-2 px-2">
           Featured In Leading Publications And Partnered With Top Organizations
         </p>
       </div>

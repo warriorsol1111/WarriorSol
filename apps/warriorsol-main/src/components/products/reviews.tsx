@@ -65,7 +65,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
           </div>
         </div>
       </div>
-      <p className="mt-3 text-base sm:text-lg font-light text-[#1F1F1F] leading-relaxed">
+      <p className="mt-3 text-base sm:text-lg  text-[#1F1F1F] leading-relaxed">
         {review}
       </p>
     </div>
@@ -79,7 +79,7 @@ export default function Reviews({ reviews }: { reviews: Review[] }) {
         <h2 className="text-[36px] sm:text-[48px] md:text-[62px] font-normal text-[#1F1F1F]">
           Ratings & Reviews (0)
         </h2>
-        <p className="text-[16px] sm:text-[20px] text-[#1F1F1FB2] font-light font-[Inter] mt-1">
+        <p className="text-[16px] sm:text-[20px] text-[#1F1F1FB2]  font-[Inter] mt-1">
           No reviews yet — be the first to share your thoughts!
         </p>
       </section>
@@ -91,7 +91,7 @@ export default function Reviews({ reviews }: { reviews: Review[] }) {
       <h2 className="text-[36px] sm:text-[48px] md:text-[62px] font-normal text-[#1F1F1F]">
         Ratings & Reviews ({reviews.length})
       </h2>
-      <p className="text-[16px] sm:text-[20px] text-[#1F1F1FB2] font-light font-[Inter] mt-1">
+      <p className="text-[16px] sm:text-[20px] text-[#1F1F1FB2]  font-[Inter] mt-1">
         All the authentic reviews by our trusted clients
       </p>
 

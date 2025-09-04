@@ -26,7 +26,7 @@ const GiveMeaning = () => {
         <h2 className="text-[32px] sm:text-[42px] md:text-[52px] lg:text-[62px] leading-tight md:leading-[62px]  font-normal text-[#1F1F1F] mb-3 md:mb-4">
           Give Meaning, Not Just Merchandise
         </h2>
-        <p className="text-[16px] sm:text-[18px] md:text-[20px] font-light  text-[#1F1F1F]/70 max-w-3xl mx-auto">
+        <p className="text-[16px] sm:text-[18px] md:text-[20px]   text-[#1F1F1F]/70 max-w-3xl mx-auto">
           Send More Than A Gift. Send Strength, Hope, And The Reminder That
           They&apos;re Not Alone.
         </p>
@@ -39,11 +39,11 @@ const GiveMeaning = () => {
             className="bg-[#F9F9F9] p-6 sm:p-8 md:p-10 lg:p-12 rounded-lg text-center"
           >
             <div className="relative mb-4 md:mb-6 lg:mb-8">
-              <span className="absolute inset-0 text-[80px] sm:text-[100px] md:text-[120px] font-light  text-[#E4B0A0] opacity-10">
+              <span className="absolute inset-0 text-[80px] sm:text-[100px] md:text-[120px]   text-[#E4B0A0] opacity-10">
                 {step.number}
               </span>
               <span
-                className="relative text-[80px] sm:text-[100px] md:text-[120px] font-light  text-transparent"
+                className="relative text-[80px] sm:text-[100px] md:text-[120px]   text-transparent"
                 style={{
                   WebkitTextStroke: "1px #E4B0A0",
                 }}
@@ -54,7 +54,7 @@ const GiveMeaning = () => {
             <h3 className="text-[24px] sm:text-[28px] md:text-[32px]  text-[#1F1F1F] mb-2 md:mb-3">
               {step.title}
             </h3>
-            <p className="text-[14px] sm:text-[15px] md:text-[16px] font-light  text-[#1F1F1F]/70">
+            <p className="text-[14px] sm:text-[15px] md:text-[16px]   text-[#1F1F1F]/70">
               {step.description}
             </p>
           </div>

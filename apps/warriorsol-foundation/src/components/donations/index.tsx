@@ -21,7 +21,7 @@ export default function Donations() {
                 Donate Now
               </h2>
             </div>
-            <p className="text-base sm:text-lg  max-w-md font-light leading-relaxed">
+            <p className="text-base sm:text-lg  max-w-md  leading-relaxed">
               Your financial contributions can make a real difference. Every
               dollar you donate goes directly towards our foundation.
             </p>
@@ -35,7 +35,7 @@ export default function Donations() {
                 Become A Volunteer
               </h2>
             </div>
-            <p className="text-base sm:text-lg  max-w-md font-light leading-relaxed">
+            <p className="text-base sm:text-lg  max-w-md  leading-relaxed">
               Join our team of dedicated volunteers and actively participate in
               our events.
             </p>

@@ -253,7 +253,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
       >
         <DrawerHeader className="border-b border-gray-200">
           <div className="flex justify-between items-center">
-            <DrawerTitle className="text-xl md:text-[42px] text-[#1F1F1F] font-light">
+            <DrawerTitle className="text-xl md:text-[42px] text-[#1F1F1F] ">
               Share Your Story
             </DrawerTitle>
             <DrawerClose className="p-2 cursor-pointer">

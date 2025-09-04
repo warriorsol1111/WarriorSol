@@ -54,7 +54,7 @@ export default function DonorWall({
               <br />
               mission of hope{" "}
             </h1>
-            <p className="text-xl md:text-xl font-[Inter] max-w-2xl opacity-90 font-light">
+            <p className="text-xl md:text-xl font-[Inter] max-w-2xl opacity-90 ">
               Your generous donation helps us provide care, support, and lasting
               impact for those in need. Every contribution brings us closer to a
               brighter future.
@@ -66,7 +66,7 @@ export default function DonorWall({
         <h2 className="text-[32px] sm:text-[42px] lg:text-[62px] text-center md:text-start leading-tight sm:leading-[1.1] lg:leading-[62px]  font-normal text-[#1F1F1F] capitalize">
           Our Amazing Donors
         </h2>
-        <p className="text-[16px] sm:text-[18px] lg:text-[20px] text-center md:text-start font-light  text-[#1F1F1F]/70 capitalize mt-2 sm:mt-3">
+        <p className="text-[16px] sm:text-[18px] lg:text-[20px] text-center md:text-start   text-[#1F1F1F]/70 capitalize mt-2 sm:mt-3">
           Thank you to all the warriors who make our mission possible
         </p>
       </div>

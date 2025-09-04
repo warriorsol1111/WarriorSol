@@ -117,7 +117,7 @@ export default function Navbar() {
         </div>
 
         {/* Center: Desktop Navigation */}
-        <nav className="hidden lg:flex flex-1 justify-center items-center space-x-6 text-sm text-black font-light overflow-x-auto">
+        <nav className="hidden lg:flex flex-1 justify-center items-center space-x-6 text-sm text-black  overflow-x-auto">
           <Link href="/home" className={isActive("/home")}>
             Home
           </Link>

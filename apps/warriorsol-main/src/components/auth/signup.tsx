@@ -222,7 +222,7 @@ function SignupPage() {
             <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] font-serif font-normal">
               Hello There!
             </h1>
-            <p className="font-light text-base md:text-lg text-[#1F1F1F99] opacity-[60%]">
+            <p className=" text-base md:text-lg text-[#1F1F1F99] opacity-[60%]">
               Welcome to warriorsol, Enter details to create your account{" "}
             </p>
           </div>
@@ -347,9 +347,7 @@ function SignupPage() {
           {/* OR Divider */}
           <div className="flex items-center gap-4 my-4">
             <div className="flex-grow h-px bg-gray-300" />
-            <span className="text-gray-500 text-sm md:text-base font-light">
-              OR
-            </span>
+            <span className="text-gray-500 text-sm md:text-base ">OR</span>
             <div className="flex-grow h-px bg-gray-300" />
           </div>
 
@@ -375,7 +373,7 @@ function SignupPage() {
 
           {/* Login Link */}
           <div className="flex justify-center gap-x-2 md:gap-x-4">
-            <p className="text-base md:text-lg !font-[Inter] !text-[#1F1F1F] opacity-60 text-center font-light">
+            <p className="text-base md:text-lg !font-[Inter] !text-[#1F1F1F] opacity-60 text-center ">
               Already Have An Account?{" "}
               <a href="/login" className="text-black font-bold underline">
                 SignIn

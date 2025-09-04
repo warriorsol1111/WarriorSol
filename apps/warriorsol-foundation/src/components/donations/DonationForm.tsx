@@ -97,7 +97,7 @@ export default function DonationForm() {
         <h2 className="text-[26px] sm:text-[36px] md:text-[48px] lg:text-[62px] leading-tight  font-normal text-[#1F1F1F] mb-3">
           Make a Difference Today
         </h2>
-        <p className="text-[15px] sm:text-[17px] md:text-[20px] font-light  text-[#1F1F1F]/70 mx-auto max-w-xl">
+        <p className="text-[15px] sm:text-[17px] md:text-[20px]   text-[#1F1F1F]/70 mx-auto max-w-xl">
           Every donation helps families facing their greatest challenges. Your
           support provides hope, resources, and healing.
         </p>
@@ -120,7 +120,7 @@ export default function DonationForm() {
         <div className="w-full lg:w-1/2 bg-[#FFEBCC] flex p-4 sm:p-6 md:p-10">
           <Card className="w-full shadow-none border-none !rounded-none bg-[#FFF9F5]">
             <CardContent className="flex flex-col justify-between h-full space-y-8 p-4 sm:p-6 md:p-10">
-              <h2 className="text-2xl sm:text-3xl md:text-[42px] font-light  text-center flex gap-2 justify-center lg:justify-start items-center">
+              <h2 className="text-2xl sm:text-3xl md:text-[42px]   text-center flex gap-2 justify-center lg:justify-start items-center">
                 <FaRegHeart className="w-8 h-8 sm:w-10 sm:h-10 mt-1 text-[#EE9254]" />
                 Donation Form
               </h2>

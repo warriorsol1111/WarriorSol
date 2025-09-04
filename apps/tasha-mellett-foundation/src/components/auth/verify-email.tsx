@@ -112,7 +112,7 @@ export default function VerifyEmailPage() {
           <form onSubmit={handleSubmit} className="mt-12 w-full space-y-6">
             <div className="text-center md:text-left">
               <h1 className=" text-3xl md:text-[42px]">Email Verification</h1>
-              <p className="mt-2 text-base font-light text-[#1F1F1F99] font-[Inter] md:text-lg">
+              <p className="mt-2 text-base  text-[#1F1F1F99] font-[Inter] md:text-lg">
                 We have sent a verification code on your Email
               </p>
               <p className="text-base  text-[#EE9254] font-[Inter] md:text-lg">
@@ -161,7 +161,7 @@ export default function VerifyEmailPage() {
             </Button>
 
             <div className="flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-y-0">
-              <p className="text-center text-base font-light md:text-lg">
+              <p className="text-center text-base  md:text-lg">
                 Didn&apos;t receive the code?{" "}
                 <Button
                   type="button"
@@ -179,7 +179,7 @@ export default function VerifyEmailPage() {
             </div>
 
             <div className="flex justify-center">
-              <p className="text-base font-light">
+              <p className="text-base ">
                 Back to{" "}
                 <a href="/login" className="font-bold underline text-black">
                   Login

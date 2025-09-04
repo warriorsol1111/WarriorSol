@@ -128,12 +128,12 @@ export default function ComingSoon() {
             </div>
           </Link>
 
-          <nav className="absolute hidden md:flex left-1/2 transform -translate-x-1/2 space-x-6 text-sm text-center text-black font-light">
+          <nav className="absolute hidden md:flex left-1/2 transform -translate-x-1/2 space-x-6 text-sm text-center text-black ">
             <p>Subscribe to receive a notification upon our launch</p>
           </nav>
 
           <div className="flex items-center space-x-4">
-            <Button variant="link" className="text-black font-light text-sm">
+            <Button variant="link" className="text-black  text-sm">
               Follow Us
             </Button>
           </div>
@@ -159,7 +159,7 @@ export default function ComingSoon() {
         <Button
           variant="link"
           onClick={toggleAudio}
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 px-6 py-3 rounded-full mt-16 bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all duration-300 text-white font-light tracking-wider flex items-center gap-2"
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 px-6 py-3 rounded-full mt-16 bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all duration-300 text-white  tracking-wider flex items-center gap-2"
         >
           {isPlaying ? (
             <>
@@ -246,7 +246,7 @@ export default function ComingSoon() {
           </div>
         </div>
         {/* Artist Credit (Bottom Right) */}
-        <div className="absolute bottom-10 right-4 z-20 flex items-center space-x-2 text-white/80 text-xs sm:text-sm font-light">
+        <div className="absolute bottom-10 right-4 z-20 flex items-center space-x-2 text-white/80 text-xs sm:text-sm ">
           <Image
             src={Singer}
             alt="Artist Avatar"

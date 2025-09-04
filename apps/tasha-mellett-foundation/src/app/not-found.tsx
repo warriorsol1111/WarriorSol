@@ -21,7 +21,7 @@ export default function NotFound() {
         <h2 className="text-[32px] md:text-[42px] font-cormorantSC mb-6">
           Page Not Found
         </h2>
-        <p className="text-[16px] md:text-[18px] font-light text-white/80 mb-8">
+        <p className="text-[16px] md:text-[18px]  text-white/80 mb-8">
           The page you&apos;re looking for seems to have wandered off. Like
           every warrior&apos;s journey, sometimes we need to find our way back
           home.

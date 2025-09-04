@@ -87,7 +87,7 @@ export default function HomePage({
         <h1 className="text-[32px] md:text-[62px] font-normal">
           Early Access: Explore Our First Collection
         </h1>
-        <p className="text-base mt-4 md:text-xl font-light font-inter">
+        <p className="text-base mt-4 md:text-xl  font-inter">
           Be among the first to browse our limited-time launch pieces.
         </p>
       </div>
@@ -129,7 +129,7 @@ export default function HomePage({
         <h2 className="text-2xl md:text-4xl font-semibold mb-4">
           Want to know when we launch?
         </h2>
-        <p className="text-base md:text-xl font-light font-inter mb-6">
+        <p className="text-base md:text-xl  font-inter mb-6">
           Enter your email below and be the first to know when the full Warrior
           Sol experience goes live.
         </p>

@@ -149,7 +149,7 @@ const RecommendedProducts: React.FC = () => {
                     <div className="text-sm sm:text-base lg:text-[16px]  font-medium text-[#1F1F1F]">
                       {product.title}
                     </div>
-                    <div className="text-xs sm:text-[12.5px] text-[#1E1E1E99] font-light ">
+                    <div className="text-xs sm:text-[12.5px] text-[#1E1E1E99]  ">
                       {product.category}
                     </div>
                   </div>

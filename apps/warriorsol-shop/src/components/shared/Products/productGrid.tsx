@@ -40,9 +40,9 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
           <div className="p-2 flex items-end justify-between">
             <div>
               <h3 className="text-base font-medium">{product.title}</h3>
-              <p className="text-xs mt-1 font-light">{product.category}</p>
+              <p className="text-xs mt-1 ">{product.category}</p>
             </div>
-            <p className="text-sm font-light mb-1">{product.price}</p>
+            <p className="text-sm  mb-1">{product.price}</p>
           </div>
         </a>
       ))}

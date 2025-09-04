@@ -191,7 +191,7 @@ const WarriorProducts = () => {
           </Button>
         </div>
 
-        <p className="text-base md:text-lg lg:text-xl font-light font-inter text-gray-600 mb-6">
+        <p className="text-base md:text-lg lg:text-xl  font-inter text-gray-600 mb-6">
           Every collection tells a story. Find the one that speaks to your
           journey.
         </p>

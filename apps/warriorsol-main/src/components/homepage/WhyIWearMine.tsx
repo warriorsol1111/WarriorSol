@@ -114,7 +114,7 @@ const WhyIWearMine: React.FC = () => {
             <h2 className="text-[28px] sm:text-[36px] md:text-[46px] lg:text-[62px] leading-tight lg:leading-[62px]  font-normal text-[#1F1F1F] capitalize">
               WHY I WEAR MINE
             </h2>
-            <p className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] text-center md:text-start font-light  text-[#1F1F1F]/70 capitalize mt-2">
+            <p className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] text-center md:text-start   text-[#1F1F1F]/70 capitalize mt-2">
               Real Stories From Real Warriors In Our Community
             </p>
           </div>

@@ -136,7 +136,7 @@ export const CommunityDetails = ({
           <h1 className="text-[42px] sm:text-[62px] text-[#1F1F1F]  font-semibold">
             {story.title}
           </h1>
-          <p className="text-[20px] font-light text-[#1F1F1F99] font-[Inter] mt-2">
+          <p className="text-[20px]  text-[#1F1F1F99] font-[Inter] mt-2">
             Published on {new Date(story.createdAt).toDateString()}
           </p>
         </div>
@@ -254,7 +254,7 @@ export const CommunityDetails = ({
 
         {/* Description */}
         <div className="flex justify-center items-center mt-10">
-          <p className="text-[24px] text-[#1F1F1F] font-[Inter] font-light text-center mx-auto whitespace-pre-line max-w-4xl">
+          <p className="text-[24px] text-[#1F1F1F] font-[Inter]  text-center mx-auto whitespace-pre-line max-w-4xl">
             {story.description}
           </p>
         </div>
@@ -281,7 +281,7 @@ export const CommunityDetails = ({
                 {story.isAnonymous ? "Anonymous" : story.userName}
               </p>
               <div className="flex items-center justify-center gap-2 mt-1">
-                <p className="text-[18px] text-[#1F1F1F] font-[Inter] font-light capitalize">
+                <p className="text-[18px] text-[#1F1F1F] font-[Inter]  capitalize">
                   {story.userType}
                 </p>
                 {story.isAnonymous && (

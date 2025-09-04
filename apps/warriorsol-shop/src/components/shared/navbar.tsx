@@ -26,7 +26,7 @@ export default function Navbar() {
         </Link>
 
         {/* Centered Navigation */}
-        <nav className="absolute hidden md:flex left-1/2 transform -translate-x-1/2 space-x-6 text-sm text-center text-black font-light">
+        <nav className="absolute hidden md:flex left-1/2 transform -translate-x-1/2 space-x-6 text-sm text-center text-black ">
           <Link href="/" className="hover:underline">
             All Products
           </Link>
