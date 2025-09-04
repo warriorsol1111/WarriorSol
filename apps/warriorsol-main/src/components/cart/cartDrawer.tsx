@@ -133,11 +133,6 @@ export default function CartDrawer() {
                 </Button>
               </DrawerClose>
             </div>
-            {isGuest && (
-              <p className="text-sm text-gray-600 mt-2">
-                Sign in to save your cart items
-              </p>
-            )}
           </DrawerHeader>
 
           {/* Cart Items */}

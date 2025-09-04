@@ -57,7 +57,7 @@ export default function MeaningfulGiftComponent() {
                 <div className="absolute inset-0 bg-black/20"></div>
 
                 {/* Step Number */}
-                <div className="absolute top-14 left-6 z-10">
+                <div className="absolute top-0 left-0 z-10">
                   <span className="text-[60px] lg:text-[90px] xl:text-[180px] font-medium text-white drop-shadow-lg">
                     {step.id}
                   </span>

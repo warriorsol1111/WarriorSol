@@ -10,7 +10,7 @@ const Hero: React.FC = () => {
   const router = useRouter();
 
   return (
-    <section className="relative w-full bg-white py-4 md:py-28">
+    <section className="relative w-full bg-white py-4 md:py-10">
       <div className="px-4 sm:px-6 md:px-8 mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
         {/* LEFT SECTION */}
         <div className=" text-left">

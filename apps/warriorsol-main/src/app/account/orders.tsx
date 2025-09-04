@@ -17,11 +17,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import toast from "react-hot-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import Link from "next/link";
 
 type LineItem = {
@@ -290,7 +291,9 @@ export default function OrdersPage() {
                     className="flex flex-col sm:flex-row gap-4 items-center sm:items-start border rounded p-3 hover:shadow-md transition"
                   >
                     <div className="w-24 h-24 flex-shrink-0 bg-gray-100 rounded overflow-hidden">
-                      <Link href={`/products/${extractNumericId(item.id)}`}>
+                      <Link
+                        href={`/products/${extractNumericId(item.productId)}`}
+                      >
                         <Image
                           src={item.image}
                           alt={item.title}
@@ -334,12 +337,21 @@ export default function OrdersPage() {
 
       {/* Review Modal */}
       <Dialog open={reviewModalOpen} onOpenChange={setReviewModalOpen}>
-        <DialogContent>
-          <DialogHeader>
+        <DialogContent className="[&>button]:hidden">
+          <DialogHeader className="flex justify-between items-center">
+            <DialogClose className="absolute top-3 right-3" asChild>
+              <button
+                className="cursor-pointer text-gray-500 items-end justify-end hover:text-gray-700 transition"
+                aria-label="Close"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </DialogClose>
             <DialogTitle>
               {editingReview ? "Edit Review" : "Leave a Review"}
             </DialogTitle>
           </DialogHeader>
+
           <div className="flex flex-col gap-4">
             {/* Stars */}
             <div className="flex gap-1">
@@ -348,7 +360,7 @@ export default function OrdersPage() {
                   key={star}
                   type="button"
                   className={cn(
-                    "text-2xl",
+                    "text-2xl cursor-pointer",
                     star <= rating ? "text-yellow-500" : "text-gray-300"
                   )}
                   onClick={() => setRating(star)}
@@ -366,8 +378,13 @@ export default function OrdersPage() {
               required
             />
           </div>
+
           <DialogFooter>
-            <Button onClick={submitReview} disabled={reviewLoading}>
+            <Button
+              className="bg-[#EE9254] text-white hover:bg-[#EE9254]/80"
+              onClick={submitReview}
+              disabled={reviewLoading}
+            >
               {reviewLoading ? (
                 <Loader2 className="animate-spin h-5 w-5 mr-2" />
               ) : null}

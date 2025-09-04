@@ -131,7 +131,7 @@ const RebellionNewsletter = () => {
               </Button>
             </div>
 
-            <div className="mt-4 text-sm text-white/80">
+            <div className="mt-4 text-sm text-black">
               {count > 0
                 ? `${count} people have already joined our newsletter!`
                 : "Be the first to join our newsletter!"}

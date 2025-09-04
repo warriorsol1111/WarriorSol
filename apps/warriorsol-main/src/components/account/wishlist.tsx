@@ -175,11 +175,11 @@ export default function Wishlist() {
         Your Wishlist
       </h1>
       <p className="text-gray-600 mb-6 text-xl text-center">
-        {loading ? (
-          <></>
-        ) : (
-          count != 0 && count + " item" + (count !== 1 && "s") + " saved"
-        )}
+        {loading
+          ? null
+          : count !== 0
+            ? `${count} item${count === 1 ? "" : "s"} saved`
+            : ""}
       </p>
 
       {loading ? (

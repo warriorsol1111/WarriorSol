@@ -99,7 +99,7 @@ export const useCartStore = create<CartState>((set, get) => ({
   cartLoading: false,
   isGuest: false,
 
-  hydrateCart: async (isAuthenticated = false) => {
+  hydrateCart: async (isAuthenticated?: boolean) => {
     if (isAuthenticated) {
       // Authenticated user - fetch from Shopify
       try {
