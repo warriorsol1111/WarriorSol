@@ -1,6 +1,10 @@
 "use client";
 import React, { useState, useMemo, useEffect } from "react";
-import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
+import {
+  AiOutlineMinus,
+  AiOutlinePlus,
+  AiOutlineShoppingCart,
+} from "react-icons/ai";
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatPrice } from "@/lib/utils";
@@ -74,6 +78,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const variantIdFromUrl = searchParams.get("variant");
+  const [isLoading, setIsLoading] = useState(false);
   const { addItem, openCart } = useCartStore();
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -287,9 +292,8 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           image: selectedVariant.image?.url || product.image,
         },
         quantity,
-        session?.user.id // This will be undefined for guest users, which is fine
+        session?.user.id || ""
       );
-
       openCart();
     } catch (error) {
       console.error("Error adding item to cart:", error);
@@ -323,6 +327,36 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     );
   };
 
+  const handleGuestBuyProduct = async () => {
+    if (!selectedVariant) return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/shopify/createGuestCheckout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          variantId: selectedVariant.id,
+          quantity: quantity,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create checkout");
+      }
+
+      const data = await response.json();
+      window.location.href = data.checkoutUrl;
+    } catch (error) {
+      console.error("Error creating checkout:", error);
+      alert("Failed to create checkout. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <div className="p-4 sm:p-6 md:p-8 lg:p-10">
@@ -353,7 +387,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 <h1 className="text-3xl sm:text-4xl lg:text-[62px] font-normal text-[#1F1F1F]">
                   {product.title}
                 </h1>
-                <p className="text-lg sm:text-xl text-[#1F1F1FB2]  ">
+                <p className="text-lg sm:text-xl text-[#1F1F1FB2] font-[Inter] font-light">
                   {product.vendor}
                 </p>
               </div>
@@ -460,7 +494,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 >
                   <AiOutlineMinus size={16} />
                 </Button>
-                <span className="w-12 text-center text-[20px] font-medium  text-[#1F1F1F]">
+                <span className="w-12 text-center text-[20px] font-medium font-[Inter] text-[#1F1F1F]">
                   {quantity.toString().padStart(2, "0")}
                 </span>
                 <Button
@@ -527,18 +561,19 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 </Button>
               </div>
             ) : (
-              <div className="">
+              // If user is not logged in, show only Buy Now button
+              <div className="w-full">
                 <Button
                   className="flex items-center w-full cursor-pointer justify-center gap-2 py-3 px-6 bg-[#EE9254] text-white rounded-lg text-base font-medium hover:bg-orange-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={!selectedVariant?.availableForSale || loading}
-                  onClick={handleAddItemToCart}
+                  disabled={!selectedVariant?.availableForSale || isLoading}
+                  onClick={handleGuestBuyProduct}
                   size="lg"
                 >
-                  <BsCart2 size={20} />
-                  {loading ? (
+                  <AiOutlineShoppingCart size={20} />
+                  {isLoading ? (
                     <Loader2 className="animate-spin h-5 w-5" />
                   ) : selectedVariant?.availableForSale ? (
-                    "Add to Cart"
+                    "Buy Now"
                   ) : (
                     "Out of Stock"
                   )}
