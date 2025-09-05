@@ -46,7 +46,7 @@
 
 :root {
   --background: oklch(1 0 0);
---foreground: oklch(0.274 0 0); /* ✨ matches #1f1f1f */
+  --foreground: oklch(0.274 0 0); /* ✨ matches #1f1f1f */
   --radius: 0.625rem;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -133,4 +133,11 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+  border: none;
 }

@@ -11,7 +11,7 @@ function Textarea({ className, error, ...props }: TextareaProps) {
     <textarea
       data-slot="textarea"
       className={cn(
-        "file:text-foreground placeholder:text-[#1F1F1F4D] ",
+        "file:text-foreground focus:outline-none focus:!ring-2 focus:!ring-[#EE9254] focus:!ring-offset-0",
         "flex h-12 w-full rounded-md border bg-white px-4 py-2 !text-lg !text-[#1F1F1FCC] shadow-sm transition-all duration-200",
         "border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-300",
         "selection:bg-blue-500 selection:text-white",

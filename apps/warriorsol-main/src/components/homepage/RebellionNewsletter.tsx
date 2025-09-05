@@ -113,14 +113,14 @@ const RebellionNewsletter = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your Email"
-                className="w-full bg-[#FFFFFF] border-none px-4 py-3 text-black focus:outline-none"
+                className="w-full h-13 rounded-lg bg-[#FFFFFF] border-none px-4 py-3 text-black focus:outline-none"
                 required
                 disabled={notifyLoading}
               />
               <Button
                 type="submit"
                 size="lg"
-                className="text-[20px] bg-[#EE9254] text-white px-8  hover:bg-[#d89b89] transition h-12"
+                className="text-[20px] bg-[#EE9254] text-white px-8 h-13 rounded-lg hover:bg-[#d89b89] transition"
                 disabled={notifyLoading}
               >
                 {notifyLoading ? (

@@ -144,13 +144,13 @@ export default function Footer() {
         {pathname !== "/" && (
           <div className="flex gap-4">
             <a
-              href="/privacy"
+              href="#"
               className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
             >
               Privacy
             </a>
             <a
-              href="/terms"
+              href="#"
               className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
             >
               Terms

@@ -51,10 +51,10 @@ const CommunityPage = () => {
     <main className="bg-white text-black font-inter">
       {/* ✅ HERO TEXT Section */}
       <section className="w-full text-center">
-        <h1 className="text-[40px] md:text-[62px] font-cormorantSC font-normal text-[#1F1F1F] leading-tight">
+        <h1 className="text-[40px] md:text-[62px] text-center font-cormorantSC font-normal text-[#1F1F1F] leading-tight">
           Our Story – Born Of Fire, Built To Shine
         </h1>
-        <p className="mt-6 text-[16px] md:text-[20px]   leading-relaxed text-[#1F1F1FB2] text-left max-w-7xl mx-auto">
+        <p className="mt-6 text-[16px] md:text-[20px]   leading-relaxed text-[#1F1F1FB2] text-center md:text-left max-w-7xl mx-auto">
           Warrior Sol began not as a brand, but as a battle cry. We are rooted
           in the lived experience of love, loss, and resilience. This journey
           started with Tasha—our first warrior, our North Star. When cancer
@@ -86,7 +86,7 @@ const CommunityPage = () => {
       </section>
 
       {/* ✅ MISSION SECTION */}
-      <section className="w-full px-6 md:px-24 py-20 flex flex-col lg:flex-row gap-12 items-center">
+      <section className="w-full px-6 md:px-24 md:py-20 flex flex-col lg:flex-row gap-12 items-center">
         <div className="flex-1 w-full">
           <Image
             src={missionImage}
@@ -95,19 +95,27 @@ const CommunityPage = () => {
             placeholder="blur"
           />
         </div>
-        <div className="flex-1 text-left">
+        <div className="flex-1 text-center md:text-left md:mb-[200px]">
           <h2 className="text-[42px] md:text-[62px] font-cormorantSC capitalize leading-tight mb-6 text-[#1F1F1F]">
             Our Mission – Apparel With A Pulse
           </h2>
-          <p className="text-[16px] md:text-[20px]   text-black/70 leading-relaxed">
+          <p className="text-[16px] md:text-[20px] text-center md:text-left   text-black/70 leading-relaxed">
             At Warrior Sol, our mission is to create emotionally powerful
-            apparel...
+            apparel that offers more than comfort—it offers connection. We’re
+            here to: Empower those impacted by cancer—fighters, survivors,
+            caregivers, and allies. Share real stories that spark empathy,
+            healing, and belonging. Give back directly to the warriors and
+            families navigating the financial, emotional, and physical burdens
+            of cancer. Turn fashion into a force for good—one thread, one story,
+            one sunrise at a time. We are a tribe. A rebellion of care. And
+            we’re not here to follow trends—we’re here to fight for truth,
+            tenderness, and tangible impact.
           </p>
         </div>
       </section>
 
       {/* ✅ TEAM SECTION with CAROUSEL */}
-      <section className="w-full px-6 md:px-24 py-20 text-center">
+      <section className="w-full px-6 md:px-24 py-20 md:py-5 text-center">
         <h2 className="text-[42px] md:text-[62px] text-[#1F1F1F] font-cormorantSC capitalize">
           Our Team
         </h2>

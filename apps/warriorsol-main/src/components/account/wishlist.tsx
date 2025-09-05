@@ -195,7 +195,7 @@ export default function Wishlist() {
             href="/products"
             className="w-full sm:w-auto flex justify-center"
           >
-            <Button className="bg-[#EE9254] hover:bg-[#EE9254] w-full sm:w-auto">
+            <Button className="bg-[#EE9254] h-10 px-10 hover:bg-[#EE9254] w-full sm:w-auto">
               Browse Products
             </Button>
           </Link>
@@ -205,7 +205,7 @@ export default function Wishlist() {
           <div className="flex justify-end">
             <Button
               variant="destructive"
-              className="text-lg"
+              className="text-lg h-10 px-10"
               onClick={handleClearWishlist}
             >
               {deleteLoading ? (
@@ -260,14 +260,14 @@ export default function Wishlist() {
                     <div className="flex flex-col items-end gap-2 min-w-0 sm:min-w-[140px] w-full sm:w-auto">
                       <Link
                         href={`/products/${d.productId}?variant=${item.variantId}`}
-                        className="text-lg  text-white hover:underline bg-[#EE9254] px-4 py-2 border border-[#EE9254] rounded-lg font-bold transition w-full sm:w-auto text-center"
+                        className="text-lg  text-white hover:underline bg-[#EE9254] !h-10 !px-10 text-center justify-center !py-1 border border-[#EE9254] rounded-lg font-bold transition w-full sm:w-auto"
                       >
                         View Product
                       </Link>
 
                       <Button
                         variant="outline"
-                        className="product-button w-full h-10 !text-red-600 !border-red-300 hover:!bg-red-50 hover:!text-red-700"
+                        className="product-button w-full h-10 px-10 !text-red-600 !border-red-300 hover:!bg-red-50 hover:!text-red-700"
                         onClick={() => handleRemoveItem(item.variantId)}
                         disabled={isRemoving}
                       >

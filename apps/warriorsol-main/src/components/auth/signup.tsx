@@ -222,8 +222,8 @@ function SignupPage() {
             <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] font-serif font-normal">
               Hello There!
             </h1>
-            <p className=" text-base md:text-lg text-[#1F1F1F99] opacity-[60%]">
-              Welcome to warriorsol, Enter details to create your account{" "}
+            <p className=" text-base md:text-lg text-[#1F1F1F] opacity-[60%]">
+              Welcome to Warriorsol, Enter details to create your account{" "}
             </p>
           </div>
 

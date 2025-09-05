@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import React from "react";
 import Gift1 from "@/assets/gift1.jpg";
@@ -5,8 +6,10 @@ import Gift2 from "@/assets/gift2.jpg";
 import Gift3 from "@/assets/gift3.png";
 import { GoArrowUpRight } from "react-icons/go";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 export default function MeaningfulGiftComponent() {
+  const router = useRouter();
   const steps = [
     {
       id: 1,
@@ -80,6 +83,7 @@ export default function MeaningfulGiftComponent() {
             variant="outline"
             size="lg"
             className="w-full sm:w-auto border border-black px-4 text-[#1F1F1F] sm:px-10 py-2.5 sm:py-3 text-base sm:text-lg lg:text-[20px]  capitalize flex items-center justify-center gap-2 hover:bg-black hover:text-white transition"
+            onClick={() => router.push("/products")}
           >
             <span className="flex items-center gap-2">
               Get a gift

@@ -222,9 +222,16 @@ export default function ForgotPasswordPage() {
           );
           const data = await response.json();
           if (data.status === "success") {
-            toast.dismiss();
-            toast.success("Verification code sent successfully");
-            setStep("verify");
+            if (
+              data.message?.includes("No account found with this email address")
+            ) {
+              toast.dismiss();
+              toast.error("No account found with this email address");
+            } else {
+              toast.dismiss();
+              toast.success("Verification code sent successfully");
+              setStep("verify");
+            }
           } else {
             if (
               data.message?.includes(
@@ -346,7 +353,7 @@ export default function ForgotPasswordPage() {
               <h1 className="text-3xl md:text-[42px] text-[#1F1F1F]  font-normal">
                 Forgot Password
               </h1>
-              <p className=" text-[#1F1F1F99]  text-base md:text-lg">
+              <p className=" text-[#1F1F1F99]  text-base md:text-[20px]">
                 Enter Your email, we&apos;ll send a verification code
               </p>
             </div>

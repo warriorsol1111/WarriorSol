@@ -407,7 +407,7 @@ export default function AccountPage() {
                       <Button
                         onClick={handleSave}
                         disabled={imageLoading}
-                        className="bg-[#EE9254] hover:[#EE9254] text-white"
+                        className="bg-[#EE9254] h-10 px-10 hover:[#EE9254] text-white"
                       >
                         {imageLoading ? (
                           <Loader2 className="animate-spin h-4 w-4 mr-2" />
@@ -417,6 +417,7 @@ export default function AccountPage() {
                       </Button>
                       <Button
                         variant="outline"
+                        className="h-10 px-10"
                         onClick={() => {
                           setSelectedImage(null);
                           setPreviewUrl(null);
@@ -428,7 +429,7 @@ export default function AccountPage() {
                   ) : (
                     <div className="flex gap-4">
                       <Button
-                        className="bg-[#EE9254] text-white hover:bg-[#e97e3a]"
+                        className="bg-[#EE9254] h-10 px-10 text-white hover:bg-[#e97e3a]"
                         onClick={() =>
                           document.getElementById("photoUpload")?.click()
                         }
@@ -441,6 +442,7 @@ export default function AccountPage() {
                       {(session?.user?.profilePhoto || previewUrl) && (
                         <Button
                           variant="destructive"
+                          className="h-10 px-10"
                           onClick={async () => {
                             try {
                               setDeleteLoading(true);
@@ -672,7 +674,7 @@ export default function AccountPage() {
                         type="submit"
                         disabled={loading}
                         size="default"
-                        className="w-full text-xl  bg-[#EE9254] text-white hover:bg-[#e97e3a] transition"
+                        className="w-full text-xl h-10 px-10 bg-[#EE9254] text-white hover:bg-[#e97e3a] transition"
                       >
                         {loading ? (
                           <Loader2 className="animate-spin h-5 w-5 mr-2" />
