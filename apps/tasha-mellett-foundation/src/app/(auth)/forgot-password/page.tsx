@@ -1,7 +1,7 @@
 import ForgotPassword from "@/components/auth/forgot-password";
 
 export const metadata = {
-  title: "Forgot Password - WarriorSol Foundation",
+  title: "Forgot Password - Tasha Mellett Foundation",
   description: "Reset your password",
 };
 

@@ -2,7 +2,7 @@ import VerifyEmail from "@/components/auth/verify-email";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Verify Email - WarriorSol Foundation",
+  title: "Verify Email - Tasha Mellett Foundation",
   description: "Verify your email",
 };
 
