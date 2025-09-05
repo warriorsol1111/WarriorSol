@@ -16,8 +16,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { loginSchema } from "./login-schema";
 import { Loader2 } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { useCartStore } from "@/store/cart-store";
 
 function LoginPage() {
   const router = useRouter();
@@ -25,8 +23,6 @@ function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({ email: "", password: "" });
   const [googleLoading, setGoogleLoading] = useState(false);
-  const { migrateGuestCartToUser } = useCartStore();
-  const { data: session } = useSession();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -162,7 +158,6 @@ function LoginPage() {
     } else {
       toast.dismiss();
       toast.success("Login successful");
-      migrateGuestCartToUser(session?.user?.id as string);
       if (!isCommunity) {
         router.replace(response?.url || callbackUrl);
       }
