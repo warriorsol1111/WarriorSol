@@ -39,7 +39,14 @@ export default function ForgotPasswordPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [resending, setResending] = useState(false);
+  const [redirectLoading, setRedirectLoading] = useState(false);
 
+  const handleBackToLogin = () => {
+    setRedirectLoading(true);
+    setTimeout(() => {
+      window.location.href = "/login";
+    }, 1000);
+  };
   // Handle browser back button and history
   useEffect(() => {
     // Push initial state when component mounts
@@ -566,10 +573,15 @@ export default function ForgotPasswordPage() {
               </p>
             </div>
             <Button
-              onClick={() => (window.location.href = "/login")}
+              onClick={handleBackToLogin}
+              disabled={redirectLoading}
               className="w-full bg-[#EE9254] cursor-pointer ! !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white"
             >
-              Back to Login
+              {redirectLoading ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                "Back to Login"
+              )}
             </Button>
           </>
         );

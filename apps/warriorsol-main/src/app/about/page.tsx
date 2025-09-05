@@ -51,10 +51,10 @@ const CommunityPage = () => {
     <main className="bg-white text-black font-inter">
       {/* ✅ HERO TEXT Section */}
       <section className="w-full text-center">
-        <h1 className="text-[40px] md:text-[62px] text-center font-cormorantSC font-normal text-[#1F1F1F] leading-tight">
+        <h1 className="text-[40px] md:text-[62px] text-center md:text-left mx-auto max-w-[90%] font-normal mt-10 text-[#1F1F1F] leading-tight">
           Our Story – Born Of Fire, Built To Shine
         </h1>
-        <p className="mt-6 text-[16px] md:text-[20px]   leading-relaxed text-[#1F1F1FB2] text-center md:text-left max-w-7xl mx-auto">
+        <p className="mt-6 text-[16px] md:text-[20px]   leading-relaxed text-[#1F1F1FB2] text-center md:text-left max-w-[90%] mx-auto">
           Warrior Sol began not as a brand, but as a battle cry. We are rooted
           in the lived experience of love, loss, and resilience. This journey
           started with Tasha—our first warrior, our North Star. When cancer

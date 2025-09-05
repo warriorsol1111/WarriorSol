@@ -71,30 +71,30 @@ export default function OrdersPage() {
   // Refetch flag for modal
   const [shouldRefetchOrders, setShouldRefetchOrders] = useState(false);
 
-  // useEffect(() => {
-  //   if (!session?.user?.token) return;
+  useEffect(() => {
+    if (!session?.user?.token) return;
 
-  //   (async () => {
-  //     try {
-  //       const res = await fetch(
-  //         `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders`,
-  //         {
-  //           method: "GET",
-  //           headers: {
-  //             Authorization: `Bearer ${session?.user.token}`,
-  //           },
-  //         }
-  //       );
+    (async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${session?.user.token}`,
+            },
+          }
+        );
 
-  //       const json = await res.json();
-  //       setOrders(json.data || []);
-  //     } catch (err) {
-  //       console.error("Error fetching orders:", err);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   })();
-  // }, [session?.user?.token]);
+        const json = await res.json();
+        setOrders(json.data || []);
+      } catch (err) {
+        console.error("Error fetching orders:", err);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [session?.user?.token]);
 
   // Refetch orders after review modal closes and refetch is requested
   useEffect(() => {
@@ -123,60 +123,7 @@ export default function OrdersPage() {
       })();
     }
   }, [reviewModalOpen, shouldRefetchOrders, session?.user?.token]);
-  useEffect(() => {
-    const fakeOrders: Order[] = [
-      {
-        id: "1",
-        shopifyOrderId: "10000001",
-        date: new Date().toISOString(),
-        total: 59.99,
-        financialStatus: "paid",
-        fulfillmentStatus: "fulfilled",
-        cancelledAt: null,
-        lineItems: [
-          {
-            id: "li1",
-            title: "Cool Sneakers",
-            productId: "prod123",
-            image: "/images/sneakers.jpg",
-            quantity: 1,
-            price: 59.99,
-            review: null,
-          },
-        ],
-      },
-      {
-        id: "2",
-        shopifyOrderId: "10000002",
-        date: new Date().toISOString(),
-        total: 120.0,
-        financialStatus: "pending",
-        fulfillmentStatus: "unfulfilled",
-        cancelledAt: null,
-        lineItems: [
-          {
-            id: "li2",
-            title: "Fancy Jacket",
-            productId: "prod456",
-            image: "/images/jacket.jpg",
-            quantity: 2,
-            price: 60.0,
-            review: {
-              id: "rev1",
-              score: 4,
-              text: "Love it!",
-            },
-          },
-        ],
-      },
-    ];
 
-    // simulate loading delay
-    setTimeout(() => {
-      setOrders(fakeOrders);
-      setLoading(false);
-    }, 500);
-  }, []);
   const statusColor = (status: string) => {
     switch (status?.toLowerCase()) {
       case "paid":

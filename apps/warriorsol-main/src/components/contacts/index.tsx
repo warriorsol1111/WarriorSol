@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import FormImage from "@/assets/formImage.svg";
 import { useForm } from "react-hook-form";
-import { Label } from "@radix-ui/react-label";
+import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
@@ -88,7 +88,7 @@ const Contacts = () => {
           <Image
             src={FormImage}
             alt="Contact Form Illustration"
-            className="object-cover w-full h-full rounded-lg"
+            className="object-contain w-full h-full rounded-lg"
           />
         </div>
 

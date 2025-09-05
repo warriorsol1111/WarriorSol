@@ -97,9 +97,9 @@ const RecommendedProducts: React.FC = () => {
   }, [fetchProducts]);
 
   return (
-    <section className="w-full p-8 mb-10">
+    <section className="w-full p-10 mb-10">
       {/* Heading */}
-      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6 mb-10">
         <div>
           <h2 className="text-4xl sm:text-5xl lg:text-[62px] leading-tight lg:leading-[62px]  font-normal text-[#1F1F1F] capitalize">
             You might also like
@@ -109,7 +109,7 @@ const RecommendedProducts: React.FC = () => {
           variant="outline"
           size="lg"
           onClick={() => router.push("/products")}
-          className="w-full sm:w-auto border border-black text-[#1F1F1F] px-4 sm:px-5 py-2.5 sm:py-3 !rounded-none text-base sm:text-lg lg:text-[20px]  capitalize flex items-center justify-center sm:justify-start gap-2 hover:bg-white hover:text-black transition"
+          className="w-full sm:w-auto border border-black text-[#1F1F1F] px-4 sm:px-5 py-2.5 sm:py-3 text-base sm:text-lg lg:text-[20px]  capitalize flex items-center justify-center sm:justify-start gap-2 hover:bg-white hover:text-black transition"
         >
           See All Products
           <GoArrowUpRight className="w-6 h-6" />

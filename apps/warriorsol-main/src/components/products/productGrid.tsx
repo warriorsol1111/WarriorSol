@@ -195,7 +195,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
               className="block overflow-hidden rounded-xl shadow-sm hover:shadow-lg transition-all duration-300"
             >
               {/* Only the image and info go here */}
-              <div className="relative w-full pt-[100%] overflow-hidden">
+              <div className="relative w-full pt-[100%] overflow-hidden rounded-xl">
                 <Image
                   src={product.imageUrl}
                   alt={product.title}
