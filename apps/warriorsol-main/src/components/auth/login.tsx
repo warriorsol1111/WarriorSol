@@ -198,7 +198,9 @@ function LoginPage() {
               }
             />
             {fieldErrors.email && (
-              <p className="text-red-500 text-sm mt-1">{fieldErrors.email}</p>
+              <p className="text-red-500 text-sm md:text-[16px] mt-[-10px]">
+                {fieldErrors.email}
+              </p>
             )}
           </div>
 
@@ -228,7 +230,7 @@ function LoginPage() {
               </Button>
             </div>
             {fieldErrors.password && (
-              <p className="text-red-500 text-sm mt-1">
+              <p className="text-red-500 text-sm md:text-[16px] mt-[-10px]">
                 {fieldErrors.password}
               </p>
             )}

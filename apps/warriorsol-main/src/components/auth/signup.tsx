@@ -239,7 +239,7 @@ function SignupPage() {
               onChange={handleChange}
             />
             {formErrors.name && (
-              <p className="text-red-500 text-sm mt-[-10px]">
+              <p className="text-red-500 text-sm md:text-[16px] mt-[-10px]">
                 {formErrors.name}
               </p>
             )}
@@ -257,7 +257,7 @@ function SignupPage() {
               onChange={handleChange}
             />
             {formErrors.email && (
-              <p className="text-red-500 text-sm mt-[-10px]">
+              <p className="text-red-500 text-sm md:text-[16px] mt-[-10px]">
                 {formErrors.email}
               </p>
             )}
@@ -290,7 +290,7 @@ function SignupPage() {
               </Button>
             </div>
             {formErrors.password && (
-              <p className="text-red-500 text-sm mt-[-10px]">
+              <p className="text-red-500 text-sm md:text-[16px] mt-[-10px]">
                 {formErrors.password}
               </p>
             )}
@@ -325,7 +325,7 @@ function SignupPage() {
               </Button>
             </div>
             {formErrors.confirmPassword && (
-              <p className="text-red-500 text-sm mt-[-10px]">
+              <p className="text-red-500 text-sm md:text-[16px] mt-[-10px]">
                 {formErrors.confirmPassword}
               </p>
             )}

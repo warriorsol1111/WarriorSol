@@ -263,7 +263,9 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                 disabled={isAnonymous}
               />
               {errors.name && (
-                <p className="text-xs text-red-500 mt-[-10px]">{errors.name}</p>
+                <p className="text-xs md:text-[16px] text-red-500 mt-[-10px]">
+                  {errors.name}
+                </p>
               )}
             </div>
 
@@ -311,7 +313,9 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                 </SelectContent>
               </Select>
               {errors.role && (
-                <p className="text-xs text-red-500 mt-[-10px]">{errors.role}</p>
+                <p className="text-xs md:text-[16px] text-red-500 mt-[-10px]">
+                  {errors.role}
+                </p>
               )}
             </div>
 
@@ -336,7 +340,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                 {formData.title.length}/255
               </span>
               {errors.title && (
-                <p className="text-xs text-red-500 mt-[-10px]">
+                <p className="text-xs md:text-[16px] text-red-500 mt-[-10px]">
                   {errors.title}
                 </p>
               )}
@@ -363,7 +367,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                 {formData.story.length}/1800
               </span>
               {errors.story && (
-                <p className="text-xs text-red-500 mt-[-10px]">
+                <p className="text-xs md:text-[16px] text-red-500 mt-[-10px]">
                   {errors.story}
                 </p>
               )}

@@ -376,7 +376,9 @@ export default function ForgotPasswordPage() {
                 className={`w-full ${errors.email ? "border-red-500" : ""}`}
               />
               {errors.email && (
-                <p className="text-sm text-red-500">{errors.email}</p>
+                <p className="text-sm md:text-[16px]  text-red-500">
+                  {errors.email}
+                </p>
               )}
             </div>
             <Button

@@ -92,10 +92,10 @@ export default function CartDrawer() {
                           {/* Item & Size */}
                           <div>
                             <div className="mb-3">
-                              <p className="text-xs text-[#1F1F1FB2] uppercase tracking-wide mb-1">
+                              <p className="text-xs  text-[#1F1F1FB2] uppercase tracking-wide mb-1">
                                 Item
                               </p>
-                              <p className="text-sm text-[#1F1F1F] font-medium truncate max-w-[100px] md:max-w-[200px]">
+                              <p className="text-sm md:text-[16px] text-[#1F1F1F] font-medium truncate max-w-[100px] md:max-w-[200px]">
                                 {item.name}
                               </p>
                             </div>
@@ -104,7 +104,7 @@ export default function CartDrawer() {
                               <p className="text-xs text-[#1F1F1FB2] uppercase tracking-wide mb-1">
                                 Size
                               </p>
-                              <p className="text-sm text-[#1F1F1F]">
+                              <p className="text-sm md:text-[16px] text-[#1F1F1F]">
                                 {item.size || "—"}
                               </p>
                             </div>
@@ -116,7 +116,7 @@ export default function CartDrawer() {
                               <p className="text-xs text-[#1F1F1FB2] uppercase tracking-wide mb-1">
                                 Color
                               </p>
-                              <p className="text-sm text-[#1F1F1F]">
+                              <p className="text-sm md:text-[16px] text-[#1F1F1F]">
                                 {item.color || "—"}
                               </p>
                             </div>
@@ -125,7 +125,7 @@ export default function CartDrawer() {
                               <p className="text-xs text-[#1F1F1FB2] uppercase tracking-wide mb-1">
                                 Price
                               </p>
-                              <p className="text-sm text-[#1F1F1F]">
+                              <p className="text-sm md:text-[16px] text-[#1F1F1F]">
                                 ${item.price.toFixed(2)}
                               </p>
                             </div>
