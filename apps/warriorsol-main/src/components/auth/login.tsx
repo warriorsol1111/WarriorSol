@@ -263,6 +263,9 @@ function LoginPage() {
               signIn("google", {
                 callbackUrl: searchParams.get("callbackUrl") || "/home",
               });
+              setTimeout(() => {
+                setGoogleLoading(false);
+              }, 5000);
             }}
             className="w-full flex items-center h-10 md:h-14 justify-center gap-3 bg-white text-black border hover:bg-white border-gray-300 rounded-lg shadow-sm hover:shadow-md transition text-sm md:text-base py-2 md:py-3"
           >

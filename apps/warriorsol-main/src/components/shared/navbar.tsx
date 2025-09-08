@@ -239,7 +239,7 @@ export default function Navbar() {
           {/* Wishlist Button */}
           <Button
             variant="link"
-            className="relative p-2 sm:p-2 transition-colors cursor-pointer"
+            className="relative !h-10 p-2 sm:p-2 transition-colors cursor-pointer"
             onClick={() => router.push("/account?tab=wishlist")}
           >
             <AiOutlineHeart className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -253,7 +253,7 @@ export default function Navbar() {
           {/* Cart Button */}
           <Button
             variant="link"
-            className="relative p-2 sm:p-2 cursor-pointer"
+            className="relative !h-10   p-2 sm:p-2 cursor-pointer"
             onClick={() => {
               toggleCart();
             }}

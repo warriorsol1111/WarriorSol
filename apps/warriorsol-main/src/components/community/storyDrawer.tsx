@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/select";
 import { IoClose } from "react-icons/io5";
 import { FaAsterisk } from "react-icons/fa";
-import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import { Textarea } from "../ui/textarea";
@@ -97,7 +96,6 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
         "Only PNG, JPG, JPEG, GIF images and MP4, WEBM, MOV, AVI videos are allowed."
       );
       setFormData((prev) => ({ ...prev, image: null }));
-      toast.dismiss();
 
       return;
     }
@@ -108,14 +106,12 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
     if (isSvg) {
       setFileError("SVG files are not allowed");
       setFormData((prev) => ({ ...prev, image: null }));
-      toast.dismiss();
       return;
     }
 
     if (isTooBig) {
       setFileError("File size must be under 10MB");
       setFormData((prev) => ({ ...prev, image: null }));
-      toast.dismiss();
       return;
     }
 
@@ -127,7 +123,6 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
         if (video.duration > 60) {
           setFileError("Video must be 1 minute or less");
           setFormData((prev) => ({ ...prev, image: null }));
-          toast.dismiss();
           return;
         } else {
           setFileError("");
@@ -137,7 +132,6 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
       video.onerror = () => {
         setFileError("Could not load video file");
         setFormData((prev) => ({ ...prev, image: null }));
-        toast.dismiss();
         return;
       };
       video.src = URL.createObjectURL(file);
@@ -222,22 +216,12 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
       );
 
       if (!response.ok) throw new Error("Failed to submit story");
-      toast.dismiss();
-      toast.success("Your story has been submitted for review!");
-      setFormData({
-        name: "",
-        role: "",
-        title: "",
-        story: "",
-        image: null,
-      });
+
       setIsAnonymous(false);
       setErrors({ name: "", role: "", title: "", story: "", image: "" });
       onOpenChange(false);
     } catch (error) {
       console.error(error);
-      toast.dismiss();
-      toast.error("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -245,12 +229,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
 
   return (
     <Drawer open={isOpen} onOpenChange={onOpenChange}>
-      <DrawerContent
-        onInteractOutside={(e) => {
-          e.preventDefault();
-        }}
-        className="h-full p-2"
-      >
+      <DrawerContent className="h-full p-2">
         <DrawerHeader className="border-b border-gray-200">
           <div className="flex justify-between items-center">
             <DrawerTitle className="text-xl md:text-[42px] text-[#1F1F1F] ">
@@ -284,7 +263,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                 disabled={isAnonymous}
               />
               {errors.name && (
-                <p className="text-xs text-red-500">{errors.name}</p>
+                <p className="text-xs text-red-500 mt-[-10px]">{errors.name}</p>
               )}
             </div>
 
@@ -332,7 +311,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                 </SelectContent>
               </Select>
               {errors.role && (
-                <p className="text-xs text-red-500">{errors.role}</p>
+                <p className="text-xs text-red-500 mt-[-10px]">{errors.role}</p>
               )}
             </div>
 
@@ -357,7 +336,9 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                 {formData.title.length}/255
               </span>
               {errors.title && (
-                <p className="text-xs text-red-500">{errors.title}</p>
+                <p className="text-xs text-red-500 mt-[-10px]">
+                  {errors.title}
+                </p>
               )}
             </div>
 
@@ -382,7 +363,9 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                 {formData.story.length}/1800
               </span>
               {errors.story && (
-                <p className="text-xs text-red-500">{errors.story}</p>
+                <p className="text-xs text-red-500 mt-[-10px]">
+                  {errors.story}
+                </p>
               )}
             </div>
 
