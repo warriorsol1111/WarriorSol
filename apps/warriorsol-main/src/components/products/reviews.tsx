@@ -75,7 +75,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
 export default function Reviews({ reviews }: { reviews: Review[] }) {
   if (!reviews || reviews.length === 0) {
     return (
-      <section className="w-full ">
+      <section className="w-full text-center md:text-start ">
         <h2 className="text-[36px] sm:text-[48px] md:text-[62px] font-normal text-[#1F1F1F]">
           Ratings & Reviews (0)
         </h2>
@@ -87,7 +87,7 @@ export default function Reviews({ reviews }: { reviews: Review[] }) {
   }
 
   return (
-    <section className="w-full">
+    <section className="w-full text-center md:text-start">
       <h2 className="text-[36px] sm:text-[48px] md:text-[62px] font-normal text-[#1F1F1F]">
         Ratings & Reviews ({reviews.length})
       </h2>

@@ -101,7 +101,7 @@ const RecommendedProducts: React.FC = () => {
       {/* Heading */}
       <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6 mb-10">
         <div>
-          <h2 className="text-4xl sm:text-5xl lg:text-[62px] leading-tight lg:leading-[62px]  font-normal text-[#1F1F1F] capitalize">
+          <h2 className="text-4xl sm:text-5xl lg:text-[62px] leading-tight lg:leading-[62px] text-center md:text-start font-normal text-[#1F1F1F] capitalize">
             You might also like
           </h2>
         </div>
@@ -144,7 +144,7 @@ const RecommendedProducts: React.FC = () => {
                 </div>
 
                 {/* Details */}
-                <div className="flex justify-between px-1 sm:px-2">
+                <div className="flex justify-between px-1 sm:px-2 mt-4">
                   <div>
                     <div className="text-sm sm:text-base lg:text-[16px]  font-medium text-[#1F1F1F]">
                       {product.title}

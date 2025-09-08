@@ -335,7 +335,7 @@ function SignupPage() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#EE9254] ! !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white mt-4"
+            className="w-full bg-[#EE9254] text-sm md:text-base hover:bg-[#EE9254] h-10 md:h-14 text-white mt-4"
           >
             {loading ? (
               <Loader2 className="animate-spin w-5 h-5" />
@@ -359,7 +359,7 @@ function SignupPage() {
               setGoogleLoading(true);
               signIn("google", { callbackUrl: "/home" });
             }}
-            className="w-full flex items-center justify-center gap-3 bg-white text-black border hover:bg-white border-gray-300 rounded-lg shadow-sm hover:shadow-md transition text-sm md:text-base py-2 md:py-3"
+            className="w-full flex items-center h-10 md:h-14 justify-center gap-3 bg-white text-black border hover:bg-white border-gray-300 rounded-lg shadow-sm hover:shadow-md transition text-sm md:text-base py-2 md:py-3"
           >
             {googleLoading ? (
               <Loader2 className="animate-spin w-5 h-5 mr-2" />

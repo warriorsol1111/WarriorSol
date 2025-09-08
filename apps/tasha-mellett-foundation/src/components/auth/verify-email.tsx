@@ -152,7 +152,7 @@ export default function VerifyEmailPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="h-12 w-full bg-[#EE9254] text-white hover:bg-[#EE9254] text-lg  flex items-center justify-center gap-2"
+              className="h-12 w-full bg-[#C1E965]  hover:bg-[#C1E965] text-lg text-black flex items-center justify-center gap-2"
             >
               {loading && <Loader2 className="h-5 w-5 animate-spin" />}
               Verify Email
@@ -194,7 +194,7 @@ export default function VerifyEmailPage() {
 
             <Button
               onClick={() => router.push("/login")}
-              className="h-12 w-full hover:bg-[#EE9254] bg-[#EE9254] text-white  text-xl"
+              className="h-12 w-full hover:bg-[#C1E965] bg-[#C1E965] text-white  text-xl"
             >
               Back to Login
             </Button>

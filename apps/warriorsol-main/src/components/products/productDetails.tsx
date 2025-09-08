@@ -387,7 +387,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 <h1 className="text-3xl sm:text-4xl lg:text-[62px] font-normal text-[#1F1F1F]">
                   {product.title}
                 </h1>
-                <p className="text-lg sm:text-xl text-[#1F1F1FB2] font-[Inter] font-light">
+                <p className="text-lg sm:text-xl text-[#1F1F1FB2] mt-2 font-[Inter]">
                   {product.vendor}
                 </p>
               </div>
@@ -490,9 +490,10 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                   variant="link"
                   size="lg"
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="p-2 text-[20px] text-gray-600 hover:text-gray-900"
+                  disabled={quantity === 1}
+                  className="p-2 text-[20px]"
                 >
-                  <AiOutlineMinus size={16} />
+                  <AiOutlineMinus size={20} />
                 </Button>
                 <span className="w-12 text-center text-[20px] font-medium font-[Inter] text-[#1F1F1F]">
                   {quantity.toString().padStart(2, "0")}
@@ -501,9 +502,9 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                   variant="link"
                   size="lg"
                   onClick={() => setQuantity(quantity + 1)}
-                  className="p-2 text-[20px] text-gray-600 hover:text-gray-900"
+                  className="p-2 text-[20px] "
                 >
-                  <AiOutlinePlus size={16} />
+                  <AiOutlinePlus size={20} />
                 </Button>
               </div>
             </div>
@@ -583,7 +584,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           </div>
         </div>
       </div>
-      <div className="w-full mb-10 p-4 sm:p-6 md:p-8 lg:p-10 mx-auto">
+      <div className="w-full  p-4 sm:p-6 md:p-8 lg:p-10 mx-auto">
         <Tabs defaultValue="description" className="w-full min-w-0">
           {/* TabsList: stacked on mobile, horizontal on sm+ */}
           <TabsList
@@ -610,7 +611,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
           <TabsContent value="description" className="mt-6 lg:mt-8 min-w-0">
             <div
-              className="space-y-4 text-base md:text-3xl font-inter prose prose-base md:prose-lg max-w-none"
+              className="space-y-4 text-base md:text-2xl font-inter prose prose-base md:prose-lg max-w-none"
               dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
             />
             <style jsx global>{`

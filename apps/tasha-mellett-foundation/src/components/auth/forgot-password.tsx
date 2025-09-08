@@ -368,7 +368,7 @@ export default function ForgotPasswordPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#EE9254] ! !text-xl  cursor-pointer hover:bg-[#EE9254] h-10 md:h-12 text-white"
+              className="w-full bg-[#C1E965] ! !text-xl  cursor-pointer hover:bg-[#C1E965] h-10 md:h-12 text-black"
             >
               {loading ? Spinner : "Send Code"}
             </Button>
@@ -424,7 +424,7 @@ export default function ForgotPasswordPage() {
             <Button
               type="submit"
               disabled={loading || otpValues.some((val) => val === "")}
-              className="w-full bg-[#EE9254] cursor-pointer ! !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white disabled:opacity-50"
+              className="w-full bg-[#C1E965] cursor-pointer ! !text-xl hover:bg-[#C1E965] h-10 md:h-12 text-black disabled:opacity-50"
             >
               {loading ? Spinner : "Verify Code"}
             </Button>
@@ -540,7 +540,7 @@ export default function ForgotPasswordPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#EE9254] cursor-pointer ! !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white"
+              className="w-full bg-[#C1E965] cursor-pointer ! !text-xl hover:bg-[#C1E965] h-10 md:h-12 text-black"
             >
               {loading ? Spinner : "Continue"}
             </Button>
@@ -560,7 +560,7 @@ export default function ForgotPasswordPage() {
             </div>
             <Button
               onClick={() => (window.location.href = "/login")}
-              className="w-full bg-[#EE9254] cursor-pointer ! !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white"
+              className="w-full bg-[#C1E965] cursor-pointer ! !text-xl hover:bg-[#C1E965] h-10 md:h-12 text-black"
             >
               Back to Login
             </Button>

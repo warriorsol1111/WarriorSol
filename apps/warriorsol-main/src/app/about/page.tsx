@@ -76,7 +76,7 @@ const CommunityPage = () => {
       </section>
 
       {/* ✅ HERO IMAGE Section */}
-      <section className="w-full mt-14">
+      <section className="w-full mt-10">
         <Image
           src={mainImage}
           alt="Hero Background"
@@ -86,7 +86,7 @@ const CommunityPage = () => {
       </section>
 
       {/* ✅ MISSION SECTION */}
-      <section className="w-full px-6 md:px-24 md:py-20 flex flex-col lg:flex-row gap-12 items-center">
+      <section className="w-full px-6 md:px-24 md:py-20 mt-10 flex flex-col lg:flex-row gap-12 items-center">
         <div className="flex-1 w-full">
           <Image
             src={missionImage}
@@ -115,7 +115,7 @@ const CommunityPage = () => {
       </section>
 
       {/* ✅ TEAM SECTION with CAROUSEL */}
-      <section className="w-full px-6 md:px-24 py-20 md:py-5 text-center">
+      <section className="w-full px-6 md:px-24 py-10 md:py-5 text-center">
         <h2 className="text-[42px] md:text-[62px] text-[#1F1F1F] font-cormorantSC capitalize">
           Our Team
         </h2>

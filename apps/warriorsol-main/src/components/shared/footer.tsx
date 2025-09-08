@@ -4,11 +4,13 @@ import React from "react";
 import LogoWhite from "../../assets/logo-white.svg";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const Footer = () => {
+  const isHomePage = usePathname() === "/";
   return (
     <footer className="bg-[#1F1F1F] text-[#e5e5e5] pt-12 pb-6 px-10">
-      <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-12 md:gap-0">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-6 md:gap-0">
         {/* Brand Section */}
         <div className="md:w-1/3 flex flex-col items-start mb-8 md:mb-0">
           <div className="flex items-center mb-4">
@@ -32,82 +34,84 @@ const Footer = () => {
         </div>
 
         {/* Navigation Columns Section */}
-        <div className="w-full md:w-2/3 mt-2 flex flex-col sm:flex-row gap-8 md:gap-16">
-          {/* Shop Column */}
-          <div className="flex-1">
-            <h4 className="text-white text-[16px] font-medium font-[Playfair] mb-3">
-              Shop
-            </h4>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/products"
-                  className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
-                >
-                  All Products
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/warrior-products"
-                  className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
-                >
-                  Warrior Products
-                </Link>
-              </li>
-            </ul>
-          </div>
+        {isHomePage === false && (
+          <div className="w-full md:w-2/3 mt-2 flex flex-col sm:flex-row gap-8 md:gap-16">
+            {/* Shop Column */}
+            <div className="flex-1">
+              <h4 className="text-white text-[16px] font-medium font-[Playfair] mb-3">
+                Shop
+              </h4>
+              <ul className="space-y-2">
+                <li>
+                  <Link
+                    href="/products"
+                    className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
+                  >
+                    All Products
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/warrior-products"
+                    className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
+                  >
+                    Warrior Products
+                  </Link>
+                </li>
+              </ul>
+            </div>
 
-          {/* About Column */}
-          <div className="flex-1">
-            <h4 className="text-white text-[16px] font-medium font-[Playfair] mb-3">
-              About
-            </h4>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/home"
-                  className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/community"
-                  className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
-                >
-                  Community
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about"
-                  className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
-                >
-                  About
-                </Link>
-              </li>
-            </ul>
-          </div>
+            {/* About Column */}
+            <div className="flex-1">
+              <h4 className="text-white text-[16px] font-medium font-[Playfair] mb-3">
+                About
+              </h4>
+              <ul className="space-y-2">
+                <li>
+                  <Link
+                    href="/home"
+                    className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
+                  >
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/community"
+                    className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
+                  >
+                    Community
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/about"
+                    className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
+                  >
+                    About
+                  </Link>
+                </li>
+              </ul>
+            </div>
 
-          {/* Support Column */}
-          <div className="flex-1">
-            <h4 className="text-white text-[16px] font-medium font-[Playfair] mb-3">
-              Support
-            </h4>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/contacts"
-                  className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
-                >
-                  Contacts
-                </Link>
-              </li>
-            </ul>
+            {/* Support Column */}
+            <div className="flex-1">
+              <h4 className="text-white text-[16px] font-medium font-[Playfair] mb-3">
+                Support
+              </h4>
+              <ul className="space-y-2">
+                <li>
+                  <Link
+                    href="/contacts"
+                    className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
+                  >
+                    Contacts
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Bottom Bar */}

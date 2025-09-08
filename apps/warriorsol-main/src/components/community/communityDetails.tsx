@@ -148,8 +148,7 @@ export const CommunityDetails = ({
               <AlertDialogTrigger asChild>
                 <Button
                   variant="outline"
-                  size="lg"
-                  className="px-8 py-4 text-[20px]  h-13 cursor-pointer border border-black font-semibold hover:scale-105 transition"
+                  className="px-8 py-4 cursor-pointer border border-black font-semibold hover:scale-105 transition"
                 >
                   Archive
                 </Button>
@@ -165,11 +164,11 @@ export const CommunityDetails = ({
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel className="cursor-pointer text-[20px]  h-13">
+                  <AlertDialogCancel className="cursor-pointer ">
                     Cancel
                   </AlertDialogCancel>
                   <AlertDialogAction
-                    className="cursor-pointer text-[20px]  h-13 bg-[#EE9254] hover:bg-[#EE9254]"
+                    className="cursor-pointer bg-[#EE9254] hover:bg-[#EE9254]"
                     onClick={() => handleArchive(story.id)}
                     disabled={loadingAction}
                   >
@@ -186,10 +185,7 @@ export const CommunityDetails = ({
             {/* Delete button */}
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button
-                  size="lg"
-                  className="px-8 py-4 text-[20px]  h-13 cursor-pointer bg-red-500 hover:bg-red-600 text-white font-semibold hover:scale-105 transition"
-                >
+                <Button className="px-8 py-4 cursor-pointer bg-red-500 border border-red-500 hover:bg-red-600 text-white font-semibold hover:scale-105 transition">
                   Delete
                 </Button>
               </AlertDialogTrigger>
@@ -205,11 +201,11 @@ export const CommunityDetails = ({
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel className="cursor-pointer text-[20px]  h-13">
+                  <AlertDialogCancel className="cursor-pointer  ">
                     Cancel
                   </AlertDialogCancel>
                   <AlertDialogAction
-                    className="cursor-pointer text-[20px]  h-13 bg-red-500 hover:bg-red-600 text-white font-semibold hover:scale-105 transition"
+                    className="cursor-pointer bg-red-500 hover:bg-red-600 text-white font-semibold hover:scale-105 transition"
                     onClick={() => handleDelete(story.id)}
                     disabled={loadingAction}
                   >
@@ -227,7 +223,7 @@ export const CommunityDetails = ({
 
         {/* Media */}
         {story.attachment && (
-          <div className="relative w-full h-screen mx-auto mt-10 rounded-lg overflow-hidden shadow-md">
+          <div className="relative w-full h-screen mx-auto md:mt-10 rounded-lg overflow-hidden">
             {isVideo ? (
               <video
                 className="object-cover w-full h-full rounded-lg"
@@ -253,7 +249,7 @@ export const CommunityDetails = ({
         )}
 
         {/* Description */}
-        <div className="flex justify-center items-center mt-10">
+        <div className="flex justify-center items-center mt-[-20px] md:mt-10">
           <p className="text-[24px] text-[#1F1F1F]   text-center mx-auto whitespace-pre-line max-w-4xl">
             {story.description}
           </p>
@@ -262,7 +258,7 @@ export const CommunityDetails = ({
         {/* Author */}
         <div className="flex justify-center items-center mt-10">
           <div className="flex flex-col gap-4 items-center">
-            <Avatar className="w-[160px] h-[160px] shadow-lg">
+            <Avatar className="w-[80px] h-[80px] nd:w-[160px] md:h-[160px] shadow-lg">
               <AvatarImage
                 src={
                   story.isAnonymous
@@ -277,11 +273,11 @@ export const CommunityDetails = ({
             </Avatar>
 
             <div className="text-center">
-              <p className="text-[#1F1F1F] text-[36px] font-semibold">
+              <p className="text-[#1F1F1F] !text-base md:!text-[36px] font-semibold">
                 {story.isAnonymous ? "Anonymous" : story.userName}
               </p>
               <div className="flex items-center justify-center gap-2 mt-1">
-                <p className="text-[18px] text-[#1F1F1F]   capitalize">
+                <p className=" text-[#1F1F1F]   capitalize !text-sm md:!text-base">
                   {story.userType}
                 </p>
                 {story.isAnonymous && (

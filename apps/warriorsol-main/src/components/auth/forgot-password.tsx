@@ -382,7 +382,7 @@ export default function ForgotPasswordPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#EE9254] ! !text-xl  cursor-pointer hover:bg-[#EE9254] h-10 md:h-12 text-white"
+              className="w-full bg-[#EE9254]  cursor-pointer hover:bg-[#EE9254] h-10 md:h-12 text-white"
             >
               {loading ? Spinner : "Send Code"}
             </Button>
@@ -438,7 +438,7 @@ export default function ForgotPasswordPage() {
             <Button
               type="submit"
               disabled={loading || otpValues.some((val) => val === "")}
-              className="w-full bg-[#EE9254] cursor-pointer ! !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white disabled:opacity-50"
+              className="w-full bg-[#EE9254] cursor-pointer hover:bg-[#EE9254] h-10 md:h-12 text-white disabled:opacity-50"
             >
               {loading ? Spinner : "Verify Code"}
             </Button>
@@ -554,7 +554,7 @@ export default function ForgotPasswordPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#EE9254] cursor-pointer ! !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white"
+              className="w-full bg-[#EE9254] cursor-pointer hover:bg-[#EE9254] h-10 md:h-12 text-white"
             >
               {loading ? Spinner : "Continue"}
             </Button>

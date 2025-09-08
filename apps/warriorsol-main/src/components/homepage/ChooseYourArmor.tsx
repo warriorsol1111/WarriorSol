@@ -274,9 +274,8 @@ const ChooseYourArmor: React.FC = () => {
         </div>
         <Button
           variant="outline"
-          size="lg"
           onClick={() => router.push("/products")}
-          className="mt-8 flex items-center !rounded-xl gap-2 px-12 py-3 border border-[#1F1F1F] bg-white text-[16px] md:text-[20px] text-[#1F1F1F] hover:bg-gray-200 hover:text-[#1F1F1F] transition"
+          className="mt-8 flex items-center justify-center gap-2 px-12 py-3 border border-[#1F1F1F] bg-white text-[16px] md:text-[20px] text-[#1F1F1F] hover:bg-gray-200 hover:text-[#1F1F1F] transition"
         >
           See All Products
           <GoArrowUpRight className="w-6 h-6" />
@@ -305,7 +304,7 @@ const ChooseYourArmor: React.FC = () => {
                     src={product.imageUrl}
                     alt={product.title}
                     fill
-                    className="object-cover rounded-md"
+                    className="object-cover"
                   />
                 </div>
                 {/* Details */}

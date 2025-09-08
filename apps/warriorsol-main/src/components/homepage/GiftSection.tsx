@@ -60,15 +60,15 @@ export default function MeaningfulGiftComponent() {
                 <div className="absolute inset-0 bg-black/20"></div>
 
                 {/* Step Number */}
-                <div className="absolute top-0 left-0 z-10">
-                  <span className="text-[60px] lg:text-[90px] xl:text-[180px] font-medium text-white drop-shadow-lg">
+                <div className="absolute top-0 left-5 z-10">
+                  <span className="text-[110px] md:text-[90px] xl:text-[180px] font-medium text-white drop-shadow-lg">
                     {step.id}
                   </span>
                 </div>
 
                 {/* Title */}
                 <div className="absolute bottom-6 left-6 z-10">
-                  <h3 className="text-white text-lg md:text-[24px] lg:text-[32px] font-medium drop-shadow-lg">
+                  <h3 className="text-white text-lg md:text-[24px] xl:text-[32px] font-medium drop-shadow-lg">
                     {step.title}
                   </h3>
                 </div>
@@ -82,7 +82,7 @@ export default function MeaningfulGiftComponent() {
           <Button
             variant="outline"
             size="lg"
-            className="w-full sm:w-auto border border-black px-4 text-[#1F1F1F] sm:px-10 py-2.5 sm:py-3 text-base sm:text-lg lg:text-[20px]  capitalize flex items-center justify-center gap-2 hover:bg-black hover:text-white transition"
+            className="w-full sm:w-auto border border-black px-4 text-[#1F1F1F] sm:px-10 py-2.5 sm:py-3 text-base sm:text-lg lg:text-[20px]  capitalize flex items-center justify-center gap-2 hover:bg-white hover:text-black transition"
             onClick={() => router.push("/products")}
           >
             <span className="flex items-center gap-2">

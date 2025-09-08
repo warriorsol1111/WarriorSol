@@ -162,7 +162,7 @@ export const Filter: React.FC<FilterProps> = ({
         <div className="px-6 py-4 space-y-6 overflow-y-auto flex-1">
           {/* Sort By */}
           <div>
-            <h3 className="font-medium mb-3  text-xl text-[#1F1F1F]">
+            <h3 className="font-medium mb-3 text-sm md:text-xl text-[#1F1F1F]">
               Sort By
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -186,7 +186,7 @@ export const Filter: React.FC<FilterProps> = ({
 
           {/* Product Type */}
           <div>
-            <h3 className="font-medium mb-3  text-xl text-[#1F1F1F]">
+            <h3 className="font-medium mb-3 text-sm md:text-xl text-[#1F1F1F]">
               Product Type
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -210,7 +210,9 @@ export const Filter: React.FC<FilterProps> = ({
 
           {/* Color */}
           <div>
-            <h3 className="font-medium mb-3  text-xl text-[#1F1F1F]">Color</h3>
+            <h3 className="font-medium mb-3 text-sm md:text-xl text-[#1F1F1F]">
+              Color
+            </h3>
 
             <div className="flex flex-wrap gap-3">
               {colors.map((colorOption) => {
@@ -227,7 +229,7 @@ export const Filter: React.FC<FilterProps> = ({
                       size="lg"
                       variant="link"
                       onClick={() => toggleFilter("color", colorOption.value)}
-                      className={`w-[62px] h-[62px] rounded-full border-2 relative transition-all`}
+                      className={`md:w-[62px] md:h-[62px] w-[42px] h-[42px] rounded-full border-2 relative transition-all`}
                       style={{
                         backgroundColor: colorOption.color,
                         borderColor: isSelected ? "#EE9254" : "#d1d5db",
@@ -256,7 +258,9 @@ export const Filter: React.FC<FilterProps> = ({
 
           {/* Size */}
           <div>
-            <h3 className="font-medium mb-3  text-xl text-[#1F1F1F]">Size</h3>
+            <h3 className="font-medium mb-3 text-sm  md:text-xl text-[#1F1F1F]">
+              Size
+            </h3>
             <div className="flex flex-wrap gap-2">
               {sizes.map((size) => (
                 <Button
@@ -278,7 +282,9 @@ export const Filter: React.FC<FilterProps> = ({
 
           {/* Gender */}
           <div>
-            <h3 className="font-medium mb-3  text-xl text-[#1F1F1F]">Gender</h3>
+            <h3 className="font-medium mb-3 text-sm md:text-xl text-[#1F1F1F]">
+              Gender
+            </h3>
             <div className="flex flex-wrap gap-2">
               {genderOptions.map((gender) => (
                 <Button
@@ -300,7 +306,7 @@ export const Filter: React.FC<FilterProps> = ({
 
           {/* Price Range */}
           <div>
-            <h3 className="font-medium mb-3  text-xl text-[#1F1F1F]">
+            <h3 className="font-medium mb-3 text-sm md:text-xl text-[#1F1F1F]">
               Price Range
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -324,7 +330,7 @@ export const Filter: React.FC<FilterProps> = ({
 
           {/* Availability */}
           <div>
-            <h3 className="font-medium mb-3  text-xl text-[#1F1F1F]">
+            <h3 className="font-medium mb-3 text-sm md:text-xl text-[#1F1F1F]">
               Availability
             </h3>
             <div className="flex gap-2">
@@ -350,21 +356,19 @@ export const Filter: React.FC<FilterProps> = ({
         <DrawerFooter className="border-t border-gray-200">
           <div className="flex gap-4 flex-col sm:flex-row">
             <Button
-              size="lg"
               onClick={() => {
                 onFiltersChange(tempFilters);
                 onApplyFilters();
               }}
               variant="link"
-              className="flex-1 py-3 px-4 bg-[#EE9254] !text-[20px] text-white rounded-sm hover:bg-[#E97451]/90 transition-colors"
+              className="flex-1 py-3 px-4 bg-[#EE9254] border border-[#EE9254]  text-white rounded-sm hover:bg-[#E97451]/90 transition-colors"
             >
               Apply Filters
             </Button>
             <Button
-              size="lg"
               onClick={handleClearFilters}
               variant="link"
-              className="flex-1 py-3 px-4 !text-[20px] rounded-sm border border-black hover:bg-gray-50 transition-colors"
+              className="flex-1 py-3 px-4 rounded-sm border border-black hover:bg-gray-50 transition-colors"
               disabled={getActiveFiltersCount() === 0}
             >
               Clear All ({getActiveFiltersCount()})

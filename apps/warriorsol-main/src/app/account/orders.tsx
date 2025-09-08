@@ -323,6 +323,7 @@ export default function OrdersPage() {
                           <span className="text-yellow-500 mr-1">
                             {"★".repeat(item.review.score)}
                           </span>
+                          <br />
                           <span>{item.review.text}</span>
                         </div>
                       )}

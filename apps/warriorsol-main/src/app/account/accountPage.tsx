@@ -282,7 +282,7 @@ export default function AccountPage() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Navbar />
-      <main className="flex-1 px-4 py-12 max-w-5xl mx-auto w-full">
+      <main className="flex-1 px-4 py-4 md:py-12 max-w-5xl mx-auto w-full">
         <h1 className="text-3xl md:text-[62px] font-extrabold mb-8 text-center text-[#1F1F1F]">
           My Account
         </h1>
@@ -305,28 +305,28 @@ export default function AccountPage() {
           </TabsList>
 
           <TabsContent value="personal">
-            <div className="bg-white p-6 sm:p-8 rounded-xl shadow space-y-8">
+            <div className="bg-white p-6 sm:p-8 rounded-xl  space-y-8">
               {/* Personal Info Section */}
               <div className="space-y-6">
                 <h2 className="text-2xl font-bold text-gray-800">
                   Personal Information
                 </h2>
-                <div className="bg-gray-50 rounded-xl border border-gray-200 shadow-sm p-6 sm:p-8">
+                <div className="bg-gray-50 rounded-xl p-6 sm:p-8">
                   <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
                     <div>
-                      <dt className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                      <dt className="text-sm font-semibold md:text-base text-gray-500 uppercase tracking-wide">
                         Full Name
                       </dt>
-                      <dd className="mt-1 text-lg font-medium text-gray-900">
+                      <dd className="mt-1 text-sm md:text-base font-medium text-gray-900">
                         {session?.user?.firstName} {session?.user?.lastName}
                       </dd>
                     </div>
 
                     <div>
-                      <dt className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                      <dt className="text-sm font-semibold md:text-base text-gray-500 uppercase tracking-wide">
                         Email Address
                       </dt>
-                      <dd className="mt-1 text-lg font-medium text-gray-900">
+                      <dd className="mt-1 text-sm md:text-base font-medium text-gray-900">
                         {session?.user?.email}
                       </dd>
                     </div>
@@ -349,10 +349,10 @@ export default function AccountPage() {
                       width={128}
                       height={128}
                       alt="Profile"
-                      className="w-32 h-32 rounded-full object-contain border-2 border-gray-300 shadow-sm"
+                      className="md:w-32 md:h-32 w-24 h-24 rounded-full object-contain border-2 border-gray-300 shadow-sm"
                     />
                   ) : (
-                    <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                    <div className="rounded-full md:w-32 md:h-32 w-24 h-24 bg-gray-200 flex items-center justify-center text-gray-500">
                       No Photo
                     </div>
                   )}
@@ -500,9 +500,9 @@ export default function AccountPage() {
               </div>
 
               {/* Change Password Section */}
-              <div className="space-y-6">
+              <div className="space-y-6 ">
                 {/* Top Header with Back */}
-                <div className="flex items-center gap-3">
+                <div className="flex  gap-3">
                   {step === 2 && (
                     <Button
                       type="button"
@@ -517,12 +517,12 @@ export default function AccountPage() {
                           confirmPassword: "",
                         });
                       }}
-                      className="p-0 h-auto text-gray-600 hover:text-gray-900"
+                      className="p-0 ml-[-15px] h-auto text-gray-600 hover:text-gray-900"
                     >
                       <ArrowLeft className="h-5 w-5" />
                     </Button>
                   )}
-                  <h2 className="text-2xl font-bold text-gray-800">
+                  <h2 className="text-xl md:text-2xl font-bold  text-gray-800">
                     Change Password
                   </h2>
                 </div>
@@ -563,7 +563,7 @@ export default function AccountPage() {
                             type="button"
                             variant="ghost"
                             onClick={() => setShowOldPassword((prev) => !prev)}
-                            className="absolute right-2 top-2 text-gray-500 hover:text-gray-800"
+                            className="absolute right-2 top-0.5 text-gray-500 hover:text-gray-800"
                           >
                             {showOldPassword ? (
                               <EyeOff className="h-5 w-5" />
@@ -573,7 +573,7 @@ export default function AccountPage() {
                           </Button>
                         </div>
                         {passwordErrors.oldPassword && (
-                          <p className="text-sm text-red-500 mt-[-10px]">
+                          <p className="text-xs text-red-500 text-start md:text-left mt-[-10px]">
                             {passwordErrors.oldPassword}
                           </p>
                         )}
@@ -607,7 +607,7 @@ export default function AccountPage() {
                               onClick={() =>
                                 setShowNewPassword((prev) => !prev)
                               }
-                              className="absolute right-2 top-2 text-gray-500 hover:text-gray-800"
+                              className="absolute right-2 top-0.5 text-gray-500 hover:text-gray-800"
                             >
                               {showNewPassword ? (
                                 <EyeOff className="h-5 w-5" />
@@ -617,7 +617,7 @@ export default function AccountPage() {
                             </Button>
                           </div>
                           {passwordErrors.newPassword && (
-                            <p className="text-sm text-red-500 mt-[-10px]">
+                            <p className="text-xs text-red-500 text-start md:text-left mt-[-10px]">
                               {passwordErrors.newPassword}
                             </p>
                           )}
@@ -650,7 +650,7 @@ export default function AccountPage() {
                               onClick={() =>
                                 setShowConfirmPassword((prev) => !prev)
                               }
-                              className="absolute right-2 top-2 text-gray-500 hover:text-gray-800"
+                              className="absolute right-2 top-0.5 text-gray-500 hover:text-gray-800"
                             >
                               {showConfirmPassword ? (
                                 <EyeOff className="h-5 w-5" />
@@ -660,7 +660,7 @@ export default function AccountPage() {
                             </Button>
                           </div>
                           {passwordErrors.confirmPassword && (
-                            <p className="text-sm text-red-500 mt-[-10px]">
+                            <p className="text-xs text-red-500 text-start md:text-left mt-[-10px]">
                               {passwordErrors.confirmPassword}
                             </p>
                           )}
@@ -673,8 +673,7 @@ export default function AccountPage() {
                       <Button
                         type="submit"
                         disabled={loading}
-                        size="default"
-                        className="w-full text-xl h-10 px-10 bg-[#EE9254] text-white hover:bg-[#e97e3a] transition"
+                        className="w-full h-10 px-10 bg-[#EE9254] text-white hover:bg-[#e97e3a] transition"
                       >
                         {loading ? (
                           <Loader2 className="animate-spin h-5 w-5 mr-2" />

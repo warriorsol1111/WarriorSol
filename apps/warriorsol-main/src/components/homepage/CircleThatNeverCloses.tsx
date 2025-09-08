@@ -28,7 +28,7 @@ const CircleThatNeverCloses = () => {
           variant="outline"
           size="lg"
           onClick={() => window.open(`${foundationURL}`, "_blank")}
-          className="w-full sm:w-auto border border-black px-4 text-[#1F1F1F] sm:px-5 py-2.5 sm:py-3 text-base sm:text-lg lg:text-[20px]  capitalize flex items-center justify-center sm:justify-start gap-2 hover:bg-black hover:text-white transition"
+          className="w-full sm:w-auto border border-black px-4 text-[#1F1F1F] sm:px-5 py-2.5 sm:py-3 text-base sm:text-lg lg:text-[20px]  capitalize flex items-center justify-center sm:justify-start gap-2  transition"
         >
           <span className="flex items-center gap-2">
             Join The Movement

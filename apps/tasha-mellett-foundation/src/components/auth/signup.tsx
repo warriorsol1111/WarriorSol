@@ -335,7 +335,7 @@ function SignupPage() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#EE9254] ! !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white mt-4"
+            className="w-full bg-[#C1E965] ! !text-xl hover:bg-[#C1E965] h-10 md:h-12 text-black mt-4"
           >
             {loading ? (
               <Loader2 className="animate-spin w-5 h-5" />

@@ -241,7 +241,7 @@ function LoginPage() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#EE9254] cursor-pointer hover:bg-[#e97e3a] h-10 md:h-12 text-white text-base md:text-xl "
+            className="w-full bg-[#C1E965] cursor-pointer hover:bg-[#C1E965] h-10 md:h-12 text-black text-base md:text-xl "
           >
             {loading ? (
               <Loader2 className="animate-spin w-5 h-5 mr-2" />

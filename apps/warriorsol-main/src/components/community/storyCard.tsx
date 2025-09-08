@@ -76,7 +76,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({
 
       {/* Quote - Responsive Text and Positioning */}
       <div className="absolute inset-0 flex items-center justify-center px-4 sm:px-6 md:px-8 text-center">
-        <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-[42px]  max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-7xl leading-relaxed font-semibold">
+        <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-[42px]  max-w-[200px] sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-7xl leading-relaxed font-semibold truncate">
           &ldquo;{title}&rdquo;
         </p>
       </div>
@@ -105,9 +105,9 @@ export const StoryCard: React.FC<StoryCardProps> = ({
           {/* Read Story Button - Mobile Full Width */}
           <Link
             href={link}
-            className="block w-full px-4 py-2.5  rounded-lg text-center text-[20px] font-medium text-white border border-white hover:bg-white hover:text-black transition-all duration-300"
+            className=" w-full px-4 py-2.5 h-10 md:h-14 !text-sm md:!text-base  flex rounded-lg items-center justify-center text-center text-[20px] font-medium text-white border border-white hover:bg-white hover:text-black transition-all duration-300"
           >
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2 text-center">
               Read Story <MdArrowOutward className="w-6 h-6" />
             </span>
           </Link>

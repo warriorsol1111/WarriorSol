@@ -170,7 +170,7 @@ export default function Wishlist() {
   };
 
   return (
-    <div className="min-h-screen py-6 sm:py-10 px-2 sm:px-4 flex flex-col items-center">
+    <div className="min-h-screen sm:py-10 px-2 sm:px-4 flex flex-col items-center">
       <h1 className="text-2xl sm:text-[42px] font-bold mb-2 text-center">
         Your Wishlist
       </h1>
@@ -202,10 +202,10 @@ export default function Wishlist() {
         </>
       ) : (
         <div className="w-full max-w-4xl space-y-6">
-          <div className="flex justify-end">
+          <div className="flex justify-center md:justify-end">
             <Button
               variant="destructive"
-              className="text-lg h-10 px-10"
+              className=" h-10 px-10"
               onClick={handleClearWishlist}
             >
               {deleteLoading ? (
@@ -226,7 +226,7 @@ export default function Wishlist() {
               return (
                 <li
                   key={item.id}
-                  className="bg-white rounded-xl shadow p-4 sm:p-6 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full"
+                  className="bg-white rounded-xl  p-4 sm:p-6 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full"
                 >
                   {d.image && (
                     <div className="flex-shrink-0 w-full sm:w-auto flex justify-center">
@@ -235,7 +235,7 @@ export default function Wishlist() {
                         alt={d.title}
                         width={120}
                         height={120}
-                        className="rounded-lg w-[90px] h-[90px] sm:w-[120px] sm:h-[120px] object-cover border border-gray-200"
+                        className="rounded-lg w-[160px] h-[160px] sm:w-[120px] sm:h-[120px] object-cover border border-gray-200"
                       />
                     </div>
                   )}
@@ -260,7 +260,7 @@ export default function Wishlist() {
                     <div className="flex flex-col items-end gap-2 min-w-0 sm:min-w-[140px] w-full sm:w-auto">
                       <Link
                         href={`/products/${d.productId}?variant=${item.variantId}`}
-                        className="text-lg  text-white hover:underline bg-[#EE9254] !h-10 !px-10 text-center justify-center !py-1 border border-[#EE9254] rounded-lg font-bold transition w-full sm:w-auto"
+                        className="h-10 md:h-14 !text-sm md:!text-base !py-2 text-white hover:underline bg-[#EE9254]  text-center justify-center border border-[#EE9254] rounded-lg font-bold transition w-full sm:w-auto"
                       >
                         View Product
                       </Link>

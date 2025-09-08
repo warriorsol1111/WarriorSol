@@ -11,7 +11,7 @@ const Hero: React.FC = () => {
 
   return (
     <section className="relative w-full bg-white py-4 md:py-10">
-      <div className="px-4 sm:px-6 md:px-8 mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
+      <div className="px-4 sm:px-6 md:px-12 mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
         {/* LEFT SECTION */}
         <div className=" text-left">
           <h1 className="text-[40px] mb-10 md:text-[82px] leading-tight  font-normal text-[#1F1F1F]">
@@ -31,10 +31,9 @@ const Hero: React.FC = () => {
 
           <Button
             onClick={() => router.push("/products")}
-            size="lg"
-            className="mt-8 flex items-center !rounded-xl gap-2 px-6 py-3 border border-[#1F1F1F] bg-white text-[16px] md:text-[20px] text-[#1F1F1F]  hover:bg-gray-200 hover:text-[#1F1F1F] transition"
+            className="mt-8 flex items-center  gap-2  border border-[#1F1F1F] bg-white text-[16px] md:text-[20px] text-[#1F1F1F]  hover:bg-gray-200 hover:text-[#1F1F1F] transition"
           >
-            Shop The Story <BsArrowUpRight className="!w-6 !h-6" />
+            Shop The Story <BsArrowUpRight className="w-3 h-3 md:h-6 md:w-6" />
           </Button>
         </div>
 
@@ -45,7 +44,7 @@ const Hero: React.FC = () => {
             alt="Hero Image"
             width={1000}
             height={1000}
-            className="rounded-lg object-contain shadow-md"
+            className=" object-contain shadow-md"
             priority
           />
         </div>

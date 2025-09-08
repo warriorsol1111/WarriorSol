@@ -88,7 +88,7 @@ const Contacts = () => {
           <Image
             src={FormImage}
             alt="Contact Form Illustration"
-            className="object-contain w-full h-full rounded-lg"
+            className="object-contain w-full h-full"
           />
         </div>
 
@@ -197,16 +197,14 @@ const Contacts = () => {
 
             <Button
               type="submit"
-              size="lg"
-              variant="default"
               disabled={loading}
-              className="w-full py-3 rounded-md text-[20px]  text-white bg-[#EE9254] hover:bg-[#e9823b] font-medium flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-md  text-white bg-[#EE9254] hover:bg-[#e9823b] font-medium flex items-center justify-center gap-2"
             >
               {loading ? (
                 <Loader2 className="animate-spin h-5 w-5 text-white" />
               ) : (
                 <>
-                  <span className="text-[20px]">Send Message</span>
+                  <span className="">Send Message</span>
                   <FaArrowRightLong className="h-5 w-5" />
                 </>
               )}

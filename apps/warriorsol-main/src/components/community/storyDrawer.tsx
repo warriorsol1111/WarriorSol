@@ -301,11 +301,11 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                 }}
               >
                 <SelectTrigger
-                  className={`mt-2 w-full border !text-lg !text-[#1F1F1FCC] ! !h-12 !cursor-pointer ${errors.role ? "border-red-500 focus:border-red-500 focus:ring-red-300" : "border-gray-300"}`}
+                  className={`mt-2 w-full border  !text-[#1F1F1FCC] ! !h-12 !cursor-pointer ${errors.role ? "border-red-500 focus:border-red-500 focus:ring-red-300" : "border-gray-300"}`}
                 >
                   <SelectValue placeholder="Select your role" />
                 </SelectTrigger>
-                <SelectContent className="cursor-pointer">
+                <SelectContent className="cursor-pointer ml-2">
                   {[
                     { value: "warrior", label: "The Warrior" },
                     { value: "spouse", label: "The Lock - Spouse/Partner" },
@@ -324,7 +324,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                     <SelectItem
                       key={value}
                       value={value}
-                      className="cursor-pointer !text-lg !text-[#1F1F1FCC] !"
+                      className="cursor-pointer !text-[#1F1F1FCC] !"
                     >
                       {label}
                     </SelectItem>
@@ -410,7 +410,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
                   <>
                     <label
                       htmlFor="image"
-                      className="cursor-pointer inline-flex items-center justify-center px-4 py-2 underline text-[#1F1F1FCC] !text-lg ! font-semibold rounded-md  transition-all"
+                      className="cursor-pointer inline-flex items-center justify-center px-4 py-2 underline text-[#1F1F1FCC]  ! font-semibold rounded-md  transition-all"
                     >
                       Upload a file
                       <input
@@ -460,8 +460,7 @@ export const StoryDrawer: React.FC<StoryDrawerProps> = ({
 
             <Button
               type="submit"
-              size="default"
-              className="w-full bg-[#EE9254] !text-[20px] !h-13 ! hover:bg-[#EE9254]/90 text-white flex items-center justify-center"
+              className="w-full bg-[#EE9254]    hover:bg-[#EE9254]/90 text-white flex items-center justify-center"
               disabled={isLoading}
             >
               {isLoading ? (

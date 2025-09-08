@@ -183,14 +183,14 @@ const AdminStoriesPage: React.FC = () => {
           <Button
             variant={view === "pending" ? "default" : "outline"}
             onClick={() => setView("pending")}
-            className={`px-6 cursor-pointer py-2 h-13 text-[20px]  ${view === "pending" ? "bg-[#EE9254] hover:bg-[#EE9254]" : ""}`}
+            className={`px-6 cursor-pointer py-2  ${view === "pending" ? "bg-[#EE9254] hover:bg-[#EE9254]" : ""}`}
           >
             Pending
           </Button>
           <Button
             variant={view === "archived" ? "default" : "outline"}
             onClick={() => setView("archived")}
-            className={`px-6 cursor-pointer py-2 h-13 text-[20px]  ${view === "archived" ? "bg-[#EE9254] hover:bg-[#EE9254]" : ""}`}
+            className={`px-6 cursor-pointer py-2   ${view === "archived" ? "bg-[#EE9254] hover:bg-[#EE9254]" : ""}`}
           >
             Archived
           </Button>
@@ -269,7 +269,7 @@ const AdminStoriesPage: React.FC = () => {
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button
-                            className="bg-[#EE9254] cursor-pointer text-white hover:bg-[#d67e43] text-base sm:text-lg md:text-xl px-6 rounded-none py-2 h-13 "
+                            className="bg-[#EE9254] cursor-pointer text-white hover:bg-[#d67e43]  px-6 rounded-none py-2 "
                             disabled={actionLoading === story.id + "approve"}
                           >
                             Approve
@@ -277,22 +277,22 @@ const AdminStoriesPage: React.FC = () => {
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle className="text-[20px] ">
+                            <AlertDialogTitle className=" ">
                               Approve this story?
                             </AlertDialogTitle>
-                            <AlertDialogDescription className="text-[20px] ">
+                            <AlertDialogDescription className=" ">
                               This will mark the story as approved and make it
                               visible. You can’t undo this easily.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel className="text-[20px]  cursor-pointer">
+                            <AlertDialogCancel className=" cursor-pointer">
                               Cancel
                             </AlertDialogCancel>
                             <AlertDialogAction
                               onClick={() => handleAction(story.id, "approve")}
                               disabled={actionLoading === story.id + "approve"}
-                              className="text-[20px] cursor-pointer bg-[#EE9254] hover:bg-[#d67e43] text-white px-6 rounded-none py-2 "
+                              className=" cursor-pointer bg-[#EE9254] hover:bg-[#d67e43] text-white px-6 rounded-none py-2 "
                             >
                               {actionLoading === story.id + "approve" ? (
                                 <Loader2 className="animate-spin" />
@@ -309,7 +309,7 @@ const AdminStoriesPage: React.FC = () => {
                         <AlertDialogTrigger asChild>
                           <Button
                             variant="destructive"
-                            className="cursor-pointer text-base sm:text-lg md:text-xl px-6 rounded-none py-2 h-13 "
+                            className="cursor-pointer px-6 rounded-none py-2  "
                             disabled={actionLoading === story.id + "reject"}
                           >
                             Reject
@@ -326,7 +326,7 @@ const AdminStoriesPage: React.FC = () => {
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel className="text-[20px]  cursor-pointer">
+                            <AlertDialogCancel className="text-[20px] !border !border-black cursor-pointer">
                               Cancel
                             </AlertDialogCancel>
                             <AlertDialogAction
@@ -350,7 +350,7 @@ const AdminStoriesPage: React.FC = () => {
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button
-                            className="cursor-pointer bg-[#4CAF50] text-white hover:bg-[#43a047] text-base sm:text-lg md:text-xl px-6 rounded-none py-2 h-13 "
+                            className="cursor-pointer bg-[#EE9254] text-white hover:bg-[#EE9254]  px-6 rounded-none py-2  "
                             disabled={actionLoading === story.id + "unarchive"}
                           >
                             Unarchive
@@ -393,7 +393,7 @@ const AdminStoriesPage: React.FC = () => {
                         <AlertDialogTrigger asChild>
                           <Button
                             variant="destructive"
-                            className="cursor-pointer text-base sm:text-lg md:text-xl px-6 rounded-none py-2 h-13 "
+                            className="cursor-pointer px-6 rounded-none py-2  "
                             disabled={actionLoading === story.id + "delete"}
                           >
                             Delete

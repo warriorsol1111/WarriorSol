@@ -192,10 +192,10 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
           <div key={product.id} className="group relative">
             <a
               href={`/products/${extractShopifyId(product.id)}`}
-              className="block overflow-hidden rounded-xl shadow-sm hover:shadow-lg transition-all duration-300"
+              className="block overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300"
             >
               {/* Only the image and info go here */}
-              <div className="relative w-full pt-[100%] overflow-hidden rounded-xl">
+              <div className="relative w-full pt-[100%] overflow-hidden">
                 <Image
                   src={product.imageUrl}
                   alt={product.title}

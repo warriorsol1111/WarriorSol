@@ -95,7 +95,7 @@ export default function CartDrawer() {
                               <p className="text-xs text-[#1F1F1FB2] uppercase tracking-wide mb-1">
                                 Item
                               </p>
-                              <p className="text-sm text-[#1F1F1F] font-medium truncate max-w-[200px]">
+                              <p className="text-sm text-[#1F1F1F] font-medium truncate max-w-[100px] md:max-w-[200px]">
                                 {item.name}
                               </p>
                             </div>
@@ -153,7 +153,7 @@ export default function CartDrawer() {
                     </div>
 
                     {/* Bottom row: Quantity controls */}
-                    <div className="flex items-center justify-center sm:justify-between w-[90%] ml-8 border-t border-gray-100 pt-3">
+                    <div className="flex items-center justify-center sm:justify-between w-full md:w-[90%] md:ml-8 border-t border-gray-100 pt-3">
                       <Button
                         variant="ghost"
                         size="icon"
@@ -161,7 +161,7 @@ export default function CartDrawer() {
                           item.lineId &&
                           updateQuantity(item.lineId, item.quantity - 1)
                         }
-                        className="w-7 h-7 !rounded-full border !disabled:cursor-not-allowed border-[#141B34] text-[#141B34] hover:text-black hover:border-black"
+                        className="md:w-7 md:h-7  w-5 h-5 !rounded-full border !disabled:cursor-not-allowed border-[#141B34] text-[#141B34] hover:text-black hover:border-black"
                         disabled={
                           cartLoading ||
                           (!!item.lineId && itemLoading[item.lineId]) ||
@@ -182,7 +182,7 @@ export default function CartDrawer() {
                           item.lineId &&
                           updateQuantity(item.lineId, item.quantity + 1)
                         }
-                        className="w-7 h-7 !rounded-full border !disabled:cursor-not-allowed border-[#141B34] text-[#141B34] hover:text-black hover:border-black"
+                        className="md:w-7 md:h-7  w-5 h-5 !rounded-full border !disabled:cursor-not-allowed border-[#141B34] text-[#141B34] hover:text-black hover:border-black"
                         disabled={
                           cartLoading ||
                           (!!item.lineId && itemLoading[item.lineId])
@@ -234,7 +234,7 @@ export default function CartDrawer() {
                       setLoading(false);
                     }
                   }}
-                  className="w-full py-4 sm:py-5 h-13 text-[20px] font-[Inter] sm:text-xl bg-[#EE9254] hover:bg-[#e8823d] text-white rounded-md"
+                  className="w-full py-4 sm:py-5  font-[Inter]  bg-[#EE9254] hover:bg-[#e8823d] text-white rounded-md"
                   disabled={loading}
                 >
                   {loading ? (
@@ -250,7 +250,7 @@ export default function CartDrawer() {
                     closeCart();
                   }}
                   variant="outline"
-                  className="w-full py-4 sm:py-5 text-lg sm:text-xl text-[#1F1F1FCC] border-[#1F1F1F] border h-13 hover:bg-gray-50 rounded-md"
+                  className="w-full py-4 sm:py-5  text-[#1F1F1FCC] border-[#1F1F1F] border hover:bg-gray-50 rounded-md"
                 >
                   <MdOutlineShoppingBag className="inline-block mr-2 !w-6 !h-6" />
                   Goto Cart
