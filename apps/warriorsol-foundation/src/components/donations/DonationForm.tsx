@@ -11,14 +11,16 @@ import { FaRegHeart } from "react-icons/fa6";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useSession } from "next-auth/react";
 import { BiDonateHeart } from "react-icons/bi";
+import { Loader2 } from "lucide-react";
 
 export default function DonationForm() {
+  const { data: session } = useSession();
   const [donationType, setDonationType] = useState("one-time");
   const [amount, setAmount] = useState("50");
   const [customAmount, setCustomAmount] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(session?.user?.email || "");
   const [name, setName] = useState("");
-  const { data: session } = useSession();
+  const [loading, setLoading] = useState(false);
 
   const [errors, setErrors] = useState({
     name: "",
@@ -68,25 +70,31 @@ export default function DonationForm() {
   async function handleDonate() {
     if (!validate()) return;
     const selectedAmount = customAmount || amount;
+    try {
+      setLoading(true);
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: parseInt(selectedAmount),
+          donationType,
+          email,
+          name,
+          userId: session?.user?.id || null,
+          foundation: "warriorsol-foundation",
+        }),
+      });
 
-    const res = await fetch("/api/checkout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        amount: parseInt(selectedAmount),
-        donationType,
-        email,
-        name,
-        userId: session?.user?.id || null,
-        foundation: "warriorsol-foundation",
-      }),
-    });
-
-    const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert("Failed to create checkout session");
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert("Failed to create checkout session");
+      }
+    } catch {
+      console.error("Failed to create checkout session");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -251,7 +259,8 @@ export default function DonationForm() {
                       placeholder="Enter your email address"
                       className="rounded bg-white border-gray-200 h-10 sm:h-12"
                       type="email"
-                      value={email}
+                      disabled
+                      value={session?.user?.email}
                       onChange={(e) => {
                         setEmail(e.target.value);
                         if (errors.email) setErrors({ ...errors, email: "" });
@@ -271,8 +280,14 @@ export default function DonationForm() {
                 className="w-full bg-[#EE9254] hover:bg-[#e76b1f] text-lg sm:text-xl  font-normal rounded text-white h-12 sm:h-14"
                 onClick={handleDonate}
               >
-                Donate Now
-                <BiDonateHeart className="h-5 w-5 sm:h-6 sm:w-6 ml-2" />
+                {loading ? (
+                  <Loader2 className="h-5 w-5 sm:h-6 sm:w-6 mr-2 animate-spin" />
+                ) : (
+                  <>
+                    Donate Now
+                    <BiDonateHeart className="h-5 w-5 sm:h-6 sm:w-6 ml-2" />
+                  </>
+                )}
               </Button>
             </CardContent>
           </Card>

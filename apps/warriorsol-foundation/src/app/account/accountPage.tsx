@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import Navbar from "@/components/shared/navbar";
 import Footer from "@/components/shared/footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Receipt, Mail, Calendar, Loader2 } from "lucide-react";
+import { Receipt, Mail, Calendar, Loader2, ArrowLeft } from "lucide-react";
 import { Donation } from "@/components/donor-wall";
 import clsx from "clsx";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+
 type SupportApplication = {
   id: number;
   userId: string;
@@ -28,6 +29,7 @@ type SupportApplication = {
   status: string;
   createdAt: string;
 };
+
 export default function SettingsPage() {
   const [donations, setDonations] = useState<Donation[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,15 +40,84 @@ export default function SettingsPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [photoError, setPhotoError] = useState<string | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
-  const [message, setMessage] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [imageLoading, setImageLoading] = useState(false);
+
+  const capitalize = (str: string) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+  // Password validation errors
+  const [passwordErrors, setPasswordErrors] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  // Validation functions
+  const validatePassword = (password: string) => {
+    if (!password) return "Password is required";
+    if (password.length < 8)
+      return "Password must be at least 8 characters long";
+    if (!/(?=.*[a-z])/.test(password))
+      return "Password must contain at least one lowercase letter";
+    if (!/(?=.*[A-Z])/.test(password))
+      return "Password must contain at least one uppercase letter";
+    if (!/(?=.*\d)/.test(password))
+      return "Password must contain at least one number";
+    if (!/(?=.*[!@#$%^&*(),.?":{}|<>])/.test(password))
+      return "Password must contain at least one special character";
+    return "";
+  };
+
+  const validateOldPassword = (password: string) => {
+    if (!password.trim()) return "Current password is required";
+    return "";
+  };
+
+  const validateConfirmPassword = (
+    password: string,
+    confirmPassword: string
+  ) => {
+    if (!confirmPassword) return "Please confirm your new password";
+    if (password !== confirmPassword) return "Passwords don't match";
+    return "";
+  };
+
+  // Handle password field changes with real-time error clearing
+  const handlePasswordChange = (field: string, value: string) => {
+    switch (field) {
+      case "oldPassword":
+        setOldPassword(value);
+        if (passwordErrors.oldPassword) {
+          setPasswordErrors((prev) => ({ ...prev, oldPassword: "" }));
+        }
+        break;
+      case "newPassword":
+        setNewPassword(value);
+        if (passwordErrors.newPassword) {
+          setPasswordErrors((prev) => ({ ...prev, newPassword: "" }));
+        }
+        // Also clear confirm password error when typing in new password
+        if (passwordErrors.confirmPassword) {
+          setPasswordErrors((prev) => ({ ...prev, confirmPassword: "" }));
+        }
+        break;
+      case "confirmPassword":
+        setConfirmPassword(value);
+        if (passwordErrors.confirmPassword) {
+          setPasswordErrors((prev) => ({ ...prev, confirmPassword: "" }));
+        }
+        break;
+    }
+  };
+
   const handleSave = async () => {
     if (!selectedImage) return;
 
@@ -72,7 +143,7 @@ export default function SettingsPage() {
       toast.dismiss();
 
       if (res.ok && data.status === "success") {
-        toast.success("Photo updated");
+        toast.success("Photo updated!");
         await update({
           profilePhoto: data.data,
         });
@@ -88,13 +159,25 @@ export default function SettingsPage() {
       setImageLoading(false);
     }
   };
+
   const [applications, setApplications] = useState<SupportApplication[]>([]);
   const [applicationsLoading, setApplicationsLoading] = useState(false);
   const [applicationsError, setApplicationsError] = useState(false);
+
   const handleVerifyPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMessage("");
     setPasswordLoading(true);
+
+    // Validate old password
+    const oldPasswordError = validateOldPassword(oldPassword);
+    if (oldPasswordError) {
+      setPasswordErrors((prev) => ({ ...prev, oldPassword: oldPasswordError }));
+      toast.dismiss();
+      toast.error(oldPasswordError);
+      setPasswordLoading(false);
+      return;
+    }
+
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/verify-password`,
@@ -111,21 +194,28 @@ export default function SettingsPage() {
       if (data.status === "success") {
         toast.dismiss();
         toast.success("Current password verified.");
-
+        setPasswordErrors({
+          oldPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
         setStep(2);
       } else {
-        setMessage(data.message || "Invalid current password.");
+        const errorMsg = data.message || "Invalid current password.";
+        setPasswordErrors((prev) => ({ ...prev, oldPassword: errorMsg }));
         toast.dismiss();
-        toast.error(data.message || "Invalid current password.");
+        toast.error(errorMsg);
       }
     } catch {
-      setMessage("Something went wrong. Try again.");
+      const errorMsg = "Something went wrong. Try again.";
+      setPasswordErrors((prev) => ({ ...prev, oldPassword: errorMsg }));
       toast.dismiss();
-      toast.error("Something went wrong. Try again.");
+      toast.error(errorMsg);
     } finally {
       setPasswordLoading(false);
     }
   };
+
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
@@ -151,17 +241,37 @@ export default function SettingsPage() {
     }
     fetchData();
   }, [session]);
+
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMessage("");
-    if (newPassword !== confirmPassword) {
-      setMessage("New passwords do not match.");
+    setPasswordLoading(true);
+
+    // Validate new password and confirm password
+    const newPasswordError = validatePassword(newPassword);
+    const confirmPasswordError = validateConfirmPassword(
+      newPassword,
+      confirmPassword
+    );
+
+    if (newPasswordError || confirmPasswordError) {
+      setPasswordErrors((prev) => ({
+        ...prev,
+        newPassword: newPasswordError,
+        confirmPassword: confirmPasswordError,
+      }));
       toast.dismiss();
-      toast.error("New passwords do not match.");
+      toast.error(newPasswordError || confirmPasswordError);
+      setPasswordLoading(false);
       return;
     }
 
-    setPasswordLoading(true);
+    // Clear errors if validation passes
+    setPasswordErrors({
+      oldPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    });
+
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/change-password`,
@@ -182,17 +292,24 @@ export default function SettingsPage() {
         toast.dismiss();
         toast.success("Password changed successfully!");
         setStep(1); // Reset to initial step
+        //logout user
+        signOut();
       } else {
-        setMessage(data.message || "Failed to change password.");
+        const errorMsg = data.message || "Failed to change password.";
+        setPasswordErrors((prev) => ({ ...prev, newPassword: errorMsg }));
         toast.dismiss();
-        toast.error(data.message || "Failed to change password.");
+        toast.error(errorMsg);
       }
     } catch {
-      setMessage("Something went wrong.");
+      const errorMsg = "Something went wrong.";
+      setPasswordErrors((prev) => ({ ...prev, newPassword: errorMsg }));
+      toast.dismiss();
+      toast.error(errorMsg);
     } finally {
       setPasswordLoading(false);
     }
   };
+
   useEffect(() => {
     async function fetchApplications() {
       if (!session?.user?.token) return;
@@ -264,58 +381,58 @@ export default function SettingsPage() {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="personal">
-              <div className="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow space-y-6 sm:space-y-8">
+              <div className="bg-white p-6 sm:p-8 rounded-xl space-y-8">
                 {/* Personal Info Section */}
-                <div className="space-y-4 sm:space-y-6">
-                  <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
+                <div className="space-y-6">
+                  <h2 className="text-2xl font-bold text-gray-800">
                     Personal Information
                   </h2>
-                  <div className="bg-gray-50 rounded-xl border border-gray-200 shadow-sm p-4 sm:p-6 md:p-8">
-                    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
+                  <div className="bg-gray-50 rounded-xl p-6 sm:p-8">
+                    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
                       <div>
-                        <dt className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                        <dt className="text-sm font-semibold md:text-base text-gray-500 uppercase tracking-wide">
                           Full Name
                         </dt>
-                        <dd className="mt-1 text-lg font-medium text-gray-900">
+                        <dd className="mt-1 text-sm md:text-base font-medium text-gray-900">
                           {session?.user?.firstName} {session?.user?.lastName}
                         </dd>
                       </div>
 
                       <div>
-                        <dt className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                        <dt className="text-sm font-semibold md:text-base text-gray-500 uppercase tracking-wide">
                           Email Address
                         </dt>
-                        <dd className="mt-1 text-lg font-medium text-gray-900">
+                        <dd className="mt-1 text-sm md:text-base font-medium text-gray-900">
                           {session?.user?.email}
                         </dd>
                       </div>
                     </dl>
                   </div>
                 </div>
-                <div className="space-y-4 sm:space-y-6 text-center">
-                  <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
+
+                {/* Profile Photo Section */}
+                <div className="space-y-6 text-center">
+                  <h2 className="text-2xl font-bold text-gray-800">
                     Profile Photo
                   </h2>
 
                   <div className="flex flex-col items-center gap-4">
                     {previewUrl || session?.user?.profilePhoto ? (
-                      <div className="relative w-24 h-24 sm:w-32 sm:h-32">
-                        <Image
-                          src={
-                            previewUrl ||
-                            (session?.user?.profilePhoto as string)
-                          }
-                          fill
-                          alt="Profile"
-                          className="rounded-full object-cover border-2 border-gray-300 shadow-sm"
-                          sizes="(max-width: 640px) 6rem, 8rem"
-                        />
-                      </div>
+                      <Image
+                        src={
+                          previewUrl || (session?.user?.profilePhoto as string)
+                        }
+                        width={128}
+                        height={128}
+                        alt="Profile"
+                        className="md:w-32 md:h-32 w-24 h-24 rounded-full object-contain border-2 border-gray-300 shadow-sm"
+                      />
                     ) : (
-                      <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                      <div className="rounded-full md:w-32 md:h-32 w-24 h-24 bg-gray-200 flex items-center justify-center text-gray-500">
                         No Photo
                       </div>
                     )}
+
                     {/* Hidden File Input */}
                     <input
                       id="photoUpload"
@@ -327,7 +444,6 @@ export default function SettingsPage() {
                         const file = e.target.files?.[0];
                         if (!file) return;
 
-                        // Must be an image
                         if (!file.type.startsWith("image/")) {
                           setPhotoError(
                             "Only image files are allowed (jpg, png, etc)."
@@ -341,7 +457,6 @@ export default function SettingsPage() {
                           return;
                         }
 
-                        // Block SVGs
                         if (
                           file.type === "image/svg+xml" ||
                           file.name.endsWith(".svg")
@@ -356,7 +471,7 @@ export default function SettingsPage() {
                           return;
                         }
 
-                        setPhotoError(null); // clear error
+                        setPhotoError(null);
                         setSelectedImage(file);
                         setPreviewUrl(URL.createObjectURL(file));
                       }}
@@ -364,10 +479,11 @@ export default function SettingsPage() {
 
                     {/* Buttons */}
                     {selectedImage ? (
-                      <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                      <div className="flex gap-4">
                         <Button
                           onClick={handleSave}
-                          className="bg-[#EE9254] hover:bg-[#e97e3a] text-white w-full sm:w-auto"
+                          disabled={imageLoading}
+                          className="bg-[#EE9254] h-10 px-10 hover:bg-[#EE9254] text-white"
                         >
                           {imageLoading ? (
                             <Loader2 className="animate-spin h-4 w-4 mr-2" />
@@ -377,7 +493,7 @@ export default function SettingsPage() {
                         </Button>
                         <Button
                           variant="outline"
-                          className="w-full sm:w-auto"
+                          className="h-10 px-10"
                           onClick={() => {
                             setSelectedImage(null);
                             setPreviewUrl(null);
@@ -387,15 +503,70 @@ export default function SettingsPage() {
                         </Button>
                       </div>
                     ) : (
-                      <Button
-                        className="bg-[#EE9254] text-white hover:bg-[#e97e3a] w-full sm:w-auto"
-                        onClick={() =>
-                          document.getElementById("photoUpload")?.click()
-                        }
-                      >
-                        Upload
-                      </Button>
+                      <div className="flex gap-4">
+                        <Button
+                          className="bg-[#EE9254] h-10 px-10 text-white hover:bg-[#e97e3a]"
+                          onClick={() =>
+                            document.getElementById("photoUpload")?.click()
+                          }
+                          size="default"
+                        >
+                          Upload
+                        </Button>
+
+                        {/* Remove Button */}
+                        {(session?.user?.profilePhoto || previewUrl) && (
+                          <Button
+                            variant="destructive"
+                            className="h-10 px-10"
+                            onClick={async () => {
+                              try {
+                                setDeleteLoading(true);
+                                const res = await fetch(
+                                  `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/delete-photo`,
+                                  {
+                                    method: "DELETE",
+                                    headers: {
+                                      Authorization: `Bearer ${session?.user.token}`,
+                                    },
+                                  }
+                                );
+                                const data = await res.json();
+                                toast.dismiss();
+
+                                if (res.ok && data.status === "success") {
+                                  toast.success("Profile photo removed!");
+                                  await update({
+                                    profilePhoto: null,
+                                  });
+
+                                  setPreviewUrl(null);
+                                  setSelectedImage(null);
+                                } else {
+                                  toast.error(
+                                    data.message || "Failed to remove photo"
+                                  );
+                                }
+                              } catch (err) {
+                                toast.dismiss();
+                                toast.error("Something went wrong");
+                                console.error("Remove photo error:", err);
+                              } finally {
+                                setDeleteLoading(false);
+                              }
+                            }}
+                            disabled={deleteLoading}
+                          >
+                            {deleteLoading ? (
+                              <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                            ) : (
+                              "Remove"
+                            )}
+                          </Button>
+                        )}
+                      </div>
                     )}
+
                     {photoError && (
                       <div className="text-sm text-red-600 font-medium mt-2">
                         {photoError}
@@ -403,37 +574,66 @@ export default function SettingsPage() {
                     )}
                   </div>
                 </div>
+
                 {/* Change Password Section */}
                 <div className="space-y-6">
-                  <h2 className="text-2xl font-bold text-gray-800">
-                    Change Password
-                  </h2>
+                  {/* Top Header with Back */}
+                  <div className="flex gap-3">
+                    {step === 2 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={() => {
+                          setStep(1);
+                          setNewPassword("");
+                          setConfirmPassword("");
+                          setPasswordErrors({
+                            oldPassword: "",
+                            newPassword: "",
+                            confirmPassword: "",
+                          });
+                        }}
+                        className="p-0 ml-[-15px] h-auto text-gray-600 hover:text-gray-900"
+                      >
+                        <ArrowLeft className="h-5 w-5" />
+                      </Button>
+                    )}
+                    <h2 className="text-xl md:text-2xl font-bold text-gray-800">
+                      Change Password
+                    </h2>
+                  </div>
 
                   {session?.user?.loginMethod === "google" ? (
                     <div className="bg-orange-50 border border-orange-300 text-orange-900 p-4 rounded-md text-sm sm:text-base">
                       You&apos;re signed in with Google. Password changes
-                      are&apos;nt available for accounts using Google login.
+                      aren&apos;t available for accounts using Google login.
                     </div>
                   ) : (
                     <form
                       onSubmit={
                         step === 1 ? handleVerifyPassword : handleChangePassword
                       }
-                      className="space-y-5"
+                      className="space-y-4"
                     >
+                      {/* Step 1: Verify Current Password */}
                       {step === 1 && (
-                        <div>
+                        <div className="space-y-4">
                           <Label htmlFor="oldPassword" className="text-base">
                             Current Password
                           </Label>
-                          <div className="relative mt-2">
+                          <div className="relative">
                             <Input
                               id="oldPassword"
                               type={showOldPassword ? "text" : "password"}
                               value={oldPassword}
-                              onChange={(e) => setOldPassword(e.target.value)}
+                              onChange={(e) =>
+                                handlePasswordChange(
+                                  "oldPassword",
+                                  e.target.value
+                                )
+                              }
                               required
-                              className="pr-10"
+                              className={`pr-10 ${passwordErrors.oldPassword ? "border-red-500" : ""}`}
                             />
                             <Button
                               type="button"
@@ -441,7 +641,7 @@ export default function SettingsPage() {
                               onClick={() =>
                                 setShowOldPassword((prev) => !prev)
                               }
-                              className="absolute right-2 top-2 text-gray-500 hover:text-gray-800"
+                              className="absolute right-2 top-0.5 text-gray-500 hover:text-gray-800"
                             >
                               {showOldPassword ? (
                                 <EyeOff className="h-5 w-5" />
@@ -450,28 +650,34 @@ export default function SettingsPage() {
                               )}
                             </Button>
                           </div>
-                          {message && (
-                            <div className="text-sm text-red-600 font-medium mt-1">
-                              {message}
-                            </div>
+                          {passwordErrors.oldPassword && (
+                            <p className="text-xs text-red-500 text-start md:text-left mt-[-10px]">
+                              {passwordErrors.oldPassword}
+                            </p>
                           )}
                         </div>
                       )}
 
+                      {/* Step 2: Enter New Password */}
                       {step === 2 && (
                         <>
-                          <div>
+                          <div className="space-y-4">
                             <Label htmlFor="newPassword" className="text-base">
                               New Password
                             </Label>
-                            <div className="relative mt-2">
+                            <div className="relative">
                               <Input
                                 id="newPassword"
                                 type={showNewPassword ? "text" : "password"}
                                 value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
+                                onChange={(e) =>
+                                  handlePasswordChange(
+                                    "newPassword",
+                                    e.target.value
+                                  )
+                                }
                                 required
-                                className="pr-10"
+                                className={`pr-10 ${passwordErrors.newPassword ? "border-red-500" : ""}`}
                               />
                               <Button
                                 type="button"
@@ -479,7 +685,7 @@ export default function SettingsPage() {
                                 onClick={() =>
                                   setShowNewPassword((prev) => !prev)
                                 }
-                                className="absolute right-2 top-2 text-gray-500 hover:text-gray-800"
+                                className="absolute right-2 top-0.5 text-gray-500 hover:text-gray-800"
                               >
                                 {showNewPassword ? (
                                   <EyeOff className="h-5 w-5" />
@@ -488,24 +694,33 @@ export default function SettingsPage() {
                                 )}
                               </Button>
                             </div>
+                            {passwordErrors.newPassword && (
+                              <p className="text-xs text-red-500 text-start md:text-left mt-[-10px]">
+                                {passwordErrors.newPassword}
+                              </p>
+                            )}
                           </div>
-                          <div>
+
+                          <div className="space-y-4">
                             <Label
                               htmlFor="confirmPassword"
                               className="text-base"
                             >
                               Confirm New Password
                             </Label>
-                            <div className="relative mt-2">
+                            <div className="relative">
                               <Input
                                 id="confirmPassword"
                                 type={showConfirmPassword ? "text" : "password"}
                                 value={confirmPassword}
                                 onChange={(e) =>
-                                  setConfirmPassword(e.target.value)
+                                  handlePasswordChange(
+                                    "confirmPassword",
+                                    e.target.value
+                                  )
                                 }
                                 required
-                                className="pr-10"
+                                className={`pr-10 ${passwordErrors.confirmPassword ? "border-red-500" : ""}`}
                               />
                               <Button
                                 type="button"
@@ -513,7 +728,7 @@ export default function SettingsPage() {
                                 onClick={() =>
                                   setShowConfirmPassword((prev) => !prev)
                                 }
-                                className="absolute right-2 top-2 text-gray-500 hover:text-gray-800"
+                                className="absolute right-2 top-0.5 text-gray-500 hover:text-gray-800"
                               >
                                 {showConfirmPassword ? (
                                   <EyeOff className="h-5 w-5" />
@@ -522,36 +737,38 @@ export default function SettingsPage() {
                                 )}
                               </Button>
                             </div>
-                            {message && (
-                              <div className="text-sm text-red-600 font-medium mt-1">
-                                {message}
-                              </div>
+                            {passwordErrors.confirmPassword && (
+                              <p className="text-xs text-red-500 text-start md:text-left mt-[-10px]">
+                                {passwordErrors.confirmPassword}
+                              </p>
                             )}
                           </div>
                         </>
                       )}
 
-                      <Button
-                        type="submit"
-                        disabled={passwordLoading}
-                        size={"default"}
-                        className="w-full text-xl  bg-[#EE9254] text-white hover:bg-[#e97e3a] transition"
-                      >
-                        {passwordLoading ? (
-                          <Loader2 className="animate-spin h-5 w-5 mr-2" />
-                        ) : step === 1 ? (
-                          "Verify Current Password"
-                        ) : (
-                          "Change Password"
-                        )}
-                      </Button>
+                      {/* Step Controls */}
+                      <div className="flex justify-end">
+                        <Button
+                          type="submit"
+                          disabled={passwordLoading}
+                          className="w-full h-10 px-10 bg-[#EE9254] text-white hover:bg-[#e97e3a] transition"
+                        >
+                          {passwordLoading ? (
+                            <Loader2 className="animate-spin h-5 w-5 mr-2" />
+                          ) : step === 1 ? (
+                            "Verify Current Password"
+                          ) : (
+                            "Change Password"
+                          )}
+                        </Button>
+                      </div>
                     </form>
                   )}
                 </div>
               </div>
             </TabsContent>
 
-            {/* 💰 Donations Tab */}
+            {/* Donations Tab */}
             <TabsContent value="donations">
               <section>
                 {loading ? (
@@ -573,7 +790,7 @@ export default function SettingsPage() {
                     </p>
                   </Card>
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                     {donations.map((donation) => (
                       <Card
                         key={donation.id}
@@ -599,13 +816,13 @@ export default function SettingsPage() {
                           </p>
                         </div>
 
-                        <div className="flex flex-col items-start mt-4">
-                          <span className="text-xl sm:text-2xl font-bold text-orange-500">
+                        <div className="flex flex-col items-start">
+                          <span className="text-[18px] sm:text-2xl font-bold text-orange-500">
                             ${(donation.amount / 100).toLocaleString()}
                           </span>
                           <span
                             className={clsx(
-                              "text-sm sm:text-lg px-2 py-0.5 mt-1 rounded-full capitalize font-medium",
+                              "text-sm sm:text-lg py-0.5 mt-1 rounded-full capitalize font-medium",
                               typeColors[donation.donationType] ||
                                 "bg-gray-100 text-gray-700"
                             )}
@@ -616,7 +833,7 @@ export default function SettingsPage() {
                           {donation.stripeReceiptUrl && (
                             <Button
                               variant="link"
-                              className="text-base sm:text-lg text-blue-600 mt-2 p-0 h-auto"
+                              className="text-base sm:text-lg text-blue-600 mt-2 p-0 !px-0 h-auto"
                               asChild
                             >
                               <a
@@ -637,7 +854,7 @@ export default function SettingsPage() {
               </section>
             </TabsContent>
 
-            {/* 📄 Applications Tab */}
+            {/* Applications Tab */}
             <TabsContent value="applications">
               <section>
                 {applicationsLoading ? (
@@ -700,7 +917,7 @@ export default function SettingsPage() {
                                   : "text-red-600"
                             )}
                           >
-                            {app.status}
+                            {capitalize(app.status)}
                           </span>
                         </p>
                       </Card>

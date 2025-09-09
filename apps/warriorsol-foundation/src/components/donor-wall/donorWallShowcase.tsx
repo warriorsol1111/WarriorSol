@@ -26,7 +26,7 @@ export default function DonorWallShowcase({
   return (
     <>
       {/* Total Raised + Top Donors */}
-      <section className="w-full flex flex-col lg:flex-row gap-8 bg-white py-8 px-4 sm:px-6 rounded-lg shadow-md mt-8">
+      <section className="w-full flex flex-col lg:flex-row gap-8 bg-white py-8 px-4 sm:px-6 rounded-lg  mt-8">
         {/* Image + Stats */}
         <div className="relative w-full lg:w-1/2 h-[1000px] rounded-lg overflow-hidden">
           <Image
@@ -36,7 +36,7 @@ export default function DonorWallShowcase({
             className="object-cover"
             priority
           />
-          <Card className="absolute bottom-4 left-4 right-4 bg-[#FFEBCC] p-6 rounded-lg shadow-md">
+          <Card className="absolute bottom-4 left-4 right-4 bg-[#FFEBCC] p-6 rounded-lg ">
             <h3 className="text-xl sm:text-[42px] font-medium text-[#1F1F1F]">
               Total Raised
             </h3>

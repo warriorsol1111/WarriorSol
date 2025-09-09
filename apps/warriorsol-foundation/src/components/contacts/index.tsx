@@ -72,26 +72,27 @@ const Contacts = () => {
   };
 
   return (
-    <section className="w-full bg-white py-16 px-6 sm:px-12 lg:px-24">
-      <h1 className="text-4xl md:text-[62px] text-[#1F1F1F] text-center font-semibold">
-        Contact
-      </h1>
-      <p className="text-center mt-4 text-lg  opacity-70 sm:text-xl text-[#1F1F1F] mx-auto">
-        Whether you have questions about our products, need assistance with your
-        order, or just want to say hello, feel free to reach out. Our dedicated
-        team is here to help you with any inquiries you may have.
-      </p>
-
+    <section>
+      <div className="w-full bg-white py-4 px-6 sm:px-12 lg:px-24">
+        <h1 className="text-4xl md:text-[62px] text-[#1F1F1F] text-center font-semibold">
+          Contact
+        </h1>
+        <p className="text-center mt-4 text-lg  opacity-70 sm:text-xl text-[#1F1F1FB2] mx-auto">
+          Whether you have questions about our products, need assistance with
+          your order, or just want to say hello, feel free to reach out. Our
+          dedicated team is here to help you with any inquiries you may have.
+        </p>
+      </div>
       <div className="mt-12 flex flex-col lg:flex-row items-stretch">
         <div className="w-full lg:w-1/2">
           <Image
             src={FormImage}
             alt="Contact Form Illustration"
-            className="object-cover w-full h-full rounded-lg"
+            className="object-contain w-full h-full"
           />
         </div>
 
-        <div className="w-full lg:w-1/2 bg-[#FFEBCC] rounded-lg p-6 sm:p-10">
+        <div className="w-full lg:w-1/2 bg-[#FFEBCC] p-6 sm:p-10">
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="bg-white h-full p-6 sm:p-8 rounded-md space-y-6 shadow-md"
@@ -104,15 +105,18 @@ const Contacts = () => {
               <Input
                 {...register("fullName", {
                   validate: (value) => {
-                    const trimmed = value?.trim();
+                    if (!value) return "Name is required.";
 
-                    if (!trimmed || trimmed.length < 3) {
-                      return "Name must be at least 3 characters.";
+                    // Check for leading or trailing spaces
+                    if (/^\s|\s$/.test(value)) {
+                      return "Name cannot start or end with a space.";
                     }
 
-                    const wordCount = trimmed.split(/\s+/).length;
-                    if (wordCount < 2 && !/^[A-Za-z]{4,}$/.test(trimmed)) {
-                      return "Please enter a valid full name.";
+                    const trimmed = value.trim();
+
+                    // Require at least 3 characters for a valid name
+                    if (trimmed.length < 3) {
+                      return "Name must be at least 3 characters long.";
                     }
 
                     return true;
@@ -193,16 +197,14 @@ const Contacts = () => {
 
             <Button
               type="submit"
-              size="lg"
-              variant="default"
               disabled={loading}
-              className="w-full py-3 rounded-md text-xl  text-white bg-[#EE9254] hover:bg-[#e9823b] font-medium flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-md  text-white bg-[#EE9254] hover:bg-[#e9823b] font-medium flex items-center justify-center gap-2"
             >
               {loading ? (
                 <Loader2 className="animate-spin h-5 w-5 text-white" />
               ) : (
                 <>
-                  <span className="text-lg">Send Message</span>
+                  <span className="">Send Message</span>
                   <FaArrowRightLong className="h-5 w-5" />
                 </>
               )}

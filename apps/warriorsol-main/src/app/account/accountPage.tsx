@@ -407,7 +407,7 @@ export default function AccountPage() {
                       <Button
                         onClick={handleSave}
                         disabled={imageLoading}
-                        className="bg-[#EE9254] h-10 px-10 hover:[#EE9254] text-white"
+                        className="bg-[#EE9254] h-10 px-10 hover:bg-[#EE9254] text-white"
                       >
                         {imageLoading ? (
                           <Loader2 className="animate-spin h-4 w-4 mr-2" />

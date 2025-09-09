@@ -15,9 +15,9 @@ const WeSeeYouComponent = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b">
       {/* Main Content Section */}
-      <div className="container mx-auto px-4 py-12 lg:py-20">
+      <div className="container mx-auto px-4  lg:py-20">
         {/* Header Section */}
-        <div className="text-center mb-12 lg:mb-16">
+        <div className="text-center  lg:mb-16">
           <h1 className="text-4xl md:text-5xl lg:text-[62px] font-semibold text-[#1F1F1F] mb-6">
             We See You
           </h1>
@@ -43,8 +43,8 @@ const WeSeeYouComponent = () => {
 
       {/* Bottom Banner */}
       <div className="bg-[#EE9253] mt-16">
-        <div className="container mx-auto md:px-20 py-10 lg:py-16">
-          <h1 className="text-[21px] lg:text-[42px] font-medium text-white mb-6 text-center">
+        <div className="container mx-auto md:px-20 py-10 lg:py-16 flex items-center justify-center">
+          <h1 className="text-[21px] lg:text-[52px] font-medium text-white text-center max-w-[90%] md:max-w-full">
             No one should fight cancer alone.
           </h1>
         </div>

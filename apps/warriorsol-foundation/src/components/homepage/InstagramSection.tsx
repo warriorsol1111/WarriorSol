@@ -52,14 +52,14 @@ const InstagramSection = () => {
         </div>
       </div>
       <div className="flex flex-col items-center justify-center mt-20">
-        <p className=" text-[42px] md:text-[62px] font-normal text-[#1F1F1F] max-w-[80%] mx-auto text-center">
+        <p className=" text-[32px] md:text-[62px] font-normal text-[#1F1F1F] md:max-w-[80%] mx-auto text-center">
           Your Gift Fuels Direct Aid, Education, And A Community Of Support That
           Helps Cancer Warriors And Everyone In The Battle Rise With Courage.
         </p>
         <div className=" justify-center mt-10">
           <Button
             size="default"
-            className="inline-flex items-center space-x-2 border bg-transparent hover:bg-transparent  text-[clamp(1rem,2.2vw,1.375rem)] font-medium px-8 sm:px-12 whitespace-nowrap !lg:px-20 py-2.5 sm:py-3 rounded-xl border-black text-black hover:text-white transition-all duration-300 group"
+            className="inline-flex items-center space-x-2 border bg-transparent hover:bg-transparent  text-[clamp(1rem,2.2vw,1.375rem)] font-medium !px-8 sm:!px-12 whitespace-nowrap md:!px-20 py-2.5 sm:py-3 rounded-xl border-black text-black hover:text-black transition-all duration-300 group"
             onClick={() => router.push("/donations")}
           >
             Donate Now <BiDonateHeart className="!w-5 !h-5 ml-2" />

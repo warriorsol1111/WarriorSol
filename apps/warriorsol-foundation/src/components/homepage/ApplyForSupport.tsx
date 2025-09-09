@@ -31,7 +31,13 @@ import { Loader2 } from "lucide-react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
-export default function ApplyForSupport() {
+interface ApplyForSupportProps {
+  showParagraph?: boolean;
+}
+
+export default function ApplyForSupport({
+  showParagraph,
+}: ApplyForSupportProps) {
   const { data: session } = useSession();
   const isLoggedIn = !!session?.user;
 
@@ -61,10 +67,12 @@ export default function ApplyForSupport() {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+    setErrors({ ...errors, [e.target.id]: "" });
     setForm({ ...form, [e.target.id]: e.target.value });
   };
 
   const handleSupportTypeChange = (value: string) => {
+    setErrors({ ...errors, supportType: "" });
     setForm({ ...form, supportType: value });
   };
 
@@ -175,7 +183,7 @@ export default function ApplyForSupport() {
   };
 
   const inputClass = (field: string) =>
-    `w-full ${errors[field] ? "border-red-500" : "border-gray-300"} border rounded-md !h-12 text-lg`;
+    `w-full ${errors[field] ? "border-red-500" : "border-gray-300"} border rounded-md !h-12 text-sm md:text-[18px]`;
 
   return (
     <div>
@@ -198,7 +206,7 @@ export default function ApplyForSupport() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Family Name */}
                   <div className="space-y-2">
-                    <Label className="text-xl" htmlFor="familyName">
+                    <Label className="" htmlFor="familyName">
                       Family Name
                       <span className="text-red-500 ml-[-5px] ">*</span>
                     </Label>
@@ -218,7 +226,7 @@ export default function ApplyForSupport() {
 
                   {/* Contact Email */}
                   <div className="space-y-2">
-                    <Label className="text-xl" htmlFor="contactEmail">
+                    <Label className="" htmlFor="contactEmail">
                       Contact Email
                       <span className="text-red-500 ml-[-5px] ">*</span>
                     </Label>
@@ -226,6 +234,7 @@ export default function ApplyForSupport() {
                       id="contactEmail"
                       type="email"
                       placeholder="Enter your email"
+                      disabled
                       value={form.contactEmail}
                       onChange={handleChange}
                       className={inputClass("contactEmail")}
@@ -239,24 +248,29 @@ export default function ApplyForSupport() {
 
                   {/* Contact Phone */}
                   <div className="space-y-2">
-                    <Label className="text-xl" htmlFor="contactPhone">
+                    <Label className="" htmlFor="contactPhone">
                       Contact Phone
                       <span className="text-red-500 ml-[-5px] ">*</span>
                     </Label>
                     <PhoneInput
                       country={"us"}
                       value={form.contactPhone}
-                      onChange={(phone) =>
-                        setForm((prev) => ({ ...prev, contactPhone: phone }))
-                      }
+                      onChange={(phone) => {
+                        setErrors({ ...errors, contactPhone: "" });
+                        setForm((prev) => ({ ...prev, contactPhone: phone }));
+                      }}
                       inputProps={{
                         name: "contactPhone",
                         id: "contactPhone",
                       }}
                       containerClass="w-full"
-                      inputClass={`!w-full !h-12 !text-lg !border ${errors.contactPhone ? "!border-red-500" : "!border-gray-300"} rounded-md`}
+                      inputClass={`!w-full !h-12 !text-sm md:!text-[18px] !border ${
+                        errors.contactPhone
+                          ? "!border-red-500"
+                          : "!border-gray-300"
+                      } rounded-md focus:!border-[#EE9254] focus:!ring-1 focus:!ring-[#EE9254]`}
                       buttonClass="!h-12"
-                      dropdownClass="!w-full"
+                      dropdownClass=""
                       enableSearch
                     />
 
@@ -269,7 +283,7 @@ export default function ApplyForSupport() {
 
                   {/* Family Size */}
                   <div className="space-y-2">
-                    <Label className="text-xl" htmlFor="familySize">
+                    <Label className="" htmlFor="familySize">
                       Family Size
                       <span className="text-red-500 ml-[-5px] ">*</span>
                     </Label>
@@ -291,7 +305,7 @@ export default function ApplyForSupport() {
 
                   {/* Support Type */}
                   <div className="space-y-2">
-                    <Label className="text-xl" htmlFor="supportType">
+                    <Label className="" htmlFor="supportType">
                       Type of Support Needed
                       <span className="text-red-500 ml-[-5px] ">*</span>
                     </Label>
@@ -301,7 +315,7 @@ export default function ApplyForSupport() {
                     >
                       <SelectTrigger
                         id="supportType"
-                        className={`${errors.supportType ? "border-red-500" : "border-gray-300"} mt-2 w-full border text-lg !h-12 cursor-pointer`}
+                        className={`${errors.supportType ? "border-red-500" : "border-gray-300"} mt-2 w-full border text-sm md:text-[18px] !h-12 cursor-pointer`}
                       >
                         <SelectValue placeholder="Select support type" />
                       </SelectTrigger>
@@ -320,7 +334,7 @@ export default function ApplyForSupport() {
 
                   {/* Requested Amount */}
                   <div className="space-y-2">
-                    <Label className="text-xl" htmlFor="requestedAmount">
+                    <Label className="" htmlFor="requestedAmount">
                       Requested Amount ($)
                       <span className="text-red-500 ml-[-5px] ">*</span>
                     </Label>
@@ -343,7 +357,7 @@ export default function ApplyForSupport() {
 
                 {/* Situation */}
                 <div className="space-y-2">
-                  <Label className="text-xl" htmlFor="situation">
+                  <Label className="" htmlFor="situation">
                     Describe Your Situation
                     <span className="text-red-500 ml-[-5px] ">*</span>
                   </Label>
@@ -415,17 +429,19 @@ export default function ApplyForSupport() {
           </Card>
         </TooltipProvider>
       </section>
-      <div className="bg-[#EE9253]">
-        <div className="container mx-auto md:px-20 py-16 lg:py-24">
-          <h1 className="text-[21px] lg:text-[42px] font-medium text-white mb-6 text-center">
-            Breaking the silence{" "}
-          </h1>
-          <p className="text-lg md:text-[20px] mt-[-10px] font-medium text-white text-center">
-            Honest conversations and inspiring stories about the parts of cancer
-            no one talks about{" "}
-          </p>
+      {showParagraph && (
+        <div className="bg-[#EE9253]">
+          <div className="container mx-auto md:px-20 py-16 lg:py-24">
+            <h1 className="text-[32px] lg:text-[52px] font-medium text-white mb-6 text-center">
+              Breaking the silence{" "}
+            </h1>
+            <p className="text-lg md:text-[20px] mt-[-10px] font-medium text-white text-center">
+              Honest conversations and inspiring stories about the parts of
+              cancer no one talks about{" "}
+            </p>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

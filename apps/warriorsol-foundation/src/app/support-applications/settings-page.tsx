@@ -114,8 +114,8 @@ export default function AdminSupportApplicationsPage() {
       <Navbar />
 
       <section className="w-full px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 py-10 min-h-screen bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl md:text-[62px] font-bold mb-12 text-[#EE9254] text-left">
+        <div className="md:max-w-7xl mx-auto">
+          <h1 className="text-3xl md:text-[62px] font-bold mb-12 text-[#EE9254] text-center md:text-left">
             Review Support Applications
           </h1>
 
@@ -138,43 +138,43 @@ export default function AdminSupportApplicationsPage() {
               {applications.map((app) => (
                 <div
                   key={app.id}
-                  className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-300"
+                  className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 hover:shadow-xl transition-all duration-300 flex flex-col"
                 >
                   {/* Header with name and support type badge */}
-                  <div className="flex justify-between items-start mb-4">
-                    <h2 className="text-[24px] font-bold text-gray-900 uppercase tracking-wide">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+                    <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 uppercase tracking-wide">
                       {app.familyName}
                     </h2>
-                    <span className="bg-[#FFE4CC] text-[#B8732D] text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">
+                    <span className="bg-[#FFE4CC] text-[#B8732D] text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1 rounded-full uppercase tracking-wide self-start sm:self-auto">
                       {app.supportType}
                     </span>
                   </div>
 
                   {/* Situation */}
                   <div className="mb-4">
-                    <p className="text-[16px] font-semibold text-gray-700 mb-1">
+                    <p className="text-sm sm:text-base font-semibold text-gray-700 mb-1">
                       Situation:
                     </p>
-                    <p className="text-[16px] text-gray-600 leading-relaxed max-h-24 overflow-y-auto">
+                    <div className="text-sm sm:text-base text-gray-600 leading-relaxed max-h-24 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 rounded">
                       {app.situation}
-                    </p>
+                    </div>
                   </div>
 
                   {/* Amount and Family Size */}
-                  <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4">
                     <div>
-                      <p className="text-[16px] font-semibold text-gray-700">
+                      <p className="text-sm sm:text-base font-semibold text-gray-700">
                         Amount:
                       </p>
-                      <p className="text-lg font-bold text-[#EE9254]">
+                      <p className="text-base sm:text-lg font-bold text-[#EE9254]">
                         ${app.requestedAmount.toLocaleString()}
                       </p>
                     </div>
                     <div>
-                      <p className="text-[16px] font-semibold text-gray-700">
+                      <p className="text-sm sm:text-base font-semibold text-gray-700">
                         Family Size:
                       </p>
-                      <p className="text-lg font-bold text-gray-900">
+                      <p className="text-base sm:text-lg font-bold text-gray-900">
                         {app.familySize}
                       </p>
                     </div>
@@ -182,7 +182,7 @@ export default function AdminSupportApplicationsPage() {
 
                   {/* Submission Date */}
                   <div className="mb-4">
-                    <p className="text-[16px] font-medium text-gray-500 uppercase tracking-wide">
+                    <p className="text-xs sm:text-sm md:text-base font-medium text-gray-500 uppercase tracking-wide">
                       Submitted:{" "}
                       {new Date(app.createdAt).toLocaleDateString("en-US", {
                         year: "numeric",
@@ -195,8 +195,8 @@ export default function AdminSupportApplicationsPage() {
                   </div>
 
                   {/* Contact Information */}
-                  <div className="mb-6 space-y-2 bg-gray-50 p-3 rounded-lg">
-                    <div className="flex items-center text-[16px]">
+                  <div className="mb-6 space-y-2 bg-gray-50 p-2 sm:p-3 rounded-lg">
+                    <div className="flex flex-wrap items-center text-sm sm:text-base">
                       <span className="mr-2">📧</span>
                       <span className="font-medium text-gray-700 mr-2">
                         Email:
@@ -206,7 +206,7 @@ export default function AdminSupportApplicationsPage() {
                       </span>
                     </div>
                     {app.contactPhone && (
-                      <div className="flex items-center text-[16px]">
+                      <div className="flex flex-wrap items-center text-sm sm:text-base">
                         <span className="mr-2">📞</span>
                         <span className="font-medium text-gray-700 mr-2">
                           Phone:
@@ -219,9 +219,9 @@ export default function AdminSupportApplicationsPage() {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex gap-3">
+                  <div className="flex flex-col sm:flex-row gap-3 mt-auto">
                     <Button
-                      className="bg-[#EE9254] hover:bg-[#D67E43] text-white font-semibold text-[18px]  py-2.5 px-6 rounded-lg transition-colors duration-200 flex-1"
+                      className="bg-[#EE9254] hover:bg-[#D67E43] text-white font-semibold text-sm sm:text-lg py-2 sm:py-2.5 px-4 sm:px-6 rounded-lg transition-colors duration-200 flex-1"
                       onClick={() => handleAction(app.id, "accept")}
                       disabled={
                         actionLoading.id === app.id &&
@@ -239,7 +239,7 @@ export default function AdminSupportApplicationsPage() {
                       )}
                     </Button>
                     <Button
-                      className="bg-red-500 hover:bg-red-600 text-white font-semibold text-[18px]  py-2.5 px-6 rounded-lg transition-colors duration-200 flex-1"
+                      className="bg-red-500 hover:bg-red-600 text-white font-semibold text-sm sm:text-lg py-2 sm:py-2.5 px-4 sm:px-6 rounded-lg transition-colors duration-200 flex-1"
                       onClick={() => handleAction(app.id, "reject")}
                       disabled={
                         actionLoading.id === app.id &&

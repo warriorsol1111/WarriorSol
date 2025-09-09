@@ -256,7 +256,7 @@ export default function OrdersPage() {
               <AccordionTrigger className="cursor-pointer px-4 py-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                 <div className="text-left">
                   <p className="text-xl sm:text-2xl font-semibold text-[#1F1F1F]">
-                    Order #{order.shopifyOrderName.slice(0, 8)}
+                    Order {order.shopifyOrderName.slice(0, 8)}
                   </p>
                   <p className="text-base sm:text-lg text-gray-500">
                     {format(new Date(order.date), "PPP")}

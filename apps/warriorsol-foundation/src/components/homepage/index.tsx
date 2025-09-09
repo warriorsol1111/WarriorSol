@@ -17,7 +17,7 @@ export default function Homepage() {
   const router = useRouter();
   return (
     <section>
-      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6 mb-8 sm:mb-12 w-full px-4 sm:px-6 md:px-8 lg:px-12 py-5 mt-10">
+      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6 mb-8 w-full px-4 sm:px-6 md:px-8 lg:px-12 py-5">
         <div>
           <h2 className="text-4xl sm:text-5xl text-center md:text-start lg:text-[62px] leading-tight lg:leading-[62px]  mb-1 font-medium text-[#1F1F1F] capitalize">
             WarriorSol Foundation
@@ -47,22 +47,22 @@ export default function Homepage() {
           </p>
 
           {/* Buttons overlay */}
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 items-center justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 items-center justify-center w-full sm:w-auto">
             <Button
               size="default"
               variant="outline"
-              className="inline-flex items-center space-x-2 border text-white text-sm sm:text-base md:text-lg font-medium px-6 sm:px-10 md:px-12 py-2 sm:py-3 rounded-xl bg-transparent hover:bg-white/20 hover:text-white transition-all duration-300 group"
+              className="flex-1 inline-flex items-center justify-center space-x-2 border text-white text-sm sm:text-base md:text-lg font-medium  py-2 sm:py-3 rounded-xl bg-transparent hover:bg-white/20 hover:text-white transition-all duration-300 group"
               onClick={() => router.push("/support")}
             >
-              Apply For Support{" "}
+              Apply For Support
               <GoArrowUpRight className="!w-4 !h-4 sm:!w-5 sm:!h-5 ml-2" />
             </Button>
             <Button
               size="default"
-              className="inline-flex items-center space-x-2 border text-white text-sm sm:text-base md:text-lg font-medium px-6 sm:px-10 md:px-12 py-2 sm:py-3 rounded-xl bg-transparent hover:bg-white/20 hover:text-white transition-all duration-300 group"
+              className="flex-1 inline-flex items-center justify-center space-x-2 border text-white text-sm sm:text-base md:text-lg font-medium py-2 sm:py-3 !px-8  md:!px-6 rounded-xl bg-transparent hover:bg-white/20 hover:text-white transition-all duration-300 group"
               onClick={() => router.push("/donations")}
             >
-              Donate Now{" "}
+              Donate Now
               <BiDonateHeart className="!w-4 !h-4 sm:!w-5 sm:!h-5 ml-2" />
             </Button>
           </div>
@@ -72,9 +72,9 @@ export default function Homepage() {
       <div className="bg-[#EE9253]">
         <div className="container mx-auto md:px-20 py-16 lg:py-24">
           <p className="text-lg md:text-[20px] mt-[-10px] font-medium text-white text-center">
-            Globally, $15Bi is raised annually but{" "}
+            Globally, $15B is raised annually but{" "}
           </p>
-          <h1 className="text-[21px] lg:text-[42px] font-medium text-white mb-6 text-center">
+          <h1 className="text-[21px] lg:text-[52px] font-medium text-white mb-6 text-center">
             90% of cancer funding goes to research — less than 10% reaches
             families in need{" "}
           </h1>
@@ -82,7 +82,7 @@ export default function Homepage() {
       </div>
       <OurMission />
       <WeSeeYouComponent />
-      <ApplyForSupport />
+      <ApplyForSupport showParagraph={false} />
       <InstagramSection />
       <WearYourSupportSection />
       <RebellionNewsletter />

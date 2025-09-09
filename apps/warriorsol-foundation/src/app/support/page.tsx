@@ -17,14 +17,14 @@ export default function SupportPage() {
       <Navbar />
       <main className="min-h-screen bg-white">
         {/* Hero Section */}
-        <section className="relative bg-[#F8F9FA] py-20">
+        <section className="relative bg-[#F8F9FA] py-5 md:py-10">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div className="space-y-6">
                 <h1 className="text-5xl md:text-6xl text-center md:text-start  leading-tight">
                   We&apos;re Here to Support Your Journey
                 </h1>
-                <p className="text-lg text-center md:text-start text-gray-600 ">
+                <p className="text-[18px] md:text-lg text-center md:text-start text-gray-600 ">
                   At WarriorSol Foundation, we understand that life can present
                   unexpected challenges. Our mission is to provide meaningful
                   support to families facing difficult times, offering both
@@ -32,11 +32,11 @@ export default function SupportPage() {
                   through these moments.
                 </p>
               </div>
-              <div className="relative h-[400px]">
+              <div className="">
                 <Image
                   src={changeLifeImg}
                   alt="Support Illustration"
-                  fill
+                  layout="responsive"
                   className="object-contain"
                   priority
                 />
@@ -46,9 +46,9 @@ export default function SupportPage() {
         </section>
 
         {/* Support Form Section */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <ApplyForSupport />
+        <section className="">
+          <div className="container  mt-[-20px] mx-auto px-4">
+            <ApplyForSupport showParagraph={false} />
           </div>
         </section>
 

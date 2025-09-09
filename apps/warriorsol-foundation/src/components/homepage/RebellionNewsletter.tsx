@@ -68,14 +68,7 @@ const RebellionNewsletter = () => {
 
   return (
     <section className="w-full">
-      <div className="bg-[#EE9253]">
-        <div className="container mx-auto md:px-20 py-16 lg:py-24">
-          <h1 className="text-[19px] lg:text-[42px] font-medium text-white mb-6 text-center">
-            Everyday you rise with the sun is proof of the courage and strength
-            that already lives within you{" "}
-          </h1>
-        </div>
-      </div>
+      <div className="bg-[#EE9253]"></div>
 
       {/* Newsletter Section */}
       <div className="grid grid-cols-1 md:grid-cols-2">
@@ -107,20 +100,19 @@ const RebellionNewsletter = () => {
             onSubmit={addEmailToNewsLetter}
             className="w-full max-w-md px-4 md:px-0"
           >
-            <div className="relative flex flex-col sm:flex-row gap-2 sm:gap-4 md:gap-x-4 lg:gap-x-4">
+            <div className="relative flex flex-col sm:flex-row gap-4 md:gap-0">
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your Email"
-                className="w-full bg-[#FFFFFF] border-none px-4 py-3 text-black focus:outline-none"
+                className="w-full rounded-lg bg-[#FFFFFF] border-none px-4 py-3 text-black focus:outline-none"
                 required
                 disabled={notifyLoading}
               />
               <Button
                 type="submit"
-                size="lg"
-                className="text-[20px] bg-[#EE9254] text-white px-8  hover:bg-[#d89b89] transition h-12"
+                className="text-[20px] bg-[#EE9254] text-white px-8 rounded-lg hover:bg-[#d89b89] transition"
                 disabled={notifyLoading}
               >
                 {notifyLoading ? (

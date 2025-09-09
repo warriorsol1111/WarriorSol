@@ -61,7 +61,7 @@ export default function StoriesOfHope() {
         <h2 className="text-[32px] sm:text-[42px] md:text-[52px] lg:text-[62px] leading-tight md:leading-[62px]  font-semibold text-[#1F1F1F] mb-3 md:mb-4">
           OUR MISSION
         </h2>
-        <p className="text-[16px] sm:text-[18px] md:text-[20px] font-medium text-[#1F1F1F]/70 mx-auto max-w-[40%]">
+        <p className="text-[16px] sm:text-[18px] md:text-[20px] font-medium text-[#1F1F1F]/70 mx-auto md:max-w-[40%]">
           To Provide Direct Financial And Emotional Support To The Warriors
           Fighting The Hidden Burdens Of Cancer Directly Or Indirectly.
         </p>
@@ -121,7 +121,7 @@ export default function StoriesOfHope() {
                     {/* Quote in true center */}
                     <div className="flex flex-1 items-center justify-center">
                       <p
-                        className={`text-center text-sm sm:text-base md:text-[15px] font-medium leading-relaxed ${
+                        className={`text-left md:text-center text-sm sm:text-base md:text-[15px] font-medium leading-relaxed ${
                           (i + pairIndex * 2) % 2 === 0
                             ? "text-[#EDF1D3]"
                             : "text-black"
@@ -155,7 +155,7 @@ export default function StoriesOfHope() {
         <div className="flex justify-center mt-10">
           <Button
             size="default"
-            className="inline-flex items-center space-x-2 border bg-transparent hover:bg-transparent  text-[clamp(1rem,2.2vw,1.375rem)] font-medium px-8 sm:px-12 whitespace-nowrap !lg:px-20 py-2.5 sm:py-3 rounded-xl border-black text-black hover:text-white transition-all duration-300 group"
+            className="inline-flex items-center space-x-2 border bg-transparent hover:bg-transparent hover:text-black  text-[clamp(1rem,2.2vw,1.375rem)] font-medium px-8 sm:!px-12 whitespace-nowrap !lg:px-20 py-2.5 sm:py-3 rounded-xl border-black text-black  transition-all duration-300 group"
             onClick={() => router.push("/donations")}
           >
             Donate Now <BiDonateHeart className="!w-5 !h-5 ml-2" />

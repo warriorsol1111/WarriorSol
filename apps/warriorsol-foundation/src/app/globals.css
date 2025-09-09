@@ -146,3 +146,11 @@
 .animate-scroll-reverse {
   animation: scroll-reverse 20s linear infinite;
 }
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+  border: none;
+}
