@@ -328,7 +328,7 @@ const ChooseYourArmor: React.FC = () => {
               <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <Button
                   variant="link"
-                  className="w-8 h-8 sm:w-10 sm:h-10 bg-white flex items-center justify-center text-lg sm:text-xl rounded-full shadow p-0"
+                  className=" bg-white flex items-center justify-center text-lg sm:text-xl !rounded-full shadow p-0 !w-10 !h-10"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -348,7 +348,7 @@ const ChooseYourArmor: React.FC = () => {
                   <div title="Out of stock">
                     <Button
                       variant="link"
-                      className="w-8 h-8 sm:w-10 sm:h-10 bg-white flex items-center justify-center text-lg sm:text-xl rounded-full shadow p-0"
+                      className=" bg-white flex items-center justify-center text-lg sm:text-xl !rounded-full shadow p-0 !w-10 !h-10"
                       disabled
                     >
                       <AiOutlineShoppingCart />
@@ -357,7 +357,7 @@ const ChooseYourArmor: React.FC = () => {
                 ) : (
                   <Button
                     variant="link"
-                    className="w-8 h-8 sm:w-10 sm:h-10 bg-white flex items-center justify-center text-lg sm:text-xl rounded-full shadow p-0"
+                    className=" bg-white flex items-center justify-center text-lg sm:text-xl !rounded-full shadow p-0 !w-10 !h-10"
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();

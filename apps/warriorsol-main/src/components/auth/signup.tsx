@@ -280,7 +280,7 @@ function SignupPage() {
                 variant="ghost"
                 size="icon"
                 onClick={togglePasswordVisibility}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:bg-transparent"
               >
                 {showPassword ? (
                   <FaEyeSlash className="w-4 h-4 md:w-5 md:h-5" />
@@ -315,7 +315,7 @@ function SignupPage() {
                 variant="ghost"
                 size="icon"
                 onClick={toggleConfirmPasswordVisibility}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:bg-transparent"
               >
                 {showConfirmPassword ? (
                   <FaEyeSlash className="w-4 h-4 md:w-5 md:h-5" />

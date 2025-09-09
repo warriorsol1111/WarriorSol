@@ -231,11 +231,11 @@ export default function ComingSoon() {
                 placeholder="Your Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-[#FFFFFF] rounded-lg text-black !placeholder-black text-xs sm:text-sm h-10 sm:h-11 md:h-13 flex-1"
+                className="bg-[#FFFFFF] rounded-lg text-black !placeholder-black !text-xs sm:!text-sm h-10 sm:h-11 md:h-13 flex-1"
               />
               <Button
                 type="submit"
-                className="bg-[#EE9254] hover:bg-[#D97C38] text-white px-4 sm:px-6 py-2 tracking-wide uppercase text-xs sm:text-sm flex items-center justify-center gap-2 whitespace-nowrap"
+                className="bg-[#EE9254] hover:bg-[#D97C38] text-white px-4 sm:px-6 h-10 sm:h-11 md:h-13 py-2 tracking-wide uppercase text-xs sm:text-sm flex items-center justify-center gap-2 whitespace-nowrap"
                 disabled={notifyLoading}
               >
                 {notifyLoading ? (

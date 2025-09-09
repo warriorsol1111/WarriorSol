@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { Label } from "../../../../warriorsol-main/src/components/ui/label";
+import { Label } from "../ui/label";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import ForgotPasswordImage1 from "@/assets/auth/forgotPassword1.svg";
@@ -39,7 +39,14 @@ export default function ForgotPasswordPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [resending, setResending] = useState(false);
+  const [redirectLoading, setRedirectLoading] = useState(false);
 
+  const handleBackToLogin = () => {
+    setRedirectLoading(true);
+    setTimeout(() => {
+      window.location.href = "/login";
+    }, 1000);
+  };
   // Handle browser back button and history
   useEffect(() => {
     // Push initial state when component mounts
@@ -222,9 +229,16 @@ export default function ForgotPasswordPage() {
           );
           const data = await response.json();
           if (data.status === "success") {
-            toast.dismiss();
-            toast.success("Verification code sent successfully");
-            setStep("verify");
+            if (
+              data.message?.includes("No account found with this email address")
+            ) {
+              toast.dismiss();
+              toast.error("No account found with this email address");
+            } else {
+              toast.dismiss();
+              toast.success("Verification code sent successfully");
+              setStep("verify");
+            }
           } else {
             if (
               data.message?.includes(
@@ -346,7 +360,7 @@ export default function ForgotPasswordPage() {
               <h1 className="text-3xl md:text-[42px] text-[#1F1F1F]  font-normal">
                 Forgot Password
               </h1>
-              <p className=" text-[#1F1F1F99]  text-base md:text-lg">
+              <p className=" text-[#1F1F1F99]  text-base md:text-[20px]">
                 Enter Your email, we&apos;ll send a verification code
               </p>
             </div>
@@ -362,13 +376,15 @@ export default function ForgotPasswordPage() {
                 className={`w-full ${errors.email ? "border-red-500" : ""}`}
               />
               {errors.email && (
-                <p className="text-sm text-red-500">{errors.email}</p>
+                <p className="text-sm md:text-[16px]  text-red-500">
+                  {errors.email}
+                </p>
               )}
             </div>
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#EE9254] ! !text-xl  cursor-pointer hover:bg-[#EE9254] h-10 md:h-12 text-white"
+              className="w-full bg-[#EE9254]  cursor-pointer hover:bg-[#EE9254] h-10 md:h-12 text-white"
             >
               {loading ? Spinner : "Send Code"}
             </Button>
@@ -424,7 +440,7 @@ export default function ForgotPasswordPage() {
             <Button
               type="submit"
               disabled={loading || otpValues.some((val) => val === "")}
-              className="w-full bg-[#EE9254] cursor-pointer ! !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white disabled:opacity-50"
+              className="w-full bg-[#EE9254] cursor-pointer hover:bg-[#EE9254] h-10 md:h-12 text-white disabled:opacity-50"
             >
               {loading ? Spinner : "Verify Code"}
             </Button>
@@ -487,7 +503,7 @@ export default function ForgotPasswordPage() {
                   size="icon"
                   type="button"
                   onClick={togglePasswordVisibility}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:bg-transparent"
                 >
                   {showPassword ? (
                     <FaEyeSlash className="w-5 h-5" />
@@ -521,7 +537,7 @@ export default function ForgotPasswordPage() {
                   size="icon"
                   type="button"
                   onClick={toggleConfirmPasswordVisibility}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:bg-transparent"
                 >
                   {showConfirmPassword ? (
                     <FaEyeSlash className="w-5 h-5" />
@@ -540,7 +556,7 @@ export default function ForgotPasswordPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#EE9254] cursor-pointer ! !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white"
+              className="w-full bg-[#EE9254] cursor-pointer hover:bg-[#EE9254] h-10 md:h-12 text-white"
             >
               {loading ? Spinner : "Continue"}
             </Button>
@@ -559,10 +575,15 @@ export default function ForgotPasswordPage() {
               </p>
             </div>
             <Button
-              onClick={() => (window.location.href = "/login")}
+              onClick={handleBackToLogin}
+              disabled={redirectLoading}
               className="w-full bg-[#EE9254] cursor-pointer ! !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white"
             >
-              Back to Login
+              {redirectLoading ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                "Back to Login"
+              )}
             </Button>
           </>
         );

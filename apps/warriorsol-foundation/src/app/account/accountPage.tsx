@@ -238,6 +238,10 @@ export default function SettingsPage() {
       <div className="min-h-screen flex flex-col bg-gray-50">
         <Navbar />
         <main className="flex-1 px-2 sm:px-4 py-6 sm:py-12 max-w-7xl mx-auto w-full">
+          <h1 className="text-3xl md:text-[62px] font-extrabold mb-8 text-center text-[#1F1F1F]">
+            My Account
+          </h1>
+
           <Tabs defaultValue="personal" className="w-full">
             <TabsList className="mb-8 sm:mb-20 flex flex-wrap justify-center gap-2 sm:gap-3 rounded-full backdrop-blur p-1 shadow-inner">
               <TabsTrigger

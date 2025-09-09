@@ -229,7 +229,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
                 {/* Wishlist button */}
                 <Button
                   variant="link"
-                  className="p-1.5 sm:p-2 bg-white/90 backdrop-blur-sm cursor-pointer hover:bg-white transition-colors shadow-md rounded-full"
+                  className=" bg-white flex items-center justify-center text-lg sm:text-xl !rounded-full shadow p-0 !w-10 !h-10"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -249,7 +249,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
                 {/* Cart button */}
                 <Button
                   variant="link"
-                  className="p-1.5 sm:p-2 bg-white/90 backdrop-blur-sm cursor-pointer hover:bg-white transition-colors shadow-md rounded-full"
+                  className=" bg-white flex items-center justify-center text-lg sm:text-xl !rounded-full shadow p-0 !w-10 !h-10"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
