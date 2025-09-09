@@ -40,7 +40,7 @@ export default function DonorWallShowcase({
             <h3 className="text-xl sm:text-[42px] font-medium text-[#1F1F1F]">
               Total Raised
             </h3>
-            <p className="text-3xl sm:text-[52px] font-[Geist] font-medium">
+            <p className="text-3xl sm:text-[52px]  font-medium">
               ${(totalRaised / 100).toLocaleString()}
             </p>
             <Progress.Root
@@ -54,7 +54,7 @@ export default function DonorWallShowcase({
                 }}
               />
             </Progress.Root>
-            <div className="flex justify-between text-sm sm:text-lg font-[Geist] font-medium">
+            <div className="flex justify-between text-sm sm:text-lg  font-medium">
               <span>{uniqueInvestors.length} investors</span>
               <span>{progressPercentage.toFixed()}%</span>
             </div>
@@ -94,16 +94,16 @@ export default function DonorWallShowcase({
                           <AvatarFallback>{initials}</AvatarFallback>
                         </Avatar>
                         <div>
-                          <div className="font-medium text-lg sm:text-[26px] text-[#1F1F1F] font-[Geist]">
+                          <div className="font-medium text-lg sm:text-[26px] text-[#1F1F1F] ">
                             {donation.name}
                           </div>
-                          <div className="text-xs sm:text-lg font-[Geist] text-[#1F1F1F99]">
+                          <div className="text-xs sm:text-lg  text-[#1F1F1F99]">
                             Donated on{" "}
                             {new Date(donation.createdAt).toLocaleDateString()}
                           </div>
                         </div>
                       </div>
-                      <div className="text-lg sm:text-[26px] font-[Geist] text-[#1F1F1F] font-medium">
+                      <div className="text-lg sm:text-[26px]  text-[#1F1F1F] font-medium">
                         ${(donation.amount / 100).toLocaleString()}
                       </div>
                     </div>
@@ -144,16 +144,16 @@ export default function DonorWallShowcase({
                       <AvatarFallback>{initials}</AvatarFallback>
                     </Avatar>
                     <div>
-                      <div className="font-medium text-lg sm:text-[26px] text-[#1F1F1F] font-[Geist]">
+                      <div className="font-medium text-lg sm:text-[26px] text-[#1F1F1F] ">
                         {donation.name}
                       </div>
-                      <div className="text-xs sm:text-lg font-[Geist] text-[#1F1F1F99]">
+                      <div className="text-xs sm:text-lg  text-[#1F1F1F99]">
                         Donated on{" "}
                         {new Date(donation.createdAt).toLocaleDateString()}
                       </div>
                     </div>
                   </div>
-                  <div className="text-lg sm:text-[26px] font-[Geist] text-[#1F1F1F] font-medium">
+                  <div className="text-lg sm:text-[26px]  text-[#1F1F1F] font-medium">
                     ${(donation.amount / 100).toLocaleString()}
                   </div>
                 </div>

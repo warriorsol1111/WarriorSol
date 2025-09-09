@@ -10,22 +10,21 @@ export default function WhoIsTasha() {
         <div className="mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-3xl sm:text-4xl lg:text-[62px] font-semibold text-[#1F1F1F] mb-8">
-              Who Is Tasha Mallet?
+              Who Is Tasha Mellett?
             </h1>
           </div>
 
           {/* Main Content */}
-          <div className="bg-white rounded-lg  overflow-hidden">
+          <div className="bg-white overflow-hidden">
             <div className="flex flex-col lg:flex-row">
               {/* Image Section */}
               <div className="lg:w-1/3 flex-shrink-0">
-                <div className="h-64 sm:h-80 lg:h-full bg-gray-200 flex items-center justify-center">
+                <div className=" bg-gray-200 flex items-center justify-center !rounded-none">
                   <Image
                     src={TashaImage}
                     alt="Tasha Mallet"
-                    width={300}
-                    height={400}
-                    className="w-full h-full object-cover"
+                    layout="responsive"
+                    className="w-full h-full object-cover !rounded-none"
                   />
                 </div>
               </div>
@@ -73,7 +72,7 @@ export default function WhoIsTasha() {
       </div>
       <div className="bg-[#90AF83]">
         <div className="container mx-auto md:px-20 py-10 lg:py-18">
-          <h1 className="text-[21px] lg:text-[42px] font-medium text-white mb-6 text-center">
+          <h1 className="text-[21px] lg:text-[52px] font-medium text-white mb-6 text-center">
             Tasha’s story sparked a movement of love to create a strong
             ecosystem rooted in vulnerability and support{" "}
           </h1>

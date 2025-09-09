@@ -123,7 +123,7 @@ export default function StoriesOfHope() {
                       {/* Quote in true center */}
                       <div className="flex flex-1 items-center justify-center">
                         <p
-                          className={`text-center text-sm sm:text-base md:text-[15px] font-medium leading-relaxed ${
+                          className={`text-left text-sm sm:text-base md:text-[15px] font-medium leading-relaxed ${
                             (i + pairIndex * 2) % 2 === 0
                               ? "text-[#EDF1D3]"
                               : "text-black"
@@ -157,7 +157,7 @@ export default function StoriesOfHope() {
           <div className="flex justify-center mt-10">
             <Button
               size="default"
-              className="inline-flex items-center space-x-2 border  bg-[#CDED84] !rounded-full hover:bg-[#CDED84]  text-[clamp(1rem,2.2vw,1.375rem)] font-medium px-8 sm:px-12 whitespace-nowrap !lg:px-20 py-2.5 sm:py-3 text-black hover:text-black transition-all duration-300 group"
+              className="inline-flex items-center space-x-2  bg-[#C1E965] hover:bg-[#C1E965] hover:text-black  text-[clamp(1rem,2.2vw,1.375rem)] font-medium px-8 sm:!px-12 whitespace-nowrap !lg:px-20 py-2.5 sm:py-3 border-black text-black  transition-all duration-300 group"
               onClick={() => router.push("/donations")}
             >
               Donate Now <BiDonateHeart className="!w-5 !h-5 ml-2" />
@@ -167,7 +167,7 @@ export default function StoriesOfHope() {
       </section>
       <div className="bg-[#90AF83]">
         <div className="container mx-auto md:px-20 py-10 lg:py-10">
-          <h1 className="text-[21px] lg:text-[42px] font-medium text-white mb-6 text-center">
+          <h1 className="text-[21px] lg:text-[42px] font-medium text-white  text-center">
             Let us help you be seen, heard, and supported
           </h1>
         </div>

@@ -50,7 +50,7 @@ export default function Homepage() {
             <Button
               size="default"
               variant="outline"
-              className="inline-flex items-center space-x-2 !rounded-full border text-white text-sm sm:text-base md:text-lg font-medium px-6 sm:px-10 md:px-12 py-2 sm:py-3 bg-transparent hover:bg-white/20 hover:text-white transition-all duration-300 group"
+              className="flex-1 inline-flex items-center justify-center space-x-2 border text-white text-sm sm:text-base md:text-lg font-medium  py-2 sm:py-3 bg-transparent hover:bg-white/20 hover:text-white transition-all duration-300 group"
               onClick={() => router.push("/support")}
             >
               Apply For Support{" "}
@@ -58,7 +58,7 @@ export default function Homepage() {
             </Button>
             <Button
               size="default"
-              className="inline-flex items-center space-x-2 !rounded-full border text-white text-sm sm:text-base md:text-lg font-medium px-6 sm:px-10 md:px-12 py-2 sm:py-3 bg-transparent hover:bg-white/20 hover:text-white transition-all duration-300 group"
+              className="flex-1 inline-flex items-center justify-center space-x-2 border text-white text-sm sm:text-base md:text-lg font-medium py-2 sm:py-3 !px-8  md:!px-6 bg-transparent hover:bg-white/20 hover:text-white transition-all duration-300 group"
               onClick={() => router.push("/donations")}
             >
               Donate Now{" "}
@@ -73,7 +73,7 @@ export default function Homepage() {
           <p className="text-lg md:text-[20px] mt-[-10px] font-medium text-white text-center">
             Our Mission{" "}
           </p>
-          <h1 className="text-[21px] lg:text-[42px] font-medium text-white mb-6 text-center">
+          <h1 className="text-[21px] lg:text-[52px] font-medium text-white mb-6 text-center">
             To amplify the voices and impact of partners raising funds in the
             battle against cancer
           </h1>

@@ -64,7 +64,7 @@ const RebellionNewsletter = () => {
             </div>
 
             {/* Input + Button */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full lg:w-auto">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center w-full lg:w-auto">
               <Input
                 placeholder="Enter your email"
                 value={email}
@@ -95,7 +95,7 @@ const RebellionNewsletter = () => {
             <Image
               src={newsLetterImage}
               alt="Newsletter Image"
-              className="w-full max-w-[700px] h-auto object-cover rounded-xl"
+              className="w-full max-w-[1000px] h-auto rounded-xl"
             />
           </div>
         </div>

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { Label } from "../../../../warriorsol-main/src/components/ui/label";
+import { Label } from "../ui/label";
 import { Button } from "@/components/ui/button";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
@@ -23,6 +23,7 @@ function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({ email: "", password: "" });
   const [googleLoading, setGoogleLoading] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -157,8 +158,6 @@ function LoginPage() {
     } else {
       toast.dismiss();
       toast.success("Login successful");
-
-      // 🚀 If not community → manually redirect using response.url
       if (!isCommunity) {
         router.replace(response?.url || callbackUrl);
       }
@@ -199,7 +198,9 @@ function LoginPage() {
               }
             />
             {fieldErrors.email && (
-              <p className="text-red-500 text-sm mt-1">{fieldErrors.email}</p>
+              <p className="text-red-500 text-sm md:text-[16px] mt-[-10px]">
+                {fieldErrors.email}
+              </p>
             )}
           </div>
 
@@ -219,7 +220,7 @@ function LoginPage() {
                 size="icon"
                 type="button"
                 onClick={togglePasswordVisibility}
-                className="absolute right-3 top-1/2 cursor-pointer -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                className="absolute right-3 top-1/2 cursor-pointer -translate-y-1/2 text-gray-500 hover:bg-transparent"
               >
                 {showPassword ? (
                   <FaEyeSlash className="w-4 h-4 md:w-5 md:h-5" />
@@ -229,7 +230,7 @@ function LoginPage() {
               </Button>
             </div>
             {fieldErrors.password && (
-              <p className="text-red-500 text-sm mt-1">
+              <p className="text-red-500 text-sm md:text-[16px] mt-[-10px]">
                 {fieldErrors.password}
               </p>
             )}
@@ -241,7 +242,7 @@ function LoginPage() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#C1E965] cursor-pointer hover:bg-[#C1E965] h-10 md:h-12 text-black text-base md:text-xl "
+            className="w-full bg-[#C1E965] cursor-pointer hover:bg-[#C1E965] h-10 md:h-14 text-black text-base md:text-xl "
           >
             {loading ? (
               <Loader2 className="animate-spin w-5 h-5 mr-2" />
@@ -264,8 +265,11 @@ function LoginPage() {
               signIn("google", {
                 callbackUrl: searchParams.get("callbackUrl") || "/home",
               });
+              setTimeout(() => {
+                setGoogleLoading(false);
+              }, 5000);
             }}
-            className="w-full flex items-center justify-center gap-3 bg-white text-black border hover:bg-white border-gray-300 rounded-lg shadow-sm hover:shadow-md transition text-sm md:text-base py-2 md:py-3"
+            className="w-full flex items-center h-10 md:h-14 justify-center gap-3 bg-white text-black border hover:bg-white border-gray-300 rounded-lg shadow-sm hover:shadow-md transition text-sm md:text-base py-2 md:py-3"
           >
             {googleLoading ? (
               <Loader2 className="animate-spin w-5 h-5 mr-2" />

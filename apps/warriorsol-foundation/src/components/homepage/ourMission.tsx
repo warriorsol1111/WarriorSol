@@ -121,7 +121,7 @@ export default function StoriesOfHope() {
                     {/* Quote in true center */}
                     <div className="flex flex-1 items-center justify-center">
                       <p
-                        className={`text-left md:text-center text-sm sm:text-base md:text-[15px] font-medium leading-relaxed ${
+                        className={`text-left text-sm sm:text-base md:text-[15px] font-medium leading-relaxed ${
                           (i + pairIndex * 2) % 2 === 0
                             ? "text-[#EDF1D3]"
                             : "text-black"

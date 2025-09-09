@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -60,10 +59,12 @@ export default function ApplyForSupport() {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+    setErrors({ ...errors, [e.target.id]: "" });
     setForm({ ...form, [e.target.id]: e.target.value });
   };
 
   const handleSupportTypeChange = (value: string) => {
+    setErrors({ ...errors, supportType: "" });
     setForm({ ...form, supportType: value });
   };
 
@@ -132,7 +133,7 @@ export default function ApplyForSupport() {
     setLoading(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/apply-for-support`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/tasha-foundation/apply-for-support`,
         {
           method: "POST",
           headers: {
@@ -191,13 +192,13 @@ export default function ApplyForSupport() {
             </CardHeader>
             <CardContent>
               <form
-                className="space-y-6 max-w-3xl mt-10 items-center justify-center mx-auto"
+                className="space-y-6 max-w-3xl mt-4 items-center justify-center mx-auto"
                 onSubmit={handleSubmit}
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Family Name */}
                   <div className="space-y-2">
-                    <Label className="text-xl" htmlFor="familyName">
+                    <Label className="" htmlFor="familyName">
                       Family Name
                       <span className="text-red-500 ml-[-5px] ">*</span>
                     </Label>
@@ -217,7 +218,7 @@ export default function ApplyForSupport() {
 
                   {/* Contact Email */}
                   <div className="space-y-2">
-                    <Label className="text-xl" htmlFor="contactEmail">
+                    <Label className="" htmlFor="contactEmail">
                       Contact Email
                       <span className="text-red-500 ml-[-5px] ">*</span>
                     </Label>
@@ -225,6 +226,7 @@ export default function ApplyForSupport() {
                       id="contactEmail"
                       type="email"
                       placeholder="Enter your email"
+                      disabled
                       value={form.contactEmail}
                       onChange={handleChange}
                       className={inputClass("contactEmail")}
@@ -238,26 +240,27 @@ export default function ApplyForSupport() {
 
                   {/* Contact Phone */}
                   <div className="space-y-2">
-                    <Label className="text-xl" htmlFor="contactPhone">
+                    <Label className="" htmlFor="contactPhone">
                       Contact Phone
                       <span className="text-red-500 ml-[-5px] ">*</span>
                     </Label>
-                    <PhoneInput
-                      country={"us"}
-                      value={form.contactPhone}
-                      onChange={(phone) =>
-                        setForm((prev) => ({ ...prev, contactPhone: phone }))
-                      }
-                      inputProps={{
-                        name: "contactPhone",
-                        id: "contactPhone",
-                      }}
-                      containerClass="w-full"
-                      inputClass={`!w-full !h-12 !text-lg !border ${errors.contactPhone ? "!border-red-500" : "!border-gray-300"} rounded-md`}
-                      buttonClass="!h-12"
-                      dropdownClass="!w-full"
-                      enableSearch
-                    />
+                    <div className="w-full rounded-full border border-gray-300 focus-within:border-[#C1E965] focus-within:ring-1 focus-within:ring-[#C1E965]">
+                      <PhoneInput
+                        country={"us"}
+                        value={form.contactPhone}
+                        onChange={(phone) => {
+                          setErrors({ ...errors, contactPhone: "" });
+                          setForm((prev) => ({ ...prev, contactPhone: phone }));
+                        }}
+                        inputProps={{
+                          name: "contactPhone",
+                          id: "contactPhone",
+                        }}
+                        containerClass="!w-full"
+                        inputClass="!w-full !h-12 !text-sm md:!text-[18px] !border-0 !rounded-full"
+                        buttonClass="!h-12 !rounded-full"
+                      />
+                    </div>
 
                     {errors.contactPhone && (
                       <p className="text-red-500 text-sm">
@@ -268,7 +271,7 @@ export default function ApplyForSupport() {
 
                   {/* Family Size */}
                   <div className="space-y-2">
-                    <Label className="text-xl" htmlFor="familySize">
+                    <Label className="" htmlFor="familySize">
                       Family Size
                       <span className="text-red-500 ml-[-5px] ">*</span>
                     </Label>
@@ -290,7 +293,7 @@ export default function ApplyForSupport() {
 
                   {/* Support Type */}
                   <div className="space-y-2">
-                    <Label className="text-xl" htmlFor="supportType">
+                    <Label className="" htmlFor="supportType">
                       Type of Support Needed
                       <span className="text-red-500 ml-[-5px] ">*</span>
                     </Label>
@@ -300,7 +303,7 @@ export default function ApplyForSupport() {
                     >
                       <SelectTrigger
                         id="supportType"
-                        className={`${errors.supportType ? "border-red-500" : "border-gray-300"} mt-2 w-full border text-lg !h-12 cursor-pointer`}
+                        className={`${errors.supportType ? "border-red-500" : "border-gray-300"} mt-2 w-full border !rounded-full !focus-within:border-[#C1E965] !focus-within:ring-1 !focus-within:ring-[#C1E965] text-sm md:text-[18px] !h-12 cursor-pointer`}
                       >
                         <SelectValue placeholder="Select support type" />
                       </SelectTrigger>
@@ -319,7 +322,7 @@ export default function ApplyForSupport() {
 
                   {/* Requested Amount */}
                   <div className="space-y-2">
-                    <Label className="text-xl" htmlFor="requestedAmount">
+                    <Label className="" htmlFor="requestedAmount">
                       Requested Amount ($)
                       <span className="text-red-500 ml-[-5px] ">*</span>
                     </Label>
@@ -342,11 +345,11 @@ export default function ApplyForSupport() {
 
                 {/* Situation */}
                 <div className="space-y-2">
-                  <Label className="text-xl" htmlFor="situation">
+                  <Label className="" htmlFor="situation">
                     Describe Your Situation
                     <span className="text-red-500 ml-[-5px] ">*</span>
                   </Label>
-                  <Textarea
+                  <Input
                     id="situation"
                     placeholder="Please describe your current situation and why you need support"
                     className={`resize-none overflow-y-auto h-32 ${
@@ -361,7 +364,7 @@ export default function ApplyForSupport() {
                 </div>
 
                 {/* Info */}
-                <div className="bg-[#1877F20D] border border-[#1877F280] p-4 rounded-lg space-y-2">
+                <div className="bg-[#1877F20D]/10 border border-[#1877F2]/60 p-4 rounded-lg space-y-2">
                   <h4 className="font-medium text-xl ">What Happens Next?</h4>
                   <ul className="text-sm  space-y-1">
                     <li>
@@ -389,7 +392,7 @@ export default function ApplyForSupport() {
                     <div>
                       <Button
                         size="lg"
-                        className="w-full text-[20px]  text-[#1F1F1F] !rounded-full bg-[#CDED84] hover:bg-[#CDED84]/90"
+                        className="w-full text-[20px]  text-[#1F1F1F] bg-[#C1E965] hover:bg-[#C1E965]/90"
                         type="submit"
                         disabled={loading || !isLoggedIn}
                       >

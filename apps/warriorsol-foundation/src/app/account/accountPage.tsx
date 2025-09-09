@@ -350,6 +350,18 @@ export default function SettingsPage() {
     gift_card: "bg-purple-100 text-purple-700",
   };
 
+  const convertSupportType = (type: string) => {
+    switch (type) {
+      case "gift_card":
+        return "Gift Card";
+      case "scholarship":
+        return "Scholarship";
+      case "donation":
+        return "Donation";
+      default:
+        return type;
+    }
+  };
   return (
     <>
       <div className="min-h-screen flex flex-col bg-gray-50">
@@ -536,9 +548,11 @@ export default function SettingsPage() {
 
                                 if (res.ok && data.status === "success") {
                                   toast.success("Profile photo removed!");
-                                  await update({
-                                    profilePhoto: null,
-                                  });
+                                  console.log(
+                                    await update({
+                                      profilePhoto: null,
+                                    })
+                                  );
 
                                   setPreviewUrl(null);
                                   setSelectedImage(null);
@@ -890,7 +904,7 @@ export default function SettingsPage() {
                         <h3 className="text-xl sm:text-2xl font-semibold mb-1">
                           {app.familyName} —{" "}
                           <span className="text-indigo-600">
-                            {app.supportType}
+                            {convertSupportType(app.supportType)}
                           </span>
                         </h3>
                         <p className="text-base sm:text-lg text-gray-600 mb-1">

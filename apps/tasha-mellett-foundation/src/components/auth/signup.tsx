@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { Label } from "../../../../warriorsol-main/src/components/ui/label";
+import { Label } from "../ui/label";
 import { Button } from "@/components/ui/button";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
@@ -25,8 +25,8 @@ function SignupPage() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [formErrors, setFormErrors] = useState<{
     name?: string;
     email?: string;
@@ -222,8 +222,8 @@ function SignupPage() {
             <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] font-serif font-normal">
               Hello There!
             </h1>
-            <p className=" text-base md:text-lg text-[#1F1F1F99] opacity-[60%]">
-              Welcome to warriorsol, Enter details to create your account{" "}
+            <p className=" text-base md:text-lg text-[#1F1F1F] opacity-[60%]">
+              Welcome to Warriorsol, Enter details to create your account{" "}
             </p>
           </div>
 
@@ -239,7 +239,7 @@ function SignupPage() {
               onChange={handleChange}
             />
             {formErrors.name && (
-              <p className="text-red-500 text-sm mt-[-10px]">
+              <p className="text-red-500 text-sm md:text-[16px] mt-[-10px]">
                 {formErrors.name}
               </p>
             )}
@@ -257,7 +257,7 @@ function SignupPage() {
               onChange={handleChange}
             />
             {formErrors.email && (
-              <p className="text-red-500 text-sm mt-[-10px]">
+              <p className="text-red-500 text-sm md:text-[16px] mt-[-10px]">
                 {formErrors.email}
               </p>
             )}
@@ -280,7 +280,7 @@ function SignupPage() {
                 variant="ghost"
                 size="icon"
                 onClick={togglePasswordVisibility}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:bg-transparent"
               >
                 {showPassword ? (
                   <FaEyeSlash className="w-4 h-4 md:w-5 md:h-5" />
@@ -290,7 +290,7 @@ function SignupPage() {
               </Button>
             </div>
             {formErrors.password && (
-              <p className="text-red-500 text-sm mt-[-10px]">
+              <p className="text-red-500 text-sm md:text-[16px] mt-[-10px]">
                 {formErrors.password}
               </p>
             )}
@@ -315,7 +315,7 @@ function SignupPage() {
                 variant="ghost"
                 size="icon"
                 onClick={toggleConfirmPasswordVisibility}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:bg-transparent"
               >
                 {showConfirmPassword ? (
                   <FaEyeSlash className="w-4 h-4 md:w-5 md:h-5" />
@@ -325,7 +325,7 @@ function SignupPage() {
               </Button>
             </div>
             {formErrors.confirmPassword && (
-              <p className="text-red-500 text-sm mt-[-10px]">
+              <p className="text-red-500 text-sm md:text-[16px] mt-[-10px]">
                 {formErrors.confirmPassword}
               </p>
             )}
@@ -335,7 +335,7 @@ function SignupPage() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#C1E965] ! !text-xl hover:bg-[#C1E965] h-10 md:h-12 text-black mt-4"
+            className="w-full bg-[#C1E965] text-sm md:text-base hover:bg-[#C1E965] h-10 md:h-14 text-black mt-4"
           >
             {loading ? (
               <Loader2 className="animate-spin w-5 h-5" />
@@ -358,15 +358,20 @@ function SignupPage() {
             onClick={() => {
               setGoogleLoading(true);
               signIn("google", { callbackUrl: "/home" });
+              setTimeout(() => {
+                setGoogleLoading(false);
+              }, 5000);
             }}
-            className="w-full flex items-center justify-center gap-3 bg-white text-black border hover:bg-white border-gray-300 rounded-lg shadow-sm hover:shadow-md transition text-sm md:text-base py-2 md:py-3"
+            className="w-full flex items-center h-10 md:h-14 justify-center gap-3 bg-white text-black border hover:bg-white border-gray-300 rounded-lg shadow-sm hover:shadow-md transition text-sm md:text-base py-2 md:py-3"
           >
             {googleLoading ? (
-              <Loader2 className="animate-spin w-5 h-5" />
+              <Loader2 className="animate-spin w-5 h-5 mr-2" />
             ) : (
-              <FcGoogle className="w-5 h-5 md:w-6 md:h-6" />
+              <>
+                <FcGoogle className="w-5 h-5 md:w-6 md:h-6" />
+                Continue with Google
+              </>
             )}
-            Continue with Google
           </Button>
 
           {/* Login Link */}

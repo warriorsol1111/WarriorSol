@@ -29,19 +29,19 @@ export default function Donations() {
               alt="Hands holding a stone with 'Hope' engraved"
               width={600}
               height={600}
-              className="w-full h-[250px] sm:h-[350px] md:h-[432px] lg:h-[432px] object-cover rounded-2xl shadow-md transform transition-transform duration-300 hover:scale-105"
+              className="w-full h-[250px] sm:h-[350px] md:h-[432px] lg:h-[472px] object-cover rounded-2xl shadow-md transform transition-transform duration-300 hover:scale-105"
             />
           </div>
 
           {/* Cards */}
           <div className="flex flex-col justify-center space-y-5 w-full lg:col-span-1">
-            <div className="p-4 sm:p-6 w-full sm:w-[280px] h-auto bg-[#F5F4A9] rounded-2xl shadow-md transform transition-transform duration-300 hover:scale-105">
-              <p className="text-lg sm:text-xl md:text-[28px] text-[#1B1E1E] font-semibold leading-snug">
+            <div className="p-4 sm:p-6 w-full sm:w-[280px] md:w-[680px] lg:w-[280px] h-auto bg-[#F5F4A9] rounded-2xl shadow-md transform transition-transform duration-300 hover:scale-105">
+              <p className="text-lg sm:text-xl md:text-[28px] text-[#1B1E1E] font-semibold leading-snug max-w-[80%]">
                 Every dollar you donate goes directly towards our foundation.
               </p>
             </div>
 
-            <div className="p-4 sm:p-6 sm:w-[280px]  bg-[#C5E99E] rounded-2xl shadow-md transform transition-transform duration-300 hover:scale-105">
+            <div className="p-4 sm:p-6 sm:w-[280px] md:w-[680px] lg:w-[280px]  bg-[#C5E99E] rounded-2xl shadow-md transform transition-transform duration-300 hover:scale-105">
               <h3 className="text-4xl sm:text-5xl md:text-6xl lg:text-[80px] text-[#1B1E1E] font-semibold">
                 150K+
               </h3>
@@ -60,7 +60,7 @@ export default function Donations() {
             alt="Hands cupped, holding seashells on a beach"
             width={600}
             height={600}
-            className="w-full h-[250px] sm:h-[350px] md:h-[432px] lg:h-[432px] object-cover rounded-2xl shadow-md transform transition-transform duration-300 hover:scale-105"
+            className="w-full h-[250px] sm:h-[350px] md:h-[432px] ml-0 lg:ml-20 xl:ml-0 lg:h-[472px] object-cover rounded-2xl shadow-md transform transition-transform duration-300 hover:scale-105"
           />
         </div>
       </div>

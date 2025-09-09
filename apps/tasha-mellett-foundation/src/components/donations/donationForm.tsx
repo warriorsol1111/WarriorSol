@@ -1,16 +1,17 @@
 "use client";
 
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import DonorWallImage from "@/assets/donorWallImage.svg";
-import { FaHeart } from "react-icons/fa";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useSession } from "next-auth/react";
 import { BiDonateHeart } from "react-icons/bi";
+import DonorWallImage from "@/assets/donorWallImage.svg";
+import { FaHeart } from "react-icons/fa";
+import { Loader2 } from "lucide-react";
 
 export default function DonationForm() {
   const [donationType, setDonationType] = useState("one-time");
@@ -19,6 +20,7 @@ export default function DonationForm() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const { data: session } = useSession();
+  const [loading, setLoading] = useState(false);
 
   const [errors, setErrors] = useState({
     name: "",
@@ -26,62 +28,19 @@ export default function DonationForm() {
     amount: "",
   });
 
-  // Memoize button styles to avoid recalculating on every render
-  const buttonStyles = useMemo(
-    () => ({
-      selected: "bg-[#C1E965B2] text-black border-none",
-      default: "bg-white border-gray-200",
-    }),
-    []
-  );
-
-  // Memoize radio button styles
-  const radioStyles = useMemo(
-    () => ({
-      selected: "bg-[#C1E965B2] text-black border-none",
-      default: "bg-white border-gray-200",
-    }),
-    []
-  );
-
-  // Memoize donation amounts array
-  const donationAmounts = useMemo(
-    () => ["10", "25", "50", "100", "250", "500"],
-    []
-  );
-
-  // Memoize donation types array
-  const donationTypes = useMemo(
-    () => [
-      { id: "one-time", label: "One-Time Donation" },
-      { id: "monthly", label: "Monthly Recurring Donation" },
-    ],
-    []
-  );
-
-  function validateEmail(email: string) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  }
-
   function validate() {
     let valid = true;
     const newErrors = { name: "", email: "", amount: "" };
 
-    if (!name.trim()) {
+    const trimmedName = name.trim();
+    if (!trimmedName) {
       newErrors.name = "Full name is required.";
       valid = false;
-    } else if (name.trim().length < 3) {
+    } else if (trimmedName.length < 3) {
       newErrors.name = "Name must be at least 3 characters long.";
       valid = false;
-    } else if (!/^[A-Za-z\s]+$/.test(name)) {
-      newErrors.name = "Name can only contain letters and spaces.";
-      valid = false;
-    }
-    if (!email.trim()) {
-      newErrors.email = "Email is required.";
-      valid = false;
-    } else if (!validateEmail(email)) {
-      newErrors.email = "Please enter a valid email address.";
+    } else if (!/\S/.test(trimmedName)) {
+      newErrors.name = "Name cannot be just spaces.";
       valid = false;
     }
     const selectedAmount = customAmount || amount;
@@ -97,88 +56,34 @@ export default function DonationForm() {
     return valid;
   }
 
-  // Optimized amount selection handler
-  const handleAmountSelect = useCallback(
-    (val: string) => {
-      setAmount(val);
-      // Only clear custom amount if it's not already empty to avoid unnecessary re-renders
-      if (customAmount) {
-        setCustomAmount("");
-      }
-    },
-    [customAmount]
-  );
-
-  // Optimized custom amount handler
-  const handleCustomAmountChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
-      setCustomAmount(value);
-      // Only clear amount if it's not already empty
-      if (amount) {
-        setAmount("");
-      }
-      // Clear error if it exists
-      if (errors.amount) {
-        setErrors((prev) => ({ ...prev, amount: "" }));
-      }
-    },
-    [amount, errors.amount]
-  );
-
-  // Optimized custom amount focus handler
-  const handleCustomAmountFocus = useCallback(() => {
-    if (amount) {
-      setAmount("");
-    }
-  }, [amount]);
-
-  // Optimized name change handler
-  const handleNameChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      // Only allow letters and spaces
-      const value = e.target.value.replace(/[^A-Za-z\s]/g, "");
-      setName(value);
-      if (errors.name) {
-        setErrors((prev) => ({ ...prev, name: "" }));
-      }
-    },
-    [errors.name]
-  );
-
-  // Optimized email change handler
-  const handleEmailChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setEmail(e.target.value);
-      if (errors.email) {
-        setErrors((prev) => ({ ...prev, email: "" }));
-      }
-    },
-    [errors.email]
-  );
-
   async function handleDonate() {
     if (!validate()) return;
     const selectedAmount = customAmount || amount;
+    try {
+      setLoading(true);
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: parseInt(selectedAmount),
+          donationType,
+          email,
+          name,
+          userId: session?.user?.id || null,
+          foundation: "tasha-mellett-foundation",
+        }),
+      });
 
-    const res = await fetch("/api/checkout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        amount: parseInt(selectedAmount),
-        donationType,
-        email,
-        name,
-        userId: session?.user?.id || null,
-        foundation: "tasha-mellett-foundation",
-      }),
-    });
-
-    const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert("Failed to create checkout session");
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        console.error("Failed to create checkout session");
+      }
+    } catch {
+      console.error("Failed to create checkout session");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -194,49 +99,53 @@ export default function DonationForm() {
         </p>
       </div>
 
-      <div className="flex flex-col md:flex-row w-full min-h-full bg-neutral-900">
-        {/* Image */}
-
-        {/* Form Section */}
-        <div className="w-full md:w-1/2 bg-white flex p-6 sm:p-8 md:p-12">
-          <Card className="w-full shadow-none border-none bg-white">
-            <CardContent className="flex flex-col justify-between h-full space-y-8 p-6 sm:p-8">
-              <h2 className="text-3xl sm:text-[44px] text-[#1F1F1F] font-extrabold text-center flex gap-2 justify-start items-center">
-                <FaHeart className="w-10 h-10 mt-1 text-[#C1E965]" />
+      {/* Flipped order: image first on mobile, form first on desktop */}
+      <div className="flex flex-col-reverse lg:flex-row w-full min-h-full bg-neutral-900">
+        {/* Form Section (left on desktop) */}
+        <div className="w-full lg:w-1/2 bg-white flex ">
+          <Card className="w-full shadow-none border-none !rounded-none">
+            <CardContent className="flex flex-col justify-between h-full space-y-8 p-4 sm:p-6 md:p-10">
+              <h2 className="text-2xl sm:text-3xl md:text-[44px] font-extrabold text-center flex gap-2 justify-center lg:justify-start items-center">
+                <FaHeart className="w-8 h-8 sm:w-10 sm:h-10 mt-1 text-[#C1E965]" />
                 Donation Form
               </h2>
 
               <div className="space-y-6 flex-grow">
                 {/* Donation Type */}
                 <div>
-                  <Label className="text-lg sm:text-xl mb-4 block">
-                    Donation Type
-                  </Label>
+                  <Label className=" mb-4 block">Donation Type</Label>
                   <RadioGroup
                     value={donationType}
                     onValueChange={setDonationType}
-                    className="flex flex-col gap-4"
+                    className="flex flex-col gap-3"
                   >
-                    {donationTypes.map(({ id, label }) => (
+                    {[
+                      { id: "one-time", label: "One-Time Donation" },
+                      { id: "monthly", label: "Monthly Recurring Donation" },
+                    ].map(({ id, label }) => (
                       <div
                         key={id}
                         onClick={() => setDonationType(id)}
-                        className={`flex items-center gap-2 p-3 border !text-[#1F1F1FCC] rounded-xl cursor-pointer ${
+                        className={`flex items-center gap-3 p-3 border cursor-pointer transition rounded-full ${
                           donationType === id
-                            ? radioStyles.selected
-                            : radioStyles.default
+                            ? "bg-[#C1E965] text-black border-none"
+                            : "bg-white border-gray-200"
                         }`}
                       >
                         <RadioGroupItem
                           value={id}
                           id={id}
-                          className={
-                            donationType === id
-                              ? "text-[#1F1F1FCC]"
-                              : "text-[#C1E965B2]"
-                          }
+                          className="
+          h-5 w-5 rounded-full border-2
+          border-black bg-transparent
+          data-[state=checked]:border-white
+          data-[state=checked]:bg-white
+        "
                         />
-                        <Label htmlFor={id} className="cursor-pointer text-lg">
+                        <Label
+                          htmlFor={id}
+                          className="cursor-pointer text-sm md:text-[18px] text-black"
+                        >
                           {label}
                         </Label>
                       </div>
@@ -246,42 +155,42 @@ export default function DonationForm() {
 
                 {/* Donation Amount */}
                 <div>
-                  <Label className="text-lg sm:text-xl mb-4 block">
-                    Donation Amount
-                  </Label>
+                  <Label className=" mb-4 block">Donation Amount</Label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    {donationAmounts.map((val) => (
+                    {["10", "25", "50", "100", "250", "500"].map((val) => (
                       <Button
                         key={val}
                         variant="outline"
-                        className={`rounded-xl text-lg  h-10 sm:h-12 text-[#1F1F1FCC] ${
+                        className={`rounded text-base hover:bg-[#C1E965] hover:text-black sm:text-lg h-10 sm:h-13 ${
                           amount === val
-                            ? buttonStyles.selected
-                            : buttonStyles.default
+                            ? "bg-[#C1E965] text-black border-none"
+                            : "bg-white border-gray-200"
                         }`}
-                        onClick={() => handleAmountSelect(val)}
+                        onClick={() => {
+                          setAmount(val);
+                          setCustomAmount("");
+                        }}
                       >
                         ${val}
                       </Button>
                     ))}
                   </div>
-                  <div className="mt-2">
+                  <div className="mt-3">
                     <Input
                       placeholder={
                         donationType === "monthly"
-                          ? "Custom amount not available"
+                          ? "Custom amount not available for monthly"
                           : "Custom ($)"
                       }
                       type="number"
                       value={customAmount}
-                      onFocus={handleCustomAmountFocus}
-                      onChange={handleCustomAmountChange}
+                      onChange={(e) => {
+                        setCustomAmount(e.target.value);
+                        if (errors.amount) setErrors({ ...errors, amount: "" });
+                      }}
+                      onFocus={() => setAmount("")}
+                      className="rounded border-gray-200 h-10 sm:h-12"
                       disabled={donationType === "monthly"}
-                      className={`rounded-xl border-gray-200 ${
-                        donationType === "monthly"
-                          ? "bg-gray-100 text-gray-500 cursor-not-allowed"
-                          : "bg-white"
-                      }`}
                     />
                   </div>
                   {errors.amount && (
@@ -292,17 +201,21 @@ export default function DonationForm() {
                 </div>
 
                 {/* Name & Email */}
-                <div className="space-y-5">
+                <div className="space-y-4">
                   <div>
-                    <Label className="text-lg sm:text-xl mb-2 block">
+                    <Label className=" mb-2 block">
                       Full Name
+                      <span className="text-red-500 text-lg">*</span>
                     </Label>
                     <Input
                       placeholder="Enter your full name"
-                      className="rounded-xl bg-white border-gray-200"
+                      className="rounded bg-white border-gray-200 h-10 sm:h-12"
                       type="text"
                       value={name}
-                      onChange={handleNameChange}
+                      onChange={(e) => {
+                        setName(e.target.value);
+                        if (errors.name) setErrors({ ...errors, name: "" });
+                      }}
                     />
                     {errors.name && (
                       <div className="text-red-500 text-sm mt-1">
@@ -311,15 +224,17 @@ export default function DonationForm() {
                     )}
                   </div>
                   <div>
-                    <Label className="text-lg sm:text-xl mb-2 block">
-                      Email Address
-                    </Label>
+                    <Label className=" mb-2 block">Email Address</Label>
                     <Input
                       placeholder="Enter your email address"
-                      className="rounded-xl bg-white border-gray-200"
+                      className="rounded bg-white border-gray-200 h-10 sm:h-12"
                       type="email"
-                      value={email}
-                      onChange={handleEmailChange}
+                      disabled
+                      value={session?.user?.email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        if (errors.email) setErrors({ ...errors, email: "" });
+                      }}
                     />
                     {errors.email && (
                       <div className="text-red-500 text-sm mt-1">
@@ -330,22 +245,32 @@ export default function DonationForm() {
                 </div>
               </div>
 
+              {/* Submit Button */}
               <Button
-                className="w-full bg-[#C1E965] hover:bg-[#C1E965]/90 text-xl  font-normal rounded-xl text-black h-12"
+                className="w-full bg-[#C1E965] hover:bg-[#C1E965] text-lg sm:text-xl font-normal rounded text-black h-12 sm:h-14"
                 onClick={handleDonate}
               >
-                Donate Now
-                <BiDonateHeart className="h-6 w-6" />
+                {loading ? (
+                  <Loader2 className="h-5 w-5 sm:h-6 sm:w-6 mr-2 animate-spin text-black" />
+                ) : (
+                  <>
+                    Donate Now
+                    <BiDonateHeart className="h-5 w-5 sm:h-6 sm:w-6 ml-2" />
+                  </>
+                )}
               </Button>
             </CardContent>
           </Card>
         </div>
-        <div className="w-full md:w-1/2 h-[250px] md:h-auto relative">
+
+        {/* Image Section (right on desktop, top on mobile) */}
+        <div className="w-full lg:w-1/2 h-[220px] sm:h-[300px] md:h-[400px] lg:h-auto relative">
           <Image
             src={DonorWallImage}
             alt="Family Image"
             fill
             className="object-cover"
+            priority
           />
         </div>
       </div>

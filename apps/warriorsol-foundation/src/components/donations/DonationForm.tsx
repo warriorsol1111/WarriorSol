@@ -28,10 +28,6 @@ export default function DonationForm() {
     amount: "",
   });
 
-  function validateEmail(email: string) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  }
-
   function validate() {
     let valid = true;
     const newErrors = { name: "", email: "", amount: "" };
@@ -45,13 +41,6 @@ export default function DonationForm() {
       valid = false;
     } else if (!/\S/.test(trimmedName)) {
       newErrors.name = "Name cannot be just spaces.";
-      valid = false;
-    }
-    if (!email.trim()) {
-      newErrors.email = "Email is required.";
-      valid = false;
-    } else if (!validateEmail(email)) {
-      newErrors.email = "Please enter a valid email address.";
       valid = false;
     }
     const selectedAmount = customAmount || amount;
@@ -89,7 +78,7 @@ export default function DonationForm() {
       if (data.url) {
         window.location.href = data.url;
       } else {
-        alert("Failed to create checkout session");
+        console.error("Failed to create checkout session");
       }
     } catch {
       console.error("Failed to create checkout session");
@@ -136,9 +125,7 @@ export default function DonationForm() {
               <div className="space-y-6 flex-grow">
                 {/* Donation Type */}
                 <div>
-                  <Label className="text-base sm:text-lg md:text-xl mb-4 block">
-                    Donation Type
-                  </Label>
+                  <Label className=" mb-4 block">Donation Type</Label>
                   <RadioGroup
                     value={donationType}
                     onValueChange={setDonationType}
@@ -182,9 +169,7 @@ export default function DonationForm() {
 
                 {/* Donation Amount */}
                 <div>
-                  <Label className="text-base sm:text-lg md:text-xl mb-4 block">
-                    Donation Amount
-                  </Label>
+                  <Label className=" mb-4 block">Donation Amount</Label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     {["10", "25", "50", "100", "250", "500"].map((val) => (
                       <Button
@@ -232,8 +217,9 @@ export default function DonationForm() {
                 {/* Name & Email */}
                 <div className="space-y-4">
                   <div>
-                    <Label className="text-base sm:text-lg md:text-xl mb-2 block">
+                    <Label className=" mb-2 block">
                       Full Name
+                      <span className="text-red-500 text-lg">*</span>
                     </Label>
                     <Input
                       placeholder="Enter your full name"
@@ -252,9 +238,7 @@ export default function DonationForm() {
                     )}
                   </div>
                   <div>
-                    <Label className="text-base sm:text-lg md:text-xl mb-2 block">
-                      Email Address
-                    </Label>
+                    <Label className=" mb-2 block">Email Address</Label>
                     <Input
                       placeholder="Enter your email address"
                       className="rounded bg-white border-gray-200 h-10 sm:h-12"

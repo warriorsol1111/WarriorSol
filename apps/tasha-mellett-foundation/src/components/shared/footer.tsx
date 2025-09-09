@@ -115,20 +115,17 @@ export default function Footer() {
               <h4 className="text-white text-lg font-semibold mb-3">Company</h4>
               <ul className="space-y-2">
                 <li>
-                  <Link href="/about" className="hover:underline text-white">
+                  <Link href="#" className="hover:underline text-white">
                     About
                   </Link>
                 </li>
                 <li>
-                  <Link href="/contact" className="hover:underline text-white">
+                  <Link href="#" className="hover:underline text-white">
                     Contact
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    href="/community"
-                    className="hover:underline text-white"
-                  >
+                  <Link href="#" className="hover:underline text-white">
                     Community
                   </Link>
                 </li>
@@ -143,7 +140,7 @@ export default function Footer() {
         <div>© 2025 Tasha Mellett Foundation. All rights reserved.</div>
 
         {/* Social Media Links */}
-        <div className="flex gap-3 items-center">
+        <div className="grid gap-3 items-center grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
           <a
             href="https://twitter.com"
             target="_blank"

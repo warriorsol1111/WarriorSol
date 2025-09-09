@@ -8,9 +8,10 @@ import Navbar from "@/components/shared/navbar";
 import Footer from "@/components/shared/footer";
 import Image from "next/image";
 import ThankYouImage from "@/assets/thank_you.svg";
+import { Loader2 } from "lucide-react";
 export default function ThankYouPage() {
   const [showConfetti, setShowConfetti] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     setShowConfetti(true);
   }, []);
@@ -48,8 +49,13 @@ export default function ThankYouPage() {
             asChild
             size="lg"
             className="rounded-lg bg-[#EE9254] hover:bg-[#e76b1f] text-white text-lg px-8 py-4"
+            onClick={() => setTimeout(() => setLoading(true), 5000)}
           >
-            <Link href="/home">Back to Home</Link>
+            {loading ? (
+              <Loader2 className="animate-spin h-5 w-5 mr-2" />
+            ) : (
+              <Link href="/home">Back to Home</Link>
+            )}
           </Button>
         </div>
       </section>
