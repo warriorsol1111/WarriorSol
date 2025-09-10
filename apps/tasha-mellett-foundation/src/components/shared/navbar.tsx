@@ -86,19 +86,22 @@ export default function Navbar() {
           </Sheet>
 
           {/* Logo */}
-          <Link href="/home" className="flex items-center">
-            <Image
-              src={Logo}
-              alt="Warrior Sol Logo"
-              className="h-[40px] sm:h-[48px] w-auto"
-              width={100}
-              height={100}
-              style={{ objectFit: "contain" }}
-            />
+          <Link href="/home" className="text-lg font-semibold tracking-wide">
+            <div className="flex items-center px-1 sm:px-3">
+              <Image
+                src={Logo}
+                alt="Warrior Sol Logo"
+                className="h-8 sm:h-10 md:h-12 lg:h-18 w-auto"
+                width={120}
+                height={120}
+                style={{ objectFit: "contain" }}
+                priority
+              />
+            </div>
           </Link>
 
           {/* Desktop Navigation - Show on 1280px+ screens */}
-          <nav className="hidden xl:flex items-center gap-6 lg:gap-8 text-sm lg:text-base xl:text-lg font-medium text-black">
+          <nav className="hidden xl:flex items-center gap-6 lg:gap-8 text-sm lg:text-base xl:text-lg font-medium text-black mt-1">
             <div className="h-6 w-px bg-[#999999]" /> {/* Divider */}
             <Link href="/home" className={isActive("/home")}>
               Home
@@ -123,7 +126,7 @@ export default function Navbar() {
           </nav>
 
           {/* Tablet Navigation - Show on 1024px-1279px screens */}
-          <nav className="hidden lg:flex xl:hidden items-center gap-4 text-sm font-medium text-black">
+          <nav className="hidden lg:flex xl:hidden items-center gap-4 text-sm font-medium text-black mt-1">
             <div className="h-6 w-px bg-[#999999]" />
             <Link href="/home" className={isActive("/home")}>
               Home
@@ -149,7 +152,7 @@ export default function Navbar() {
         </div>
 
         {/* Right Section */}
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-1 sm:gap-3 flex-shrink-0">
           <a
             href="/donations"
             className="hidden sm:inline-block px-3 sm:px-4 lg:px-6 py-2 bg-[#C1E965] rounded-full font-extrabold text-xs sm:text-sm lg:text-lg hover:bg-[#b3e06d] text-[#023729] transition-all"

@@ -17,7 +17,6 @@ function isPublicRoute(pathname: string) {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  console.log(process.env.MAINTENANCE_MODE);
   if (process.env.MAINTENANCE_MODE === "true" && pathname !== "/") {
     return NextResponse.redirect(new URL("/", request.url));
   }

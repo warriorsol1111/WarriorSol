@@ -127,17 +127,18 @@ export default function Navbar() {
               <Image
                 src={Logo}
                 alt="Warrior Sol Logo"
-                className="h-6 sm:h-8 w-auto"
-                width={80}
-                height={80}
+                className="h-8 sm:h-10 md:h-12 lg:h-14 w-auto"
+                width={120}
+                height={120}
                 style={{ objectFit: "contain" }}
+                priority
               />
             </div>
           </Link>
         </div>
 
         {/* Desktop Nav */}
-        <nav className="hidden lg:flex flex-1 justify-center items-center px-4 max-w-2xl xl:max-w-none mx-auto">
+        <nav className="hidden lg:flex flex-1 justify-center items-center px-4 max-w-2xl xl:max-w-none mx-auto mt-2">
           <div className="flex flex-wrap xl:flex-nowrap justify-center items-center gap-x-4 lg:gap-x-6 gap-y-2 text-sm text-black ">
             <Link className={isActive("/home")} href="/home">
               Home
@@ -180,7 +181,7 @@ export default function Navbar() {
         </nav>
 
         {/* Right: Search (Desktop only) / User / Cart */}
-        <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+        <div className="flex items-center gap-1 sm:gap-3 flex-shrink-0">
           {/* Search - Only visible on desktop */}
           <div className="hidden lg:block cursor-pointer">
             <NavbarSearchDrawer />

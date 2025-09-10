@@ -121,9 +121,10 @@ export default function ComingSoon() {
               <Image
                 src={Logo}
                 alt="Warrior Sol Logo"
-                className="h-6 w-auto sm:h-8 md:h-10"
-                width={100}
-                height={100}
+                className="h-8 w-auto sm:h-10 md:h-12 lg:h-14"
+                width={120}
+                priority
+                height={120}
                 style={{ objectFit: "contain" }}
               />
             </div>
@@ -214,9 +215,9 @@ export default function ComingSoon() {
 
           {/* Bottom Section - Improved mobile layout */}
           <div className="mt-auto pb-6 sm:pb-8 md:pb-12 flex flex-col items-start">
-            <h3 className="text-white text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-bold w-full sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[40%] text-left tracking-[0.15em] sm:tracking-[0.25em] mb-3 sm:mb-4 leading-relaxed">
-              Get exclusive early access before public launch+ gentle doses of
-              courage in your inbox.
+            <h3 className="text-white text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-bold w-full sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[40%] text-left mb-3 sm:mb-4 leading-relaxed">
+              Get exclusive early access and enjoy a special offer before the
+              public launch.
             </h3>
 
             <div className="w-[250px] sm:w-48 md:w-64 lg:w-80 xl:w-[650px] h-[1px] bg-white/50 mb-4 sm:mb-6" />
@@ -231,7 +232,7 @@ export default function ComingSoon() {
                 placeholder="Your Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-[#FFFFFF] rounded-lg text-black !placeholder-black !text-xs sm:!text-sm h-10 sm:h-11 md:h-13 flex-1"
+                className="bg-[#FFFFFF] rounded-lg text-black !placeholder-black flex-1"
               />
               <Button
                 type="submit"

@@ -2,13 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import LogoWhite from "../../assets/logo-white.svg";
+import LogoWhite from "../../assets/logo-white.png";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import { CiTwitter } from "react-icons/ci";
-import { CiInstagram } from "react-icons/ci";
-import { FaBehance } from "react-icons/fa6";
-import { FaPinterestP } from "react-icons/fa";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
+import { SiTiktok } from "react-icons/si";
 
 export default function Footer() {
   const { data: session } = useSession();
@@ -20,16 +18,15 @@ export default function Footer() {
         {/* Brand Section */}
         <div className="md:w-1/3 flex flex-col items-start mb-8 md:mb-0">
           <div className="flex items-center mb-4">
-            {/* Bird Logo */}
             <Image
               src={LogoWhite}
               alt="Warrior Sol Logo"
               className="w-full h-full"
-              width={100}
-              height={100}
+              width={220}
+              height={220}
             />
           </div>
-          <p className="text-lg leading-relaxed max-w-xs text-white">
+          <p className="text-lg leading-relaxed max-w-xs text-white ml-3">
             Born from experience.
             <br />
             Established 11:11. Apparel
@@ -140,50 +137,44 @@ export default function Footer() {
         <div>© 2025 Tasha Mellett Foundation. All rights reserved.</div>
 
         {/* Social Media Links */}
-        <div className="grid gap-3 items-center grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-3 items-center grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3">
+          {/* Facebook */}
           <a
-            href="https://twitter.com"
+            href="https://facebook.com"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-white text-black px-4 py-2 h-14 rounded-full hover:bg-gray-200 transition-colors flex items-center justify-between min-w-[100px]"
           >
             <span className="text-[15px] text-[#1F1F1F] font-medium">
-              Twitter
+              Facebook
             </span>
-            <CiTwitter size={18} className="ml-10" />
+            <FaFacebookF size={18} className="ml-10" />
           </a>
+
+          {/* Instagram */}
           <a
             href="https://instagram.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-white text-black px-4 py-2 h-14 rounded-full hover:bg-gray-200 transition-colors flex items-center justify-between min-w-[110px]"
+            className="bg-white text-black px-4 py-2 h-14 rounded-full hover:bg-gray-200 transition-colors flex items-center justify-between min-w-[100px]"
           >
             <span className="text-[15px] text-[#1F1F1F] font-medium">
               Instagram
             </span>
-            <CiInstagram size={18} className="ml-10" />
+            <FaInstagram size={18} className="ml-10" />
           </a>
+
+          {/* TikTok */}
           <a
-            href="https://pinterest.com"
+            href="https://tiktok.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-white text-black px-4 py-2 h-14   rounded-full hover:bg-gray-200 transition-colors flex items-center justify-between min-w-[105px]"
+            className="bg-white text-black px-4 py-2 h-14 rounded-full hover:bg-gray-200 transition-colors flex items-center justify-between min-w-[100px]"
           >
             <span className="text-[15px] text-[#1F1F1F] font-medium">
-              Pinterest
+              TikTok
             </span>
-            <FaPinterestP size={18} className="ml-10" />
-          </a>
-          <a
-            href="https://behance.net"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-white text-black px-4 py-2  h-14 rounded-full hover:bg-gray-200 transition-colors flex items-center justify-between min-w-[100px]"
-          >
-            <span className="text-[15px] text-[#1F1F1F] font-medium">
-              Behance
-            </span>
-            <FaBehance size={18} className="ml-10" />
+            <SiTiktok size={18} className="ml-10" />
           </a>
         </div>
       </div>

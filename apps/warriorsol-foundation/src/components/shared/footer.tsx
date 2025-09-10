@@ -19,12 +19,12 @@ export default function Footer() {
             <Image
               src={LogoWhite}
               alt="Warrior Sol Logo"
-              className="w-full h-full"
+              className="h-8 sm:h-10 md:h-12 lg:h-20 w-auto"
               width={100}
               height={100}
             />
           </div>
-          <p className="text-[16px]  font-normal leading-relaxed max-w-xs text-[#FFFFFF99]">
+          <p className="text-[16px]  font-normal leading-relaxed max-w-xs ml-3 text-[#FFFFFF99]">
             Born from experience.
             <br />
             Established 11:11. Apparel

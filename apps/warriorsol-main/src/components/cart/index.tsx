@@ -6,6 +6,7 @@ import { Loader2, Minus, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/cart-store";
 import RecommendedProducts from "../community/recommendedProducts";
+import GiftMessage from "./giftComponent";
 
 export default function CartPage() {
   const {
@@ -18,11 +19,54 @@ export default function CartPage() {
   } = useCartStore();
   const isEmpty = items.length === 0;
   const [loading, setLoading] = React.useState(false);
+  const [senderName, setSenderName] = React.useState("Daniyal Khan");
+  const [recipientName, setRecipientName] = React.useState("Jimmy Mellet");
+  const [giftMessage, setGiftMessage] = React.useState("");
+  const [nameError, setNameError] = React.useState("");
+  const [recipientNameError, setRecipientNameError] = React.useState("");
+
+  function validateName(name: string): string | null {
+    if (!name || name.trim().length === 0) {
+      return "Name cannot be empty.";
+    }
+
+    if (name.length < 3) {
+      return "Name must be at least 3 characters long.";
+    }
+
+    if (name.length > 20) {
+      return "Name cannot exceed 20 characters.";
+    }
+
+    if (/^\s/.test(name)) {
+      return "Name cannot start with a space.";
+    }
+
+    if (/\s{2,}/.test(name)) {
+      return "Name cannot contain consecutive spaces.";
+    }
+
+    return null; // valid
+  }
 
   const handleCheckout = async () => {
     setLoading(true);
+    const senderNameValidationError = validateName(senderName);
+    const recipientNameValidationError = validateName(recipientName);
+
+    if (senderNameValidationError || recipientNameValidationError) {
+      setNameError(senderNameValidationError || "");
+      setRecipientNameError(recipientNameValidationError || "");
+      setLoading(false);
+      return;
+    }
+
     try {
-      const res = await fetch("/api/shopify/getCheckout");
+      const res = await fetch("/api/shopify/getCheckout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ giftMessage, senderName, recipientName }),
+      });
       const data = await res.json();
       if (res.ok && data.checkoutUrl) {
         window.location.href = data.checkoutUrl;
@@ -34,6 +78,14 @@ export default function CartPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const clearNameError = () => {
+    setNameError("");
+  };
+
+  const clearRecipientNameError = () => {
+    setRecipientNameError("");
   };
 
   return (
@@ -178,7 +230,19 @@ export default function CartPage() {
                   </div>
                 ))}
               </div>
-
+              <div className="border border-gray-200 rounded-lg p-6 mb-6 bg-white">
+                <GiftMessage
+                  senderName={senderName}
+                  recipientName={recipientName}
+                  onSenderNameChange={setSenderName}
+                  onRecipientNameChange={setRecipientName}
+                  onGiftMessageChange={setGiftMessage}
+                  nameError={nameError}
+                  recipientNameError={recipientNameError}
+                  onClearNameError={clearNameError}
+                  onClearRecipientNameError={clearRecipientNameError}
+                />
+              </div>
               {/* Checkout Heading */}
               <div className="mt-10 mb-2 bg-[#fafafa] rounded text-center text-xl py-3 font-medium text-gray-700 border">
                 Checkout Details

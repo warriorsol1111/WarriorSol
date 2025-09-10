@@ -19,7 +19,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           type={type}
           data-slot="input"
           className={cn(
-            "file:text-foreground text-sm md:text-[18px] focus:outline-none focus:!ring-2 focus:!ring-[#EE9254] focus:!ring-offset-0",
+            "file:text-foreground text-base md:text-[18px] focus:outline-none focus:!ring-2 focus:!ring-[#EE9254] focus:!ring-offset-0",
             " placeholder:text-[#413a3a4d] ",
             "flex h-10 md:h-14 w-full !rounded-lg border bg-white px-4 py-2  !text-[#1F1F1FCC] shadow-sm transition-all duration-200",
             "border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-300",

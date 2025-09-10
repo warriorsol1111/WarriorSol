@@ -103,21 +103,22 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link href="/home" className="text-lg font-semibold tracking-wide">
-            <div className="flex items-center px-2 sm:px-5">
+            <div className="flex items-center px-1 sm:px-3">
               <Image
                 src={Logo}
                 alt="Warrior Sol Logo"
-                className="h-8 sm:h-10 w-auto"
-                width={100}
-                height={100}
+                className="h-8 sm:h-10 md:h-12 lg:h-16 w-auto"
+                width={120}
+                height={120}
                 style={{ objectFit: "contain" }}
+                priority
               />
             </div>
           </Link>
         </div>
 
         {/* Center: Desktop Navigation */}
-        <nav className="hidden lg:flex flex-1 justify-center items-center space-x-6 text-sm text-black  overflow-x-auto">
+        <nav className="hidden lg:flex flex-1 justify-center items-center space-x-6 text-sm text-black  overflow-x-auto mt-1">
           <Link href="/home" className={isActive("/home")}>
             Home
           </Link>
