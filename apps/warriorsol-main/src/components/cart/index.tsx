@@ -131,7 +131,7 @@ export default function CartPage() {
                           item.lineId &&
                           updateQuantity(item.lineId, item.quantity - 1)
                         }
-                        className="h-8 w-8 p-0 border-gray-300"
+                        className="!h-8 !w-8 p-0 border-gray-300"
                         disabled={
                           cartLoading ||
                           (!!item.lineId && itemLoading[item.lineId])
@@ -149,7 +149,7 @@ export default function CartPage() {
                           item.lineId &&
                           updateQuantity(item.lineId, item.quantity + 1)
                         }
-                        className="h-8 w-8 p-0 border-gray-300"
+                        className="!h-8 !w-8 p-0 border-gray-300"
                         disabled={
                           cartLoading ||
                           (!!item.lineId && itemLoading[item.lineId])

@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { PUBLIC_ROUTES } from "@/lib/app-routes";
-import { NextApiRequest } from "next";
+import type { NextApiRequest } from "next";
+
 function isPublicRoute(pathname: string) {
   return PUBLIC_ROUTES.some((route) => {
     if (route.includes("[id]")) {
@@ -16,13 +17,17 @@ function isPublicRoute(pathname: string) {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  if (pathname !== "/") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
   const token = await getToken({
     req: request as unknown as NextApiRequest,
     secret: process.env.NEXTAUTH_SECRET,
   });
 
   // 👇 Redirect signed-in users *away* from /login
-  if (pathname === "/login" && token) {
+  if (pathname.startsWith("/login") && token) {
     return NextResponse.redirect(new URL("/home", request.url)); // redirect to home or dashboard
   }
   if (isPublicRoute(pathname)) {

@@ -17,13 +17,17 @@ function isPublicRoute(pathname: string) {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  if (pathname !== "/") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
   const token = await getToken({
     req: request as unknown as NextApiRequest,
     secret: process.env.NEXTAUTH_SECRET,
   });
 
   // 👇 Redirect signed-in users *away* from /login
-  if (pathname === "/login" && token) {
+  if (pathname.startsWith("/login") && token) {
     return NextResponse.redirect(new URL("/home", request.url)); // redirect to home or dashboard
   }
   if (isPublicRoute(pathname)) {
