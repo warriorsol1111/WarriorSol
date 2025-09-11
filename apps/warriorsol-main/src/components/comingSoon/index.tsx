@@ -9,9 +9,11 @@ import Logo from "../../assets/logo.svg";
 import { toast } from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 import Singer from "@/assets/singer.svg";
-
+import LogoWhite from "../../assets/logo-white.svg";
+import { useRouter } from "next/navigation";
 export default function ComingSoon() {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const router = useRouter();
   const targetDate = new Date("2025-11-11T11:11:00-05:00").getTime();
 
   const [isPlaying, setIsPlaying] = useState(false);
@@ -48,12 +50,23 @@ export default function ComingSoon() {
     setTimeLeft(calculateTimeLeft());
 
     const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
+      const updatedTime = calculateTimeLeft();
+      setTimeLeft(updatedTime);
+
+      // 👇 redirect when countdown ends
+      if (
+        updatedTime.days === 0 &&
+        updatedTime.hours === 0 &&
+        updatedTime.minutes === 0 &&
+        updatedTime.seconds === 0
+      ) {
+        clearInterval(timer);
+        router.push("/home");
+      }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [targetDate]);
-
+  }, [targetDate, router]);
   const toggleAudio = () => {
     if (!audioRef.current) return;
 
@@ -185,7 +198,19 @@ export default function ComingSoon() {
         {/* Main Content */}
         <div className="relative z-10 flex flex-col flex-grow text-center px-4 sm:px-6 lg:px-8">
           <div className="mt-8 sm:mt-12 md:mt-16 lg:mt-20">
-            <h1 className="text-white text-[38px] sm:text-[48px] md:text-[64px] lg:text-[72px] xl:text-[80px] font-extrabold mb-4 sm:mb-6 tracking-[0.15em] uppercase leading-tight">
+            {/*Logo Image*/}
+            <div className="flex items-center justify-center">
+              <Image
+                src={LogoWhite}
+                alt="Warrior Sol Logo"
+                className="h-12 w-auto sm:h-14 md:h-16 lg:h-18"
+                width={120}
+                priority
+                height={120}
+                style={{ objectFit: "contain" }}
+              />
+            </div>
+            <h1 className="text-white text-[38px] sm:text-[48px] md:text-[54px] lg:text-[60px] xl:text-[60px] font-extrabold mb-4 sm:mb-6 tracking-[0.15em] uppercase leading-tight">
               Rising On 11/11
             </h1>
 

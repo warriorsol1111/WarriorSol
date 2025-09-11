@@ -43,29 +43,50 @@ export default function AboutBanner() {
           </h2>
         </div>
       </section>
-      <section className="text-center max-w-3xl mx-auto">
-        <h2 className="text-2xl sm:text-3xl font-bold mb-4">
-          Our Story – Born Of Fire, Built To Shine
-        </h2>
-        <p className="text-gray-600 leading-relaxed">
-          Warrior Sol began as not just a brand, but a beacon of hope. The kind
-          of fire that refines, that shapes, that strengthens. Out of
-          life&apos;s battles came a vision: to create apparel that isn’t just
-          worn, but lived in. Apparel that celebrates the unspoken strength of
-          survivors, the relentless drive of fighters, and the unity of those
-          who believe in standing tall no matter the storm. At Warrior Sol, we
-          don’t just make clothes. We craft identity. Together, we are not just
-          survivors — we are warriors.
-        </p>
+      <section className="px-6 sm:px-10 lg:px-16 py-16">
+        <div className=" mx-auto grid md:grid-cols-2 gap-10 items-start">
+          {/* Left side - heading */}
+          <h2 className="text-[32px] md:text-[62px] text-center md:text-left font-medium leading-snug">
+            Our Story – <br /> Born Of Fire, <br /> Built To Shine
+          </h2>
+
+          {/* Right side - content */}
+          <div className="space-y-6 text-[20px] text-[#1F1F1F] md:text-left text-center">
+            <p>
+              Warrior Sol began not as a brand, but as a battle cry. We are
+              rooted in the lived experience of love, loss, and resilience. This
+              journey started with Tasha—our first warrior, our north star. When
+              cancer entered her life, it lit a fire in ours. We stood beside
+              her through every appointment, every fight, every quiet moment of
+              strength. And when she left this world at exactly 11:11pm, she
+              left behind more than memories—she left a mission.
+            </p>
+
+            <p>
+              That mission became Warrior Sol: a community, a movement, and a
+              rebellion wrapped in fabric. Every piece we create is stitched
+              with purpose—meant to honor the warriors, the caregivers, the
+              grievers, and the ones who show up with quiet courage every single
+              day.
+            </p>
+
+            <p>
+              We don’t just sell clothing. We wear our stories. We wear our
+              strength.
+            </p>
+          </div>
+        </div>
       </section>
-      <section className="text-center max-w-2xl mx-auto">
-        <h2 className="text-2xl sm:text-3xl font-bold mb-4">Our Mission</h2>
-        <p className="text-gray-600 leading-relaxed">
-          At Warrior Sol, our mission is to create empowering powerful apparel
+      <section className="text-center mt-4">
+        <h2 className="text-[32px] md:text-[62px] font-medium mb-4">
+          Our Mission
+        </h2>
+        <p className="text-[20px] md:text-[42px] text-[#1F1F1F]">
+          At Warrior Sol, our mission is to create emotionally powerful apparel
           that offers more than comfort, it offers connection.
         </p>
       </section>
-      <section className="grid md:grid-cols-2 gap-10 items-center">
+      <section className="grid md:grid-cols-2 gap-10 mt-20 items-center">
         <div className="rounded-lg overflow-hidden shadow-md">
           <Image
             src={AboutUsImage1}
@@ -75,9 +96,11 @@ export default function AboutBanner() {
             className="object-cover w-full h-full"
           />
         </div>
-        <div>
-          <h3 className="text-xl font-semibold mb-4">What We Stand For</h3>
-          <p className="text-gray-600 leading-relaxed">
+        <div className="text-center md:text-left">
+          <h3 className="text-[32px] md:text-[42px] font-medium mb-4">
+            What We Stand For
+          </h3>
+          <p className="text-[20px] md:text-[20px] text-[#1F1F1FB2] leading-relaxed">
             We stand for survivors. For fighters. For caregivers. For families.
             For every story untold but deeply felt. Warrior Sol represents the
             light that breaks through darkness and the belief that healing is
@@ -87,16 +110,18 @@ export default function AboutBanner() {
       </section>
 
       {/* Our Spirit */}
-      <section className="grid md:grid-cols-2 gap-10 items-center">
-        <div className="order-2 md:order-1">
-          <h3 className="text-xl font-semibold mb-4">Our Spirit</h3>
-          <p className="text-gray-600 leading-relaxed">
+      <section className="grid md:grid-cols-2 gap-10 mt-20 items-center">
+        <div className="order-2 md:order-1 text-center md:text-left">
+          <h3 className="text-[32px] md:text-[42px] font-medium mb-4">
+            Our Spirit
+          </h3>
+          <p className="text-[20px] md:text-[20px] text-[#1F1F1FB2] leading-relaxed">
             Warrior Sol isn’t just clothing; it’s a declaration. A reminder that
             in every scar lies a story. In every silence, a voice waiting to be
             heard. Our spirit is unbreakable. Our message, unstoppable.
           </p>
         </div>
-        <div className="order-1 md:order-2 rounded-lg overflow-hidden shadow-md">
+        <div className="order-1 rounded-lg overflow-hidden shadow-md md:order-2">
           <Image
             src={AboutUsImage2}
             alt="Our Spirit"

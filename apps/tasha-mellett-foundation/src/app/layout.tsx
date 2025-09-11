@@ -8,11 +8,13 @@ const manrope = Manrope({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   display: "swap",
+  preload: false,
 });
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+  preload: false,
 });
 
 export const metadata: Metadata = {

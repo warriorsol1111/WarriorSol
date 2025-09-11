@@ -14,30 +14,44 @@ function isPublicRoute(pathname: string) {
     return route === pathname;
   });
 }
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // --- Coming Soon Redirect (date-based) ---
+  const targetDate = new Date("2025-11-11T11:11:00-05:00").getTime();
+  const now = Date.now();
+
+  if (pathname === "/" && now >= targetDate) {
+    return NextResponse.redirect(new URL("/home", request.url));
+  }
+
+  // --- Maintenance Mode Redirect ---
   if (process.env.MAINTENANCE_MODE === "true" && pathname !== "/") {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
+  // --- Auth Token Check ---
   const token = await getToken({
     req: request as unknown as NextApiRequest,
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  // 👇 Redirect signed-in users *away* from /login
+  // Redirect signed-in users *away* from /login
   if (pathname.startsWith("/login") && token) {
-    return NextResponse.redirect(new URL("/home", request.url)); // redirect to home or dashboard
+    return NextResponse.redirect(new URL("/home", request.url));
   }
+
+  // Allow public routes
   if (isPublicRoute(pathname)) {
     return NextResponse.next();
   }
-  // 👇 Allow public routes without auth
+
   if (PUBLIC_ROUTES.includes(pathname)) {
     return NextResponse.next();
   }
 
-  // 👇 Redirect unauthenticated users to login
+  // Redirect unauthenticated users to login
   if (!token) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("callbackUrl", pathname);
