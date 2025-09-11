@@ -114,7 +114,7 @@ export default function Footer() {
               <ul className="space-y-2">
                 <li>
                   <Link
-                    href="#"
+                    href="/privacy-policy"
                     className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
                   >
                     Privacy Policy
@@ -122,7 +122,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="#"
+                    href="/terms-of-service"
                     className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
                   >
                     Terms of Service
@@ -143,18 +143,18 @@ export default function Footer() {
         {/* Hide bottom links on "/" too */}
         {pathname !== "/" && (
           <div className="flex gap-4">
-            <a
-              href="#"
+            <Link
+              href="/privacy-policy"
               className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
             >
               Privacy
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              href="/terms-of-service"
               className="hover:underline text-[#FFFFFF99] transition-colors  font-normal text-sm"
             >
               Terms
-            </a>
+            </Link>
           </div>
         )}
       </div>

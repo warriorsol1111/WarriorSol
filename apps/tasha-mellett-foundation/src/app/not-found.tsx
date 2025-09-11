@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import logoWhite from "@/assets/logo-white.svg";
+import logoWhite from "@/assets/logo-white.png";
 
 export default function NotFound() {
   return (
@@ -11,8 +11,8 @@ export default function NotFound() {
         <Image
           src={logoWhite}
           alt="Warrior Sol Logo"
-          width={200}
-          height={200}
+          width={400}
+          height={400}
           className="mx-auto mb-8"
         />
         <h1 className="text-[64px] md:text-[84px] font-cormorantSC mb-4">

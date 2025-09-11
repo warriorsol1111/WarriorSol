@@ -1,77 +1,30 @@
 "use client";
 
 import mainImage from "@/assets/Rectangle 215.png";
-import coleImage from "@/assets/cole.png";
-import jimmyImage from "@/assets/jimmy.png";
 import missionImage from "@/assets/mission.png";
 import { SocialLinks } from "@/components/shared/socialLinks";
 import Image from "next/image";
 import React from "react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 
-const teamMembers = [
-  {
-    name: "Cole",
-    role: "Creative Lead & Storykeeper",
-    image: coleImage,
-    description:
-      "Cole brings vision, voice, and vulnerability to the heart of the brand. A designer with a mission, and a son who carries strength in his blood.",
-  },
-  {
-    name: "Jimmy",
-    role: "Founder, Warrior #2",
-    image: jimmyImage,
-    description:
-      'A father, a husband, and now, a messenger of light. After losing his wife Tasha, Jimmy turned grief into fuel. Warrior Sol is his way of saying: "We’re still here. We’re still fighting."',
-  },
-  {
-    name: "Cole",
-    role: "Creative Lead & Storykeeper",
-    image: coleImage,
-    description:
-      "Cole brings vision, voice, and vulnerability to the heart of the brand. A designer with a mission, and a son who carries strength in his blood.",
-  },
-  {
-    name: "Jimmy",
-    role: "Founder, Warrior #2",
-    image: jimmyImage,
-    description:
-      'A father, a husband, and now, a messenger of light. After losing his wife Tasha, Jimmy turned grief into fuel. Warrior Sol is his way of saying: "We’re still here. We’re still fighting."',
-  },
-];
+import { Button } from "@/components/ui/button";
+import { GoArrowUpRight } from "react-icons/go";
+import { useRouter } from "next/navigation";
+import RecommendedProducts from "@/components/community/recommendedProducts";
 
 const CommunityPage = () => {
+  const router = useRouter();
+  const FOUNDATION_URL = process.env.NEXT_PUBLIC_FOUNDATION_URL;
   return (
     <main className="bg-white text-black font-inter">
       {/* ✅ HERO TEXT Section */}
       <section className="w-full text-center">
         <h1 className="text-[40px] md:text-[62px] text-center md:text-left mx-auto max-w-[90%] font-normal mt-10 text-[#1F1F1F] leading-tight">
-          Our Story – Born Of Fire, Built To Shine
+          Our Bold Vision: To Raise $25 Million Over The Next 3 Years{" "}
         </h1>
-        <p className="mt-6 text-[16px] md:text-[20px]   leading-relaxed text-[#1F1F1FB2] text-center md:text-left max-w-[90%] mx-auto">
-          Warrior Sol began not as a brand, but as a battle cry. We are rooted
-          in the lived experience of love, loss, and resilience. This journey
-          started with Tasha—our first warrior, our North Star. When cancer
-          entered her life, it lit a fire in ours. We stood beside her through
-          every appointment, every fight, every quiet moment of strength. And
-          when she left this world at exactly 11:11pm, she left behind more than
-          memories—she left a mission.
-          <br />
-          <br />
-          That mission became Warrior Sol: a community, a movement, and a
-          rebellion wrapped in fabric. Every piece we create is stitched with
-          purpose—meant to honor the warriors, the caregivers, the grievers, and
-          the ones who show up with quiet courage every single day.
-          <br />
-          <br />
-          We don’t just sell clothing. We wear our stories. We wear our
-          strength.
+        <p className="mt-6 text-[16px] md:text-[20px] capitalize  leading-relaxed text-[#1F1F1FB2] text-center md:text-left max-w-[90%] mx-auto">
+          We&apos;re on a mission to raise $25 million over the next three
+          years—a goal that would make us the largest foundation worldwide
+          providing direct aid to families impacted by cancer.
         </p>
       </section>
 
@@ -96,72 +49,96 @@ const CommunityPage = () => {
           />
         </div>
         <div className="flex-1 text-center md:text-left md:mb-[200px]">
-          <h2 className="text-[42px] md:text-[62px] font-cormorantSC capitalize leading-tight mb-6 text-[#1F1F1F]">
-            Our Mission – Apparel With A Pulse
+          <h2 className="text-[42px] md:text-[52px] font-cormorantSC capitalize leading-tight mb-6 text-[#1F1F1F]">
+            Globally, Foundations And Organizations Raise $15 Billion Annually
+            For Cancer-related Causes. But Less Than 10% Reaches The People
+            Living With Cancer Daily Realities.{" "}
           </h2>
-          <p className="text-[16px] md:text-[20px] text-center md:text-left   text-black/70 leading-relaxed">
-            At Warrior Sol, our mission is to create emotionally powerful
-            apparel that offers more than comfort—it offers connection. We’re
-            here to: Empower those impacted by cancer—fighters, survivors,
-            caregivers, and allies. Share real stories that spark empathy,
-            healing, and belonging. Give back directly to the warriors and
-            families navigating the financial, emotional, and physical burdens
-            of cancer. Turn fashion into a force for good—one thread, one story,
-            one sunrise at a time. We are a tribe. A rebellion of care. And
-            we’re not here to follow trends—we’re here to fight for truth,
+          <p className="text-[16px] md:text-[20px] text-center md:text-left capitalize   text-black/70 leading-relaxed">
+            We&apos;re on a mission to raise $25 million over the next three
+            years—a goal that would make us the largest foundation worldwide
+            providing direct aid to families impacted by cancer. Our bold
+            vision: to raise $25 Million over the next 3 years Most of the help
+            goes to research, while those living with the day-to-day realities
+            of cancer often find themselves without the support they need—
+            financially, emotionally, and socially.e here to fight for truth,
             tenderness, and tangible impact.
           </p>
         </div>
       </section>
-
-      {/* ✅ TEAM SECTION with CAROUSEL */}
-      <section className="w-full px-6 md:px-24 py-10 md:py-5 text-center">
-        <h2 className="text-[42px] md:text-[62px] text-[#1F1F1F] font-cormorantSC capitalize">
-          Our Team
-        </h2>
-        <p className="text-[16px] md:text-[20px]   text-[#1F1F1FB2] opacity-70">
-          We&apos;ve walked these halls. We&apos;ve held the hands. We&apos;ve
-          heard the silence—and we chose to speak.
-        </p>
-
-        <div className="mt-2 relative w-full max-w-4xl mx-auto">
-          <Carousel>
-            <CarouselContent className="mb-20">
-              {teamMembers.map((member, index) => (
-                <CarouselItem
-                  key={index}
-                  className="md:basis-1/2 lg:basis-1/3 flex justify-center"
-                >
-                  <div className="flex flex-col items-start text-left bg-white rounded-2xl shadow-md p-6">
-                    <div className="w-full h-[300px] overflow-hidden rounded">
-                      <Image
-                        src={member.image}
-                        alt={member.name}
-                        className="w-full h-full object-cover"
-                        placeholder="blur"
-                      />
-                    </div>
-                    <h3 className="mt-4 text-[24px] text-[#1F1F1F] font-normal font-cormorant">
-                      {member.name}
-                    </h3>
-                    <p className="text-[16px] text-[#1F1F1F99] ">
-                      {member.role}
-                    </p>
-                    <p className="mt-2 text-[16px]  text-[#1F1F1FB2]  ">
-                      {member.description}
-                    </p>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-
-            <div className="absolute bottom-4 right-4 flex gap-2">
-              <CarouselPrevious className=" static translate-y-0 w-10 h-10 border border-[#6B2C1A] text-[#6B2C1A] rounded-none bg-transparent hover:bg-[#6B2C1A] hover:text-white transition" />
-              <CarouselNext className=" static translate-y-0 w-10 h-10 border border-[#6B2C1A] text-[#6B2C1A] rounded-none bg-transparent hover:bg-[#6B2C1A] hover:text-white transition" />
-            </div>
-          </Carousel>
+      <div className="bg-[#EE9253]">
+        <div className=" mx-auto md:px-20 py-16 lg:py-24">
+          <p className="text-lg md:text-[20px] mt-[-10px] font-medium text-white text-center">
+            We Are Here To Meet The Human Needs That Research Funding Does Not
+            Touch.{" "}
+          </p>
+          <h1 className="text-[21px] lg:text-[52px] font-medium text-white mb-6 text-center">
+            Because every warrior, every caregiver, and every supporter deserves
+            to feel seen, heard, and supported in this journey.
+          </h1>
+        </div>
+      </div>
+      <section className="w-full px-6 md:px-24 md:py-20 mt-10 flex flex-col lg:flex-row gap-12 items-center">
+        <div className="flex-1 text-center md:text-left md:mb-[200px]">
+          <h2 className="text-[42px] md:text-[52px] font-cormorantSC capitalize leading-tight mb-6 text-[#1F1F1F]">
+            The Hidden Battles
+          </h2>
+          <p className="text-[16px] md:text-[20px] text-center md:text-left capitalize  text-black/70 leading-relaxed">
+            Every year, cancer impacts millions. For every person facing a
+            diagnosis, 10 to 20 others are affected.
+            <br />
+            <br />
+            Families, friends, and caregivers carry invisible burdens the
+            sleepless nights, the loss of income, the overwhelming costs of
+            care, the isolation from friends who don&apos;t know what to say,
+            and the guilt caregivers feel when they try to care for themselves.
+            <br />
+            <br />
+            Too often, people are left to navigate this storm alone, without a
+            safety net.
+          </p>
+        </div>
+        <div className="flex-1 w-full">
+          <Image
+            src={missionImage}
+            alt="Mission Visual"
+            className="rounded w-full h-auto object-cover"
+            placeholder="blur"
+          />
         </div>
       </section>
+      <div className="flex flex-col sm:flex-row justify-between items-start px-6 md:px-24 md:py-20">
+        <div>
+          <h2 className="text-4xl sm:text-5xl lg:text-[62px] text-center md:text-start leading-tight lg:leading-[62px] font-semibold text-[#1F1F1F] capitalize">
+            This is where Warrior Sol Foundation steps in{" "}
+          </h2>
+          <p className="text-base sm:text-lg lg:text-[20px] font-medium text-center md:text-start text-[#1F1F1FB2] capitalize mt-4 sm:mt-4">
+            To provide direct aid to people and families impacted by cancer,
+            covering urgent needs, from
+            <br />
+            medical travel expenses to utility bills, to comfort items that
+            bring relief in difficult moments.
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          onClick={() => router.push(`${FOUNDATION_URL}`)}
+          className="mt-8 flex items-center justify-center gap-2 px-12 py-3 border border-[#1F1F1F] bg-white text-[16px] md:text-[20px] text-[#1F1F1F] hover:bg-gray-200 hover:text-[#1F1F1F] transition"
+        >
+          Join The Movement
+          <GoArrowUpRight className="w-6 h-6" />
+        </Button>
+      </div>
+      <div className="bg-[#EE9253]">
+        <div className=" mx-auto md:px-20 py-12 lg:py-12">
+          <h1 className="text-[21px] lg:text-[52px] font-medium text-white mb-6 text-center">
+            When you wear Warrior Sol, you invest in your own comfort while
+            fuelling a mission that uplifts an entire community.
+          </h1>
+        </div>
+      </div>
+
+      <RecommendedProducts />
 
       <SocialLinks />
     </main>

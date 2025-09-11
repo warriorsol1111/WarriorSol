@@ -75,12 +75,19 @@ const Contacts = () => {
     <section>
       <div className="w-full bg-white py-4 px-6 sm:px-12 lg:px-24">
         <h1 className="text-4xl md:text-[62px] text-[#1F1F1F] text-center font-semibold">
-          Contact
+          We’d love to hear from you
         </h1>
-        <p className="text-center mt-4 text-lg  opacity-70 sm:text-xl text-[#1F1F1FB2] mx-auto">
-          Whether you have questions about our products, need assistance with
-          your order, or just want to say hello, feel free to reach out. Our
-          dedicated team is here to help you with any inquiries you may have.
+        <p className="text-center mt-4 text-lg  opacity-70 sm:text-xl text-[#1F1F1FB2] mx-auto capitalize">
+          Whether you want to share words of love, explore a partnership,
+          discuss donations, or connect with us about Warrior Sol&apos;s
+          mission, we are here for it.
+          <br />
+          <br />
+          For questions about your order, please head to our Help Page so we can
+          assist you faster.
+          <br />
+          <br />
+          We reply to every email within 48 hours.
         </p>
       </div>
       <div className="mt-12 flex flex-col lg:flex-row items-stretch">

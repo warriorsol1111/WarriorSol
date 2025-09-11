@@ -120,10 +120,16 @@ const Footer = () => {
           © 2025 Warrior Sol. Rooted in light. All rights reserved.
         </div>
         <div className="text-sm flex space-x-6  font-normal text-[#FFFFFF99]">
-          <Link href="#" className="hover:text-white transition-colors">
+          <Link
+            href="/privacy-policy"
+            className="hover:text-white transition-colors"
+          >
             Privacy Policy
           </Link>
-          <Link href="#" className="hover:text-white transition-colors">
+          <Link
+            href="/terms-of-service"
+            className="hover:text-white transition-colors"
+          >
             Terms of Service
           </Link>
         </div>

@@ -39,13 +39,13 @@ export default function Navbar() {
 
   return (
     <header className="w-full shadow-sm sticky top-0 z-50 bg-white">
-      <div className="flex items-center justify-between px-4 sm:px-6 lg:px-10 py-3 sm:py-4">
+      <div className="flex items-center justify-between px-4 sm:px-6 lg:px-4 xl:px-10 py-3 sm:py-4">
         {/* Left Section */}
-        <div className="flex items-center gap-4 sm:gap-8">
+        <div className="flex items-center gap-2">
           {/* Mobile Menu Button - Show on screens smaller than 1024px */}
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="xl:hidden p-1">
+              <Button variant="ghost" size="icon" className="lg:hidden p-1">
                 <MdMenu className="h-6 w-6 text-black" />
               </Button>
             </SheetTrigger>
@@ -66,6 +66,12 @@ export default function Navbar() {
                 </Link>
                 <Link href="/donor-wall" className={isActive("/donor-wall")}>
                   Donor Wall
+                </Link>
+                <Link href="/about" className={isActive("/about")}>
+                  About
+                </Link>
+                <Link href="/contact" className={isActive("/contact")}>
+                  Contact
                 </Link>
                 {session?.user?.role === "admin" && (
                   <Link
@@ -107,13 +113,19 @@ export default function Navbar() {
               Home
             </Link>
             <Link href="/support" className={isActive("/support")}>
-              Apply for Support
+              Support
             </Link>
             <Link href="/donations" className={isActive("/donations")}>
               Donations
             </Link>
             <Link href="/donor-wall" className={isActive("/donor-wall")}>
               Donor Wall
+            </Link>
+            <Link href="/about" className={isActive("/about")}>
+              About
+            </Link>
+            <Link href="/contact" className={isActive("/contact")}>
+              Contact
             </Link>
             {session?.user?.role === "admin" && (
               <Link
@@ -140,6 +152,12 @@ export default function Navbar() {
             <Link href="/donor-wall" className={isActive("/donor-wall")}>
               Wall
             </Link>
+            <Link href="/about" className={isActive("/about")}>
+              About
+            </Link>
+            <Link href="/contact" className={isActive("/contact")}>
+              Contact
+            </Link>
             {session?.user?.role === "admin" && (
               <Link
                 href="/support-applications"
@@ -152,7 +170,7 @@ export default function Navbar() {
         </div>
 
         {/* Right Section */}
-        <div className="flex items-center gap-1 sm:gap-3 flex-shrink-0">
+        <div className=" flex items-center gap-1 sm:gap-3 flex-shrink-0">
           <a
             href="/donations"
             className="hidden sm:inline-block px-3 sm:px-4 lg:px-6 py-2 bg-[#C1E965] rounded-full font-extrabold text-xs sm:text-sm lg:text-lg hover:bg-[#b3e06d] text-[#023729] transition-all"

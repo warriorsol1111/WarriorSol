@@ -11,8 +11,8 @@ const hkGrotesk = Hanken_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "WarriorSol Main",
-  description: "WarriorSol Main",
+  title: "WarriorSol Foundation",
+  description: "WarriorSol Foundation",
 };
 
 export default function RootLayout({

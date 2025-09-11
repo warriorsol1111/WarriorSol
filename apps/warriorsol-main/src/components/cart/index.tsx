@@ -94,10 +94,13 @@ export default function CartPage() {
         <div className="w-full max-w-6xl">
           {/* Title */}
           <h1 className="text-[36px] sm:text-[48px] lg:text-[62px] font-normal text-center mb-2">
-            Your Cart
+            Your Picks{" "}
           </h1>
-          <p className="text-center font-light text-lg sm:text-xl text-gray-500 mb-8">
-            Review your items before proceeding to checkout
+          <p className="text-center font-light text-lg sm:text-xl text-gray-500 mb-8 capitalize">
+            Every item you add makes a difference. We donate 11.11% of all
+            revenue to fund
+            <br />
+            direct support for those facing cancer&apos;s hidden battles.{" "}
           </p>
 
           {/* Fallback: Empty Cart */}

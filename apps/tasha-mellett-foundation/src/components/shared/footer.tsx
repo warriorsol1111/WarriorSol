@@ -95,12 +95,18 @@ export default function Footer() {
                   </li>
                 )}
                 <li>
-                  <Link href="#" className="hover:underline text-white">
+                  <Link
+                    href="/privacy-policy"
+                    className="hover:underline text-white"
+                  >
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:underline text-white">
+                  <Link
+                    href="/terms-of-service"
+                    className="hover:underline text-white"
+                  >
                     Terms of Service
                   </Link>
                 </li>
@@ -112,18 +118,13 @@ export default function Footer() {
               <h4 className="text-white text-lg font-semibold mb-3">Company</h4>
               <ul className="space-y-2">
                 <li>
-                  <Link href="#" className="hover:underline text-white">
+                  <Link href="/about" className="hover:underline text-white">
                     About
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:underline text-white">
+                  <Link href="/contact" className="hover:underline text-white">
                     Contact
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:underline text-white">
-                    Community
                   </Link>
                 </li>
               </ul>

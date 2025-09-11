@@ -223,7 +223,7 @@ export const CommunityDetails = ({
 
         {/* Media */}
         {story.attachment && (
-          <div className="relative w-full h-screen mx-auto md:mt-10 rounded-lg overflow-hidden">
+          <div className="relative w-full  mx-auto md:mt-10 rounded-lg overflow-hidden">
             {isVideo ? (
               <video
                 className="object-cover w-full h-full rounded-lg"
@@ -237,13 +237,15 @@ export const CommunityDetails = ({
                 Your browser does not support the video tag.
               </video>
             ) : (
-              <Image
-                src={story.attachment}
-                alt="Story Media"
-                fill
-                className="object-contain"
-                sizes="(max-width: 768px) 100vw, 1200px"
-              />
+              <div className="relative w-full min-h-[400px] mx-auto md:mt-10 rounded-lg overflow-hidden flex items-center justify-center">
+                <Image
+                  src={story.attachment}
+                  alt="Story Media"
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 768px) 100vw, 1200px"
+                />
+              </div>
             )}
           </div>
         )}
@@ -258,7 +260,7 @@ export const CommunityDetails = ({
         {/* Author */}
         <div className="flex justify-center items-center mt-10">
           <div className="flex flex-col gap-4 items-center">
-            <Avatar className="w-[80px] h-[80px] nd:w-[160px] md:h-[160px] shadow-lg">
+            <Avatar className="w-[80px] h-[80px] md:w-[160px] md:h-[160px] shadow-lg">
               <AvatarImage
                 src={
                   story.isAnonymous
