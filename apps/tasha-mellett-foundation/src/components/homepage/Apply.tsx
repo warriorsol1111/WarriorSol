@@ -183,7 +183,7 @@ export default function ApplyForSupport() {
         <TooltipProvider>
           <Card className="w-full max-w-5xl mx-auto !border-none">
             <CardHeader className="text-center">
-              <CardTitle className="text-[42px] lg:text-[62px] text-[#1F1F1F] font-semibold whitespace-nowrap ">
+              <CardTitle className="text-[42px] lg:text-[62px] text-[#1F1F1F] font-semibold ">
                 Become a Partner to Apply for Grants{" "}
               </CardTitle>
               <CardDescription className="text-[24px] font-medium text-[#1F1F1FB2] ">

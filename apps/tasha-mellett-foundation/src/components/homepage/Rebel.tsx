@@ -64,7 +64,7 @@ const RebellionNewsletter = () => {
             </div>
 
             {/* Input + Button */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center w-full lg:w-auto">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center w-full gap-4 md:gap-0 lg:w-auto">
               <Input
                 placeholder="Enter your email"
                 value={email}
@@ -89,7 +89,7 @@ const RebellionNewsletter = () => {
           {/* Arrow + Image */}
           <div className="flex flex-col sm:flex-row justify-between items-center sm:items-end gap-6">
             {/* Arrow */}
-            <GoArrowDownRight className="w-8 h-8 text-[#002329] sm:self-end self-center" />
+            <GoArrowDownRight className="w-8 h-8 text-[#002329] sm:self-end self-center hidden md:flex" />
 
             {/* Image */}
             <Image
