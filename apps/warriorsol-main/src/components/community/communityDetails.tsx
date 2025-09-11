@@ -133,7 +133,7 @@ export const CommunityDetails = ({
       <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 relative">
         {/* Header section */}
         <div className="text-center mb-8 pt-10">
-          <h1 className="text-[42px] sm:text-[62px] text-[#1F1F1F]  font-semibold">
+          <h1 className="text-[36px] sm:text-[42px] md:text-[62px] text-[#1F1F1F]  font-semibold">
             {story.title}
           </h1>
           <p className="text-[20px]  text-[#1F1F1F99]  mt-2">
@@ -223,7 +223,7 @@ export const CommunityDetails = ({
 
         {/* Media */}
         {story.attachment && (
-          <div className="relative w-full  mx-auto md:mt-10 rounded-lg overflow-hidden">
+          <div className="relative w-full aspect-[16/9] md:aspect-[21/9] mt-10  mx-auto md:mt-10 rounded-lg overflow-hidden">
             {isVideo ? (
               <video
                 className="object-cover w-full h-full rounded-lg"
@@ -237,15 +237,13 @@ export const CommunityDetails = ({
                 Your browser does not support the video tag.
               </video>
             ) : (
-              <div className="relative w-full min-h-[400px] mx-auto md:mt-10 rounded-lg overflow-hidden flex items-center justify-center">
-                <Image
-                  src={story.attachment}
-                  alt="Story Media"
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 768px) 100vw, 1200px"
-                />
-              </div>
+              <Image
+                src={story.attachment}
+                alt="Story Media"
+                fill
+                className="object-contain"
+                sizes="(max-width: 768px) 100vw, 80vw"
+              />
             )}
           </div>
         )}

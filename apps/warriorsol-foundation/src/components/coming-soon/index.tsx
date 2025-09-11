@@ -121,7 +121,7 @@ export default function ComingSoon() {
               <Image
                 src={Logo}
                 alt="Warrior Sol Logo"
-                className="h-8 w-auto sm:h-10 md:h-12 lg:h-14"
+                className="h-12 w-auto sm:h-14 md:h-16 lg:h-18"
                 width={120}
                 priority
                 height={120}
@@ -185,26 +185,25 @@ export default function ComingSoon() {
         {/* Main Content */}
         <div className="relative z-10 flex flex-col flex-grow text-center px-4 sm:px-6 lg:px-8">
           <div className="mt-8 sm:mt-12 md:mt-16 lg:mt-20">
-            <h2 className="text-white text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-extrabold mb-4 sm:mb-6 tracking-[0.15em] uppercase">
+            <h1 className="text-white text-[38px] sm:text-[48px] md:text-[64px] lg:text-[72px] xl:text-[80px] font-extrabold mb-4 sm:mb-6 tracking-[0.15em] uppercase leading-tight">
               Rising On 11/11
-            </h2>
+            </h1>
 
-            {/* Countdown - Improved responsive sizing */}
             <div className="flex space-x-1 sm:space-x-2 md:space-x-4 lg:space-x-6 text-center items-center justify-center mb-6 sm:mb-8">
               {["days", "hours", "minutes", "seconds"].map((unit, i) => (
                 <React.Fragment key={unit}>
                   {i !== 0 && (
-                    <div className="text-white text-sm sm:text-lg md:text-xl lg:text-2xl">
+                    <div className="text-white text-base sm:text-lg md:text-xl lg:text-2xl">
                       :
                     </div>
                   )}
                   <div className="text-center">
-                    <div className="text-white text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl uppercase font-extrabold tracking-widest">
+                    <div className="text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold tracking-widest uppercase">
                       {timeLeft[unit as keyof typeof timeLeft]
                         .toString()
                         .padStart(2, "0")}
                     </div>
-                    <div className="text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm uppercase font-medium tracking-widest">
+                    <div className="text-white text-[10px] sm:text-xs md:text-sm lg:text-base uppercase font-medium tracking-widest">
                       {unit}
                     </div>
                   </div>

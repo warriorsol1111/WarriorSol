@@ -44,7 +44,7 @@ const Hero: React.FC = () => {
             alt="Hero Image"
             width={1000}
             height={1000}
-            className=" object-contain shadow-md"
+            className=""
             priority
           />
         </div>

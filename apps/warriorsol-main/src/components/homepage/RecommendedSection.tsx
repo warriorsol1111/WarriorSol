@@ -6,14 +6,14 @@ import { GoArrowUpRight } from "react-icons/go";
 
 export default function RecommendedSection() {
   return (
-    <section className="relative min-h-[80vh] md:min-h-screen w-full overflow-hidden">
+    <section className="relative min-h-[100vh] md:min-h-screen w-full overflow-hidden">
       {/* Background Image */}
-      <div className="absolute inset-0">
+      <div className="">
         <Image
           src={RecommendedImage}
           alt="Person in weighted hoodie"
           fill
-          className="object-cover"
+          className=""
           priority
         />
         <div className="absolute inset-0 bg-black/30"></div>

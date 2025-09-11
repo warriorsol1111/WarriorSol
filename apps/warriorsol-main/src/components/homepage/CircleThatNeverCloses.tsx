@@ -38,40 +38,40 @@ const CircleThatNeverCloses = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
-        <div className="relative overflow-hidden rounded-lg shadow-lg aspect-[4/3]">
+        <div className="relative overflow-hidden rounded-lg shadow-lg">
           <Image
             src={FamilyPhoto1}
             alt="Family photo"
-            className="w-full h-full object-cover"
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="w-full h-auto object-cover"
+            width={800}
+            height={600}
           />
         </div>
-        <div className="relative overflow-hidden rounded-lg shadow-lg aspect-[4/3]">
+        <div className="relative overflow-hidden rounded-lg shadow-lg">
           <Image
             src={FamilyPhoto2}
             alt="Family on boat"
-            className="w-full h-full object-cover"
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="w-full h-auto object-cover"
+            width={800}
+            height={1200}
           />
         </div>
-        <div className="relative overflow-hidden rounded-lg shadow-lg aspect-[4/3]">
+        <div className="relative overflow-hidden rounded-lg shadow-lg">
           <Image
             src={FamilyPhoto3}
             alt="Portrait photo"
-            className="w-full h-full object-cover"
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="w-full h-auto object-cover"
+            width={600}
+            height={900}
           />
         </div>
-        <div className="relative overflow-hidden rounded-lg shadow-lg aspect-[4/3]">
+        <div className="relative overflow-hidden rounded-lg shadow-lg">
           <Image
             src={FamilyPhoto4}
             alt="Family with children"
-            className="w-full h-full object-cover"
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="w-full h-auto object-cover"
+            width={1000}
+            height={800}
           />
         </div>
       </div>

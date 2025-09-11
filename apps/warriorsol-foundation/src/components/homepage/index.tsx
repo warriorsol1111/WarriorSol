@@ -33,7 +33,7 @@ export default function Homepage() {
         <Image
           src={HomeImage}
           alt="Home Image"
-          className="w-full h-[60vh] sm:h-[70vh] lg:h-[90vh] object-cover"
+          className="w-full h-auto"
           priority
         />
 
