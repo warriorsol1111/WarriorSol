@@ -15,7 +15,7 @@ import { BsCart2 } from "react-icons/bs";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import Reviews from "./reviews";
 import RecommendedProducts from "../community/recommendedProducts";
 
@@ -55,6 +55,11 @@ interface ProductVariant {
   };
 }
 
+interface ProductImage {
+  url: string;
+  altText?: string | null;
+}
+
 interface ProductDetailsProps {
   product: {
     id: string;
@@ -63,13 +68,137 @@ interface ProductDetailsProps {
     descriptionHtml: string;
     productType: string;
     vendor: string;
+    tags: string[];
     price: string;
     currencyCode: string;
+    images: ProductImage[];
     image: string;
+    url: string;
     imageAlt: string;
     variants: ProductVariant[];
     variant: ProductVariant | null;
   };
+}
+
+// Custom Carousel Component
+interface CarouselProps {
+  images: ProductImage[];
+  selectedIndex: number;
+  onImageSelect: (index: number) => void;
+}
+
+function ProductCarousel({
+  images,
+  selectedIndex,
+  onImageSelect,
+}: CarouselProps) {
+  const [currentIndex, setCurrentIndex] = useState(selectedIndex);
+
+  useEffect(() => {
+    setCurrentIndex(selectedIndex);
+  }, [selectedIndex]);
+
+  const goToPrevious = () => {
+    const newIndex = currentIndex > 0 ? currentIndex - 1 : images.length - 1;
+    setCurrentIndex(newIndex);
+    onImageSelect(newIndex);
+  };
+
+  const goToNext = () => {
+    const newIndex = currentIndex < images.length - 1 ? currentIndex + 1 : 0;
+    setCurrentIndex(newIndex);
+    onImageSelect(newIndex);
+  };
+
+  if (!images || images.length === 0) {
+    return (
+      <div className="w-full h-96 bg-gray-200 rounded-2xl flex items-center justify-center">
+        No images available
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative w-full">
+      {/* Main image display */}
+      <div className="relative w-full pt-[100%] bg-gray-100 rounded-2xl overflow-hidden shadow-md">
+        <Image
+          src={images[currentIndex]?.url || images[0].url}
+          alt={images[currentIndex]?.altText || "Product Image"}
+          fill
+          className="absolute top-0 left-0 w-full h-full object-contain"
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
+
+        {/* Navigation arrows - only show if more than 1 image */}
+        {images.length > 1 && (
+          <>
+            <button
+              onClick={goToPrevious}
+              className="absolute left-2 top-1/2 cursor-pointer -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md transition-all duration-200"
+              aria-label="Previous image"
+            >
+              <ChevronLeft className="w-5 h-5 text-gray-700" />
+            </button>
+            <button
+              onClick={goToNext}
+              className="absolute right-2 top-1/2 cursor-pointer -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md transition-all duration-200"
+              aria-label="Next image"
+            >
+              <ChevronRight className="w-5 h-5 text-gray-700" />
+            </button>
+          </>
+        )}
+
+        {/* Dots indicator */}
+        {images.length > 1 && (
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+            {images.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  setCurrentIndex(index);
+                  onImageSelect(index);
+                }}
+                className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                  index === currentIndex ? "bg-[#EE9254]" : "bg-white/60"
+                }`}
+                aria-label={`Go to image ${index + 1}`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Thumbnail navigation */}
+      {images.length > 1 && (
+        <div className="mt-4 flex gap-3 overflow-x-auto">
+          {images.map((img, idx) => (
+            <div
+              key={`${img.url}-${idx}`}
+              className={`relative w-20 h-20 rounded-lg overflow-hidden border cursor-pointer flex-shrink-0 ${
+                currentIndex === idx
+                  ? "border-[#EE9254] ring-1 ring-[#EE9254]"
+                  : "border-gray-200"
+              }`}
+              onClick={() => {
+                setCurrentIndex(idx);
+                onImageSelect(idx);
+              }}
+            >
+              <Image
+                src={img.url}
+                alt={img.altText || `Thumbnail ${idx + 1}`}
+                fill
+                className="object-contain"
+                sizes="80px"
+              />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function ProductDetails({ product }: ProductDetailsProps) {
@@ -84,6 +213,9 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
   const [loading, setLoading] = useState(false);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [wishListLoading, setWishlistLoading] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+  console.log("product", product);
 
   const { colors, sizes } = useMemo(() => {
     const colorSet = new Set<string>();
@@ -138,6 +270,11 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
   const [selectedColor, setSelectedColor] = useState<string>(colors[0]);
   const [selectedSize, setSelectedSize] = useState<string>(sizes[0]);
+  const [quantity, setQuantity] = useState(1);
+  const [quantityInStock, setQuantityInStock] = useState(
+    product.variants[0]?.quantityAvailable || 0
+  );
+
   // Set selected variant if variant ID is in URL
   useEffect(() => {
     if (!variantIdFromUrl || !product.variants.length) return;
@@ -158,10 +295,6 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     }
   }, [variantIdFromUrl, product.variants]);
 
-  const [quantity, setQuantity] = useState(1);
-  const [quantityInStock, setQuantityInStock] = useState(
-    product.variants[0].quantityAvailable || 0
-  );
   useEffect(() => {
     setQuantityInStock(
       product.variants.find((variant) => variant.title === selectedColor)
@@ -173,6 +306,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     const parts = id.split("/");
     return parts[parts.length - 1];
   };
+
   useEffect(() => {
     const fetchReviews = async () => {
       if (!session?.user.token) return;
@@ -198,6 +332,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     };
     fetchReviews();
   }, [product.id, session?.user.token]);
+
   const selectedVariant = useMemo(() => {
     const isHatProduct = product.variants.every((variant) => {
       const parts = variant.title.split(" / ");
@@ -220,6 +355,31 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
       ) || product.variants[0]
     );
   }, [selectedColor, selectedSize, product.variants]);
+
+  // Update selected image when variant changes
+  useEffect(() => {
+    if (selectedVariant?.image?.url) {
+      const index = product.images.findIndex(
+        (img) => img.url === selectedVariant.image.url
+      );
+      if (index >= 0) setSelectedImageIndex(index);
+    }
+  }, [selectedVariant, product.images]);
+
+  // Update selected variant when user clicks on an image
+  const handleImageSelect = (index: number) => {
+    setSelectedImageIndex(index);
+    const clickedImage = product.images[index];
+    // Check if this image belongs to a variant
+    const variant = product.variants.find(
+      (v) => v.image?.url === clickedImage.url
+    );
+    if (variant) {
+      setSelectedColor(variant.title.split(" / ")[0]);
+      const size = variant.title.split(" / ")[1];
+      if (size) setSelectedSize(size);
+    }
+  };
 
   useEffect(() => {
     const checkWishlist = async () => {
@@ -279,6 +439,10 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     }
   };
 
+  const isPreOrder =
+    product.tags?.includes("Pre-Order") ||
+    (selectedVariant?.availableForSale && quantityInStock === 0);
+
   const handleAddItemToCart = () => {
     try {
       setLoading(true);
@@ -303,6 +467,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
       setLoading(false);
     }
   };
+
   const formattedPrice = formatPrice({
     amount: selectedVariant?.price.amount || product.price,
     currencyCode: selectedVariant?.price.currencyCode || product.currencyCode,
@@ -362,20 +527,13 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
       <div className="p-4 sm:p-6 md:p-8 lg:p-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12">
           <div className="flex justify-center items-center p-4 sm:p-6">
-            {/* Product Image */}
+            {/* Product Image with Custom Carousel */}
             <div className="relative w-full max-w-md">
-              <div className="relative w-full max-w-md">
-                <div className="relative w-full pt-[100%] bg-gray-100 rounded-2xl overflow-hidden shadow-md">
-                  <Image
-                    key={selectedVariant?.image.url}
-                    src={selectedVariant?.image.url || product.image}
-                    alt={selectedVariant?.image.altText || product.imageAlt}
-                    fill
-                    className="absolute top-0 left-0 w-full h-full object-contain"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                </div>
-              </div>
+              <ProductCarousel
+                images={product.images}
+                selectedIndex={selectedImageIndex}
+                onImageSelect={handleImageSelect}
+              />
             </div>
           </div>
 
@@ -384,6 +542,12 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             {/* Header */}
             <div className="flex flex-col xl:flex-row sm:justify-between sm:items-start gap-4">
               <div>
+                {isPreOrder && (
+                  <span className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">
+                    Pre-Order
+                  </span>
+                )}
+
                 <h1 className="text-3xl sm:text-4xl lg:text-[62px] font-normal text-[#1F1F1F]">
                   {product.title}
                 </h1>
@@ -416,11 +580,15 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                   ? "In Stock"
                   : "Out of Stock"}
               </span>
-              {quantityInStock > 0 && (
+              {isPreOrder ? (
+                <span className="text-lg font-medium text-orange-600">
+                  Available for Pre-Order
+                </span>
+              ) : quantityInStock > 0 ? (
                 <span className="text-lg font-medium text-gray-700">
                   {quantityInStock} in stock
                 </span>
-              )}
+              ) : null}
             </div>
 
             {/* Variant Selection */}
@@ -450,6 +618,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 </div>
               </div>
             )}
+
             {/* Size Selection - Only show for shirts and pants */}
             {sizes.length > 0 &&
               !product.variants.every((variant) => {
@@ -546,13 +715,13 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                   variant="outline"
                   size="lg"
                   disabled={!selectedVariant?.availableForSale}
-                  onClick={() => {
-                    handleAddItemToCart();
-                  }}
-                  className="flex items-center justify-center gap-2 bg-[#EE9254] text-white hover:text-white hover:bg-[#EE9254] transition-colors"
+                  onClick={handleAddItemToCart}
+                  className={`flex items-center justify-center gap-2 ${"bg-[#EE9254] text-white hover:bg-[#EE9254] hover:text-white"}`}
                 >
                   {loading ? (
                     <Loader2 className="animate-spin h-5 w-5" />
+                  ) : isPreOrder ? (
+                    "Pre-Order Now"
                   ) : (
                     <>
                       <BsCart2 size={20} />
