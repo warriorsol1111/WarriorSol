@@ -12,24 +12,33 @@ const Footer = () => {
     <footer className="bg-[#1F1F1F] text-[#e5e5e5] pt-12 pb-6 px-10">
       <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-6 md:gap-0">
         {/* Brand Section */}
-        <div className="md:w-1/3 flex flex-col items-start mb-8 md:mb-0">
-          <div className="flex items-center mb-4">
+        {/* Brand Section */}
+        <div
+          className={`flex flex-col mb-8 md:mb-0 ${
+            isHomePage
+              ? "w-full items-center text-center" // Center logo + text on homepage
+              : "md:w-1/3 items-start text-left" // Default alignment for other pages
+          }`}
+        >
+          <div className="flex justify-center mb-4 w-full">
             <Image
               src={LogoWhite}
               alt="Warrior Sol Logo"
-              className="w-full h-full"
-              width={100}
-              height={100}
+              className="h-auto w-64 md:w-32 lg:w-36"
+              width={120}
+              height={120}
+              style={{ objectFit: "contain" }}
             />
           </div>
-          <p className="text-[16px]  font-normal leading-relaxed max-w-xs text-[#FFFFFF99]">
-            Born from experience.
+
+          <p
+            className={`text-[16px] font-normal leading-relaxed max-w-xs text-[#FFFFFF99] ${
+              isHomePage ? "mx-auto" : ""
+            }`}
+          >
+            Born from love, built for warriors.
             <br />
-            Established 11:11. Apparel
-            <br />
-            with meaning for every
-            <br />
-            warrior&apos;s journey.
+            Est. 11:11
           </p>
         </div>
 
@@ -117,7 +126,9 @@ const Footer = () => {
       {/* Bottom Bar */}
       <div className="mt-10 pt-6 border-t border-[#353534] flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
         <div className="text-sm  font-normal text-white">
-          © 2025 Warrior Sol. Rooted in light. All rights reserved.
+          © 2025 Warrior Sol.
+          <br />
+          All rights reserved.
         </div>
         <div className="text-sm flex space-x-6  font-normal text-[#FFFFFF99]">
           <Link

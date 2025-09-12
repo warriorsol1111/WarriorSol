@@ -9,7 +9,7 @@ import Logo from "../../assets/logo.svg";
 import { toast } from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 import Singer from "@/assets/singer.svg";
-import LogoWhite from "../../assets/logo-white.png";
+import LogoWhite from "../../assets/icon-white.png";
 import { useRouter } from "next/navigation";
 export default function ComingSoon() {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -128,32 +128,28 @@ export default function ComingSoon() {
   return (
     <>
       <header>
-        <div className="flex items-center justify-between px-4 sm:px-6 py-4 bg-white relative">
-          <Link href="/home" className="text-lg font-semibold tracking-wide">
-            <div className="flex items-center space-x-2 px-2 sm:px-5">
-              <Image
-                src={Logo}
-                alt="Warrior Sol Logo"
-                className="h-12 w-auto sm:h-14 md:h-16 lg:h-18"
-                width={120}
-                priority
-                height={120}
-                style={{ objectFit: "contain" }}
-              />
-            </div>
+        <div className="flex items-center justify-center lg:justify-between px-4 sm:px-6 py-4 bg-white relative">
+          {/* Logo */}
+          <Link
+            href="/home"
+            className="text-lg font-semibold tracking-wide flex items-center"
+          >
+            <Image
+              src={Logo}
+              alt="Warrior Sol Logo"
+              className="h-12 w-auto sm:h-14 md:h-16 lg:h-18"
+              width={120}
+              priority
+              height={120}
+              style={{ objectFit: "contain" }}
+            />
           </Link>
 
           {/* Tagline - Hidden on mobile, visible on tablet+ */}
-          <nav className="absolute hidden lg:flex left-1/2 transform -translate-x-1/2 text-xs xl:text-sm 2xl:text-base text-center text-black max-w-md xl:max-w-lg 2xl:max-w-full px-4">
+          <nav className="absolute hidden mt-1 lg:flex left-1/2 transform -translate-x-1/2 text-xs md:text-lg text-center text-black max-w-md xl:max-w-lg 2xl:max-w-full px-4">
             Born from love, built for warriors. Every piece funds direct support
             for those facing cancer&apos;s hidden battles.
           </nav>
-
-          <div className="flex items-center space-x-4">
-            <Button variant="link" className="text-black text-xs sm:text-sm">
-              Follow Us
-            </Button>
-          </div>
         </div>
       </header>
 
@@ -172,46 +168,63 @@ export default function ComingSoon() {
 
         <div className="absolute inset-0 bg-black/50" />
 
-        {/* Audio Toggle - Better positioning */}
-        <Button
-          variant="link"
-          onClick={toggleAudio}
-          className="absolute top-[45%] sm:top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all duration-300 text-white text-xs sm:text-sm tracking-wider flex items-center gap-2"
-        >
-          {isPlaying ? (
-            <>
-              <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white animate-pulse" />
-              Pause Music
-            </>
-          ) : (
-            "Play Music"
-          )}
-        </Button>
+        {/* Audio Toggle + Text */}
+        <div className="absolute top-[45%] sm:top-1/2 lg:top-[55%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-3 px-4">
+          {/* Play/Pause Button */}
+          <Button
+            variant="link"
+            onClick={toggleAudio}
+            className="px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all duration-300 text-white text-xs sm:text-sm tracking-wider flex items-center gap-2"
+          >
+            {isPlaying ? (
+              <>
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white animate-pulse" />
+                Pause Music
+              </>
+            ) : (
+              "Play Music"
+            )}
+          </Button>
 
-        <audio
-          ref={audioRef}
-          loop
-          preload="auto"
-          src="https://res.cloudinary.com/dr5yanrd3/video/upload/v1751544573/Bon_Iver_-_Holocene_Lyrics_bp8n2s.mp3"
-        />
+          {/* Artist Info */}
+          <div className="flex items-center gap-2 mt-2 md:mt-4 mr-6">
+            <Image
+              src={Singer}
+              alt="Artist Avatar"
+              width={40}
+              height={40}
+              className="w-8 h-8 lg:w-9 lg:h-9 xl:w-10 xl:h-10 rounded-full border border-white/30 flex-shrink-0"
+            />
+            <div className="flex flex-col text-white leading-tight min-w-0">
+              <span className="capitalize ml-1 text-xs lg:text-sm tracking-wide whitespace-nowrap">
+                Enjoy The Legend
+              </span>
+              <span className="font-bold text-base lg:text-lg xl:text-xl whitespace-nowrap">
+                Coleman Mellett
+              </span>
+            </div>
+          </div>
+        </div>
 
         {/* Main Content */}
         <div className="relative z-10 flex flex-col flex-grow text-center px-4 sm:px-6 lg:px-8">
-          <div className="mt-8 sm:mt-12 md:mt-16 lg:mt-20">
+          <div className="mt-6 sm:mt-6 md:mt-6 lg:mt-6">
             {/*Logo Image*/}
             <div className="flex items-center justify-center">
               <Image
                 src={LogoWhite}
                 alt="Warrior Sol Logo"
-                className=""
-                width={350}
+                className="w-auto h-18 md:h-20 lg:h-24"
+                width={120}
                 priority
-                height={350}
+                height={120}
                 style={{ objectFit: "contain" }}
               />
             </div>
-            <h1 className="text-white text-[38px] sm:text-[48px] md:text-[54px] lg:text-[60px] xl:text-[60px] font-extrabold mb-4 sm:mb-6 tracking-[0.15em] uppercase leading-tight">
-              Rising On 11/11
+            <h1 className="text-white text-[38px] !font-[Comfortaa] sm:text-[48px] md:text-[54px] lg:text-[60px] xl:text-[60px] !font-semibold mb-4 sm:mb-6 tracking-[0.15em]  leading-tight">
+              Rising
+              <br />
+              11:11
             </h1>
 
             <div className="flex space-x-1 sm:space-x-2 md:space-x-4 lg:space-x-6 text-center items-center justify-center mb-6 sm:mb-8">
@@ -238,29 +251,29 @@ export default function ComingSoon() {
           </div>
 
           {/* Bottom Section - Improved mobile layout */}
-          <div className="mt-auto pb-6 sm:pb-8 md:pb-12 flex flex-col items-start">
-            <h3 className="text-white text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-bold w-full sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[40%] text-left mb-3 sm:mb-4 leading-relaxed">
+          <div className="mt-[250px] md:mt-[250px] pb-6 sm:pb-8 md:pb-12 flex flex-col items-center">
+            <h3 className="text-white text-base md:text-base lg:text-lg xl:text-2xl font-bold w-full text-center sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[40%] mb-3 sm:mb-4 leading-relaxed">
               Get exclusive early access and enjoy a special offer before the
               public launch.
             </h3>
 
-            <div className="w-[250px] sm:w-48 md:w-64 lg:w-80 xl:w-[650px] h-[1px] bg-white/50 mb-4 sm:mb-6" />
+            <div className="w-full md:w-96 lg:w-80 xl:w-[650px] h-[1px] bg-white/50 mb-4 sm:mb-6" />
 
-            {/* Email Subscribe - Better mobile form */}
+            {/* Email Subscribe */}
             <form
               onSubmit={handleSubscribe}
-              className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full max-w-[280px] sm:max-w-sm md:max-w-md lg:max-w-lg"
+              className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full md:max-w-md lg:max-w-lg items-center justify-center"
             >
               <Input
                 type="email"
                 placeholder="Your Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-[#FFFFFF] rounded-lg text-black !placeholder-black flex-1"
+                className="bg-[#FFFFFF] rounded-lg text-black !placeholder-black flex-1 placeholder:text-center md:placeholder:text-center"
               />
               <Button
                 type="submit"
-                className="bg-[#EE9254] hover:bg-[#D97C38] text-white px-4 sm:px-6 h-10 sm:h-11 md:h-13 py-2 tracking-wide uppercase text-xs sm:text-sm flex items-center justify-center gap-2 whitespace-nowrap"
+                className="bg-[#EE9254] hover:bg-[#D97C38] text-white px-4 sm:px-6 py-2 tracking-wide uppercase text-xs sm:text-sm flex items-center justify-center gap-2 whitespace-nowrap"
                 disabled={notifyLoading}
               >
                 {notifyLoading ? (
@@ -270,25 +283,6 @@ export default function ComingSoon() {
                 )}
               </Button>
             </form>
-          </div>
-        </div>
-
-        {/* Artist Credit - Better responsive positioning */}
-        <div className="absolute bottom-3 sm:bottom-4 md:bottom-6 lg:bottom-8 xl:bottom-10 right-2 sm:right-3 md:right-4 lg:right-6 xl:right-8 z-20 hidden md:flex items-center space-x-1 sm:space-x-2 text-white/80">
-          <Image
-            src={Singer}
-            alt="Artist Avatar"
-            width={40}
-            height={40}
-            className="w-8 h-8 lg:w-9 lg:h-9 xl:w-10 xl:h-10 rounded-full border border-white/30 flex-shrink-0"
-          />
-          <div className="flex flex-col leading-tight min-w-0">
-            <span className="uppercase text-xs lg:text-sm tracking-wide whitespace-nowrap">
-              By a Legend
-            </span>
-            <span className="font-bold text-base lg:text-lg xl:text-xl whitespace-nowrap">
-              Coleman Mellett
-            </span>
           </div>
         </div>
       </div>

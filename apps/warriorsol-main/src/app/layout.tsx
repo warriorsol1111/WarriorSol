@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Hanken_Grotesk } from "next/font/google";
+import { Comfortaa } from "next/font/google";
 import "./globals.css";
 import SessionProviderWrapper from "@/components/shared/sessionProvider";
 import CartDrawer from "@/components/cart/cartDrawer";
 import NextTopLoader from "nextjs-toploader";
 import CustomToaster from "@/lib/custom-toaster";
 
-const hkGrotesk = Hanken_Grotesk({
+const comfortaa = Comfortaa({
   subsets: ["latin"],
   variable: "--font-hkGrotesk",
 });
@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${hkGrotesk.className} antialiased`}>
+      <body className={`${comfortaa.className} antialiased`}>
         <NextTopLoader height={5} showSpinner={false} />
         <CustomToaster />
 
