@@ -30,6 +30,7 @@ const GET_CART_QUERY = `
                 }
                 product {
                   title
+                  tags   # 👈 add this
                 }
               }
             }
@@ -50,7 +51,7 @@ interface ShopifyCartLineNode {
       price: { amount: string; currencyCode: string };
       selectedOptions?: { name: string; value: string }[];
       image?: { url: string };
-      product: { title: string };
+      product: { title: string; tags: string[] };
     };
   };
 }
@@ -172,6 +173,7 @@ export async function GET() {
           size,
           image: variant.image?.url || "",
           lineId: node.id,
+          tags: variant.product.tags, // 👈 now you’ll get ["Pre Order", ...]
         };
       }
     );

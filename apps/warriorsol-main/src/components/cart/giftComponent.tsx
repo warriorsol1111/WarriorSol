@@ -15,6 +15,8 @@ interface GiftMessageProps {
   recipientNameError?: string;
   onClearNameError?: () => void;
   onClearRecipientNameError?: () => void;
+  onGiftSelectionChange?: (checked: boolean) => void;
+  isCart?: boolean;
 }
 
 export default function GiftMessage({
@@ -27,6 +29,8 @@ export default function GiftMessage({
   recipientNameError,
   onClearNameError,
   onClearRecipientNameError,
+  onGiftSelectionChange,
+  isCart,
 }: GiftMessageProps) {
   const [isGiftSelected, setIsGiftSelected] = useState(false);
   const [selectedNote, setSelectedNote] = useState<string | null>(null);
@@ -67,6 +71,18 @@ export default function GiftMessage({
       onClearRecipientNameError();
     }
   };
+  const handleGiftSelectionChange = (checked: boolean) => {
+    setIsGiftSelected(checked);
+    // Notify parent component about the gift selection change
+    if (onGiftSelectionChange) {
+      onGiftSelectionChange(checked);
+    }
+
+    if (!checked) {
+      setSelectedNote(null);
+      onGiftMessageChange("");
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -75,13 +91,7 @@ export default function GiftMessage({
         <Checkbox
           id="gift-option"
           checked={isGiftSelected}
-          onCheckedChange={(checked) => {
-            setIsGiftSelected(checked as boolean);
-            if (!checked) {
-              setSelectedNote(null);
-              onGiftMessageChange("");
-            }
-          }}
+          onCheckedChange={handleGiftSelectionChange}
           className="border-[#EE9254] data-[state=checked]:bg-[#EE9254] data-[state=checked]:border-[#EE9254]"
         />
         <Label
@@ -147,7 +157,9 @@ export default function GiftMessage({
           </div>
 
           {/* Gift Note Selection */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div
+            className={`${isCart ? "grid grid-cols-1 " : "grid grid-cols-1 md:grid-cols-3 gap-4"}`}
+          >
             {Object.entries(giftNotes).map(([key, note]) => {
               const isChecked = selectedNote === key;
               return (
@@ -178,7 +190,9 @@ export default function GiftMessage({
                       onCheckedChange={() => handleNoteSelect(key)}
                       className="mt-1 border-[#EE9254] data-[state=checked]:bg-[#EE9254] data-[state=checked]:border-[#EE9254]"
                     />
-                    <p className="text-sm text-gray-600 leading-relaxed h-[400px] overflow-y-auto break-words pr-2">
+                    <p
+                      className={`text-sm text-gray-600 leading-relaxed ${isCart ? "" : "h-[400px] overflow-y-auto break-words pr-2"}`}
+                    >
                       {note
                         .replace(
                           /\[RECIPIENT'S NAME\]/g,

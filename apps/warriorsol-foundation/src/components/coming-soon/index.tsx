@@ -185,6 +185,12 @@ export default function ComingSoon() {
               "Play Music"
             )}
           </Button>
+          <audio
+            ref={audioRef}
+            loop
+            preload="auto"
+            src="https://res.cloudinary.com/dr5yanrd3/video/upload/v1757672339/photos/photos/1757672333207___Fire%20and%20Rain%20-%20Coleman%20Mellett.mp3.mp3"
+          />
 
           {/* Artist Info */}
           <div className="flex items-center gap-2 mt-2 md:mt-4 mr-6">

@@ -283,7 +283,7 @@ const ChooseYourArmor: React.FC = () => {
       </div>
 
       {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 min-h-[1100px]">
         {loading ? (
           <div className="col-span-full flex justify-center">
             <Loader2 className="animate-spin h-8 w-8 text-[#EE9254]" />

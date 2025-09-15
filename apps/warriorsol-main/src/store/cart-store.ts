@@ -9,6 +9,7 @@ export interface CartItem {
   price: number;
   quantity: number;
   image: string;
+  tags?: string[];
   lineId?: string; // Shopify line item ID
 }
 
@@ -29,7 +30,8 @@ interface CartState {
   addItem: (
     item: Omit<CartItem, "quantity" | "lineId">,
     quantity: number,
-    userId: string
+    userId: string,
+    isPreOrder?: boolean
   ) => Promise<void>;
   removeItem: (lineId: string) => Promise<void>;
   updateQuantity: (lineId: string, quantity: number) => Promise<void>;
@@ -80,7 +82,7 @@ export const useCartStore = create<CartState>((set, get) => ({
     }
   },
 
-  addItem: async (item, quantity = 1, userId) => {
+  addItem: async (item, quantity = 1, userId, isPreOrder) => {
     set({ cartLoading: true });
     toast.dismiss();
     toast.loading("Adding item to cart...");
@@ -94,6 +96,7 @@ export const useCartStore = create<CartState>((set, get) => ({
           merchandiseId: item.id,
           quantity,
           userId,
+          isPreOrder,
         }),
       });
 

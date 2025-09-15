@@ -441,8 +441,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
   const isPreOrder =
     product.tags?.includes("Pre-Order") ||
-    (selectedVariant?.availableForSale && quantityInStock === 0);
-
+    (quantityInStock <= 0 && selectedVariant?.availableForSale);
   const handleAddItemToCart = () => {
     try {
       setLoading(true);
@@ -456,7 +455,8 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           image: selectedVariant.image?.url || product.image,
         },
         quantity,
-        session?.user.id || ""
+        session?.user.id || "",
+        isPreOrder
       );
       openCart();
     } catch (error) {
@@ -569,7 +569,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             </div>
 
             {/* Availability */}
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col md:flex-row items-center gap-2">
               <div
                 className={`w-2 h-2 rounded-full ${selectedVariant?.availableForSale ? "bg-green-500" : "bg-red-500"}`}
               ></div>
@@ -580,6 +580,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                   ? "In Stock"
                   : "Out of Stock"}
               </span>
+
               {isPreOrder ? (
                 <span className="text-lg font-medium text-orange-600">
                   Available for Pre-Order

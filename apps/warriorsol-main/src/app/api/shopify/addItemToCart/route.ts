@@ -41,7 +41,7 @@ const UPDATE_CART_ATTRIBUTES_MUTATION = `mutation CartAttributesUpdate($cartId: 
 
 export async function POST(req: NextRequest) {
   try {
-    const { merchandiseId, quantity, userId } = await req.json();
+    const { merchandiseId, quantity, userId, isPreOrder } = await req.json();
     const cookieStore = await cookies();
     let cartId = cookieStore.get("cartId")?.value;
 
@@ -50,6 +50,15 @@ export async function POST(req: NextRequest) {
     if (!session) {
       return new Response("Unauthorized", { status: 401 });
     }
+
+    // Debug logging
+    console.log("AddItemToCart Debug:", {
+      merchandiseId,
+      quantity,
+      userId,
+      isPreOrder,
+      cartId,
+    });
 
     if (cartId) {
       // Add items to existing cart
@@ -65,28 +74,46 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // Update cart attributes to ensure userId is preserved/added
-      if (userId) {
-        const { cartAttributesUpdate } = await fetchShopify(
-          UPDATE_CART_ATTRIBUTES_MUTATION,
-          {
-            cartId,
-            attributes: [{ key: "user_id", value: userId }],
-          }
-        );
+      // Always update cart attributes to ensure they're set correctly
+      const attributes = [
+        { key: "is_pre_order", value: isPreOrder ? "true" : "false" },
+      ];
 
-        if (cartAttributesUpdate.userErrors.length > 0) {
-          console.error(
-            "Failed to update cart attributes:",
-            cartAttributesUpdate.userErrors
-          );
+      // Add userId if it exists
+      if (userId) {
+        attributes.push({ key: "user_id", value: userId });
+      }
+
+      const { cartAttributesUpdate } = await fetchShopify(
+        UPDATE_CART_ATTRIBUTES_MUTATION,
+        {
+          cartId,
+          attributes,
         }
+      );
+
+      if (cartAttributesUpdate.userErrors.length > 0) {
+        console.error(
+          "Failed to update cart attributes:",
+          cartAttributesUpdate.userErrors
+        );
+      } else {
+        console.log("Successfully updated cart attributes:", attributes);
       }
 
       return NextResponse.json({ cart: cartLinesAdd.cart });
     } else {
-      // Create new cart with userId attribute
-      const cartAttributes = userId ? [{ key: "user_id", value: userId }] : [];
+      // Create new cart - Always include is_pre_order attribute
+      const cartAttributes = [
+        { key: "is_pre_order", value: isPreOrder ? "true" : "false" },
+      ];
+
+      // Add userId if it exists
+      if (userId) {
+        cartAttributes.push({ key: "user_id", value: userId });
+      }
+
+      console.log("Creating cart with attributes:", cartAttributes);
 
       const { cartCreate } = await fetchShopify(CREATE_CART_MUTATION, {
         lines: [{ merchandiseId, quantity }],
@@ -124,6 +151,11 @@ export async function POST(req: NextRequest) {
         maxAge: 60 * 60 * 24 * 30,
         httpOnly: false,
       });
+
+      console.log(
+        "Cart created successfully with attributes:",
+        cartCreate.cart.attributes
+      );
 
       return NextResponse.json({ cart: cartCreate.cart });
     }
