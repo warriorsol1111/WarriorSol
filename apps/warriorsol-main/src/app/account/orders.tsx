@@ -285,54 +285,73 @@ export default function OrdersPage() {
               </AccordionTrigger>
 
               <AccordionContent className="px-4 pb-4 space-y-3">
-                {order.lineItems.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex flex-col sm:flex-row gap-4 items-center sm:items-start border rounded p-3 hover:shadow-md transition relative"
-                  >
-                    <div className="w-24 h-24 flex-shrink-0 bg-gray-100 rounded overflow-hidden relative">
-                      <Link href={`/products/${item.product.id}`}>
-                        <Image
-                          src={item.product.image || "/placeholder.png"}
-                          alt={item.title}
-                          width={96}
-                          height={96}
-                          className="w-full h-full object-cover"
-                        />
-                        {item.product.tags?.includes("Pre-Order") && (
-                          <span className="absolute top-2 left-2 bg-orange-500 text-white text-xs font-medium px-2 py-0.5 rounded">
-                            Pre-Order
-                          </span>
+                {order.lineItems.map((item) => {
+                  const product = item.product;
+
+                  return (
+                    <div
+                      key={item.id}
+                      className="flex flex-col sm:flex-row gap-4 items-center sm:items-start border rounded p-3 hover:shadow-md transition relative"
+                    >
+                      <div className="w-24 h-24 flex-shrink-0 bg-gray-100 rounded overflow-hidden relative">
+                        {product ? (
+                          <Link href={`/products/${product.id}`}>
+                            <Image
+                              src={product.image || "/placeholder.png"}
+                              alt={item.title}
+                              width={96}
+                              height={96}
+                              className="w-full h-full object-cover"
+                            />
+                            {product.tags?.includes("Pre-Order") && (
+                              <span className="absolute top-2 left-2 bg-orange-500 text-white text-xs font-medium px-2 py-0.5 rounded">
+                                Pre-Order
+                              </span>
+                            )}
+                          </Link>
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-xs text-gray-500">
+                            Product unavailable
+                          </div>
                         )}
-                      </Link>
+                      </div>
+
+                      <div className="text-center sm:text-left flex-1">
+                        <p className="font-medium text-gray-800">
+                          {item.title}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          Qty: {item.quantity} × ${item.price.toFixed(2)}
+                        </p>
+
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="mt-2"
+                          onClick={() =>
+                            openReviewModal(
+                              product?.id ?? item.id,
+                              item.review ?? null
+                            )
+                          }
+                          disabled={!product} // prevent reviewing "ghost" products
+                        >
+                          {item.review ? "Edit Review" : "Leave a Review"}
+                        </Button>
+
+                        {item.review && (
+                          <div className="mt-1 text-sm text-gray-700">
+                            <span className="text-yellow-500 mr-1">
+                              {"★".repeat(item.review.score)}
+                            </span>
+                            <br />
+                            <span>{item.review.text}</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <div className="text-center sm:text-left flex-1">
-                      <p className="font-medium text-gray-800">{item.title}</p>
-                      <p className="text-sm text-gray-500">
-                        Qty: {item.quantity} × ${item.price.toFixed(2)}
-                      </p>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="mt-2"
-                        onClick={() =>
-                          openReviewModal(item.product.id, item.review ?? null)
-                        }
-                      >
-                        {item.review ? "Edit Review" : "Leave a Review"}
-                      </Button>
-                      {item.review && (
-                        <div className="mt-1 text-sm text-gray-700">
-                          <span className="text-yellow-500 mr-1">
-                            {"★".repeat(item.review.score)}
-                          </span>
-                          <br />
-                          <span>{item.review.text}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </AccordionContent>
             </AccordionItem>
           ))}

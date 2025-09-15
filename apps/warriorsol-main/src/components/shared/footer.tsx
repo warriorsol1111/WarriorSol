@@ -19,7 +19,9 @@ const Footer = () => {
               : "md:w-1/3 items-start text-left"
           }`}
         >
-          <div className="flex justify-center mb-4 w-full">
+          <div
+            className={`flex ${isHomePage ? "justify-center" : "justify-start"} mb-4 w-full`}
+          >
             <Image
               src={LogoWhite}
               alt="Warrior Sol Logo"
