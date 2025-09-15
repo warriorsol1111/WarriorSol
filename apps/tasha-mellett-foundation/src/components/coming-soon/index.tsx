@@ -9,7 +9,7 @@ import Logo from "../../assets/logo.svg";
 import { toast } from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 import Singer from "@/assets/singer.svg";
-import LogoWhite from "../../assets/icon-white.png";
+import LogoWhite from "../../assets/tasha-white.png";
 import { useRouter } from "next/navigation";
 export default function ComingSoon() {
   const audioRef = useRef<HTMLAudioElement>(null);
