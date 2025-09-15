@@ -25,13 +25,23 @@ import toast from "react-hot-toast";
 import { Loader2, X } from "lucide-react";
 import Link from "next/link";
 
+type Product = {
+  id: string;
+  title: string;
+  description: string;
+  tags?: string[];
+  handle: string;
+  image?: string | null;
+};
+
 type LineItem = {
   id: string;
   title: string;
-  productId: string;
-  image: string;
   quantity: number;
   price: number;
+  variantId?: string;
+  sku?: string | null;
+  product: Product;
   review?: {
     id: string;
     score: number;
@@ -69,7 +79,6 @@ export default function OrdersPage() {
   const [rating, setRating] = useState<number>(0);
   const [comment, setComment] = useState("");
   const [reviewLoading, setReviewLoading] = useState(false);
-  // Refetch flag for modal
   const [shouldRefetchOrders, setShouldRefetchOrders] = useState(false);
 
   useEffect(() => {
@@ -86,7 +95,6 @@ export default function OrdersPage() {
             },
           }
         );
-
         const json = await res.json();
         setOrders(json.data || []);
       } catch (err) {
@@ -97,10 +105,8 @@ export default function OrdersPage() {
     })();
   }, [session?.user?.token]);
 
-  // Refetch orders after review modal closes and refetch is requested
   useEffect(() => {
     if (!reviewModalOpen && shouldRefetchOrders) {
-      // Refetch orders
       (async () => {
         setLoading(true);
         try {
@@ -178,7 +184,6 @@ export default function OrdersPage() {
     try {
       let res;
       if (editingReview) {
-        // Update review
         res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reviews`, {
           method: "PUT",
           headers: {
@@ -186,13 +191,12 @@ export default function OrdersPage() {
             Authorization: `Bearer ${session?.user?.token}`,
           },
           body: JSON.stringify({
-            productId: extractNumericId(selectedProductId),
+            productId: selectedProductId,
             rating,
             comment,
           }),
         });
       } else {
-        // Create review
         res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reviews`, {
           method: "POST",
           headers: {
@@ -200,7 +204,7 @@ export default function OrdersPage() {
             Authorization: `Bearer ${session?.user?.token}`,
           },
           body: JSON.stringify({
-            productId: extractNumericId(selectedProductId),
+            productId: selectedProductId,
             rating,
             comment,
           }),
@@ -234,11 +238,6 @@ export default function OrdersPage() {
     }
   };
 
-  const extractNumericId = (id: string): string => {
-    const match = id.match(/\d+$/);
-    return match ? match[0] : id;
-  };
-
   return (
     <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {loading ? (
@@ -256,7 +255,7 @@ export default function OrdersPage() {
               <AccordionTrigger className="cursor-pointer px-4 py-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                 <div className="text-left">
                   <p className="text-xl sm:text-2xl font-semibold text-[#1F1F1F]">
-                    Order {order.shopifyOrderName.slice(0, 8)}
+                    Order {order.shopifyOrderName}
                   </p>
                   <p className="text-base sm:text-lg text-gray-500">
                     {format(new Date(order.date), "PPP")}
@@ -289,19 +288,22 @@ export default function OrdersPage() {
                 {order.lineItems.map((item) => (
                   <div
                     key={item.id}
-                    className="flex flex-col sm:flex-row gap-4 items-center sm:items-start border rounded p-3 hover:shadow-md transition"
+                    className="flex flex-col sm:flex-row gap-4 items-center sm:items-start border rounded p-3 hover:shadow-md transition relative"
                   >
-                    <div className="w-24 h-24 flex-shrink-0 bg-gray-100 rounded overflow-hidden">
-                      <Link
-                        href={`/products/${extractNumericId(item.productId)}`}
-                      >
+                    <div className="w-24 h-24 flex-shrink-0 bg-gray-100 rounded overflow-hidden relative">
+                      <Link href={`/products/${item.product.id}`}>
                         <Image
-                          src={item.image}
+                          src={item.product.image || "/placeholder.png"}
                           alt={item.title}
                           width={96}
                           height={96}
                           className="w-full h-full object-cover"
                         />
+                        {item.product.tags?.includes("Pre-Order") && (
+                          <span className="absolute top-2 left-2 bg-orange-500 text-white text-xs font-medium px-2 py-0.5 rounded">
+                            Pre-Order
+                          </span>
+                        )}
                       </Link>
                     </div>
                     <div className="text-center sm:text-left flex-1">
@@ -314,7 +316,7 @@ export default function OrdersPage() {
                         size="sm"
                         className="mt-2"
                         onClick={() =>
-                          openReviewModal(item.productId, item.review ?? null)
+                          openReviewModal(item.product.id, item.review ?? null)
                         }
                       >
                         {item.review ? "Edit Review" : "Leave a Review"}
