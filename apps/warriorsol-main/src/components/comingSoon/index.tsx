@@ -131,7 +131,7 @@ export default function ComingSoon() {
         <div className="flex items-center justify-center lg:justify-between px-4 sm:px-6 py-4 bg-white relative">
           {/* Logo */}
           <Link
-            href="/home"
+            href="/"
             className="text-lg font-semibold tracking-wide flex items-center"
           >
             <Image
@@ -146,7 +146,7 @@ export default function ComingSoon() {
           </Link>
 
           {/* Tagline - Hidden on mobile, visible on tablet+ */}
-          <nav className="absolute hidden mt-1 lg:flex left-1/2 transform -translate-x-1/2 text-xs md:text-lg text-center text-black max-w-md xl:max-w-lg 2xl:max-w-full px-4">
+          <nav className="absolute hidden mt-1 lg:flex left-1/2 transform -translate-x-1/2 text-xs xl:text-lg text-center text-black max-w-md xl:max-w-lg 2xl:max-w-full px-4">
             Born from love, built for warriors. Every piece funds direct support
             for those facing cancer&apos;s hidden battles.
           </nav>
@@ -263,7 +263,7 @@ export default function ComingSoon() {
               public launch.
             </h3>
 
-            <div className="w-full md:w-96 lg:w-80 xl:w-[650px] h-[1px] bg-white/50 mb-4 sm:mb-6" />
+            <div className="w-full md:w-[550px] lg:w-[600px] xl:w-[650px] h-[1px] bg-white/50 mb-4 sm:mb-6" />
 
             {/* Email Subscribe */}
             <form
@@ -279,7 +279,7 @@ export default function ComingSoon() {
               />
               <Button
                 type="submit"
-                className="bg-[#EE9254] hover:bg-[#D97C38] text-white px-4 sm:px-6 py-2 tracking-wide uppercase text-xs sm:text-sm flex items-center justify-center gap-2 whitespace-nowrap"
+                className="bg-[#EE9254] hover:bg-[#D97C38] text-white px-4 sm:px-6 py-2 w-full md:w-auto tracking-wide uppercase text-xs sm:text-sm flex items-center justify-center gap-2 whitespace-nowrap"
                 disabled={notifyLoading}
               >
                 {notifyLoading ? (

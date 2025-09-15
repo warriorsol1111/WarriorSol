@@ -131,7 +131,7 @@ export default function ComingSoon() {
         <div className="flex items-center justify-center lg:justify-between px-4 sm:px-6 py-4 bg-white relative">
           {/* Logo */}
           <Link
-            href="/home"
+            href="/"
             className="text-lg font-semibold tracking-wide flex items-center"
           >
             <Image
