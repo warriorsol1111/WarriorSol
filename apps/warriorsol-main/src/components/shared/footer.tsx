@@ -12,12 +12,11 @@ const Footer = () => {
     <footer className="bg-[#1F1F1F] text-[#e5e5e5] pt-12 pb-6 px-10">
       <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-6 md:gap-0">
         {/* Brand Section */}
-        {/* Brand Section */}
         <div
           className={`flex flex-col mb-8 md:mb-0 ${
             isHomePage
-              ? "w-full items-center text-center" // Center logo + text on homepage
-              : "md:w-1/3 items-start text-left" // Default alignment for other pages
+              ? "w-full items-center text-center"
+              : "md:w-1/3 items-start text-left"
           }`}
         >
           <div className="flex justify-center mb-4 w-full">
