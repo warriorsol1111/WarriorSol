@@ -34,6 +34,11 @@ interface ShopifyProduct {
     minVariantPrice: ShopifyPrice;
     maxVariantPrice: ShopifyPrice;
   };
+  tags: string[];
+  metafields: {
+    key: string;
+    value: string;
+  }[];
   images: {
     edges: Array<{ node: ShopifyImage }>;
   };
@@ -53,6 +58,15 @@ const GET_PRODUCT_BY_ID = `
       productType
       vendor
       totalInventory
+      metafields(identifiers: [
+  { namespace: "custom", key: "preorder_ship_date" }
+   {namespace: "custom", key: "is_preorder"}
+]) {
+  namespace
+  key
+  value
+}
+
       priceRange {
         minVariantPrice { amount currencyCode }
         maxVariantPrice { amount currencyCode }
@@ -74,6 +88,7 @@ const GET_PRODUCT_BY_ID = `
           }
         }
       }
+      tags
     }
   }
 `;
@@ -171,6 +186,8 @@ export async function GET(request: NextRequest) {
       images,
       variants,
       variant,
+      tags: product.tags,
+      metafields: product.metafields,
     };
 
     return NextResponse.json(transformedProduct);

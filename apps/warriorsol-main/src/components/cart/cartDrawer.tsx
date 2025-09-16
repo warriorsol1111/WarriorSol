@@ -37,7 +37,9 @@ export default function CartDrawer() {
   const [giftMessage, setGiftMessage] = useState("");
   const [nameError, setNameError] = useState("");
   const [recipientNameError, setRecipientNameError] = useState("");
+  const [noteSelectionError, setNoteSelectionError] = useState("");
   const [isGiftSelected, setIsGiftSelected] = useState(false);
+  const [hasNoteSelected, setHasNoteSelected] = useState(false);
 
   if (!isOpen) return null;
 
@@ -67,17 +69,27 @@ export default function CartDrawer() {
 
   const handleCheckout = async () => {
     setLoading(true);
+
     if (isGiftSelected) {
       const senderNameValidationError = validateName(senderName);
       const recipientNameValidationError = validateName(recipientName);
+      const noteValidationError = !hasNoteSelected
+        ? "Please select a gift message."
+        : null;
 
-      if (senderNameValidationError || recipientNameValidationError) {
+      if (
+        senderNameValidationError ||
+        recipientNameValidationError ||
+        noteValidationError
+      ) {
         setNameError(senderNameValidationError || "");
         setRecipientNameError(recipientNameValidationError || "");
+        setNoteSelectionError(noteValidationError || "");
         setLoading(false);
         return;
       }
     }
+
     try {
       const requestBody = isGiftSelected
         ? { giftMessage, senderName, recipientName }
@@ -106,6 +118,18 @@ export default function CartDrawer() {
 
   const clearRecipientNameError = () => {
     setRecipientNameError("");
+  };
+
+  const clearNoteSelectionError = () => {
+    setNoteSelectionError("");
+  };
+
+  const handleGiftSelectionChange = (checked: boolean) => {
+    setIsGiftSelected(checked);
+  };
+
+  const handleNoteSelectionChange = (hasNote: boolean) => {
+    setHasNoteSelected(hasNote);
   };
 
   return (
@@ -163,7 +187,7 @@ export default function CartDrawer() {
                               height={118}
                               className="w-full h-full object-cover"
                             />
-                            {item.tags?.includes("Pre-Order") && (
+                            {item.metafields?.is_preorder === "true" && (
                               <span className="absolute top-2 left-2 bg-orange-500 text-white text-xs font-medium px-2 py-0.5 rounded">
                                 Pre-Order
                               </span>
@@ -182,10 +206,21 @@ export default function CartDrawer() {
                                   <p className="text-sm md:text-[16px] text-[#1F1F1F] font-medium truncate max-w-[100px] md:max-w-[200px]">
                                     {item.name}
                                   </p>
-                                  {item.tags?.includes("Pre-Order") && (
-                                    <span className="inline-block mt-1 text-xs px-2 py-0.5 rounded bg-orange-100 text-orange-700 font-medium">
-                                      Pre-Order
-                                    </span>
+                                  {item.metafields?.is_preorder === "true" && (
+                                    <div className="mt-1">
+                                      {item.metafields?.preorder_ship_date && (
+                                        <p className="text-xs text-gray-600 mt-1">
+                                          Ships on{" "}
+                                          {new Date(
+                                            item.metafields.preorder_ship_date
+                                          ).toLocaleDateString("en-US", {
+                                            month: "long",
+                                            day: "numeric",
+                                            year: "numeric",
+                                          })}
+                                        </p>
+                                      )}
+                                    </div>
                                   )}
                                 </div>
 
@@ -295,9 +330,12 @@ export default function CartDrawer() {
                     onGiftMessageChange={setGiftMessage}
                     nameError={nameError}
                     recipientNameError={recipientNameError}
+                    noteSelectionError={noteSelectionError}
                     onClearNameError={clearNameError}
-                    onGiftSelectionChange={setIsGiftSelected}
                     onClearRecipientNameError={clearRecipientNameError}
+                    onClearNoteSelectionError={clearNoteSelectionError}
+                    onGiftSelectionChange={handleGiftSelectionChange}
+                    onNoteSelectionChange={handleNoteSelectionChange}
                     isCart={true}
                   />
                 </div>
@@ -327,7 +365,7 @@ export default function CartDrawer() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Button
                   onClick={handleCheckout}
-                  className="w-full py-4 sm:py-5  font-[Inter]  bg-[#EE9254] hover:bg-[#e8823d] text-white rounded-md"
+                  className="w-full py-4 sm:py-5    bg-[#EE9254] hover:bg-[#e8823d] text-white rounded-md"
                   disabled={loading}
                 >
                   {loading ? (

@@ -74,7 +74,7 @@ const Contacts = () => {
   return (
     <section>
       <div className="w-full bg-white py-4 px-6 sm:px-12 lg:px-24">
-        <h1 className="text-4xl md:text-[62px] text-[#1F1F1F] text-center font-semibold">
+        <h1 className="text-4xl md:text-[62px] mt-5 lg:mt-10 text-[#1F1F1F] text-center font-semibold">
           We’d love to hear from you
         </h1>
         <p className="text-center mt-4 text-lg  opacity-70 sm:text-xl text-[#1F1F1FB2] mx-auto capitalize">

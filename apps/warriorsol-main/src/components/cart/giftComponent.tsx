@@ -13,9 +13,12 @@ interface GiftMessageProps {
   onGiftMessageChange: (message: string) => void;
   nameError?: string;
   recipientNameError?: string;
+  noteSelectionError?: string;
   onClearNameError?: () => void;
   onClearRecipientNameError?: () => void;
+  onClearNoteSelectionError?: () => void;
   onGiftSelectionChange?: (checked: boolean) => void;
+  onNoteSelectionChange?: (hasNote: boolean) => void;
   isCart?: boolean;
 }
 
@@ -27,9 +30,12 @@ export default function GiftMessage({
   onGiftMessageChange,
   nameError,
   recipientNameError,
+  noteSelectionError,
   onClearNameError,
   onClearRecipientNameError,
+  onClearNoteSelectionError,
   onGiftSelectionChange,
+  onNoteSelectionChange,
   isCart,
 }: GiftMessageProps) {
   const [isGiftSelected, setIsGiftSelected] = useState(false);
@@ -46,6 +52,16 @@ export default function GiftMessage({
   const handleNoteSelect = (noteKey: string) => {
     const newSelection = selectedNote === noteKey ? null : noteKey;
     setSelectedNote(newSelection);
+
+    // Clear note selection error when a note is selected
+    if (newSelection && noteSelectionError && onClearNoteSelectionError) {
+      onClearNoteSelectionError();
+    }
+
+    // Notify parent about note selection change
+    if (onNoteSelectionChange) {
+      onNoteSelectionChange(!!newSelection);
+    }
 
     if (!newSelection) {
       onGiftMessageChange("");
@@ -71,6 +87,7 @@ export default function GiftMessage({
       onClearRecipientNameError();
     }
   };
+
   const handleGiftSelectionChange = (checked: boolean) => {
     setIsGiftSelected(checked);
     // Notify parent component about the gift selection change
@@ -81,7 +98,22 @@ export default function GiftMessage({
     if (!checked) {
       setSelectedNote(null);
       onGiftMessageChange("");
+      // Clear all errors when unchecking gift option
+      if (onClearNameError) onClearNameError();
+      if (onClearRecipientNameError) onClearRecipientNameError();
+      if (onClearNoteSelectionError) onClearNoteSelectionError();
+      if (onNoteSelectionChange) {
+        onNoteSelectionChange(false);
+      }
     }
+
+    // Force blur to remove focus state that might cause visibility issues
+    setTimeout(() => {
+      const activeElement = document.activeElement as HTMLElement;
+      if (activeElement && activeElement.blur) {
+        activeElement.blur();
+      }
+    }, 0);
   };
 
   return (
@@ -92,7 +124,8 @@ export default function GiftMessage({
           id="gift-option"
           checked={isGiftSelected}
           onCheckedChange={handleGiftSelectionChange}
-          className="border-[#EE9254] data-[state=checked]:bg-[#EE9254] data-[state=checked]:border-[#EE9254]"
+          className="border-[#EE9254] data-[state=checked]:bg-[#EE9254] data-[state=checked]:border-[#EE9254] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#EE9254] focus-visible:ring-offset-2"
+          style={{ opacity: 1, visibility: "visible" }}
         />
         <Label
           htmlFor="gift-option"
@@ -157,56 +190,68 @@ export default function GiftMessage({
           </div>
 
           {/* Gift Note Selection */}
-          <div
-            className={`${isCart ? "grid grid-cols-1 " : "grid grid-cols-1 md:grid-cols-3 gap-4"}`}
-          >
-            {Object.entries(giftNotes).map(([key, note]) => {
-              const isChecked = selectedNote === key;
-              return (
-                <div
-                  key={key}
-                  onClick={() => handleNoteSelect(key)}
-                  className={`relative p-4 border rounded-lg bg-white h-full cursor-pointer transition-colors flex flex-col 
-    ${isChecked ? "border-[#EE9254]" : "border-gray-200"} 
-    hover:border-[#EE9254]`}
-                >
-                  {/* Label (title of card) */}
-                  <Label
-                    htmlFor={`${key}-note`}
-                    className="font-medium text-gray-900 block mb-2 cursor-pointer"
-                  >
-                    {key === "general"
-                      ? "General Note Of Support"
-                      : key === "celebrations"
-                        ? "Celebrations Note"
-                        : "Note For A Warrior"}
-                  </Label>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-medium text-gray-700">
+                Select a Gift Message
+              </Label>
+              {noteSelectionError && (
+                <p className="text-sm text-red-500">{noteSelectionError}</p>
+              )}
+            </div>
 
-                  {/* Checkbox + text */}
-                  <div className="flex items-start gap-2">
-                    <Checkbox
-                      id={`${key}-note`}
-                      checked={isChecked}
-                      onCheckedChange={() => handleNoteSelect(key)}
-                      className="mt-1 border-[#EE9254] data-[state=checked]:bg-[#EE9254] data-[state=checked]:border-[#EE9254]"
-                    />
-                    <p
-                      className={`text-sm text-gray-600 leading-relaxed ${isCart ? "" : "h-[400px] overflow-y-auto break-words pr-2"}`}
+            <div
+              className={`${isCart ? "grid grid-cols-1 " : "grid grid-cols-1 md:grid-cols-3 gap-4"}`}
+            >
+              {Object.entries(giftNotes).map(([key, note]) => {
+                const isChecked = selectedNote === key;
+                return (
+                  <div
+                    key={key}
+                    onClick={() => handleNoteSelect(key)}
+                    className={`relative p-4 border rounded-lg bg-white h-full cursor-pointer transition-colors flex flex-col 
+      ${isChecked ? "border-[#EE9254]" : "border-gray-200"} 
+      ${noteSelectionError ? "border-red-200" : ""}
+      hover:border-[#EE9254]`}
+                  >
+                    {/* Label (title of card) */}
+                    <Label
+                      htmlFor={`${key}-note`}
+                      className="font-medium text-gray-900 block mb-2 cursor-pointer text-center md:text-left"
                     >
-                      {note
-                        .replace(
-                          /\[RECIPIENT'S NAME\]/g,
-                          recipientName || "[RECIPIENT'S NAME]"
-                        )
-                        .replace(
-                          /\[SENDER'S NAME\]/g,
-                          senderName || "[SENDER'S NAME]"
-                        )}
-                    </p>
+                      {key === "general"
+                        ? "General Note Of Support"
+                        : key === "celebrations"
+                          ? "Celebrations Note"
+                          : "Note For A Warrior"}
+                    </Label>
+
+                    {/* Checkbox + text */}
+                    <div className="flex items-start gap-2 md:flex-row flex-col md:text-left text-center">
+                      <Checkbox
+                        id={`${key}-note`}
+                        checked={isChecked}
+                        onCheckedChange={() => handleNoteSelect(key)}
+                        className="mt-1 border-[#EE9254] data-[state=checked]:bg-[#EE9254] data-[state=checked]:border-[#EE9254] focus-visible:ring-2 focus-visible:ring-[#EE9254] focus-visible:ring-offset-2 md:mx-0 mx-auto"
+                      />
+                      <p
+                        className={`text-sm text-gray-600 leading-relaxed text-center md:text-left ${isCart ? "" : ""}`}
+                      >
+                        {note
+                          .replace(
+                            /\[RECIPIENT'S NAME\]/g,
+                            recipientName || "[RECIPIENT'S NAME]"
+                          )
+                          .replace(
+                            /\[SENDER'S NAME\]/g,
+                            senderName || "[SENDER'S NAME]"
+                          )}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
       )}

@@ -18,6 +18,7 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import Reviews from "./reviews";
 import RecommendedProducts from "../community/recommendedProducts";
+import { formatDate } from "@/lib/utils";
 
 export interface Review {
   review: {
@@ -68,8 +69,14 @@ interface ProductDetailsProps {
     descriptionHtml: string;
     productType: string;
     vendor: string;
+    metafields: {
+      namespace: string;
+      key: string;
+      value: string;
+    }[];
     tags: string[];
     price: string;
+
     currencyCode: string;
     images: ProductImage[];
     image: string;
@@ -78,6 +85,29 @@ interface ProductDetailsProps {
     variants: ProductVariant[];
     variant: ProductVariant | null;
   };
+}
+
+interface ShopifyProduct {
+  id: string;
+  title: string;
+  description: string;
+  descriptionHtml: string;
+  productType: string;
+  vendor: string;
+  metafields: {
+    namespace: string;
+    key: string;
+    value: string;
+  }[];
+  tags: string[];
+  price: string;
+  currencyCode: string;
+  images: ProductImage[];
+  image: string;
+  url: string;
+  imageAlt: string;
+  variants: ProductVariant[];
+  variant: ProductVariant | null;
 }
 
 // Custom Carousel Component
@@ -306,6 +336,22 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
     const parts = id.split("/");
     return parts[parts.length - 1];
   };
+  const getMetafield = (
+    product: ShopifyProduct | null,
+    key: string,
+    namespace: string = "custom"
+  ) => {
+    if (!product?.metafields) return null;
+
+    const field = product.metafields.find(
+      (f) => f && f.key === key && f.namespace === namespace
+    );
+
+    return field?.value ?? null;
+  };
+
+  const preorderDate = getMetafield(product, "preorder_ship_date");
+  const isPreorderMeta = getMetafield(product, "is_preorder") === "true";
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -438,10 +484,11 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
       setWishlistLoading(false);
     }
   };
-
   const isPreOrder =
+    isPreorderMeta ||
     product.tags?.includes("Pre-Order") ||
     (quantityInStock <= 0 && selectedVariant?.availableForSale);
+
   const handleAddItemToCart = () => {
     try {
       setLoading(true);
@@ -551,7 +598,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 <h1 className="text-3xl sm:text-4xl lg:text-[62px] font-normal text-[#1F1F1F]">
                   {product.title}
                 </h1>
-                <p className="text-lg sm:text-xl text-[#1F1F1FB2] mt-2 font-[Inter]">
+                <p className="text-lg sm:text-xl text-[#1F1F1FB2] mt-2 ">
                   {product.vendor}
                 </p>
               </div>
@@ -570,21 +617,30 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
             {/* Availability */}
             <div className="flex flex-col md:flex-row items-center gap-2">
-              <div
-                className={`w-2 h-2 rounded-full ${selectedVariant?.availableForSale ? "bg-green-500" : "bg-red-500"}`}
-              ></div>
-              <span
-                className={`text-lg font-medium ${selectedVariant?.availableForSale ? "text-green-600" : "text-red-600"}`}
-              >
-                {selectedVariant?.availableForSale
-                  ? "In Stock"
-                  : "Out of Stock"}
-              </span>
-
-              {isPreOrder ? (
-                <span className="text-lg font-medium text-orange-600">
-                  Available for Pre-Order
+              {!isPreOrder && (
+                <div
+                  className={`w-2 h-2 rounded-full ${selectedVariant?.availableForSale ? "bg-green-500" : "bg-red-500"}`}
+                ></div>
+              )}
+              {!isPreOrder && (
+                <span
+                  className={`text-lg font-medium ${selectedVariant?.availableForSale ? "text-green-600" : "text-red-600"}`}
+                >
+                  {selectedVariant?.availableForSale
+                    ? "In Stock"
+                    : "Out of Stock"}
                 </span>
+              )}
+              {isPreOrder ? (
+                <div>
+                  <span className="text-lg font-medium text-orange-600">
+                    Available for Pre-Order
+                  </span>
+                  <br />
+                  <span className="text-lg font-medium">
+                    Ships on {formatDate(preorderDate as string)}
+                  </span>
+                </div>
               ) : quantityInStock > 0 ? (
                 <span className="text-lg font-medium text-gray-700">
                   {quantityInStock} in stock
@@ -665,7 +721,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 >
                   <AiOutlineMinus size={20} />
                 </Button>
-                <span className="w-12 text-center text-[20px] font-medium font-[Inter] text-[#1F1F1F]">
+                <span className="w-12 text-center text-[20px] font-medium  text-[#1F1F1F]">
                   {quantity.toString().padStart(2, "0")}
                 </span>
                 <Button
@@ -781,7 +837,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
           <TabsContent value="description" className="mt-6 lg:mt-8 min-w-0">
             <div
-              className="space-y-4 text-base md:text-2xl font-inter prose prose-base md:prose-lg max-w-none"
+              className="space-y-4 text-base md:text-2xl  prose prose-base md:prose-lg max-w-none"
               dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
             />
             <style jsx global>{`

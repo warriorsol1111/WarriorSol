@@ -606,7 +606,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
           <TabsContent value="description" className="mt-6 lg:mt-8 min-w-0">
             <div
-              className="space-y-4 text-base md:text-3xl font-inter prose prose-base md:prose-lg max-w-none"
+              className="space-y-4 text-base md:text-3xl prose prose-base md:prose-lg max-w-none"
               dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
             />
             <style jsx global>{`

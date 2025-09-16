@@ -146,7 +146,7 @@ const RecommendedProducts: React.FC = () => {
                 {/* Details */}
                 <div className="flex justify-between px-1 sm:px-2 mt-4">
                   <div>
-                    <div className="text-sm sm:text-base lg:text-[16px]  font-medium text-[#1F1F1F]">
+                    <div className="text-sm sm:text-base lg:text-[15px]  font-medium text-[#1F1F1F]">
                       {product.title}
                     </div>
                     <div className="text-xs sm:text-[12.5px] text-[#1E1E1E99]  ">

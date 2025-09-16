@@ -22,7 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import toast from "react-hot-toast";
-import { Loader2, X } from "lucide-react";
+import { Loader2, X, Gift, ChevronDown, ChevronUp } from "lucide-react";
 import Link from "next/link";
 
 type Product = {
@@ -47,6 +47,9 @@ type LineItem = {
     score: number;
     text: string;
   } | null;
+  isPreOrder?: boolean;
+  preorderShipDate?: string | null;
+  customAttributes?: Record<string, string>;
 };
 
 type Order = {
@@ -59,6 +62,84 @@ type Order = {
   financialStatus: string;
   fulfillmentStatus: string;
   cancelledAt: string | null;
+  customAttributes?: Record<string, string>;
+};
+
+// Gift Order Detection Helper
+const isGiftOrder = (order: Order) => {
+  const attrs = order.customAttributes || {};
+  return !!(
+    attrs["Gift Message"] ||
+    attrs["Sender"] ||
+    attrs["Recipient"] ||
+    attrs["gift_message"] ||
+    attrs["sender"] ||
+    attrs["recipient"]
+  );
+};
+
+const GiftDetails = ({ order }: { order: Order }) => {
+  const [showDetails, setShowDetails] = useState(false);
+  const attrs = order.customAttributes || {};
+
+  const giftMessage = attrs["Gift Message"] || attrs["gift_message"];
+  const sender = attrs["Sender"] || attrs["sender"];
+  const recipient = attrs["Recipient"] || attrs["recipient"];
+
+  if (!isGiftOrder(order)) return null;
+
+  return (
+    <div className="mt-3 p-3 bg-gradient-to-r from-pink-50 to-purple-50 border border-pink-200 rounded-lg">
+      {/* Header */}
+      <div
+        className="flex flex-wrap items-center justify-between gap-2 cursor-pointer"
+        onClick={() => setShowDetails(!showDetails)}
+      >
+        <div className="flex flex-wrap items-center gap-2">
+          <Gift className="h-4 w-4 text-pink-600 flex-shrink-0" />
+          <span className="text-sm sm:text-base font-medium text-pink-800">
+            Gift Order
+          </span>
+          {sender && recipient && (
+            <span className="text-xs sm:text-sm text-pink-600 truncate max-w-[150px] sm:max-w-none">
+              {sender} → {recipient}
+            </span>
+          )}
+        </div>
+        {showDetails ? (
+          <ChevronUp className="h-4 w-4 text-pink-600 flex-shrink-0" />
+        ) : (
+          <ChevronDown className="h-4 w-4 text-pink-600 flex-shrink-0" />
+        )}
+      </div>
+
+      {/* Expanded Details */}
+      {showDetails && (
+        <div className="mt-3 grid gap-2 text-sm sm:text-base">
+          {sender && (
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+              <span className="font-medium text-gray-700">From:</span>
+              <span className="text-gray-600 break-words">{sender}</span>
+            </div>
+          )}
+          {recipient && (
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+              <span className="font-medium text-gray-700">To:</span>
+              <span className="text-gray-600 break-words">{recipient}</span>
+            </div>
+          )}
+          {giftMessage && (
+            <div>
+              <span className="font-medium text-gray-700 block">Message:</span>
+              <div className="mt-1 p-2 bg-white rounded border text-gray-600 italic text-sm sm:text-base break-words">
+                &quot;{giftMessage}&quot;
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default function OrdersPage() {
@@ -96,6 +177,7 @@ export default function OrdersPage() {
           }
         );
         const json = await res.json();
+        console.log(json);
         setOrders(json.data || []);
       } catch (err) {
         console.error("Error fetching orders:", err);
@@ -120,6 +202,7 @@ export default function OrdersPage() {
             }
           );
           const json = await res.json();
+          console.log(json);
           setOrders(json.data || []);
         } catch (err) {
           console.error("Error refetching orders after review:", err);
@@ -254,9 +337,19 @@ export default function OrdersPage() {
             >
               <AccordionTrigger className="cursor-pointer px-4 py-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                 <div className="text-left">
-                  <p className="text-xl sm:text-2xl font-semibold text-[#1F1F1F]">
-                    Order {order.shopifyOrderName}
-                  </p>
+                  <div className="flex items-center gap-2 mb-1">
+                    <p className="text-xl sm:text-2xl font-semibold text-[#1F1F1F]">
+                      Order {order.shopifyOrderName}
+                    </p>
+                    {isGiftOrder(order) && (
+                      <div className="flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-pink-100 to-purple-100 rounded-full">
+                        <Gift className="h-3 w-3 text-pink-600" />
+                        <span className="text-xs font-medium text-pink-700">
+                          Gift
+                        </span>
+                      </div>
+                    )}
+                  </div>
                   <p className="text-base sm:text-lg text-gray-500">
                     {format(new Date(order.date), "PPP")}
                   </p>
@@ -285,6 +378,9 @@ export default function OrdersPage() {
               </AccordionTrigger>
 
               <AccordionContent className="px-4 pb-4 space-y-3">
+                {/* Gift Details - Show at the top of order details */}
+                <GiftDetails order={order} />
+
                 {order.lineItems.map((item) => {
                   const product = item.product;
 
@@ -303,7 +399,7 @@ export default function OrdersPage() {
                               height={96}
                               className="w-full h-full object-cover"
                             />
-                            {product.tags?.includes("Pre-Order") && (
+                            {item.isPreOrder && (
                               <span className="absolute top-2 left-2 bg-orange-500 text-white text-xs font-medium px-2 py-0.5 rounded">
                                 Pre-Order
                               </span>
@@ -321,8 +417,16 @@ export default function OrdersPage() {
                           {item.title}
                         </p>
                         <p className="text-sm text-gray-500">
-                          Qty: {item.quantity} × ${item.price.toFixed(2)}
+                          Qty: {item.quantity}
                         </p>
+
+                        {/* Pre-order shipping date */}
+                        {item.isPreOrder && item.preorderShipDate && (
+                          <p className="text-sm text-orange-600 font-medium mt-1">
+                            Ships on{" "}
+                            {format(new Date(item.preorderShipDate), "PPP")}
+                          </p>
+                        )}
 
                         <Button
                           variant="outline"
@@ -334,7 +438,7 @@ export default function OrdersPage() {
                               item.review ?? null
                             )
                           }
-                          disabled={!product} // prevent reviewing "ghost" products
+                          disabled={!product}
                         >
                           {item.review ? "Edit Review" : "Leave a Review"}
                         </Button>

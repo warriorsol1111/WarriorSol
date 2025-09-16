@@ -24,6 +24,9 @@ export default function CartPage() {
   const [giftMessage, setGiftMessage] = React.useState("");
   const [nameError, setNameError] = React.useState("");
   const [recipientNameError, setRecipientNameError] = React.useState("");
+  const [noteSelectionError, setNoteSelectionError] = React.useState("");
+  const [isGiftSelected, setIsGiftSelected] = React.useState(false);
+  const [hasNoteSelected, setHasNoteSelected] = React.useState(false);
 
   function validateName(name: string): string | null {
     if (!name || name.trim().length === 0) {
@@ -51,21 +54,35 @@ export default function CartPage() {
 
   const handleCheckout = async () => {
     setLoading(true);
-    const senderNameValidationError = validateName(senderName);
-    const recipientNameValidationError = validateName(recipientName);
 
-    if (senderNameValidationError || recipientNameValidationError) {
-      setNameError(senderNameValidationError || "");
-      setRecipientNameError(recipientNameValidationError || "");
-      setLoading(false);
-      return;
+    if (isGiftSelected) {
+      const senderNameValidationError = validateName(senderName);
+      const recipientNameValidationError = validateName(recipientName);
+      const noteValidationError = !hasNoteSelected
+        ? "Please select a gift message."
+        : null;
+
+      if (
+        senderNameValidationError ||
+        recipientNameValidationError ||
+        noteValidationError
+      ) {
+        setNameError(senderNameValidationError || "");
+        setRecipientNameError(recipientNameValidationError || "");
+        setNoteSelectionError(noteValidationError || "");
+        setLoading(false);
+        return;
+      }
     }
 
     try {
+      const requestBody = isGiftSelected
+        ? { giftMessage, senderName, recipientName }
+        : {};
       const res = await fetch("/api/shopify/getCheckout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ giftMessage, senderName, recipientName }),
+        body: JSON.stringify(requestBody),
       });
       const data = await res.json();
       if (res.ok && data.checkoutUrl) {
@@ -86,6 +103,18 @@ export default function CartPage() {
 
   const clearRecipientNameError = () => {
     setRecipientNameError("");
+  };
+
+  const clearNoteSelectionError = () => {
+    setNoteSelectionError("");
+  };
+
+  const handleGiftSelectionChange = (checked: boolean) => {
+    setIsGiftSelected(checked);
+  };
+
+  const handleNoteSelectionChange = (hasNote: boolean) => {
+    setHasNoteSelected(hasNote);
   };
 
   return (
@@ -156,7 +185,7 @@ export default function CartPage() {
                           className="rounded-md object-cover w-16 h-16 xs:w-20 xs:h-20 sm:w-[90px] sm:h-[90px]"
                         />
                         {/* Badge overlay on image */}
-                        {item.tags?.includes("Pre-Order") && (
+                        {item.metafields?.is_preorder === "true" && (
                           <span className="absolute -top-1 left-1 sm:top-[-5px] sm:left-2 bg-orange-500 text-white text-[8px] xs:text-[10px] font-medium px-1 xs:px-2 py-0.5 rounded">
                             Pre-Order
                           </span>
@@ -203,6 +232,18 @@ export default function CartPage() {
                             </p>
                           </div>
                         </div>
+                        {item.metafields?.is_preorder === "true" && (
+                          <p className="text-xs text-orange-600 font-medium mt-1">
+                            Ships on{" "}
+                            {new Date(
+                              item.metafields.preorder_ship_date
+                            ).toLocaleDateString("en-US", {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -283,7 +324,7 @@ export default function CartPage() {
                       ${item.price.toFixed(2)}
                     </div>
 
-                    <div className="hidden lg:flex justify-center items-center flex-wrap gap-2">
+                    <div className="hidden lg:flex justify-center items-center flex-wrap gap-2 ml-5">
                       <Button
                         variant="outline"
                         size="sm"
@@ -331,7 +372,7 @@ export default function CartPage() {
                       </Button>
                     </div>
 
-                    <div className="hidden lg:block text-right text-sm md:text-base font-medium text-gray-900">
+                    <div className="hidden lg:block text-center ml-5 text-sm md:text-base font-medium text-gray-900">
                       ${(item.price * item.quantity).toFixed(2)}
                     </div>
                   </div>
@@ -347,8 +388,12 @@ export default function CartPage() {
                   onGiftMessageChange={setGiftMessage}
                   nameError={nameError}
                   recipientNameError={recipientNameError}
+                  noteSelectionError={noteSelectionError}
                   onClearNameError={clearNameError}
                   onClearRecipientNameError={clearRecipientNameError}
+                  onClearNoteSelectionError={clearNoteSelectionError}
+                  onGiftSelectionChange={handleGiftSelectionChange}
+                  onNoteSelectionChange={handleNoteSelectionChange}
                 />
               </div>
 

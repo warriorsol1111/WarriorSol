@@ -15,7 +15,7 @@ const CommunityPage = () => {
   const router = useRouter();
   const FOUNDATION_URL = process.env.NEXT_PUBLIC_FOUNDATION_URL;
   return (
-    <main className="bg-white text-black font-inter">
+    <main className="bg-white text-black">
       {/* ✅ HERO TEXT Section */}
       <section className="w-full text-center">
         <h1 className="text-[40px] md:text-[62px] text-center md:text-left mx-auto max-w-[90%] font-normal mt-10 text-[#1F1F1F] leading-tight">
@@ -49,12 +49,12 @@ const CommunityPage = () => {
           />
         </div>
         <div className="flex-1 text-center md:text-left md:mb-[200px]">
-          <h2 className="text-[42px] md:text-[52px] font-cormorantSC capitalize leading-tight mb-6 text-[#1F1F1F]">
+          <h2 className="text-[22px] md:text-[52px] font-cormorantSC capitalize leading-tight mb-6 text-[#1F1F1F]">
             Globally, Foundations And Organizations Raise $15 Billion Annually
             For Cancer-related Causes. But Less Than 10% Reaches The People
             Living With Cancer Daily Realities.{" "}
           </h2>
-          <p className="text-[16px] md:text-[20px] text-center md:text-left capitalize   text-black/70 leading-relaxed">
+          <p className="text-[16px] md:text-[20px] text-center md:text-left capitalize md:mb-0 mb-10  text-black/70 leading-relaxed">
             We&apos;re on a mission to raise $25 million over the next three
             years—a goal that would make us the largest foundation worldwide
             providing direct aid to families impacted by cancer. Our bold
@@ -68,17 +68,17 @@ const CommunityPage = () => {
       </section>
       <div className="bg-[#EE9253]">
         <div className=" mx-auto md:px-20 py-16 lg:py-24">
-          <p className="text-lg md:text-[20px] mt-[-10px] font-medium text-white text-center">
+          <p className="text-[16px] md:text-[20px] mt-[-10px] font-medium text-white text-center">
             We Are Here To Meet The Human Needs That Research Funding Does Not
             Touch.{" "}
           </p>
-          <h1 className="text-[21px] lg:text-[52px] font-medium text-white mb-6 text-center">
+          <h1 className="text-[22px] lg:text-[42px] font-medium text-white mt-4 md:mt-0 text-center">
             Because every warrior, every caregiver, and every supporter deserves
             to feel seen, heard, and supported in this journey.
           </h1>
         </div>
       </div>
-      <section className="w-full px-6 md:px-24 md:py-20 mt-10 flex flex-col lg:flex-row gap-12 items-center">
+      <section className="w-full px-6 md:px-24 mb-[-250px] md:py-20 mt-10 flex flex-col lg:flex-row gap-12 items-center">
         <div className="flex-1 text-center md:text-left md:mb-[200px]">
           <h2 className="text-[42px] md:text-[52px] font-cormorantSC capitalize leading-tight mb-6 text-[#1F1F1F]">
             The Hidden Battles
@@ -98,7 +98,7 @@ const CommunityPage = () => {
             safety net.
           </p>
         </div>
-        <div className="flex-1 w-full">
+        <div className="flex-1 w-full min-h-[1000px]">
           <Image
             src={missionImage}
             alt="Mission Visual"
@@ -107,31 +107,31 @@ const CommunityPage = () => {
           />
         </div>
       </section>
-      <div className="flex flex-col sm:flex-row justify-between items-start px-6 md:px-24 md:py-20">
-        <div>
-          <h2 className="text-4xl sm:text-5xl lg:text-[62px] text-center md:text-start leading-tight lg:leading-[62px] font-semibold text-[#1F1F1F] capitalize">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center px-6 md:px-24 md:py-20 gap-6 lg:gap-8">
+        <div className="flex-1">
+          <h2 className="text-[32px] mt-10 md:mt-0 lg:text-[50px] text-center lg:text-start leading-tight lg:leading-[62px] font-semibold text-[#1F1F1F] capitalize">
             This is where Warrior Sol Foundation steps in{" "}
           </h2>
-          <p className="text-base sm:text-lg lg:text-[20px] font-medium text-center md:text-start text-[#1F1F1FB2] capitalize mt-4 sm:mt-4">
+          <p className="text-base sm:text-lg lg:text-[20px] font-medium text-center lg:text-start text-[#1F1F1FB2] capitalize mt-4">
             To provide direct aid to people and families impacted by cancer,
-            covering urgent needs, from
-            <br />
-            medical travel expenses to utility bills, to comfort items that
-            bring relief in difficult moments.
+            covering urgent needs, from medical travel expenses to utility
+            bills, to comfort items that bring relief in difficult moments.
           </p>
         </div>
-        <Button
-          variant="outline"
-          onClick={() => router.push(`${FOUNDATION_URL}`)}
-          className="mt-8 flex items-center justify-center gap-2 px-12 py-3 border border-[#1F1F1F] bg-white text-[16px] md:text-[20px] text-[#1F1F1F] hover:bg-gray-200 hover:text-[#1F1F1F] transition"
-        >
-          Join The Movement
-          <GoArrowUpRight className="w-6 h-6" />
-        </Button>
+        <div className="w-full lg:w-auto flex justify-center lg:justify-end">
+          <Button
+            variant="outline"
+            onClick={() => router.push(`${FOUNDATION_URL}`)}
+            className="w-full sm:w-auto lg:w-auto min-w-[200px] max-w-[300px] mb-10 md:mb-0 lg:max-w-none flex items-center justify-center gap-2 px-6 sm:px-8 lg:px-12 py-3 lg:py-4 border border-[#1F1F1F] bg-white text-[16px] lg:text-[20px] text-[#1F1F1F] hover:bg-gray-200 hover:text-[#1F1F1F] transition-colors duration-200"
+          >
+            <span className="whitespace-nowrap">Join The Movement</span>
+            <GoArrowUpRight className="w-5 h-5 lg:w-6 lg:h-6 flex-shrink-0" />
+          </Button>
+        </div>
       </div>
       <div className="bg-[#EE9253]">
         <div className=" mx-auto md:px-20 py-12 lg:py-12">
-          <h1 className="text-[21px] lg:text-[52px] font-medium text-white mb-6 text-center">
+          <h1 className="text-[21px] lg:text-[42px] font-medium text-white mb-6 text-center">
             When you wear Warrior Sol, you invest in your own comfort while
             fuelling a mission that uplifts an entire community.
           </h1>

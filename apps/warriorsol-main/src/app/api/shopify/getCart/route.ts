@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { fetchShopify } from "../../../../lib/shopify";
 import { getServerSession } from "next-auth";
 import { authConfig } from "../../../../../auth";
+
 const GET_CART_QUERY = `
   query GetCart($cartId: ID!) {
     cart(id: $cartId) {
@@ -30,7 +31,14 @@ const GET_CART_QUERY = `
                 }
                 product {
                   title
-                  tags   # 👈 add this
+                  tags
+                  metafields(identifiers: [
+                    { namespace: "custom", key: "preorder_ship_date" }
+                    { namespace: "custom", key: "is_preorder" }
+                  ]) {
+                    key
+                    value
+                  }
                 }
               }
             }
@@ -51,7 +59,11 @@ interface ShopifyCartLineNode {
       price: { amount: string; currencyCode: string };
       selectedOptions?: { name: string; value: string }[];
       image?: { url: string };
-      product: { title: string; tags: string[] };
+      product: {
+        title: string;
+        tags: string[];
+        metafields?: { key: string; value: string }[];
+      };
     };
   };
 }
@@ -68,6 +80,7 @@ export async function GET() {
 
     let setCartIdCookie = false;
     let newCartId = "";
+
     // Step 1: Try fetching from your backend
     if (!cartId) {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/cart`, {
@@ -159,10 +172,23 @@ export async function GET() {
         const variant = node.merchandise;
         let color = "";
         let size = "";
+
         for (const opt of variant.selectedOptions || []) {
           if (opt.name.toLowerCase() === "color") color = opt.value;
           if (opt.name.toLowerCase() === "size") size = opt.value;
         }
+
+        // Extract metafields as a key:value object
+        const metafields =
+          variant.product.metafields?.reduce(
+            (acc: Record<string, string>, mf) => {
+              if (mf?.key && mf?.value) {
+                acc[mf.key] = mf.value;
+              }
+              return acc;
+            },
+            {}
+          ) || {};
 
         return {
           id: variant.id,
@@ -173,7 +199,8 @@ export async function GET() {
           size,
           image: variant.image?.url || "",
           lineId: node.id,
-          tags: variant.product.tags, // 👈 now you’ll get ["Pre Order", ...]
+          tags: variant.product.tags,
+          metafields, // ✅ included
         };
       }
     );

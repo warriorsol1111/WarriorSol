@@ -10,6 +10,7 @@ export interface CartItem {
   quantity: number;
   image: string;
   tags?: string[];
+  metafields?: Record<string, string>;
   lineId?: string; // Shopify line item ID
 }
 

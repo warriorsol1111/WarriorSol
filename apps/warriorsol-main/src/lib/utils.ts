@@ -29,3 +29,12 @@ export const signInSchema = z.object({
     .optional(),
   stayLoggedIn: z.boolean().optional(),
 });
+
+export function formatDate(dateString: string) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
