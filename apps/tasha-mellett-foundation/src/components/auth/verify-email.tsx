@@ -105,15 +105,15 @@ export default function VerifyEmailPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col-reverse md:flex-row">
+    <div className="flex min-h-screen flex-col-reverse lg:flex-row">
       {/* Left Side */}
-      <div className="flex w-full items-center justify-center bg-white p-6 md:w-1/2 md:p-12 md:px-24">
+      <div className="flex w-full items-center justify-center bg-white p-6 lg:w-1/2 lg:p-12 lg:px-24">
         {step === 1 ? (
           <form onSubmit={handleSubmit} className="mt-12 w-full space-y-6">
             <div className="text-center md:text-left">
               <h1 className=" text-3xl md:text-[42px]">Email Verification</h1>
               <p className="mt-2 text-base  text-[#1F1F1F99]  md:text-lg">
-                We have sent a verification code on your Email
+                We&apos;ve sent a verification code to your email.
               </p>
               <p className="text-base  text-[#EE9254]  md:text-lg">{email}</p>
             </div>
@@ -152,7 +152,7 @@ export default function VerifyEmailPage() {
             <Button
               type="submit"
               disabled={loading}
-              className=" w-full bg-[#C1E965] text-black hover:bg-[#C1E965]  flex items-center justify-center gap-2"
+              className=" w-full bg-[#EE9254] text-white hover:bg-[#EE9254]  flex items-center justify-center gap-2"
             >
               {loading && <Loader2 className="h-5 w-5 animate-spin" />}
               Verify Email
@@ -203,7 +203,7 @@ export default function VerifyEmailPage() {
       </div>
 
       {/* Right Side */}
-      <div className="relative h-[300px] w-full md:h-auto md:w-1/2">
+      <div className="relative h-[300px] w-full lg:h-auto lg:w-1/2">
         <Image
           src={step === 1 ? VerifyEmailImage1 : VerifyEmailImage2}
           alt="Verify Email Background"

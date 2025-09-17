@@ -358,10 +358,10 @@ export default function ForgotPasswordPage() {
           <>
             <div>
               <h1 className="text-3xl md:text-[42px] text-[#1F1F1F]  font-normal">
-                Forgot Password
+                Forgot Password?
               </h1>
               <p className=" text-[#1F1F1F99]  text-base md:text-[20px]">
-                Enter Your email, we&apos;ll send a verification code
+                Please enter your email and we&apos;ll send a verification code.
               </p>
             </div>
             <div className="space-y-4 w-full">
@@ -384,7 +384,7 @@ export default function ForgotPasswordPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#C1E965]  cursor-pointer hover:bg-[#C1E965] h-10 md:h-12 text-black"
+              className="w-full bg-[#EE9254]  cursor-pointer hover:bg-[#EE9254] h-10 md:h-12 text-white"
             >
               {loading ? Spinner : "Send Code"}
             </Button>
@@ -399,7 +399,7 @@ export default function ForgotPasswordPage() {
                 Email Verification
               </h1>
               <p className=" text-[#1F1F1F99]  text-base md:text-lg">
-                We have sent a verification code to your email address
+                We have sent a verification code to your email address.
               </p>
               <p className="text-base  text-[#EE9254]  md:text-lg">
                 {formData.email}
@@ -440,7 +440,7 @@ export default function ForgotPasswordPage() {
             <Button
               type="submit"
               disabled={loading || otpValues.some((val) => val === "")}
-              className="w-full bg-[#C1E965] cursor-pointer hover:bg-[#C1E965] h-10 md:h-12 text-black disabled:opacity-50"
+              className="w-full bg-[#EE9254] cursor-pointer hover:bg-[#EE9254] h-10 md:h-12 text-white disabled:opacity-50"
             >
               {loading ? Spinner : "Verify Code"}
             </Button>
@@ -482,7 +482,7 @@ export default function ForgotPasswordPage() {
                 Create New Password
               </h1>
               <p className=" text-[#1F1F1F99]   text-base md:text-lg">
-                Enter your new password{" "}
+                Please enter your new password.{" "}
               </p>
             </div>
             <div className="space-y-4 w-full">
@@ -556,7 +556,7 @@ export default function ForgotPasswordPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#C1E965] cursor-pointer hover:bg-[#C1E965] h-10 md:h-12 text-black"
+              className="w-full bg-[#EE9254] cursor-pointer hover:bg-[#EE9254] h-10 md:h-12 text-white"
             >
               {loading ? Spinner : "Continue"}
             </Button>
@@ -568,16 +568,16 @@ export default function ForgotPasswordPage() {
           <>
             <div>
               <h1 className="text-3xl md:text-[42px] text-[#1F1F1F]  font-normal">
-                Password Changed Successfully
+                Password Changed Successfully!
               </h1>
               <p className=" text-[#1F1F1F]  opacity-60 text-base md:text-lg">
-                Your password has been updated successfully
+                Your password has been updated successfully.
               </p>
             </div>
             <Button
               onClick={handleBackToLogin}
               disabled={redirectLoading}
-              className="w-full bg-[#C1E965] cursor-pointer ! !text-xl hover:bg-[#C1E965] h-10 md:h-12 text-black"
+              className="w-full bg-[#EE9254] cursor-pointer ! !text-xl hover:bg-[#EE9254] h-10 md:h-12 text-white"
             >
               {redirectLoading ? (
                 <Loader2 className="animate-spin" />
@@ -591,8 +591,8 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col-reverse md:flex-row">
-      <div className="flex-1 md:w-1/2 bg-white flex items-center justify-center p-6 md:p-12 md:px-24">
+    <div className="flex min-h-screen flex-col-reverse lg:flex-row">
+      <div className="flex-1 lg:w-1/2 bg-white flex items-center justify-center p-6 md:p-12 md:px-24">
         <div className="w-full space-y-6">
           {/* Back Button */}
           {canGoBack() && (
@@ -616,7 +616,7 @@ export default function ForgotPasswordPage() {
         </div>
       </div>
 
-      <div className="w-full md:w-1/2 h-[300px] md:h-auto relative">
+      <div className="w-full lg:w-1/2 h-[300px] lg:h-auto relative">
         <Image
           src={getBackgroundImage()}
           alt="Forgot Password Background"

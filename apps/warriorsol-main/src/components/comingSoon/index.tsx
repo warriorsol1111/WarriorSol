@@ -8,7 +8,6 @@ import Link from "next/link";
 import Logo from "../../assets/logo.svg";
 import { toast } from "react-hot-toast";
 import { Loader2 } from "lucide-react";
-import Singer from "@/assets/singer.svg";
 import LogoWhite from "../../assets/icon-white.png";
 import { useRouter } from "next/navigation";
 export default function ComingSoon() {
@@ -128,16 +127,16 @@ export default function ComingSoon() {
   return (
     <>
       <header>
-        <div className="flex items-center justify-center lg:justify-between px-4 sm:px-6 py-4 bg-white relative">
+        <div className="flex flex-col md:flex-row items-center justify-center md:justify-between px-4 sm:px-6 py-4 bg-white relative">
           {/* Logo */}
           <Link
             href="/"
-            className="text-lg font-semibold tracking-wide flex items-center"
+            className="text-lg font-semibold tracking-wide flex items-center md:mr-4"
           >
             <Image
               src={Logo}
               alt="Warrior Sol Logo"
-              className="h-12 w-auto sm:h-14 md:h-16 lg:h-18"
+              className="h-12 w-auto sm:h-14 md:h-16"
               width={120}
               priority
               height={120}
@@ -145,8 +144,16 @@ export default function ComingSoon() {
             />
           </Link>
 
-          {/* Tagline - Hidden on mobile, visible on tablet+ */}
-          <nav className="absolute hidden mt-1 lg:flex left-1/2 transform -translate-x-1/2 text-xs xl:text-lg text-center text-black max-w-md xl:max-w-lg 2xl:max-w-full px-4">
+          {/* Small tagline - only mobile */}
+          <p className="text-xs text-center mt-2 md:hidden">
+            Born from love, built for warriors.
+          </p>
+
+          {/* Big tagline - tablet+ */}
+          <nav
+            className="hidden md:block text-sm xl:text-lg text-center text-black 
+  max-w-md lg:max-w-full mt-0 md:mt-5 lg:mt-2"
+          >
             Born from love, built for warriors. Every piece funds direct support
             for those facing cancer&apos;s hidden battles.
           </nav>
@@ -169,7 +176,7 @@ export default function ComingSoon() {
         <div className="absolute inset-0 bg-black/50" />
 
         {/* Audio Toggle + Text */}
-        <div className="absolute top-[45%] sm:top-1/2 lg:top-[55%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-3 px-4">
+        <div className="absolute top-[35%] sm:top-1/2 md:top-[45%] lg:top-[55%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-3 px-4">
           {/* Play/Pause Button */}
           <Button
             variant="link"
@@ -193,23 +200,6 @@ export default function ComingSoon() {
           />
 
           {/* Artist Info */}
-          <div className="flex items-center gap-2 mt-2 md:mt-4 mr-6">
-            <Image
-              src={Singer}
-              alt="Artist Avatar"
-              width={40}
-              height={40}
-              className="w-8 h-8 lg:w-9 lg:h-9 xl:w-10 xl:h-10 rounded-full border border-white/30 flex-shrink-0"
-            />
-            <div className="flex flex-col text-white leading-tight min-w-0">
-              <span className="capitalize ml-1 text-xs lg:text-sm tracking-wide whitespace-nowrap">
-                Enjoy The Legend
-              </span>
-              <span className="font-bold text-base lg:text-lg xl:text-xl whitespace-nowrap">
-                Coleman Mellett
-              </span>
-            </div>
-          </div>
         </div>
 
         {/* Main Content */}
@@ -227,7 +217,7 @@ export default function ComingSoon() {
                 style={{ objectFit: "contain" }}
               />
             </div>
-            <h1 className="text-white text-[38px] !font-[Comfortaa] sm:text-[48px] md:text-[54px] lg:text-[60px] xl:text-[60px] !font-semibold mb-4 sm:mb-6 tracking-[0.15em]  leading-tight">
+            <h1 className="text-white text-[30px] sm:text-[48px] md:text-[54px] lg:text-[60px] xl:text-[60px] !font-semibold mb-4 sm:mb-6 tracking-[0.15em]  leading-tight">
               Rising
               <br />
               11:11
@@ -242,7 +232,7 @@ export default function ComingSoon() {
                     </div>
                   )}
                   <div className="text-center">
-                    <div className="text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold tracking-widest uppercase">
+                    <div className="text-white text-[20px] sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold tracking-widest uppercase">
                       {timeLeft[unit as keyof typeof timeLeft]
                         .toString()
                         .padStart(2, "0")}
@@ -257,10 +247,10 @@ export default function ComingSoon() {
           </div>
 
           {/* Bottom Section - Improved mobile layout */}
-          <div className="mt-[250px] md:mt-[250px] pb-6 sm:pb-8 md:pb-12 flex flex-col items-center">
+          <div className="mt-[190px] md:mt-[180px] pb-6 sm:pb-8 md:pb-12 flex flex-col items-center">
             <h3 className="text-white text-base md:text-base lg:text-lg xl:text-2xl font-bold w-full text-center sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[40%] mb-3 sm:mb-4 leading-relaxed">
               Get exclusive early access and enjoy a special offer before the
-              public launch.
+              public launch!
             </h3>
 
             <div className="w-full md:w-[550px] lg:w-[600px] xl:w-[650px] h-[1px] bg-white/50 mb-4 sm:mb-6" />
@@ -272,14 +262,14 @@ export default function ComingSoon() {
             >
               <Input
                 type="email"
-                placeholder="Your Email"
+                placeholder="Please enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="bg-[#FFFFFF] rounded-lg text-black !placeholder-black flex-1 placeholder:text-center md:placeholder:text-center"
               />
               <Button
                 type="submit"
-                className="bg-[#EE9254] hover:bg-[#D97C38] text-white px-4 sm:px-6 py-2 w-full md:w-auto tracking-wide uppercase text-xs sm:text-sm flex items-center justify-center gap-2 whitespace-nowrap"
+                className="bg-[#EE9254] hover:bg-[#D97C38] text-white px-4 sm:px-6 py-2 w-full md:w-auto tracking-wide  text-xs sm:text-sm flex items-center justify-center gap-2 whitespace-nowrap"
                 disabled={notifyLoading}
               >
                 {notifyLoading ? (

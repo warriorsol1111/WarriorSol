@@ -79,7 +79,7 @@ const Contacts = () => {
           <h2 className="text-[28px] sm:text-[32px] md:text-[62px] text-center md:text-left font-medium leading-snug">
             Contact Us
           </h2>
-          <p className="text-[16px] sm:text-[18px] md:text-[20px] text-[#1F1F1F] text-center md:text-left">
+          <p className="text-[16px] sm:text-[18px] md:text-[20px] text-[#474749] text-center md:text-left">
             Whether you have questions about our products, need assistance with
             your order, or just want to say hello, feel free to reach out. Our
             dedicated team is here to help you with any inquiries you may have.
@@ -127,7 +127,7 @@ const Contacts = () => {
                   },
                 })}
                 type="text"
-                placeholder="Enter your full name"
+                placeholder="Martin Mellett"
                 className={clsx(
                   "w-full px-4 py-2 rounded-md border text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-300",
                   errors.fullName
@@ -157,7 +157,7 @@ const Contacts = () => {
                   },
                 })}
                 type="email"
-                placeholder="Enter your email address"
+                placeholder="martinmellett@gmail.com"
                 className={clsx(
                   "w-full px-4 py-2 rounded-md border text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-300",
                   errors.email

@@ -214,16 +214,18 @@ function SignupPage() {
   };
 
   return (
-    <div className="flex flex-col-reverse md:flex-row min-h-screen">
+    <div className="flex flex-col-reverse lg:flex-row min-h-screen">
       {/* Left Section */}
-      <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-4 md:p-12 md:px-24">
+      <div className="w-full lg:w-1/2 bg-white flex items-center justify-center p-4 md:p-12 md:px-24">
         <form onSubmit={handleSubmit} className="w-full space-y-6 mt-12">
           <div>
             <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] font-serif font-normal">
-              Hello There!
+              Hello!
             </h1>
             <p className=" text-base md:text-lg text-[#1F1F1F] opacity-[60%]">
-              Welcome to Warriorsol, Enter details to create your account{" "}
+              Welcome to Warrior Sol! We&apos;re so glad you&apos;re here!
+              <br />
+              Please enter your details to create your account.{" "}
             </p>
           </div>
 
@@ -335,7 +337,7 @@ function SignupPage() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#C1E965] text-sm md:text-base hover:bg-[#C1E965] h-10 md:h-14 text-black mt-4"
+            className="w-full bg-[#EE9254] text-sm md:text-base hover:bg-[#EE9254] h-10 md:h-14 text-white mt-4"
           >
             {loading ? (
               <Loader2 className="animate-spin w-5 h-5" />
@@ -387,7 +389,7 @@ function SignupPage() {
       </div>
 
       {/* Right Section */}
-      <div className="w-full md:w-1/2 relative h-[300px] md:h-auto">
+      <div className="w-full lg:w-1/2 relative h-[300px] lg:h-auto">
         <Image
           src={SignupImage}
           alt="Login Background"

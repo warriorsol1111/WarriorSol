@@ -227,7 +227,7 @@ export default function ComingSoon() {
                 style={{ objectFit: "contain" }}
               />
             </div>
-            <h1 className="text-white text-[38px] !font-[Comfortaa] sm:text-[48px] md:text-[54px] lg:text-[60px] xl:text-[60px] !font-semibold mb-4 sm:mb-6 tracking-[0.15em]  leading-tight">
+            <h1 className="text-white text-[38px]  sm:text-[48px] md:text-[54px] lg:text-[60px] xl:text-[60px] !font-semibold mb-4 sm:mb-6 tracking-[0.15em]  leading-tight">
               Rising
               <br />
               11:11
@@ -279,7 +279,7 @@ export default function ComingSoon() {
               />
               <Button
                 type="submit"
-                className="bg-[#EE9254] hover:bg-[#D97C38] text-white px-4 sm:px-6 py-2 tracking-wide uppercase text-xs sm:text-sm flex items-center justify-center gap-2 whitespace-nowrap"
+                className="bg-[#EE9254] hover:bg-[#D97C38] text-white px-4 sm:px-6 py-2 tracking-wide text-xs sm:text-sm flex items-center justify-center gap-2 whitespace-nowrap"
                 disabled={notifyLoading}
               >
                 {notifyLoading ? (

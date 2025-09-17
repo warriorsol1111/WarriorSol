@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
@@ -28,6 +29,12 @@ export default function DonorWall({
 }) {
   return (
     <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 lg:py-16">
+      <p
+        className="text-[#2DAD95] text-[14px] !uppercase mb-4 cursor-pointer"
+        onClick={() => (window.location.href = "/donations")}
+      >
+        Donations
+      </p>
       <div className="flex flex-col lg:flex-row justify-between">
         <h2 className="text-3xl md:text-[64px] font-extrabold max-w-lg text-[#232325]">
           Support Our Mission of Hope
