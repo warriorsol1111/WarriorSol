@@ -179,12 +179,12 @@ export default function CartDrawer() {
                         {/* Top row: image + details */}
                         <div className="flex flex-col sm:flex-row gap-4">
                           {/* Product Image */}
-                          <div className="relative w-full sm:w-[118px] max-w-[100px] sm:max-w-none aspect-square rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                          <div className="relative w-full sm:w-[180px] max-w-[100px] sm:max-w-none aspect-square rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                             <Image
                               src={item.image}
                               alt={item.name}
-                              width={118}
-                              height={118}
+                              width={180}
+                              height={180}
                               className="w-full h-full object-cover"
                             />
                             {item.metafields?.is_preorder === "true" && (

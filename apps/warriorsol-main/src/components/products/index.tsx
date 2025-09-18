@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import Navbar from "../shared/navbar";
 import Footer from "../shared/footer";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import ProductGrid from "./productGrid";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
 import Filter from "./filters";
@@ -14,16 +13,55 @@ import {
   initialFilterState,
 } from "../../lib/hooks/useFilterSession";
 
+// Skeleton Components
+const TabsSkeleton = () => (
+  <div className="flex overflow-x-auto sm:justify-center w-full gap-2 sm:gap-4 mb-6 p-1 bg-white rounded-lg">
+    {Array.from({ length: 4 }).map((_, i) => (
+      <div
+        key={i}
+        className="h-10 bg-gray-200 animate-pulse rounded whitespace-nowrap px-4 py-2 min-w-[100px]"
+      />
+    ))}
+  </div>
+);
+
+const ProductGridSkeleton = () => (
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+    {Array.from({ length: 8 }).map((_, index) => (
+      <div key={index} className="animate-pulse">
+        <div className="aspect-square bg-gray-200 rounded-lg mb-3"></div>
+        <div className="space-y-2">
+          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+const ResultsSummarySkeleton = () => (
+  <div className="mb-4">
+    <div className="h-4 bg-gray-200 animate-pulse rounded w-48"></div>
+  </div>
+);
+
 interface Variant {
   title: string;
   price: string;
   availableForSale: boolean;
+}
+interface Metafield {
+  namespace: string;
+  key: string;
+  value: string;
 }
 
 interface Product {
   id: string;
   title: string;
   category: string;
+  metafields: Metafield[];
   price: string;
   imageUrl: string;
   handle: string;
@@ -43,6 +81,7 @@ interface ShopifyProductEdge {
     variants: {
       edges: Array<{ node: Variant }>;
     };
+    metafields: Metafield[];
     images: {
       edges: Array<{
         node: {
@@ -210,6 +249,7 @@ const Products: React.FC = () => {
           variants,
           colors,
           sizes,
+          metafields: product.metafields || [],
           priceValue,
         };
       });
@@ -238,7 +278,6 @@ const Products: React.FC = () => {
         };
       });
 
-      // Wait for all availability checks to complete
       const productsWithAvailability = await Promise.all(availabilityPromises);
       setAllProducts(productsWithAvailability);
     } catch (error) {
@@ -342,7 +381,6 @@ const Products: React.FC = () => {
           const titleB = normalizeTitle(b.title);
           return titleA.localeCompare(titleB);
         });
-
         break;
       case "Z-A":
         filtered.sort((a, b) => {
@@ -374,29 +412,27 @@ const Products: React.FC = () => {
   };
 
   const displayProducts = getTabProducts();
-
   const isFullyLoaded = !loading && filtersLoaded;
 
   return (
     <div>
       <Navbar />
       <div className="px-4 sm:px-6 md:px-8 lg:px-10 pt-6 pb-4 relative">
-        {/* Header with title and filter button */}
+        {/* Heading always shown */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
           <h1 className="text-[32px] md:text-[48px] text-center md:text-start lg:text-[62px] text-[#1F1F1F] font-normal">
             View Our Collection
           </h1>
 
-          {/* Filter button - hidden on mobile, shown as small button on tablet+ */}
+          {/* Filter button always visible */}
           <Button
             onClick={() => setIsFilterOpen(true)}
             variant="link"
             size="default"
-            className="hidden md:flex items-center gap-2 border !h-13 border-black  text-sm hover:bg-gray-50 transition-color"
+            className="hidden md:flex items-center gap-2 border !h-13 border-black text-sm hover:bg-gray-50 transition-color"
           >
             <span>Sort & Filter</span>
             <BsFilterLeft size={16} />
-
             {getActiveFiltersCount() > 0 && (
               <span className="bg-[#EE9254] text-white text-xs rounded-full ml-1 w-5 h-5 flex items-center justify-center min-w-[20px]">
                 {getActiveFiltersCount()}
@@ -405,12 +441,13 @@ const Products: React.FC = () => {
           </Button>
         </div>
 
+        {/* Subheading always shown */}
         <p className="text-base md:text-lg lg:text-xl text-center md:text-start text-[#1F1F1FB2] mb-6">
           Every collection tells a story. Find the one that speaks to your
           journey.
         </p>
 
-        {/* Mobile filter button - full width */}
+        {/* Mobile filter button always visible */}
         <Button
           variant="link"
           onClick={() => setIsFilterOpen(true)}
@@ -426,87 +463,51 @@ const Products: React.FC = () => {
             <BsFilterLeft size={20} />
           </div>
         </Button>
-        <Filter
-          isOpen={isFilterOpen}
-          onOpenChange={setIsFilterOpen}
-          filters={filters}
-          onFiltersChange={setFilters}
-          onApplyFilters={handleApplyFilters}
-          collections={collections}
-          allProducts={allProducts}
-        />
+
+        {isFullyLoaded && (
+          <Filter
+            isOpen={isFilterOpen}
+            onOpenChange={setIsFilterOpen}
+            filters={filters}
+            onFiltersChange={setFilters}
+            onApplyFilters={handleApplyFilters}
+            collections={collections}
+            allProducts={allProducts}
+          />
+        )}
       </div>
 
       <div className="px-4 sm:px-6 md:px-8 lg:px-10">
         {/* Results summary */}
-        {isFullyLoaded && (
+        {isFullyLoaded ? (
           <div className="mb-4 text-sm text-gray-600">
             Showing {displayProducts.length} of {allProducts.length} products
           </div>
+        ) : (
+          <ResultsSummarySkeleton />
         )}
 
-        <Tabs
-          defaultValue="all"
-          className="w-full"
-          onValueChange={(value) => {
-            setActiveTab(value);
-          }}
-        >
-          <TabsList className="flex overflow-x-auto text-[20px]  text-[#1F1F1FCC] sm:justify-center w-full gap-2 sm:gap-4 mb-6 p-1 bg-white rounded-lg scrollbar-hide">
-            <TabsTrigger value="all" className="whitespace-nowrap">
-              All ({allProducts.length})
-            </TabsTrigger>
-            {collections.map((collection) => (
-              <TabsTrigger key={collection.handle} value={collection.handle}>
-                {collection.title}
+        {isFullyLoaded ? (
+          <Tabs
+            defaultValue="all"
+            className="w-full"
+            onValueChange={(value) => {
+              setActiveTab(value);
+            }}
+          >
+            <TabsList className="flex overflow-x-auto text-[20px] text-[#1F1F1FCC] sm:justify-center w-full gap-2 sm:gap-4 mb-6 p-1 bg-white rounded-lg scrollbar-hide">
+              <TabsTrigger value="all" className="whitespace-nowrap">
+                All ({allProducts.length})
               </TabsTrigger>
-            ))}
-          </TabsList>
+              {collections.map((collection) => (
+                <TabsTrigger key={collection.handle} value={collection.handle}>
+                  {collection.title}
+                </TabsTrigger>
+              ))}
+            </TabsList>
 
-          <TabsContent value="all">
-            {!isFullyLoaded ? (
-              <div className="flex justify-center items-center py-20">
-                <AiOutlineLoading3Quarters className="w-8 h-8 animate-spin" />
-                <span className="ml-2">
-                  Loading products and availability...
-                </span>
-              </div>
-            ) : error ? (
-              <div className="text-center py-20 text-red-600">
-                <p>Error: {error}</p>
-                <p className="text-sm text-gray-600 mt-2">
-                  Please try again later
-                </p>
-              </div>
-            ) : displayProducts.length === 0 ? (
-              <div className="text-center py-20">
-                <p className="text-lg text-gray-600 mb-2">No products found</p>
-                <p className="text-sm text-gray-500">
-                  Try adjusting your filters
-                </p>
-                <Button
-                  onClick={() => setFilters(initialFilterState)}
-                  variant="link"
-                  className="mt-4 text-[#E97451] hover:text-[#E97451]/80"
-                >
-                  Clear all filters
-                </Button>
-              </div>
-            ) : (
-              <ProductGrid products={displayProducts} />
-            )}
-          </TabsContent>
-
-          {collections.map((collection) => (
-            <TabsContent key={collection.handle} value={collection.handle}>
-              {!isFullyLoaded ? (
-                <div className="flex justify-center items-center py-20">
-                  <AiOutlineLoading3Quarters className="w-8 h-8 animate-spin" />
-                  <span className="ml-2">
-                    Loading {collection.title} and availability...
-                  </span>
-                </div>
-              ) : error ? (
+            <TabsContent value="all">
+              {error ? (
                 <div className="text-center py-20 text-red-600">
                   <p>Error: {error}</p>
                   <p className="text-sm text-gray-600 mt-2">
@@ -516,18 +517,54 @@ const Products: React.FC = () => {
               ) : displayProducts.length === 0 ? (
                 <div className="text-center py-20">
                   <p className="text-lg text-gray-600 mb-2">
-                    No products found in {collection.title}
+                    No products found
                   </p>
                   <p className="text-sm text-gray-500">
                     Try adjusting your filters
                   </p>
+                  <Button
+                    onClick={() => setFilters(initialFilterState)}
+                    variant="link"
+                    className="mt-4 text-[#E97451] hover:text-[#E97451]/80"
+                  >
+                    Clear all filters
+                  </Button>
                 </div>
               ) : (
                 <ProductGrid products={displayProducts} />
               )}
             </TabsContent>
-          ))}
-        </Tabs>
+
+            {collections.map((collection) => (
+              <TabsContent key={collection.handle} value={collection.handle}>
+                {error ? (
+                  <div className="text-center py-20 text-red-600">
+                    <p>Error: {error}</p>
+                    <p className="text-sm text-gray-600 mt-2">
+                      Please try again later
+                    </p>
+                  </div>
+                ) : displayProducts.length === 0 ? (
+                  <div className="text-center py-20">
+                    <p className="text-lg text-gray-600 mb-2">
+                      No products found in {collection.title}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Try adjusting your filters
+                    </p>
+                  </div>
+                ) : (
+                  <ProductGrid products={displayProducts} />
+                )}
+              </TabsContent>
+            ))}
+          </Tabs>
+        ) : (
+          <>
+            <TabsSkeleton />
+            <ProductGridSkeleton />
+          </>
+        )}
       </div>
 
       {/* Social Links Grid */}

@@ -589,13 +589,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             {/* Header */}
             <div className="flex flex-col xl:flex-row sm:justify-between sm:items-start gap-4">
               <div>
-                {isPreOrder && (
-                  <span className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">
-                    Pre-Order
-                  </span>
-                )}
-
-                <h1 className="text-3xl sm:text-4xl lg:text-[62px] font-normal text-[#1F1F1F]">
+                <h1 className="text-3xl sm:text-4xl lg:text-[48px] ml-[-10px] font-normal text-[#1F1F1F]">
                   {product.title}
                 </h1>
                 <p className="text-lg sm:text-xl text-[#1F1F1FB2] mt-2 ">
@@ -603,13 +597,13 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                 </p>
               </div>
               {/* Price */}
-              <div className="flex items-center text-2xl sm:text-3xl lg:text-[62px] gap-2 sm:gap-3">
+              <div className="flex items-center text-2xl sm:text-3xl xl:mt-[-4px] lg:text-[52px] gap-2 sm:gap-3">
                 {formattedCompareAtPrice && (
                   <span className="text-lg sm:text-xl lg:text-[42px] text-[#1F1F1F4D] line-through">
                     {formattedCompareAtPrice}
                   </span>
                 )}
-                <span className="text-2xl sm:text-3xl lg:text-[62px] font-semibold text-gray-900">
+                <span className="text-2xl sm:text-3xl lg:text-[52px] font-semibold text-gray-900">
                   {formattedPrice}
                 </span>
               </div>

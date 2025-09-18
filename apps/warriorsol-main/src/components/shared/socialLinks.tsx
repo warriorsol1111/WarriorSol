@@ -16,7 +16,7 @@ const socialLinks = [
   },
   {
     name: "Facebook",
-    href: "https://facebook.com/warriorssol",
+    href: "https://www.facebook.com/WearWarriorSol",
     icon: <FaFacebookF size={20} />,
   },
 ];

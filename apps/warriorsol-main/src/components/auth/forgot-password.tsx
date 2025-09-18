@@ -592,7 +592,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="flex min-h-screen flex-col-reverse lg:flex-row">
-      <div className="flex-1 lg:w-1/2 bg-white flex items-center justify-center p-6 md:p-12 md:px-24">
+      <div className="flex-1 lg:w-1/2 bg-white flex items-center justify-center p-6 lg:p-12 lg:px-12">
         <div className="w-full space-y-6">
           {/* Back Button */}
           {canGoBack() && (

@@ -169,7 +169,7 @@ function LoginPage() {
   return (
     <div className="flex min-h-screen flex-col-reverse lg:flex-row">
       {/* Left Section */}
-      <div className="w-full lg:w-1/2 bg-white flex items-center justify-center p-6 md:p-12 md:px-24">
+      <div className="w-full lg:w-1/2 bg-white flex items-center justify-center p-6 lg:p-12 lg:px-12">
         <form
           onSubmit={handleSubmit}
           className="w-full space-y-4 md:space-y-10"
@@ -275,7 +275,7 @@ function LoginPage() {
               <Loader2 className="animate-spin w-5 h-5 mr-2" />
             ) : (
               <>
-                <FcGoogle className="w-5 h-5 md:w-6 md:h-6" />
+                <FcGoogle className="w-5 h-5 md:!w-8 md:!h-8" />
                 Continue with Google
               </>
             )}

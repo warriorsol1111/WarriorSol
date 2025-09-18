@@ -107,7 +107,7 @@ export default function VerifyEmailPage() {
   return (
     <div className="flex min-h-screen flex-col-reverse lg:flex-row">
       {/* Left Side */}
-      <div className="flex w-full items-center justify-center bg-white p-6 lg:w-1/2 lg:p-12 lg:px-24">
+      <div className="flex w-full items-center justify-center bg-white p-6 lg:w-1/2 lg:p-12 lg:px-12">
         {step === 1 ? (
           <form onSubmit={handleSubmit} className="mt-12 w-full space-y-6">
             <div className="text-center md:text-left">

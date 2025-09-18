@@ -21,11 +21,18 @@ interface VariantNode {
   image: ImageNode | null;
 }
 
+interface MetafieldNode {
+  namespace: string;
+  key: string;
+  value: string;
+}
+
 interface ProductNode {
   id: string;
   title: string;
   handle: string;
   productType: string;
+  metafields: MetafieldNode[];
   tags: string[];
   options: {
     name: string;
@@ -63,6 +70,16 @@ const GET_PRODUCTS_AND_COLLECTIONS = /* GraphQL */ `
           title
           handle
           productType
+          metafields(
+            identifiers: [
+              { namespace: "custom", key: "preorder_ship_date" }
+              { namespace: "custom", key: "is_preorder" }
+            ]
+          ) {
+            namespace
+            key
+            value
+          }
           tags
           options {
             name
@@ -129,6 +146,8 @@ export async function GET() {
       (edge: { node: ProductNode }) => ({
         node: {
           ...edge.node,
+          // Keep metafields at the product level, not nested in images
+          metafields: edge.node.metafields,
           images: {
             edges: edge.node.images.edges.map((img) => ({
               node: {

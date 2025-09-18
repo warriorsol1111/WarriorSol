@@ -39,33 +39,37 @@ const CommunityPage = () => {
       </section>
 
       {/* ✅ MISSION SECTION */}
-      <section className="w-full px-6 md:px-24 md:py-20 mt-10 flex flex-col lg:flex-row gap-12 items-center">
-        <div className="flex-1 w-full">
+      <section className="w-full px-6 md:px-24 md:py-20 mt-10 flex flex-col lg:flex-row gap-12 lg:gap-20 items-center lg:items-start">
+        {/* Image */}
+        <div className="flex-1 w-full flex justify-center">
           <Image
             src={missionImage}
             alt="Mission Visual"
-            className="rounded w-full h-auto object-cover"
+            className="rounded w-full  h-auto object-cover"
             placeholder="blur"
           />
         </div>
-        <div className="flex-1 text-center md:text-left md:mb-[200px]">
-          <h2 className="text-[22px] md:text-[52px] font-cormorantSC capitalize leading-tight mb-6 text-[#1F1F1F]">
+
+        {/* Text */}
+        <div className="flex-1 text-center md:text-left">
+          <h2 className="text-[22px] lg:text-[32px] xl:text-[52px] font-cormorantSC capitalize leading-tight mb-6 text-[#1F1F1F]">
             Globally, Foundations And Organizations Raise $15 Billion Annually
             For Cancer-related Causes. But Less Than 10% Reaches The People
-            Living With Cancer Daily Realities.{" "}
+            Living With Cancer Daily Realities.
           </h2>
-          <p className="text-[16px] md:text-[20px] text-center md:text-left capitalize md:mb-0 mb-10  text-black/70 leading-relaxed">
+          <p className="text-[16px] md:text-[20px] text-center md:text-left text-black/70 leading-relaxed">
             We&apos;re on a mission to raise $25 million over the next three
             years—a goal that would make us the largest foundation worldwide
             providing direct aid to families impacted by cancer. Our bold
-            vision: to raise $25 Million over the next 3 years Most of the help
+            vision: to raise $25 Million over the next 3 years. Most of the help
             goes to research, while those living with the day-to-day realities
             of cancer often find themselves without the support they need—
-            financially, emotionally, and socially.e here to fight for truth,
-            tenderness, and tangible impact.
+            financially, emotionally, and socially. We’re here to fight for
+            truth, tenderness, and tangible impact.
           </p>
         </div>
       </section>
+
       <div className="bg-[#EE9253]">
         <div className=" mx-auto md:px-20 py-16 lg:py-24">
           <p className="text-[16px] md:text-[20px] mt-[-10px] font-medium text-white text-center">
@@ -78,7 +82,7 @@ const CommunityPage = () => {
           </h1>
         </div>
       </div>
-      <section className="w-full px-6 md:px-24 mb-[-250px] md:py-20 mt-10 flex flex-col lg:flex-row gap-12 items-center">
+      <section className="w-full px-6 md:px-24 mb-[-550px] lg:mb-[-250px] md:py-20 mt-10 flex flex-col lg:flex-row gap-12 items-center">
         <div className="flex-1 text-center md:text-left md:mb-[200px]">
           <h2 className="text-[42px] md:text-[52px] font-cormorantSC capitalize leading-tight mb-6 text-[#1F1F1F]">
             The Hidden Battles

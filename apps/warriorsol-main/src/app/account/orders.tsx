@@ -335,7 +335,10 @@ export default function OrdersPage() {
               value={order.id}
               className="border rounded-lg shadow-sm bg-white"
             >
-              <AccordionTrigger className="cursor-pointer px-4 py-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+              <AccordionTrigger
+                className="cursor-pointer px-4 py-3 flex justify-between items-center gap-3 [&>svg]:hidden" // hides default chevron
+              >
+                {/* Left Side */}
                 <div className="text-left">
                   <div className="flex items-center gap-2 mb-1">
                     <p className="text-xl sm:text-2xl font-semibold text-[#1F1F1F]">
@@ -372,9 +375,14 @@ export default function OrdersPage() {
                     </span>
                   </div>
                 </div>
-                <p className="text-lg sm:text-xl font-semibold text-[#EE9254]">
-                  ${order.total.toFixed(2)}
-                </p>
+
+                {/* Right Side (Price + Chevron) */}
+                <div className="flex items-center gap-2">
+                  <p className="text-lg sm:text-xl font-semibold text-[#EE9254]">
+                    ${order.total.toFixed(2)}
+                  </p>
+                  <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180 text-gray-600" />
+                </div>
               </AccordionTrigger>
 
               <AccordionContent className="px-4 pb-4 space-y-3">
@@ -395,9 +403,9 @@ export default function OrdersPage() {
                             <Image
                               src={product.image || "/placeholder.png"}
                               alt={item.title}
-                              width={96}
-                              height={96}
-                              className="w-full h-full object-cover"
+                              width={116}
+                              height={116}
+                              className="w-[116px] h-[116px] object-cover"
                             />
                             {item.isPreOrder && (
                               <span className="absolute top-2 left-2 bg-orange-500 text-white text-xs font-medium px-2 py-0.5 rounded">

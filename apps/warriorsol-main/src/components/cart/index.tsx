@@ -19,8 +19,8 @@ export default function CartPage() {
   } = useCartStore();
   const isEmpty = items.length === 0;
   const [loading, setLoading] = React.useState(false);
-  const [senderName, setSenderName] = React.useState("Daniyal Khan");
-  const [recipientName, setRecipientName] = React.useState("Jimmy Mellet");
+  const [senderName, setSenderName] = React.useState("Areeb");
+  const [recipientName, setRecipientName] = React.useState("Jimmy");
   const [giftMessage, setGiftMessage] = React.useState("");
   const [nameError, setNameError] = React.useState("");
   const [recipientNameError, setRecipientNameError] = React.useState("");
@@ -176,13 +176,13 @@ export default function CartPage() {
                   >
                     {/* Item Info */}
                     <div className="flex flex-row col-span-1 lg:col-span-2 gap-3 sm:gap-4 items-start">
-                      <div className="relative flex-shrink-0">
+                      <div className="relative flex-shrink-0 ">
                         <Image
                           src={item.image}
                           alt={item.name}
-                          width={80}
-                          height={80}
-                          className="rounded-md object-cover w-16 h-16 xs:w-20 xs:h-20 sm:w-[90px] sm:h-[90px]"
+                          width={180}
+                          height={180}
+                          className="rounded-md object-cover"
                         />
                         {/* Badge overlay on image */}
                         {item.metafields?.is_preorder === "true" && (

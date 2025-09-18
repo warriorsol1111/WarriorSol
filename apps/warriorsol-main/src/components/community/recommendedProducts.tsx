@@ -134,7 +134,7 @@ const RecommendedProducts: React.FC = () => {
               >
                 {/* Image Card */}
                 {/* Image Card */}
-                <div className="relative w-full aspect-[4/5]">
+                <div className="relative w-full !h-[585px] aspect-[4/5]">
                   <Image
                     src={product.imageUrl}
                     alt={product.title}

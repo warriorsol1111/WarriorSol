@@ -216,7 +216,7 @@ function SignupPage() {
   return (
     <div className="flex flex-col-reverse lg:flex-row min-h-screen">
       {/* Left Section */}
-      <div className="w-full lg:w-1/2 bg-white flex items-center justify-center p-4 md:p-12 md:px-24">
+      <div className="w-full lg:w-1/2 bg-white flex items-center justify-center p-4 lg:p-12 lg:px-12">
         <form onSubmit={handleSubmit} className="w-full space-y-6 mt-12">
           <div>
             <h1 className="text-3xl md:text-[42px] text-[#1F1F1F] font-serif font-normal">
@@ -370,7 +370,7 @@ function SignupPage() {
               <Loader2 className="animate-spin w-5 h-5 mr-2" />
             ) : (
               <>
-                <FcGoogle className="w-5 h-5 md:w-6 md:h-6" />
+                <FcGoogle className="w-5 h-5 md:!w-8 md:!h-8" />
                 Continue with Google
               </>
             )}

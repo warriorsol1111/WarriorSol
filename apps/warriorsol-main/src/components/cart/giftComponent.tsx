@@ -65,13 +65,20 @@ export default function GiftMessage({
 
     if (!newSelection) {
       onGiftMessageChange("");
-      return;
+    } else {
+      const personalizedNote = giftNotes[newSelection as keyof typeof giftNotes]
+        .replace(/\[RECIPIENT'S NAME\]/g, recipientName || "[RECIPIENT'S NAME]")
+        .replace(/\[SENDER'S NAME\]/g, senderName || "[SENDER'S NAME]");
+      onGiftMessageChange(personalizedNote);
     }
 
-    const personalizedNote = giftNotes[newSelection as keyof typeof giftNotes]
-      .replace(/\[RECIPIENT'S NAME\]/g, recipientName || "[RECIPIENT'S NAME]")
-      .replace(/\[SENDER'S NAME\]/g, senderName || "[SENDER'S NAME]");
-    onGiftMessageChange(personalizedNote);
+    // 👇 force blur for note checkboxes too
+    setTimeout(() => {
+      const activeElement = document.activeElement as HTMLElement;
+      if (activeElement && activeElement.blur) {
+        activeElement.blur();
+      }
+    }, 0);
   };
 
   const handleSenderNameChange = (value: string) => {
@@ -129,7 +136,7 @@ export default function GiftMessage({
         />
         <Label
           htmlFor="gift-option"
-          className="text-sm font-medium text-gray-700 cursor-pointer"
+          className="!text-base font-medium text-gray-700 cursor-pointer"
         >
           Send As A Gift - Let Someone Know You&apos;ve Been Thinking About
           Them.
@@ -209,10 +216,10 @@ export default function GiftMessage({
                   <div
                     key={key}
                     onClick={() => handleNoteSelect(key)}
-                    className={`relative p-4 border rounded-lg bg-white h-full cursor-pointer transition-colors flex flex-col 
-      ${isChecked ? "border-[#EE9254]" : "border-gray-200"} 
-      ${noteSelectionError ? "border-red-200" : ""}
-      hover:border-[#EE9254]`}
+                    className={`relative p-4 border rounded-lg bg-white h-full cursor-pointer transition-colors flex flex-col
+    ${isChecked ? "border-[#EE9254]" : "border-gray-200"} 
+    ${noteSelectionError && !selectedNote ? "border-red-500" : ""} 
+    hover:border-[#EE9254]`}
                   >
                     {/* Label (title of card) */}
                     <Label
@@ -227,12 +234,12 @@ export default function GiftMessage({
                     </Label>
 
                     {/* Checkbox + text */}
-                    <div className="flex items-start gap-2 md:flex-row flex-col md:text-left text-center">
+                    <div className="flex items-start gap-2 md:flex-row flex-col text-left">
                       <Checkbox
                         id={`${key}-note`}
                         checked={isChecked}
                         onCheckedChange={() => handleNoteSelect(key)}
-                        className="mt-1 border-[#EE9254] data-[state=checked]:bg-[#EE9254] data-[state=checked]:border-[#EE9254] focus-visible:ring-2 focus-visible:ring-[#EE9254] focus-visible:ring-offset-2 md:mx-0 mx-auto"
+                        className={`${noteSelectionError && !selectedNote ? "border-red-500" : ""} mt-1 border-[#EE9254] data-[state=checked]:bg-[#EE9254] data-[state=checked]:border-[#EE9254] focus-visible:ring-2 focus-visible:ring-[#EE9254] focus-visible:ring-offset-2 md:mx-0 mx-auto`}
                       />
                       <p
                         className={`text-sm text-gray-600 leading-relaxed text-center md:text-left ${isCart ? "" : ""}`}

@@ -1,3 +1,5 @@
+// Updated ProductGrid component with fixed preorder display
+
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
@@ -21,7 +23,14 @@ type Product = {
   imageUrl: string;
   handle: string;
   availableForSale: boolean;
+  metafields: Metafield[];
 };
+
+interface Metafield {
+  namespace: string;
+  key: string;
+  value: string;
+}
 
 interface ProductGridProps {
   products: Product[];
@@ -30,13 +39,11 @@ interface ProductGridProps {
 const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
   const [wishlistLoading, setWishlistLoading] = useState<string | null>(null);
   const [cartLoading, setCartLoading] = useState<string | null>(null);
-  // Track variant IDs for each product
   const [productVariants, setProductVariants] = useState<
     Record<string, string>
   >({});
   const { data: session } = useSession();
 
-  // ✅ Global stores
   const { addItem, openCart } = useCartStore();
   const {
     items,
@@ -44,7 +51,29 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
     removeItem: removeWishlist,
   } = useWishlistStore();
 
-  // Helper to get first variantId for a product
+  // Helper functions for metafields
+  const getMetafieldValue = (
+    metafields: Metafield[],
+    namespace: string,
+    key: string
+  ): string | null => {
+    if (!metafields || !Array.isArray(metafields)) return null;
+
+    const metafield = metafields.find(
+      (field) => field && field.namespace === namespace && field.key === key
+    );
+    return metafield?.value || null;
+  };
+
+  const isPreorder = (metafields: Metafield[]): boolean => {
+    const preorderValue = getMetafieldValue(
+      metafields,
+      "custom",
+      "is_preorder"
+    );
+    return preorderValue === "true";
+  };
+
   const getFirstVariantId = async (id: string): Promise<string> => {
     try {
       const res = await fetch(
@@ -61,7 +90,6 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
     }
   };
 
-  // Load variant IDs for all products on mount
   useEffect(() => {
     const loadVariantIds = async () => {
       const variants: Record<string, string> = {};
@@ -81,7 +109,6 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
     loadVariantIds();
   }, [products]);
 
-  // ✅ Wishlist toggle using store
   const handleToggleWishlist = async (product: Product) => {
     setWishlistLoading(product.id);
     let variantId = productVariants[product.id];
@@ -138,7 +165,6 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
     }
   };
 
-  // ✅ Add to cart
   const handleAddToCart = async (product: Product) => {
     setCartLoading(product.id);
     let variantId = productVariants[product.id];
@@ -187,6 +213,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
       {products.map((product) => {
         const variantId = productVariants[product.id];
         const isInWishlist = variantId ? items.includes(variantId) : false;
+        const productIsPreorder = isPreorder(product.metafields);
 
         return (
           <div key={product.id} className="group relative">
@@ -194,7 +221,6 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
               href={`/products/${extractShopifyId(product.id)}`}
               className="block overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300"
             >
-              {/* Only the image and info go here */}
               <div className="relative w-full pt-[100%] overflow-hidden">
                 <Image
                   src={product.imageUrl}
@@ -203,11 +229,21 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
                   sizes="(max-width: 768px) 100vw, 25vw"
                   className="absolute top-0 left-0 w-full h-full object-cover object-center transform transition-transform duration-300 group-hover:scale-105"
                 />
-                {!product.availableForSale && (
-                  <div className="absolute top-2 left-2 bg-red-600 text-white text-[11px] font-semibold uppercase px-2.5 py-1 rounded-full shadow-lg">
-                    Out of Stock
-                  </div>
-                )}
+
+                {/* Status badges */}
+                <div className="absolute top-2 left-2 flex flex-col gap-1">
+                  {!product.availableForSale && (
+                    <div className="bg-red-600 text-white text-[11px] font-semibold uppercase px-2.5 py-1 rounded-full shadow-lg">
+                      Out of Stock
+                    </div>
+                  )}
+
+                  {productIsPreorder && (
+                    <div className="bg-orange-600 text-white text-[11px] font-semibold uppercase px-2.5 py-1 rounded-full shadow-lg">
+                      Pre-order
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="p-3 sm:p-4">
@@ -224,12 +260,12 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
                 </p>
               </div>
             </a>
+
             {session?.user && (
               <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex flex-row gap-2 sm:gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                {/* Wishlist button */}
                 <Button
                   variant="link"
-                  className=" bg-white flex items-center justify-center text-lg sm:text-xl !rounded-full shadow p-0 !w-10 !h-10"
+                  className="bg-white flex items-center justify-center text-lg sm:text-xl !rounded-full shadow p-0 !w-10 !h-10"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -246,10 +282,9 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
                   )}
                 </Button>
 
-                {/* Cart button */}
                 <Button
                   variant="link"
-                  className=" bg-white flex items-center justify-center text-lg sm:text-xl !rounded-full shadow p-0 !w-10 !h-10"
+                  className="bg-white flex items-center justify-center text-lg sm:text-xl !rounded-full shadow p-0 !w-10 !h-10"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
