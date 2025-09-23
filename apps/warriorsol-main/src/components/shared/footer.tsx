@@ -39,7 +39,9 @@ const Footer = () => {
           >
             Born from love, built for warriors.
             <br />
-            Est. 11:11
+            Est. 11
+            <span className="relative bottom-1">:</span>
+            11
           </p>
         </div>
 

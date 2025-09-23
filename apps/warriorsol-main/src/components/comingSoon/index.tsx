@@ -127,36 +127,46 @@ export default function ComingSoon() {
   return (
     <>
       <header>
-        <div className="flex flex-col md:flex-row items-center justify-center md:justify-between px-4 sm:px-6 py-4 bg-white relative">
+        <div className="flex flex-col md:flex-row items-center md:items-center px-4 sm:px-6 py-3 bg-white relative">
           {/* Logo */}
-          <Link
-            href="/"
-            className="text-lg font-semibold tracking-wide flex items-center md:mr-4"
-          >
-            <Image
-              src={Logo}
-              alt="Warrior Sol Logo"
-              className="h-12 w-auto sm:h-14 md:h-16"
-              width={120}
-              priority
-              height={120}
-              style={{ objectFit: "contain" }}
-            />
-          </Link>
+          <div className="flex-shrink-0 mb-3 md:mb-0 md:mr-4">
+            <Link
+              href="/"
+              className="flex items-center justify-center md:justify-start"
+            >
+              <Image
+                src={Logo}
+                alt="Warrior Sol Logo"
+                className="h-12 w-auto sm:h-14 md:h-16"
+                width={120}
+                priority
+                height={120}
+                style={{ objectFit: "contain" }}
+              />
+            </Link>
+          </div>
 
-          {/* Small tagline - only mobile */}
-          <p className="text-xs text-center mt-2 md:hidden">
-            Born from love, built for warriors.
-          </p>
+          {/* Tagline wrapper */}
+          <div className="flex-1 flex lg:ml-[50px] text-center">
+            {/* Mobile tagline */}
+            <p className="text-xs md:hidden max-w-[90%]">
+              Born from love, built for warriors.
+            </p>
 
-          {/* Big tagline - tablet+ */}
-          <nav
-            className="hidden md:block text-sm xl:text-lg text-center text-black 
-  max-w-md lg:max-w-full mt-0 md:mt-5 lg:mt-2"
-          >
-            Born from love, built for warriors. Every piece funds direct support
-            for those facing cancer&apos;s hidden battles.
-          </nav>
+            {/* Tablet (md–lg) tagline */}
+            <nav className="hidden md:block lg:hidden text-sm xl:text-lg text-center text-black max-w-xl">
+              Born from love, built for warriors.
+              <br />
+              Every piece funds direct support for those facing cancer&apos;s
+              hidden battles.
+            </nav>
+
+            {/* Desktop (xl+) tagline (wraps if space is tight) */}
+            <nav className="hidden lg:block text-sm xl:text-lg text-center text-black whitespace-normal max-w-full">
+              Born from love, built for warriors. Every piece funds direct
+              support for those facing cancer&apos;s hidden battles.
+            </nav>
+          </div>
         </div>
       </header>
 
@@ -176,7 +186,7 @@ export default function ComingSoon() {
         <div className="absolute inset-0 bg-black/50" />
 
         {/* Audio Toggle + Text */}
-        <div className="absolute top-[35%] sm:top-1/2 md:top-[45%] lg:top-[55%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-3 px-4">
+        <div className="absolute top-[40%] md:top-[50%] lg:top-[50%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-3 px-4">
           {/* Play/Pause Button */}
           <Button
             variant="link"
@@ -217,27 +227,29 @@ export default function ComingSoon() {
                 style={{ objectFit: "contain" }}
               />
             </div>
-            <h1 className="text-white text-[30px] sm:text-[48px] md:text-[54px] lg:text-[60px] xl:text-[60px] !font-semibold mb-4 sm:mb-6 tracking-[0.15em]  leading-tight">
+            <h1 className="text-white text-[30px] sm:text-[48px] md:text-[50px] lg:text-[45px] xl:text-[50px] !font-semibold mb-4 sm:mb-6 tracking-[0.15em] leading-tight">
               Rising
               <br />
-              11:11
+              11
+              <span className="relative bottom-1">:</span>
+              11
             </h1>
 
             <div className="flex space-x-1 sm:space-x-2 md:space-x-4 lg:space-x-6 text-center items-center justify-center mb-6 sm:mb-8">
               {["days", "hours", "minutes", "seconds"].map((unit, i) => (
                 <React.Fragment key={unit}>
                   {i !== 0 && (
-                    <div className="text-white text-base sm:text-lg md:text-xl lg:text-2xl">
+                    <div className="text-white text-base sm:text-lg md:text-xl lg:text-2xl relative bottom-1">
                       :
                     </div>
                   )}
                   <div className="text-center">
-                    <div className="text-white text-[20px] sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold tracking-widest uppercase">
+                    <div className="text-white text-[20px] sm:text-2xl md:text-[32px] font-extrabold tracking-widest uppercase">
                       {timeLeft[unit as keyof typeof timeLeft]
                         .toString()
                         .padStart(2, "0")}
                     </div>
-                    <div className="text-white text-[10px] sm:text-xs md:text-sm lg:text-base uppercase font-medium tracking-widest">
+                    <div className="text-white text-[10px] sm:text-xs md:text-xs lg:text-xs uppercase font-medium tracking-widest">
                       {unit}
                     </div>
                   </div>
@@ -247,7 +259,7 @@ export default function ComingSoon() {
           </div>
 
           {/* Bottom Section - Improved mobile layout */}
-          <div className="mt-[190px] md:mt-[180px] pb-6 sm:pb-8 md:pb-12 flex flex-col items-center">
+          <div className="mt-[140px] md:mt-[120px] lg:mt-[120px] xl:mt-[100px] 2xl:mt-[150px] pb-6 sm:pb-8 md:pb-12 flex flex-col items-center">
             <h3 className="text-white text-base md:text-base lg:text-lg xl:text-2xl font-bold w-full text-center sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[40%] mb-3 sm:mb-4 leading-relaxed">
               Get exclusive early access and enjoy a special offer before the
               public launch!
@@ -258,7 +270,7 @@ export default function ComingSoon() {
             {/* Email Subscribe */}
             <form
               onSubmit={handleSubscribe}
-              className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full md:max-w-md lg:max-w-lg items-center justify-center"
+              className="flex flex-col md:flex-row gap-2 sm:gap-3 w-full md:max-w-md lg:max-w-lg items-center justify-center"
             >
               <Input
                 type="email"
