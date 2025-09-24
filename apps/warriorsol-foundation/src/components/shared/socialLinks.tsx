@@ -10,12 +10,12 @@ const socialLinks = [
   },
   {
     name: "Instagram",
-    href: "https://instagram.com/",
+    href: "https://www.instagram.com/givewarriorsol",
     icon: <FaInstagram size={20} />,
   },
   {
     name: "TikTok",
-    href: "https://tiktok.com/",
+    href: "https://www.tiktok.com/@givewarriorsol",
     icon: <SiTiktok size={20} />,
   },
 ];
