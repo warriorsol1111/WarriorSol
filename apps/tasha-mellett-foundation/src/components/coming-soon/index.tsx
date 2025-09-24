@@ -10,6 +10,13 @@ import { toast } from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 import LogoWhite from "../../assets/icon-white.png";
 import { useRouter } from "next/navigation";
+import { Comfortaa } from "next/font/google";
+
+const comfortaa = Comfortaa({
+  subsets: ["latin"],
+  variable: "--font-comfortaa",
+});
+
 export default function ComingSoon() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const router = useRouter();
@@ -125,7 +132,7 @@ export default function ComingSoon() {
   };
 
   return (
-    <>
+    <div className={`${comfortaa.className}`}>
       <header>
         <div className="flex flex-col md:flex-row items-center md:items-center px-4 sm:px-6 py-3 bg-white relative">
           {/* Logo */}
@@ -261,8 +268,7 @@ export default function ComingSoon() {
           {/* Bottom Section - Improved mobile layout */}
           <div className="mt-[140px] md:mt-[120px] lg:mt-[120px] xl:mt-[100px] 2xl:mt-[150px] pb-6 sm:pb-8 md:pb-12 flex flex-col items-center">
             <h3 className="text-white text-base md:text-base lg:text-lg xl:text-2xl font-bold w-full text-center sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[40%] mb-3 sm:mb-4 leading-relaxed">
-              Get exclusive early access and enjoy a special offer before the
-              public launch!
+              Be the first to know when the Tasha Mellett foundation is live!
             </h3>
 
             <div className="w-full md:w-[550px] lg:w-[600px] xl:w-[650px] h-[1px] bg-white/50 mb-4 sm:mb-6" />
@@ -294,6 +300,6 @@ export default function ComingSoon() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

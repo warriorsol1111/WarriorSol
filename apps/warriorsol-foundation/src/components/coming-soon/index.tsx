@@ -10,6 +10,13 @@ import { toast } from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 import LogoWhite from "../../assets/icon-white.png";
 import { useRouter } from "next/navigation";
+import { Comfortaa } from "next/font/google";
+
+const comfortaa = Comfortaa({
+  subsets: ["latin"],
+  variable: "--font-comfortaa",
+});
+
 export default function ComingSoon() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const router = useRouter();
@@ -125,7 +132,7 @@ export default function ComingSoon() {
   };
 
   return (
-    <>
+    <div className={`${comfortaa.className}`}>
       <header>
         <div className="flex flex-col md:flex-row items-center md:items-center px-4 sm:px-6 py-3 bg-white relative">
           {/* Logo */}
@@ -294,6 +301,6 @@ export default function ComingSoon() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
