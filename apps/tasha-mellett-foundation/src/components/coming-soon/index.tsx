@@ -213,7 +213,7 @@ export default function ComingSoon() {
             ref={audioRef}
             loop
             preload="auto"
-            src="https://res.cloudinary.com/dr5yanrd3/video/upload/v1757672339/photos/photos/1757672333207___Fire%20and%20Rain%20-%20Coleman%20Mellett.mp3.mp3"
+            src="https://res.cloudinary.com/dr5yanrd3/video/upload/v1758730983/Forever_-_Ben_Harper_ad9ygg.mp3"
           />
 
           {/* Artist Info */}
