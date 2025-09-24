@@ -5,17 +5,17 @@ import { SiTiktok } from "react-icons/si";
 const socialLinks = [
   {
     name: "Facebook",
-    href: "https://facebook.com/",
+    href: "https://www.facebook.com/thetashamellettfoundation",
     icon: <FaFacebookF size={20} />,
   },
   {
     name: "Instagram",
-    href: "https://instagram.com/",
+    href: "https://www.instagram.com/thetashamellettfoundation",
     icon: <FaInstagram size={20} />,
   },
   {
     name: "TikTok",
-    href: "https://tiktok.com/",
+    href: "https://www.tiktok.com/@tashagiving",
     icon: <SiTiktok size={20} />,
   },
 ];
