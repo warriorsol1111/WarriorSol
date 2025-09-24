@@ -267,7 +267,7 @@ export default function ComingSoon() {
 
           {/* Bottom Section - Improved mobile layout */}
           <div className="mt-[140px] md:mt-[120px] lg:mt-[120px] xl:mt-[100px] 2xl:mt-[150px] pb-6 sm:pb-8 md:pb-12 flex flex-col items-center">
-            <h3 className="text-white text-base md:text-base lg:text-lg xl:text-2xl font-bold w-full text-center sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[40%] mb-3 sm:mb-4 leading-relaxed">
+            <h3 className="text-white text-base md:text-base lg:text-lg xl:text-2xl font-bold w-full text-center mb-3 sm:mb-4 leading-relaxed">
               Be the first to know when the Tasha Mellett foundation is live!
             </h3>
 
