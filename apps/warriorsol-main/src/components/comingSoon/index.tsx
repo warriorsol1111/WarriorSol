@@ -149,7 +149,7 @@ export default function ComingSoon() {
           {/* Tagline wrapper */}
           <div className="flex-1 flex lg:ml-[50px] text-center">
             {/* Mobile tagline */}
-            <p className="text-xs md:hidden max-w-[90%]">
+            <p className="text-xs md:hidden">
               Born from love, built for warriors.
             </p>
 
