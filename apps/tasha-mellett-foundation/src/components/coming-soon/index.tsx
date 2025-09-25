@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ComingSoonGif from "@/assets/comingSoon.gif";
 import Link from "next/link";
-import Logo from "../../assets/logo.svg";
+import Logo from "../../assets/logo.png";
 import { toast } from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 import LogoWhite from "../../assets/icon-white.png";
@@ -96,9 +96,23 @@ export default function ComingSoon() {
       const response = await fetch(`${BACKEND_URL}/launch-mails/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, site: "warrior_sol" }),
+        body: JSON.stringify({ email, site: "tasha_mellett" }),
       });
 
+      // Handle non-OK responses (e.g., 409 Conflict from HubSpot)
+      if (!response.ok) {
+        const errText = await response.text();
+        if (
+          response.status === 409 ||
+          errText.includes("Contact already exists")
+        ) {
+          toast.dismiss();
+          toast.error("This email already exists in our waitlist");
+          setNotifyLoading(false);
+          return;
+        }
+        throw new Error(errText);
+      }
       const data = await response.json();
 
       if (data.message === "Email already subscribed for this site") {
@@ -141,15 +155,15 @@ export default function ComingSoon() {
               href="/"
               className="flex items-center justify-center md:justify-start"
             >
-              <Image
-                src={Logo}
-                alt="Warrior Sol Logo"
-                className="h-12 w-auto sm:h-14 md:h-16"
-                width={120}
-                priority
-                height={120}
-                style={{ objectFit: "contain" }}
-              />
+              <div className="relative h-20 w-52 sm:h-24 sm:w-64">
+                <Image
+                  src={Logo}
+                  alt="Warrior Sol Logo"
+                  fill
+                  priority
+                  className="object-contain"
+                />
+              </div>
             </Link>
           </div>
 
@@ -164,14 +178,13 @@ export default function ComingSoon() {
             <nav className="hidden md:block lg:hidden text-sm xl:text-lg text-center text-black max-w-xl">
               Born from love, built for warriors.
               <br />
-              Every piece funds direct support for those facing cancer&apos;s
-              hidden battles.
+              Together, we will change the world, Forever.
             </nav>
 
             {/* Desktop (xl+) tagline (wraps if space is tight) */}
             <nav className="hidden lg:block text-sm xl:text-lg text-center text-black whitespace-normal max-w-full">
-              Born from love, built for warriors. Every piece funds direct
-              support for those facing cancer&apos;s hidden battles.
+              Born from love, built for warriors. Together, we will change the
+              world, Forever.
             </nav>
           </div>
         </div>
@@ -268,7 +281,8 @@ export default function ComingSoon() {
           {/* Bottom Section - Improved mobile layout */}
           <div className="mt-[140px] md:mt-[120px] lg:mt-[120px] xl:mt-[100px] 2xl:mt-[150px] pb-6 sm:pb-8 md:pb-12 flex flex-col items-center">
             <h3 className="text-white text-base md:text-base lg:text-lg xl:text-2xl font-bold w-full text-center mb-3 sm:mb-4 leading-relaxed">
-              Be the first to know when the Tasha Mellett foundation is live!
+              We invite you to join us as we begin our journey together <br />
+              Love always, and all ways, The Tasha Mellett Foundation.
             </h3>
 
             <div className="w-full md:w-[550px] lg:w-[600px] xl:w-[650px] h-[1px] bg-white/50 mb-4 sm:mb-6" />

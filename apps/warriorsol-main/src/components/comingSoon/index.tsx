@@ -91,7 +91,20 @@ export default function ComingSoon() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, site: "warrior_sol" }),
       });
-
+      // Handle non-OK responses (e.g., 409 Conflict from HubSpot)
+      if (!response.ok) {
+        const errText = await response.text();
+        if (
+          response.status === 409 ||
+          errText.includes("Contact already exists")
+        ) {
+          toast.dismiss();
+          toast.error("This email already exists in our waitlist");
+          setNotifyLoading(false);
+          return;
+        }
+        throw new Error(errText);
+      }
       const data = await response.json();
 
       if (data.message === "Email already subscribed for this site") {

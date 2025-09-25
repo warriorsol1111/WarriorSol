@@ -96,8 +96,9 @@ export default function ComingSoon() {
       const response = await fetch(`${BACKEND_URL}/launch-mails/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, site: "warrior_sol" }),
+        body: JSON.stringify({ email, site: "foundation" }),
       });
+      // Handle non-OK responses (e.g., 409 Conflict from HubSpot)
 
       const data = await response.json();
 
@@ -113,7 +114,20 @@ export default function ComingSoon() {
           toast.error("Failed to add email to waitlist");
         }
       }
-
+      if (!response.ok) {
+        const errText = await response.text();
+        console.log(errText);
+        if (
+          response.status === 409 ||
+          errText.includes("Contact already exists")
+        ) {
+          toast.dismiss();
+          toast.error("This email already exists in our waitlist");
+          setNotifyLoading(false);
+          return;
+        }
+        throw new Error(errText);
+      }
       setEmail("");
     } catch (error) {
       console.error("Error adding email to waitlist:", error);

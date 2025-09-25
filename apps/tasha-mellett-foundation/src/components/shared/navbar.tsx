@@ -3,7 +3,7 @@
 import { User } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import Logo from "../../assets/logo.svg";
+import Logo from "../../assets/logo.png";
 import { Button } from "../ui/button";
 import { MdMenu } from "react-icons/md";
 import {
