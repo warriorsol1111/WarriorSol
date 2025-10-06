@@ -59,7 +59,6 @@ export default function ComingSoon() {
       const updatedTime = calculateTimeLeft();
       setTimeLeft(updatedTime);
 
-      // 👇 redirect when countdown ends
       if (
         updatedTime.days === 0 &&
         updatedTime.hours === 0 &&
@@ -73,6 +72,7 @@ export default function ComingSoon() {
 
     return () => clearInterval(timer);
   }, [targetDate, router]);
+
   const toggleAudio = () => {
     if (!audioRef.current) return;
 
@@ -99,7 +99,6 @@ export default function ComingSoon() {
         body: JSON.stringify({ email, site: "tasha_mellett" }),
       });
 
-      // Handle non-OK responses (e.g., 409 Conflict from HubSpot)
       if (!response.ok) {
         const errText = await response.text();
         if (
@@ -149,7 +148,6 @@ export default function ComingSoon() {
     <div className={`${comfortaa.className}`}>
       <header>
         <div className="flex flex-col md:flex-row items-center md:items-center px-4 sm:px-6 py-3 bg-white relative">
-          {/* Logo */}
           <div className="flex-shrink-0 mb-3 md:mb-0 md:mr-4">
             <Link
               href="/"
@@ -167,21 +165,15 @@ export default function ComingSoon() {
             </Link>
           </div>
 
-          {/* Tagline wrapper */}
           <div className="flex-1 flex lg:ml-[50px] text-center">
-            {/* Mobile tagline */}
             <p className="text-xs md:hidden">
               Born from love, built for warriors.
             </p>
-
-            {/* Tablet (md–lg) tagline */}
             <nav className="hidden md:block lg:hidden text-sm xl:text-lg text-center text-black max-w-xl">
               Born from love, built for warriors.
               <br />
               Together, we will change the world, Forever.
             </nav>
-
-            {/* Desktop (xl+) tagline (wraps if space is tight) */}
             <nav className="hidden lg:block text-sm xl:text-lg text-center text-black whitespace-normal max-w-full">
               Born from love, built for warriors. Together, we will change the
               world, Forever.
@@ -191,7 +183,6 @@ export default function ComingSoon() {
       </header>
 
       <div className="min-h-screen flex flex-col relative overflow-hidden">
-        {/* Background Image */}
         <div className="absolute inset-0 w-full h-full">
           <Image
             src={ComingSoonGif}
@@ -205,9 +196,7 @@ export default function ComingSoon() {
 
         <div className="absolute inset-0 bg-black/50" />
 
-        {/* Audio Toggle + Text */}
         <div className="absolute top-[40%] md:top-[50%] lg:top-[50%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-3 px-4">
-          {/* Play/Pause Button */}
           <Button
             variant="link"
             onClick={toggleAudio}
@@ -228,14 +217,10 @@ export default function ComingSoon() {
             preload="auto"
             src="https://res.cloudinary.com/dr5yanrd3/video/upload/v1758730983/Forever_-_Ben_Harper_ad9ygg.mp3"
           />
-
-          {/* Artist Info */}
         </div>
 
-        {/* Main Content */}
         <div className="relative z-10 flex flex-col flex-grow text-center px-4 sm:px-6 lg:px-8">
           <div className="mt-6 sm:mt-6 md:mt-6 lg:mt-6">
-            {/*Logo Image*/}
             <div className="flex items-center justify-center">
               <Image
                 src={LogoWhite}
@@ -278,16 +263,16 @@ export default function ComingSoon() {
             </div>
           </div>
 
-          {/* Bottom Section - Improved mobile layout */}
+          {/* Bottom Section */}
           <div className="mt-[140px] md:mt-[120px] lg:mt-[120px] xl:mt-[100px] 2xl:mt-[150px] pb-6 sm:pb-8 md:pb-12 flex flex-col items-center">
             <h3 className="text-white text-base md:text-base lg:text-lg xl:text-2xl font-bold w-full text-center mb-3 sm:mb-4 leading-relaxed">
-              We invite you to join us as we begin our journey together <br />
-              Love always, and all ways, The Tasha Mellett Foundation.
+              Join us on our journey
+              <br />
+              The Tasha Mellett Foundation.
             </h3>
 
             <div className="w-full md:w-[550px] lg:w-[600px] xl:w-[650px] h-[1px] bg-white/50 mb-4 sm:mb-6" />
 
-            {/* Email Subscribe */}
             <form
               onSubmit={handleSubscribe}
               className="flex flex-col md:flex-row gap-2 sm:gap-3 w-full md:max-w-md lg:max-w-lg items-center justify-center"
@@ -301,7 +286,7 @@ export default function ComingSoon() {
               />
               <Button
                 type="submit"
-                className="bg-[#EE9254] hover:bg-[#D97C38] text-white px-4 sm:px-6 py-2 w-full md:w-auto tracking-wide  text-xs sm:text-sm flex items-center justify-center gap-2 whitespace-nowrap"
+                className="bg-[#EE9254] hover:bg-[#D97C38] text-white px-4 sm:px-6 py-2 w-full md:w-auto tracking-wide text-xs sm:text-sm flex items-center justify-center gap-2 whitespace-nowrap"
                 disabled={notifyLoading}
               >
                 {notifyLoading ? (
@@ -311,6 +296,21 @@ export default function ComingSoon() {
                 )}
               </Button>
             </form>
+
+            {/* 👇 Add this section */}
+            <div className="mt-6 text-center flex flex-col items-center gap-3">
+              <p className="text-white text-sm sm:text-base">
+                Prefer to make a difference right now?
+              </p>
+              <Link
+                href="https://funraise.org/give/The-Tasha-Mellett-Foundation-Inc/b50adf77-3e64-4992-95dc-f61282f8f197"
+                target="_blank"
+              >
+                <Button className="bg-[#2979ff] hover:bg-[#1E5BDC] text-white px-6 py-2 rounded-lg font-semibold shadow-lg transition-all">
+                  Donate Now
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

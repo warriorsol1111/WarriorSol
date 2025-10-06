@@ -26,15 +26,6 @@ export default function Footer() {
               height={220}
             />
           </div>
-          <p className="text-lg leading-relaxed max-w-xs text-white ml-3">
-            Born from experience.
-            <br />
-            Established 11:11. Apparel
-            <br />
-            with meaning for every
-            <br />
-            warrior&apos;s journey.
-          </p>
         </div>
 
         {/* Navigation (hidden on `/`) */}
@@ -141,7 +132,7 @@ export default function Footer() {
         <div className="grid gap-3 items-center grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3">
           {/* Facebook */}
           <a
-            href="https://facebook.com"
+            href="https://www.facebook.com/thetashamellettfoundation"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-white text-black px-4 py-2 h-14 rounded-full hover:bg-gray-200 transition-colors flex items-center justify-between min-w-[100px]"
@@ -154,7 +145,7 @@ export default function Footer() {
 
           {/* Instagram */}
           <a
-            href="https://instagram.com"
+            href="https://www.instagram.com/thetashamellettfoundation"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-white text-black px-4 py-2 h-14 rounded-full hover:bg-gray-200 transition-colors flex items-center justify-between min-w-[100px]"
@@ -167,7 +158,7 @@ export default function Footer() {
 
           {/* TikTok */}
           <a
-            href="https://tiktok.com"
+            href="https://www.tiktok.com/@tashagiving"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-white text-black px-4 py-2 h-14 rounded-full hover:bg-gray-200 transition-colors flex items-center justify-between min-w-[100px]"
